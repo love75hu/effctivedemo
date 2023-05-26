@@ -1,0 +1,44 @@
+spring:
+  mvc:
+    # 前端参数格式化
+    format:
+      # String格式化日期
+      date: yyyy-MM-dd HH:mm:ss
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://172.19.80.10:30003/mediinfo-lyra-authserver
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://172.19.80.171:5432/lyra_his?currentSchema=lyra_his
+    username: lyra_his
+    password: lyra_his
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+  data:
+    redis:
+      database: 9
+      host: 172.19.33.31
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          max-wait: -1
+          min-idle: 0
+      password: 'mediinfo@redis'
+      port: 6379
+  lifecycle:
+    timeout-per-shutdown-phase: 30s
+
+mediinfo:
+  remote:
+    urls:
+      mediinfo-vela-jiuzhen: "http://172.19.84.61:30244"
+logging:
+  level:
+    root: info
+

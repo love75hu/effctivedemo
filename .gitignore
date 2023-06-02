@@ -1,8 +1,39 @@
-/mediinfo-grus-shujuzx/.idea/.gitignore
-/mediinfo-grus-shujuzx/.idea/dataSources.xml
-/mediinfo-grus-shujuzx/.idea/encodings.xml
-/mediinfo-grus-shujuzx/.idea/google-java-format.xml
-/mediinfo-grus-shujuzx/.idea/gradle.xml
-/mediinfo-grus-shujuzx/.idea/misc.xml
-/mediinfo-grus-shujuzx/.idea/uiDesigner.xml
-/mediinfo-grus-shujuzx/src/test
+mediinfo-grus-shujuzx/HELP.md
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### VS Code ###
+.vscode/
+/mediinfo-vela-bingli/.idea
+/.idea

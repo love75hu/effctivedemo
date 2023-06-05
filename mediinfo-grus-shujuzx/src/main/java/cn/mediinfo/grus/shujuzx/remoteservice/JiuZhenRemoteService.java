@@ -22,6 +22,7 @@ public interface JiuZhenRemoteService {
     /**
      * 统计病人门诊住院就诊次数
      */
+    @PostMapping("/api/v1.0/JiuZhen/BinRenJZCSTJ")
     MsfResponse<List<BinRenJZCSTJDto>>BinRenJZCSTJ(@RequestParam Integer shouCiZX,@RequestParam Integer zhiXingSJ);
 
 

@@ -2,6 +2,7 @@ package cn.mediinfo.grus.shujuzx.service.impl;
 
 import cn.mediinfo.grus.shujuzx.Events.BaseEventDto;
 import cn.mediinfo.grus.shujuzx.Events.BingRenXXEventDto;
+import cn.mediinfo.grus.shujuzx.constant.ShuJuZXConstant;
 import cn.mediinfo.grus.shujuzx.model.SC_LC_BingRenYLSJModel;
 import cn.mediinfo.grus.shujuzx.remotedto.JiuZhenXXs.JZ_LC_JiuZhenSLRso;
 import cn.mediinfo.grus.shujuzx.remoteservice.JiuZhenRemoteService;
@@ -49,8 +50,8 @@ public class BingRenYLSJServiceImpl implements BingRenYLSJService {
             }
             JZ_LC_JiuZhenSLRso finalJiuZhenSLXX = jiuZhenSLXX;
             SC_LC_BingRenYLSJModel addBingRenYLSJ = MapUtils.copyProperties(bingRenXX, SC_LC_BingRenYLSJModel::new, (a, b) -> {
-                b.setZuZhiJGID("0");
-                b.setZuZhiJGMC("通用");
+                b.setZuZhiJGID(ShuJuZXConstant.TONGYONG_JGID);
+                b.setZuZhiJGMC(ShuJuZXConstant.TONGYONG_JGID);
                 b.setXingMing(a.getBingRenXM());
                 b.setMenZhenCS(finalJiuZhenSLXX.getMenZhenJZCS() == null ? 0 : finalJiuZhenSLXX.getMenZhenJZCS());
                 b.setZhuYuanCS(finalJiuZhenSLXX.getZuYuanJZCS() == null ? 0 : finalJiuZhenSLXX.getZuYuanJZCS());

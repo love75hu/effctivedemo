@@ -32,7 +32,7 @@ public class ShuJuZXFWRZController {
         this.shuJuZXFWRZService=shuJuZXFWRZService;
         this.zhuSuoYCZRZService=zhuSuoYCZRZService;
     }
-    @Operation(summary = "相似患者查询并生成相似索引")
+    @Operation(summary = "添加访问日志")
     @PostMapping("AddFangWenRZ")
     public MsfResponse<Boolean> AddFangWenRZ(@RequestBody AddFangWenRZDto addFangWenRZDto)
     {

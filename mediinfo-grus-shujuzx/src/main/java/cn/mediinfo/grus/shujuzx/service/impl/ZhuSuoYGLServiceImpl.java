@@ -71,7 +71,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
         var bingRenIDs= xiangSiBRIDList.stream().map(BR_DA_XiangSiSYModel::getBingRenID2).toList();
         var jiaoChaBRIDs = jiaoChaSYList.stream().map(BR_DA_JiaoChaSYModel::getGuanLianBRID).collect(Collectors.toList());
         jiaoChaBRIDs.addAll(bingRenIDs);
-        var xiangSiBRXXList = MapUtils.copyListProperties(brDaJiBenXXRepository.findAllById(bingRenIDs),BR_DA_JiBenXXByZSYGLDto::new);
+        var xiangSiBRXXList = MapUtils.copyListProperties(brDaJiBenXXRepository.findAllById(jiaoChaBRIDs),BR_DA_JiBenXXByZSYGLDto::new);
         var xiangSIBRIDs = xiangSiBRXXList.stream().map(BR_DA_JiBenXXByZSYGLDto::getId).toList();
         var jiaoChaSYCounts =brDaJiaoChaSYRepository.getJiaoChaZhuBRIDList(xiangSIBRIDs);
         //合并记录

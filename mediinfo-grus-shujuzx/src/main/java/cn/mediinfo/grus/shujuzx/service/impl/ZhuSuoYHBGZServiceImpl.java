@@ -135,7 +135,7 @@ public class ZhuSuoYHBGZServiceImpl implements ZhuSuoYHBGZService {
      */
     @Override
     public List<BR_ZD_HeBingGZListDto> getGuiZeList() throws TongYongYWException {
-        var models = brZdHeBingGZRepository.findByZuZhiJGIDOrderByFaZhiDesc("0");
+        var models = brZdHeBingGZRepository.findByZuZhiJGIDOrderByFaZhiDesc(ShuJuZXConstant.TONGYONG_JGID);
         return MapUtils.copyListProperties(models,BR_ZD_HeBingGZListDto::new);
     }
 

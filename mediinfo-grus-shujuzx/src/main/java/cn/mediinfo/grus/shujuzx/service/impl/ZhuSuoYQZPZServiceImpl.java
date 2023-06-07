@@ -1,5 +1,6 @@
 package cn.mediinfo.grus.shujuzx.service.impl;
 
+import cn.mediinfo.grus.shujuzx.constant.ShuJuZXConstant;
 import cn.mediinfo.grus.shujuzx.dto.ShuJuZXZSYs.*;
 import cn.mediinfo.grus.shujuzx.model.BR_ZD_HeBingQZPZModel;
 import cn.mediinfo.grus.shujuzx.model.QBR_ZD_HeBingQZPZModel;
@@ -43,8 +44,8 @@ public class ZhuSuoYQZPZServiceImpl implements ZhuSuoYQZPZService {
         }
         var addModel = new BR_ZD_HeBingQZPZModel();
         MapUtils.mergeProperties(dto,addModel);
-        addModel.setZuZhiJGID("0");
-        addModel.setZuZhiJGMC("通用");
+        addModel.setZuZhiJGID(ShuJuZXConstant.TONGYONG_JGID);
+        addModel.setZuZhiJGMC(ShuJuZXConstant.TONGYONG_JGMC);
         addModel.setFuLeiID(stringGenerator.Create());
         addModel.setMoJiBZ(0);
         brZdHeBingQZPZRepository.save(addModel);
@@ -97,8 +98,8 @@ public class ZhuSuoYQZPZServiceImpl implements ZhuSuoYQZPZService {
         //新增
         if(!CollectionUtils.isEmpty(dto.getAddList())){
             var addZhanShiPZList =MapUtils.copyListProperties(dto.getAddList(),BR_ZD_HeBingQZPZModel::new,(o,model)->{
-                model.setZuZhiJGID("0");
-                model.setZuZhiJGMC("通用");
+                model.setZuZhiJGID(ShuJuZXConstant.TONGYONG_JGID);
+                model.setZuZhiJGMC(ShuJuZXConstant.TONGYONG_JGMC);
                 model.setHeBingQZID(stringGenerator.Create());
                 model.setMoJiBZ(1);
             });
@@ -140,7 +141,7 @@ public class ZhuSuoYQZPZServiceImpl implements ZhuSuoYQZPZService {
     @Override
     public List<BR_ZD_HeBingGZQZPZDto> getQuanZhongPZList() throws TongYongYWException {
         List<BR_ZD_HeBingGZQZPZDto> result = new ArrayList<>();
-        var models =brZdHeBingQZPZRepository.findByZuZhiJGID("0");
+        var models =brZdHeBingQZPZRepository.findByZuZhiJGID(ShuJuZXConstant.TONGYONG_JGID);
         // 获取权重分类 末级标志 0 是分类
         List<Map<String, String>> fenLeiList = models.stream()
                 .filter(x -> x.getMoJiBZ() == 0)

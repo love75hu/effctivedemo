@@ -14,12 +14,12 @@ public class SC_ZD_YinSiPZCreateDto {
    *新增
     */
    @Schema(description = "新增")
-   private List<SC_ZD_YinSiPZDto> addList;
+   private List<SC_ZD_YinSiPZDto> addList = new ArrayList<>();
 
     /**
    *作废IDs
     */
    @Schema(description = "作废IDs")
-   private List<String> zuoFeiIds;
+   private List<String> zuoFeiIds = new ArrayList<>();
 
 }

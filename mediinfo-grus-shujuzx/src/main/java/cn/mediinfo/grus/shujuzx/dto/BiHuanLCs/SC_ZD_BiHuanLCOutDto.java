@@ -65,7 +65,7 @@ public class SC_ZD_BiHuanLCOutDto {
    *闭环节点集合
     */
    @Schema(description = "闭环节点集合")
-   private List<SC_ZD_BiHuanLCJDDto> biHuanJDLCList;
+   private List<SC_ZD_BiHuanLCJDDto> biHuanJDLCList = new ArrayList<>();
 
     /**
    *Id

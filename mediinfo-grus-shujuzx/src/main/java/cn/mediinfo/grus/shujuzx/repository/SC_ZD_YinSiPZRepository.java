@@ -6,5 +6,12 @@ import cn.mediinfo.starter.base.orm.MsfJpaRepository;
 import java.util.List;
 
 public interface SC_ZD_YinSiPZRepository extends MsfJpaRepository<SC_ZD_YinSiPZModel, String> {
+
+    /**
+     * 获取查询模式代码和组织架构id下的隐私配置信息集合
+     * @return
+     */
+    List<SC_ZD_YinSiPZModel> findByChaXunMSDMAndZuZhiJGID(String chaXunMSDM,String zuZhiJGID);
+
     List<SC_ZD_YinSiPZModel> findByZuZhiJGIDAndChaXunMSDMInAndQiYongBZ(String zuZhiJGID,List<String> chaXunMSDM,Integer qiYongBZ);
 }

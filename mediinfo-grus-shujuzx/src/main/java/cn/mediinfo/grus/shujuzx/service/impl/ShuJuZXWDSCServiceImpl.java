@@ -19,9 +19,11 @@ import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * 数据中心 - 我的收藏
@@ -33,6 +35,9 @@ public class ShuJuZXWDSCServiceImpl implements ShuJuZXWDSCService {
     private final SC_SC_ShouCangJXXRepository sc_sc_shouCangJXXRepository;
     private final SC_SC_ShouCangJMXRepository sc_sc_shouCangJMXRepository;
     private final EntityManager entityManager;
+
+    private record XMModelAndXXModelPO(String id,String shouCangJMC,String beiZhu,Integer shunXuHao,SC_SC_ShouCangJMXModel mxModel) {}
+
 
 
     public ShuJuZXWDSCServiceImpl(LyraIdentityService lyraIdentityService, SC_SC_ShouCangJXXRepository scScShouCangJXXRepository, SC_SC_ShouCangJMXRepository scScShouCangJMXRepository, EntityManager entityManager) {
@@ -48,7 +53,6 @@ public class ShuJuZXWDSCServiceImpl implements ShuJuZXWDSCService {
             throw new TongYongYWException("收藏夹名称已存在,请重新确认!");
         }
         SC_SC_ShouCangJXXModel addModel = new SC_SC_ShouCangJXXModel();
-        // todo:合并
         MapUtils.mergeProperties(shouCangJInDto, addModel);
         addModel.setZuZhiJGID(lyraIdentityService.getJiGouID());
         addModel.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
@@ -62,6 +66,7 @@ public class ShuJuZXWDSCServiceImpl implements ShuJuZXWDSCService {
     @Override
     @Transactional(rollbackOn = Exception.class)
     public Integer addShouCangJMX(SC_SC_ShouCangJMXInDto shouCangJMXInDto) {
+        // todo:无值的时候相当于copy？ new Date() 源merge中false  ID前端传入？
         SC_SC_ShouCangJMXModel addModel = new SC_SC_ShouCangJMXModel();
         MapUtils.mergeProperties(shouCangJMXInDto, addModel);
         addModel.setZuZhiJGID(lyraIdentityService.getJiGouID());
@@ -82,7 +87,8 @@ public class ShuJuZXWDSCServiceImpl implements ShuJuZXWDSCService {
 
         }
         List<SC_SC_ShouCangJMXModel> shouCangJMXList = sc_sc_shouCangJMXRepository.findByShouCangJID(shouCangJInDto.getId());
-        MapUtils.mergeProperties(updateModel,shouCangJInDto);
+        MapUtils.mergeProperties(shouCangJInDto,updateModel);
+        sc_sc_shouCangJXXRepository.save(updateModel);
         shouCangJMXList.forEach(s->s.setShouCangJMC(shouCangJInDto.getShouCangJMC()));
         sc_sc_shouCangJMXRepository.saveAll(shouCangJMXList);
         return 1;
@@ -92,7 +98,7 @@ public class ShuJuZXWDSCServiceImpl implements ShuJuZXWDSCService {
     @Transactional(rollbackOn = Exception.class)
     public Integer yiChuShouCangJMX(String id) throws TongYongYWException {
         // todo：软删前要校验？
-        if (sc_sc_shouCangJMXRepository.existsById(id)) {
+        if (!sc_sc_shouCangJMXRepository.existsById(id)) {
             throw new TongYongYWException("未找到相关可作废的信息!");
         }
         sc_sc_shouCangJMXRepository.softDelete(id);
@@ -102,7 +108,7 @@ public class ShuJuZXWDSCServiceImpl implements ShuJuZXWDSCService {
     @Override
     @Transactional(rollbackOn = Exception.class)
     public Integer zuoFeiShouCangJia(String id) throws TongYongYWException {
-        if (sc_sc_shouCangJXXRepository.existsById(id)) {
+        if (!sc_sc_shouCangJXXRepository.existsById(id)) {
             throw new TongYongYWException("未找到相关可作废的信息!");
         }
         QSC_SC_ShouCangJMXModel JMXModel = QSC_SC_ShouCangJMXModel.sC_SC_ShouCangJMXModel;
@@ -113,7 +119,53 @@ public class ShuJuZXWDSCServiceImpl implements ShuJuZXWDSCService {
 
     @Override
     public List<SC_SC_ShouCangJXXOutDto> getShouCangJiaList(String likeQuery) {
-        return null;
+        QSC_SC_ShouCangJXXModel xxModel = QSC_SC_ShouCangJXXModel.sC_SC_ShouCangJXXModel;
+        QSC_SC_ShouCangJMXModel mxModel = QSC_SC_ShouCangJMXModel.sC_SC_ShouCangJMXModel;
+        List<XMModelAndXXModelPO> list = new JPAQueryFactory(entityManager)
+                .select(
+                        QueryDSLUtils.record(XMModelAndXXModelPO.class,
+                                xxModel.id,
+                                xxModel.shouCangJMC,
+                                xxModel.beiZhu,
+                                xxModel.shunXuHao,
+                                mxModel
+                        )
+                )
+                .from(xxModel)
+                .leftJoin(mxModel)
+                .on(xxModel.id.eq(mxModel.shouCangJID)
+                        .and(xxModel.zuZhiJGID.eq(mxModel.zuZhiJGID)))
+                .where(xxModel.zuZhiJGID.eq(lyraIdentityService.getJiGouID())
+                        .and(xxModel.yongHuID.eq(lyraIdentityService.getYongHuId())))
+                // todo:error 为空字符串可以，为null报错
+                .where(QueryDSLUtils.whereIf(Objects.nonNull(likeQuery), xxModel.shouCangJMC.contains(likeQuery)))
+                .fetch();
+
+        return list
+                .stream()
+                .collect(
+                        Collectors.groupingBy(o -> List.of(
+                                o.id(),
+                                o.shouCangJMC(),
+                                o.beiZhu(),
+                                o.shunXuHao()
+                        )))
+                .entrySet()
+                .stream()
+                .map(s -> {
+                            SC_SC_ShouCangJXXOutDto dto = new SC_SC_ShouCangJXXOutDto();
+                            dto.setId(String.valueOf(s.getKey().get(0)));
+                            dto.setShouCangJMC(String.valueOf(s.getKey().get(1)));
+                            dto.setBeiZhu((String) s.getKey().get(2));
+                            dto.setShunXuHao((Integer) s.getKey().get(3));
+                            // 患者数量
+                            long count = s.getValue().stream().filter(a -> Objects.equals(a.mxModel().getShouCangJID(), s.getKey().get(0))).count();
+                            dto.setHuanZheShu((int) count);
+                            return dto;
+                        }
+                )
+                .sorted(Comparator.comparingInt(SC_SC_ShouCangJXXOutDto::getShunXuHao))
+                .toList();
     }
 
     @Override
@@ -137,6 +189,7 @@ public class ShuJuZXWDSCServiceImpl implements ShuJuZXWDSCService {
 
     @Override
     public List<SC_SC_ShouCangJMXOutDto> getShouCangJMXList(String likeQuery, String shouCangJID, Integer pageIndex, Integer pageSize) {
+        // todo:分页是否有意义？对bingRenXXList进行分页，得到的是个 shouCangMXList 数量
         pageIndex = pageIndex == null ? 1 : pageIndex;
         pageSize = pageSize == null ? 15 : pageSize;
 

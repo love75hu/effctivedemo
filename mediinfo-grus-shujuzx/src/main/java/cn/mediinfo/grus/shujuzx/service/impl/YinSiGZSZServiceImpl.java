@@ -1,5 +1,6 @@
 package cn.mediinfo.grus.shujuzx.service.impl;
 
+import cn.mediinfo.grus.shujuzx.constant.ShuJuZXConstant;
 import cn.mediinfo.grus.shujuzx.dto.YinSiGZSZs.*;
 import cn.mediinfo.grus.shujuzx.model.SC_ZD_YinSiGZSZModel;
 import cn.mediinfo.grus.shujuzx.model.SC_ZD_YinSiPZModel;
@@ -164,9 +165,9 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
     @Override
     @Transactional(rollbackOn = Exception.class)
     public Boolean updateZhanShiPZ(String zuZhiJGID, String zuZhiJGMC, String chaXunMSDM, String peiZhiLXDM) {
-        List<SC_ZD_ZhanShiPZModel> yinSiPZList = zhanShiPZRepository.findByZuZhiJGIDOrZuZhiJGIDAndChaXunMSDMAndPeiZhiLXDM("0", zuZhiJGID, chaXunMSDM, peiZhiLXDM);
+        List<SC_ZD_ZhanShiPZModel> yinSiPZList = zhanShiPZRepository.findByZuZhiJGIDOrZuZhiJGIDAndChaXunMSDMAndPeiZhiLXDM(ShuJuZXConstant.TONGYONG_JGID, zuZhiJGID, chaXunMSDM, peiZhiLXDM);
         //通用数据
-        var tongYongSJList = yinSiPZList.stream().filter(x -> "0".equals(x.getZuZhiJGID())).toList();
+        var tongYongSJList = yinSiPZList.stream().filter(x -> ShuJuZXConstant.TONGYONG_JGID.equals(x.getZuZhiJGID())).toList();
         //机构数据
         var jiGouSJList = yinSiPZList.stream().filter(x -> Objects.equals(x.getZuZhiJGID(),zuZhiJGID)).toList();
         //取差集
@@ -191,7 +192,7 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
     @Transactional(rollbackOn = Exception.class)
     public Boolean chuShiHYinSiZS(String zuZhiJGID, String zuZhiJGMC, String chaXunMSDM) {
         //通用数据
-        List<SC_ZD_YinSiPZModel> tongYongSJList = yinSiPZRepository.findByChaXunMSDMAndZuZhiJGID(chaXunMSDM, "0");
+        List<SC_ZD_YinSiPZModel> tongYongSJList = yinSiPZRepository.findByChaXunMSDMAndZuZhiJGID(chaXunMSDM, ShuJuZXConstant.TONGYONG_JGID);
         //删除机构之前的数据
         yinSiPZRepository.softDelete(yinSiPZRepository.findByChaXunMSDMAndZuZhiJGID(chaXunMSDM, zuZhiJGID));
         //初始化数据
@@ -213,7 +214,7 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
     @Transactional(rollbackOn = Exception.class)
     public Boolean chuShiHYSGZPZ(String zuZhiJGID, String zuZhiJGMC, String chaXunMSDM) {
         //通用数据
-        List<SC_ZD_YinSiPZModel> tongYongSJList = yinSiPZRepository.findByChaXunMSDMAndZuZhiJGID(chaXunMSDM, "0");
+        List<SC_ZD_YinSiPZModel> tongYongSJList = yinSiPZRepository.findByChaXunMSDMAndZuZhiJGID(chaXunMSDM, ShuJuZXConstant.TONGYONG_JGID);
         //删除机构之前的数据
         yinSiPZRepository.softDelete(yinSiPZRepository.findByChaXunMSDMAndZuZhiJGID(chaXunMSDM,zuZhiJGID));
         //初始化数据
@@ -236,7 +237,7 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
     @Transactional(rollbackOn = Exception.class)
     public Boolean chuShiHZhanShiPZ(String zuZhiJGID, String zuZhiJGMC, String chaXunMSDM, String peiZhiLXDM) {
         //通用数据
-        var tongYongSJList = zhanShiPZRepository.findByZuZhiJGIDAndChaXunMSDMAndPeiZhiLXDM("0", chaXunMSDM, peiZhiLXDM);
+        var tongYongSJList = zhanShiPZRepository.findByZuZhiJGIDAndChaXunMSDMAndPeiZhiLXDM(ShuJuZXConstant.TONGYONG_JGID, chaXunMSDM, peiZhiLXDM);
         //删除机构之前的数据
         zhanShiPZRepository.softDelete(zhanShiPZRepository.findByZuZhiJGIDAndChaXunMSDM(zuZhiJGID, chaXunMSDM));
         //初始化数据

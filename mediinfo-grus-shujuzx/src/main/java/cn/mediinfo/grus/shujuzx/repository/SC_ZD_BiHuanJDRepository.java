@@ -8,4 +8,8 @@ import java.util.List;
 public interface SC_ZD_BiHuanJDRepository extends MsfJpaRepository<SC_ZD_BiHuanJDModel, String> {
 
     List<SC_ZD_BiHuanJDModel> findByZuZhiJGID(String zuZhiJGID);
+
+    Boolean existsByBiHuanLXDMAndJieDianMC(String biHuanLXDM, String jieDianMC);
+
+    Boolean existsByJieDianID(String jieDianID);
 }

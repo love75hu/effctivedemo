@@ -49,6 +49,8 @@ mediinfo:
   remote:
     urls:
       mediinfo-vela-jiuzhen: "http://172.19.84.61:30244"
+  sequence:
+    provider: redis
 logging:
   level:
     root: info

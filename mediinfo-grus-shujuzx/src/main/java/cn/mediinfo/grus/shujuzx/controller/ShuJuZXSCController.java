@@ -44,20 +44,20 @@ public class ShuJuZXSCController {
     }
 
     @Operation(summary = "更新收藏夹")
-    @PostMapping("UpdateShouCangJia")
+    @PutMapping("UpdateShouCangJia")
     public MsfResponse<Integer> updateShouCangJia(@RequestBody SC_SC_ShouCangJXXInDto shouCangJInDto) throws TongYongYWException {
         return MsfResponse.success(shuJuZXWDSCService.updateShouCangJia(shouCangJInDto));
     }
 
     @Operation(summary = "移除某一条收藏夹明细")
     @DeleteMapping("YiChuShouCangJMX")
-    public MsfResponse<Integer> yiChuShouCangJMX(String id) throws TongYongYWException {
+    public MsfResponse<Integer> yiChuShouCangJMX(@RequestParam String id) throws TongYongYWException {
         return MsfResponse.success(shuJuZXWDSCService.yiChuShouCangJMX(id));
     }
 
     @Operation(summary = "作废收藏夹")
     @DeleteMapping("ZuoFeiShouCangJia")
-    public MsfResponse<Integer> zuoFeiShouCangJia(String id) throws TongYongYWException {
+    public MsfResponse<Integer> zuoFeiShouCangJia(@RequestParam String id) throws TongYongYWException {
         return MsfResponse.success(shuJuZXWDSCService.zuoFeiShouCangJia(id));
     }
 
@@ -69,13 +69,13 @@ public class ShuJuZXSCController {
 
     @Operation(summary = "根据收藏夹id和其他查询条件获取收藏夹明细条数")
     @GetMapping("GetShouCangJMXCount")
-    public MsfResponse<Integer> getShouCangJMXCount(String likeQuery, String shouCangJID) {
+    public MsfResponse<Integer> getShouCangJMXCount(String likeQuery, @RequestParam String shouCangJID) {
         return MsfResponse.success(shuJuZXWDSCService.getShouCangJMXCount(likeQuery, shouCangJID));
     }
 
     @Operation(summary = "根据收藏夹id和其他查询条件获取收藏夹明细")
     @GetMapping("GetShouCangJMXList")
-    public MsfResponse<List<SC_SC_ShouCangJMXOutDto>> getShouCangJMXList(String likeQuery, String shouCangJID, Integer pageIndex, Integer pageSize) {
+    public MsfResponse<List<SC_SC_ShouCangJMXOutDto>> getShouCangJMXList(String likeQuery, @RequestParam String shouCangJID, Integer pageIndex, Integer pageSize) {
         return MsfResponse.success(shuJuZXWDSCService.getShouCangJMXList(likeQuery, shouCangJID, pageIndex, pageSize));
     }
 }

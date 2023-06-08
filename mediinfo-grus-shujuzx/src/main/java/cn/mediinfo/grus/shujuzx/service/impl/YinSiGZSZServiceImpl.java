@@ -24,6 +24,7 @@ import cn.mediinfo.grus.shujuzx.constant.ChaXunMSEnum;
 import cn.mediinfo.grus.shujuzx.dto.YinSiGZSZs.SC_ZD_YinSiPZOutDto;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Comparator;
 import java.util.List;
@@ -307,13 +308,20 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
      * 获取隐私规则列表
      */
     @Override
-    public List<SC_ZD_YinSiGZSZOutDto> getYinSiGZSZList(String likeQuery, Integer pageIndex, Integer pageSize) {
+    public List<SC_ZD_YinSiGZSZOutDto> getYinSiGZSZList(String likeQuery,Integer pageIndex, Integer pageSize) {
+       if (Objects.isNull(pageIndex)){
+           pageIndex = 1;
+       }
+       if (Objects.isNull(pageSize)){
+           pageSize = 10;
+       }
         QSC_ZD_YinSiGZSZModel yinSiGZSZModel = QSC_ZD_YinSiGZSZModel.sC_ZD_YinSiGZSZModel;
         JPAQuery<SC_ZD_YinSiGZSZModel> jpaQuery = new JPAQueryFactory(entityManager).select(yinSiGZSZModel).from(yinSiGZSZModel).where(yinSiGZSZModel.zuZhiJGID.eq("0"));
         if (StringUtil.hasText(likeQuery)) {
             jpaQuery.where(yinSiGZSZModel.shuJuYMC.contains(likeQuery));
         }
-        List<SC_ZD_YinSiGZSZModel> yinSiGZSZModelList = jpaQuery.orderBy(yinSiGZSZModel.shunXuHao.asc()).limit(pageSize).offset(PageRequestUtil.of(pageIndex, pageSize).getOffset()).fetch();
+        List<SC_ZD_YinSiGZSZModel> yinSiGZSZModelList = jpaQuery.orderBy(yinSiGZSZModel.shunXuHao.asc())
+                .limit(pageSize).offset(PageRequestUtil.of(pageIndex, pageSize).getOffset()).fetch();
         return MapUtils.copyListProperties(yinSiGZSZModelList, SC_ZD_YinSiGZSZOutDto::new);
     }
 

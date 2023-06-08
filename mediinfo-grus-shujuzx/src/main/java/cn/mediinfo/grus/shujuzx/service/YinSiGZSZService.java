@@ -1,9 +1,6 @@
 package cn.mediinfo.grus.shujuzx.service;
 
-import cn.mediinfo.grus.shujuzx.dto.YinSiGZSZs.SC_ZD_YinSiGZSZInDto;
-import cn.mediinfo.grus.shujuzx.dto.YinSiGZSZs.SC_ZD_YinSiPZCreateDto;
-import cn.mediinfo.grus.shujuzx.dto.YinSiGZSZs.SC_ZD_YinSiPZOutDto;
-import cn.mediinfo.grus.shujuzx.dto.YinSiGZSZs.SC_ZD_ZhanShiPZCreateDto;
+import cn.mediinfo.grus.shujuzx.dto.YinSiGZSZs.*;
 import cn.mediinfo.starter.base.exception.MsfException;
 import cn.mediinfo.starter.base.exception.TongYongYWException;
 
@@ -76,4 +73,38 @@ public interface YinSiGZSZService {
     public Boolean chuShiHZhanShiPZ(String zuZhiJGID, String zuZhiJGMC, String chaXunMSDM, String peiZhiLXDM);
 
     List<SC_ZD_YinSiPZOutDto> getYinSiGZPZList(String chaXunMSDM, String zuZhiJGID) throws TongYongYWException;
+    /**
+     *根据主键id修改某个隐私规则
+     */
+    public SC_ZD_YinSiGZSZOutDto getYinSiGZByID(String id);
+    /**
+     * 获取隐私规则列表条数
+     */
+    public Integer getYinSiGZSZCount(String likeQuery);
+    /**
+     * 获取隐私规则列表
+     */
+    public List<SC_ZD_YinSiGZSZOutDto> getYinSiGZSZList(String likeQuery, Integer pageIndex, Integer pageSize);
+    /**
+     * 获取隐私规则设置数据元列表
+     */
+    public List<SC_ZD_YinSiGZSZOutDto> getYinSiGZSZSJYList(String chaXunMSDM,String zuZhiJGID);
+
+    /**
+     *获取隐私设置列表
+     * @param chaXunMSDM 查询模式代码
+     * @param zuZhiJGID 组织机构ID
+     * @param likeQuery 条件
+     * @return 隐私配置集合
+     */
+    public List<SC_ZD_YinSiPZDto> getYinSiSZList(String chaXunMSDM, String zuZhiJGID, String likeQuery);
+
+    /**
+     *获取展示配置列表
+     * @param zuZhiJGID 组织机构ID
+     * @param chaXunMSDM 查询模式代码
+     * @param peiZhiLXDM 配置类型代码
+     * @return 展示配置DTO集合
+     */
+    public List<SC_ZD_ZhanShiPZDto> getZhanShiPZList(String zuZhiJGID, String chaXunMSDM, String peiZhiLXDM);
 }

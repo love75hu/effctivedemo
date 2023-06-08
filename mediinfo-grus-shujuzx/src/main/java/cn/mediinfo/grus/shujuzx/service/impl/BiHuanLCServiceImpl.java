@@ -6,6 +6,7 @@ import cn.mediinfo.grus.shujuzx.model.*;
 import cn.mediinfo.grus.shujuzx.repository.SC_ZD_BiHuanLCJDRepository;
 import cn.mediinfo.grus.shujuzx.repository.SC_ZD_BiHuanLCRepository;
 import cn.mediinfo.grus.shujuzx.service.BiHuanLCService;
+import cn.mediinfo.grus.shujuzx.utils.ExpressionUtils;
 import cn.mediinfo.starter.base.util.MapUtils;
 import cn.mediinfo.starter.base.util.QueryDSLUtils;
 import com.querydsl.core.types.Projections;
@@ -45,7 +46,7 @@ public class BiHuanLCServiceImpl implements BiHuanLCService {
         List<BiHUanDto> biHUanDtos = new JPAQueryFactory(entityManager).select(QueryDSLUtils.record(BiHUanDto.class, biHuanLCModel, biHuanJDModel)).from(biHuanLCModel).where(biHuanLCModel.id.eq(id)).leftJoin(biHuanJDModel).on(biHuanJDModel.zuZhiJGID.eq(zuZhiJGID).and(biHuanLCModel.liuChengID.eq(biHuanJDModel.liuChengID))).fetch();
         //查询出所有的流程节点信息
         var allbhlcjd = biHUanDtos.stream().map(t->t.lcjdModel.getLiuChengID()).distinct().toList();
-        List<SC_ZD_BiHuanLCModel> scZdBiHuanLCModels = biHUanDtos.stream().map(t -> t.lcModel).distinct().filter(t -> allbhlcjd.contains(t.getLiuChengID())).sorted(Comparator.comparing(SC_ZD_BiHuanLCModel::getShunXuHao)).toList();
+        List<SC_ZD_BiHuanLCModel> scZdBiHuanLCModels = biHUanDtos.stream().map(t -> t.lcModel).filter(ExpressionUtils.distinctByKeys(SC_ZD_BiHuanLCModel::getLiuChengID)).filter(t -> allbhlcjd.contains(t.getLiuChengID())).sorted(Comparator.comparing(SC_ZD_BiHuanLCModel::getShunXuHao)).toList();
         return  MapUtils.copyListProperties(scZdBiHuanLCModels,SC_ZD_BiHuanLCOutDto::new);
     }
 
@@ -63,7 +64,7 @@ public class BiHuanLCServiceImpl implements BiHuanLCService {
                 .leftJoin(biHuanJDModel).on(biHuanJDModel.zuZhiJGID.eq(zuZhiJGID).and(biHuanLCModel.liuChengID.eq(biHuanJDModel.liuChengID))).fetch();
         //查询出所有的流程节点信息
         var allbhlcjd = biHUanDtos.stream().map(t->t.lcjdModel.getLiuChengID()).distinct().toList();
-        SC_ZD_BiHuanLCModel liuChengModel = biHUanDtos.stream().map(t -> t.lcModel).distinct().filter(t -> allbhlcjd.contains(t.getLiuChengID())).sorted(Comparator.comparing(SC_ZD_BiHuanLCModel::getShunXuHao)).findFirst().orElseGet(null);
+        SC_ZD_BiHuanLCModel liuChengModel = biHUanDtos.stream().map(t -> t.lcModel).filter(ExpressionUtils.distinctByKeys(SC_ZD_BiHuanLCModel::getLiuChengID)).filter(t -> allbhlcjd.contains(t.getLiuChengID())).sorted(Comparator.comparing(SC_ZD_BiHuanLCModel::getShunXuHao)).findFirst().orElseGet(null);
         return MapUtils.copyProperties(liuChengModel,SC_ZD_BiHuanLCOutDto::new);
     }
 }

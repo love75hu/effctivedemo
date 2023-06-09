@@ -284,4 +284,48 @@ public class ShuJuZXZSYController {
         var data = zhuSuoYGLService.getZhuSuoYGLList(pageIndex,pageSize,kaiShiSJ,jieShuSJ,xiangSiDu,MPI,xingMing,lianXiDH,shenFenZH,jiuZhenKH);
         return MsfResponse.success(data);
     }
+
+    /**
+     * 合并页面获取主索引和相似索引信息
+     * @return List<BR_DA_JiBenXXByHBXXDto>
+     * @throws TongYongYWException 通用异常
+     */
+    @Operation(summary = "合并页面获取主索引和相似索引信息")
+    @GetMapping("GetZhuSuoYXSList")
+    public MsfResponse<List<BR_DA_JiBenXXByHBXXDto>> getZhuSuoYXSList(String bingRenID, Integer xiangSiDu) throws TongYongYWException {
+        return MsfResponse.success(zhuSuoYGLService.getZhuSuoYXSList(bingRenID,xiangSiDu));
+    }
+
+    /**
+     * 合并
+     * @return Boolean
+     * @throws TongYongYWException 通用异常
+     */
+    @Operation(summary = "合并")
+    @GetMapping("HeBing")
+    public MsfResponse<Boolean> heBing(@RequestBody SaveHeBingDto saveDto) throws TongYongYWException {
+        return MsfResponse.success(zhuSuoYGLService.heBing(saveDto));
+    }
+
+    /**
+     * 忽略合并
+     * @return Boolean
+     * @throws TongYongYWException 通用异常
+     */
+    @Operation(summary = "忽略合并")
+    @GetMapping("HuLueHB")
+    public MsfResponse<Boolean> huLueHB(@RequestBody HuLueHBDto saveDto) throws TongYongYWException {
+        return MsfResponse.success(zhuSuoYGLService.huLueHB(saveDto));
+    }
+
+    /**
+     * 主索引修改病人基本信息
+     * @return Boolean
+     * @throws TongYongYWException 通用异常
+     */
+    @Operation(summary = "主索引修改病人基本信息")
+    @GetMapping("UpdateBingRenJBXX")
+    public MsfResponse<String> updateBingRenJBXX(@RequestBody BR_DA_JiBenXXCreateDto saveDto) throws TongYongYWException {
+        return MsfResponse.success(zhuSuoYGLService.updateBingRenJBXX(saveDto));
+    }
 }

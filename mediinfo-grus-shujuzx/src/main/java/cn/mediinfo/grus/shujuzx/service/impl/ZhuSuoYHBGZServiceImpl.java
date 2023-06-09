@@ -8,18 +8,17 @@ import cn.mediinfo.grus.shujuzx.model.QBR_ZD_HeBingGZMXModel;
 import cn.mediinfo.grus.shujuzx.repository.BR_ZD_HeBingGZMXRepository;
 import cn.mediinfo.grus.shujuzx.repository.BR_ZD_HeBingGZRepository;
 import cn.mediinfo.grus.shujuzx.service.ZhuSuoYHBGZService;
-import cn.mediinfo.starter.base.exception.MsfResponseException;
 import cn.mediinfo.starter.base.exception.TongYongYWException;
 import cn.mediinfo.starter.base.stringgenerator.StringGenerator;
 import cn.mediinfo.starter.base.util.MapUtils;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
+
 
 /**
  * 主索引合并规则维护
@@ -42,7 +41,7 @@ public class ZhuSuoYHBGZServiceImpl implements ZhuSuoYHBGZService {
      * @param dto DTO
      * @return boolean
      */
-    @Transactional(rollbackOn = Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public String addGuiZeXX(BR_ZD_HeBingGZCreateDto dto) throws TongYongYWException {
         //规则表添加信息
@@ -75,7 +74,7 @@ public class ZhuSuoYHBGZServiceImpl implements ZhuSuoYHBGZService {
      * @param heBingGZUpdateDto DTO
      * @return boolean
      */
-    @Transactional(rollbackOn = Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public String updateGuiZeXX(BR_ZD_HeBingGZUpdateDto heBingGZUpdateDto) throws TongYongYWException {
         var updateModel = brZdHeBingGZRepository.findById(heBingGZUpdateDto.getId()).orElse(null);
@@ -119,7 +118,7 @@ public class ZhuSuoYHBGZServiceImpl implements ZhuSuoYHBGZService {
      * @param id id
      * @return boolean
      */
-    @Transactional(rollbackOn = Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public Integer zuoFeiGuiZeXX(String id) throws TongYongYWException {
         var deleteModel = brZdHeBingGZRepository.findById(id).orElse(null);

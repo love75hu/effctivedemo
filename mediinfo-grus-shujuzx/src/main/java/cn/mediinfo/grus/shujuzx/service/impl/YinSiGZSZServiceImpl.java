@@ -183,7 +183,6 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
     @Override
     @Transactional(rollbackOn = Exception.class)
     public Boolean updateZhanShiPZ(String zuZhiJGID, String zuZhiJGMC, String chaXunMSDM, String peiZhiLXDM) {
-        //todo query
         List<SC_ZD_ZhanShiPZModel> yinSiPZList = zhanShiPZRepository.getZhanShiPZList(zuZhiJGID, chaXunMSDM, peiZhiLXDM);
         //通用数据
         var tongYongSJList = yinSiPZList.stream().filter(x -> ShuJuZXConstant.TONGYONG_JGID.equals(x.getZuZhiJGID())).toList();

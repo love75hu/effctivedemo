@@ -10,12 +10,11 @@ import cn.mediinfo.starter.base.exception.TongYongYWException;
 import cn.mediinfo.starter.base.stringgenerator.StringGenerator;
 import cn.mediinfo.starter.base.util.MapUtils;
 import cn.mediinfo.starter.base.util.QueryDSLUtils;
-import cn.mediinfo.starter.base.util.StringUtil;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
@@ -92,7 +91,7 @@ public class ZhuSuoYQZPZServiceImpl implements ZhuSuoYQZPZService {
      * @param dto dto
      * @return boolean
      */
-    @Transactional(rollbackOn = Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public Boolean saveQuanZhongPZ(SaveQuanZhongPZDto dto) throws TongYongYWException {
         //新增

@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface BR_DA_JieZhiXXRepository extends MsfJpaRepository<BR_DA_JieZhiXXModel, String> {
     List<BR_DA_JieZhiXXModel> findByBingRenIDOrBingRenIDIn(String bingRenID, List<String> bingRenIDs);
+    List<BR_DA_JieZhiXXModel> findByBingRenIDIn(List<String> bingRenIDs);
 }

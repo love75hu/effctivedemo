@@ -1,7 +1,6 @@
 package cn.mediinfo.grus.shujuzx.service;
 
-import cn.mediinfo.grus.shujuzx.dto.ShuJuZXZSYs.BR_DA_JiBenXXByZSYGLDto;
-import cn.mediinfo.grus.shujuzx.dto.ShuJuZXZSYs.ZhuSuoYXQDto;
+import cn.mediinfo.grus.shujuzx.dto.ShuJuZXZSYs.*;
 import cn.mediinfo.starter.base.exception.TongYongYWException;
 import cn.mediinfo.starter.base.response.MsfResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,4 +37,30 @@ public interface ZhuSuoYGLService {
      * @throws TongYongYWException 通用异常
      */
     List<BR_DA_JiBenXXByZSYGLDto> getZhuSuoYGLList(Integer pageIndex, Integer pageSize, Date kaiShiSJ, Date jieShuSJ, Integer xiangSiDu, String MPI, String xingMing, String lianXiDH, String shenFenZH, String jiuZhenKH) throws TongYongYWException, ParseException;
+    /**
+     * 合并页面获取主索引和相似索引信息
+     * @return
+     * @throws TongYongYWException 通用异常
+     */
+    List<BR_DA_JiBenXXByHBXXDto> getZhuSuoYXSList(String bingRenID, Integer xiangSiDu) throws TongYongYWException;
+    /**
+     * 合并
+     * @return
+     * @throws TongYongYWException 通用异常
+     */
+    Boolean heBing(SaveHeBingDto dto) throws TongYongYWException;
+
+    /**
+     * 忽略合并
+     * @return Boolean
+     * @throws TongYongYWException 通用异常
+     */
+    Boolean huLueHB(HuLueHBDto dto) throws TongYongYWException;
+
+    /**
+     * 忽略合并
+     * @return Boolean
+     * @throws TongYongYWException 通用异常
+     */
+    String updateBingRenJBXX(BR_DA_JiBenXXCreateDto dto) throws TongYongYWException;
 }

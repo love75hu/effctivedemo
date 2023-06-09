@@ -59,16 +59,14 @@ public class ShuJuZXWDSCServiceImpl implements ShuJuZXWDSCService {
         addModel.setYongHuID(lyraIdentityService.getYongHuId());
         addModel.setYongHuXM(lyraIdentityService.getUserName());
         sc_sc_shouCangJXXRepository.save(addModel);
-        // todo：操作数
         return 1;
     }
 
     @Override
     @Transactional(rollbackOn = Exception.class)
     public Integer addShouCangJMX(SC_SC_ShouCangJMXInDto shouCangJMXInDto) {
-        // todo:无值的时候相当于copy？ new Date() 源merge中false  ID前端传入？
         SC_SC_ShouCangJMXModel addModel = new SC_SC_ShouCangJMXModel();
-        MapUtils.mergeProperties(shouCangJMXInDto, addModel);
+        MapUtils.mergeProperties(shouCangJMXInDto, addModel,true);
         addModel.setZuZhiJGID(lyraIdentityService.getJiGouID());
         addModel.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
         addModel.setShouCangRID(lyraIdentityService.getYongHuId());
@@ -97,10 +95,6 @@ public class ShuJuZXWDSCServiceImpl implements ShuJuZXWDSCService {
     @Override
     @Transactional(rollbackOn = Exception.class)
     public Integer yiChuShouCangJMX(String id) throws TongYongYWException {
-        // todo：软删前要校验？
-        if (!sc_sc_shouCangJMXRepository.existsById(id)) {
-            throw new TongYongYWException("未找到相关可作废的信息!");
-        }
         sc_sc_shouCangJMXRepository.softDelete(id);
         return 1;
     }
@@ -137,7 +131,6 @@ public class ShuJuZXWDSCServiceImpl implements ShuJuZXWDSCService {
                         .and(xxModel.zuZhiJGID.eq(mxModel.zuZhiJGID)))
                 .where(xxModel.zuZhiJGID.eq(lyraIdentityService.getJiGouID())
                         .and(xxModel.yongHuID.eq(lyraIdentityService.getYongHuId())))
-                // todo:error 为空字符串可以，为null报错
                 .where(QueryDSLUtils.whereIf(Objects.nonNull(likeQuery), xxModel.shouCangJMC.contains(likeQuery)))
                 .fetch();
 
@@ -178,7 +171,6 @@ public class ShuJuZXWDSCServiceImpl implements ShuJuZXWDSCService {
         return new JPAQueryFactory(entityManager)
                 .select(sjModel)
                 .from(sjModel)
-                // todo:重复
                 .where(sjModel.bingRenID.in(bingRenIDList))
                 .where(QueryDSLUtils.whereIf(StringUtil.hasText(likeQuery),
                         sjModel.xingMing.contains(likeQuery)
@@ -189,10 +181,6 @@ public class ShuJuZXWDSCServiceImpl implements ShuJuZXWDSCService {
 
     @Override
     public List<SC_SC_ShouCangJMXOutDto> getShouCangJMXList(String likeQuery, String shouCangJID, Integer pageIndex, Integer pageSize) {
-        // todo:分页是否有意义？对bingRenXXList进行分页，得到的是个 shouCangMXList 数量
-        pageIndex = pageIndex == null ? 1 : pageIndex;
-        pageSize = pageSize == null ? 15 : pageSize;
-
         //根据收藏夹id 获取明细
         List<SC_SC_ShouCangJMXModel> shouCangMXs = sc_sc_shouCangJMXRepository.findByShouCangJIDAndZuZhiJGID(shouCangJID, lyraIdentityService.getJiGouID());
         List<SC_SC_ShouCangJMXOutDto> shouCangMXList = MapUtils.copyListProperties(shouCangMXs, SC_SC_ShouCangJMXOutDto::new);

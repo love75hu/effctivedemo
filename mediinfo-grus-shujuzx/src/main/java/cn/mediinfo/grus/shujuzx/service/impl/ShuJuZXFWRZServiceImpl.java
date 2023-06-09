@@ -62,7 +62,6 @@ public class ShuJuZXFWRZServiceImpl implements ShuJuZXFWRZService {
                 .select(sjModel)
                 .from(sjModel)
                 .where(QueryDSLUtils.whereIf(fangWenKSRQ != null, sjModel.fangWenSJ.goe(fangWenKSRQ)))
-                // todo:含义一致？
                 .where(QueryDSLUtils.whereIf(fangWenJSRQ != null, sjModel.fangWenSJ.lt(DateUtil.dateAddDays(fangWenJSRQ, 1))))
                 .where(QueryDSLUtils.whereIf(StringUtil.hasText(bingRenID), sjModel.bingRenID.eq(bingRenID)))
                 .where(QueryDSLUtils.whereIf(StringUtil.hasText(xingMing), sjModel.xingMing.eq(xingMing)))
@@ -72,7 +71,6 @@ public class ShuJuZXFWRZServiceImpl implements ShuJuZXFWRZService {
 
     @Override
     public List<ShuJuZXFWRZDto> getFangWenRZList(Date fangWenKSRQ, Date fangWenJSRQ, String bingRenID, String xingMing, String fangWenRXM, Integer pageIndex, Integer pageSize) {
-        // todo: 返回类型 IEnumerable
         QSC_RZ_FangWenLCSJModel sjModel = QSC_RZ_FangWenLCSJModel.sC_RZ_FangWenLCSJModel;
         List<SC_RZ_FangWenLCSJModel> list = new JPAQueryFactory(entityManager)
                 .select(sjModel)

@@ -75,7 +75,7 @@ public class ShuJuZXSCController {
 
     @Operation(summary = "根据收藏夹id和其他查询条件获取收藏夹明细")
     @GetMapping("GetShouCangJMXList")
-    public MsfResponse<List<SC_SC_ShouCangJMXOutDto>> getShouCangJMXList(String likeQuery, @RequestParam String shouCangJID, Integer pageIndex, Integer pageSize) {
+    public MsfResponse<List<SC_SC_ShouCangJMXOutDto>> getShouCangJMXList(String likeQuery, @RequestParam String shouCangJID, @RequestParam(required = false,defaultValue = "1") Integer pageIndex,  @RequestParam(required = false,defaultValue = "15") Integer pageSize) {
         return MsfResponse.success(shuJuZXWDSCService.getShouCangJMXList(likeQuery, shouCangJID, pageIndex, pageSize));
     }
 }

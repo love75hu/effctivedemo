@@ -35,20 +35,20 @@ public class ZhuSuoYCZRZServiceImpl implements ZhuSuoYCZRZService {
     }
 
     @Override
-    public List<BR_DA_ZhuSuoYCZRZDto> getZhuSuoYCZRZList(Integer page,Integer pageSize,Date caoZuoKSRQ, Date caoZuoJSRQ, String caoZuoLXDM, String likeQuery) throws TongYongYWException, ParseException {
+    public List<BR_DA_ZhuSuoYCZRZDto> getZhuSuoYCZRZList(Integer page, Integer pageSize, Date caoZuoKSRQ, Date caoZuoJSRQ, String caoZuoLXDM, String likeQuery) throws TongYongYWException, ParseException {
         var qModel = QBR_DA_ZhuSuoYCZRZModel.bR_DA_ZhuSuoYCZRZModel;
         var zhuSuoYCZRZModels = new JPAQueryFactory(entityManager).select(qModel)
-                .where(QueryDSLUtils.whereIf(caoZuoKSRQ!=null,qModel.caoZuoSJ.goe(DateUtil.get0Dian(caoZuoKSRQ))))
-                .where(QueryDSLUtils.whereIf(caoZuoJSRQ!=null,qModel.caoZuoSJ.loe(DateUtil.getLastDian(caoZuoJSRQ))))
-                .where(QueryDSLUtils.whereIf(StringUtil.hasText(caoZuoLXDM),qModel.caoZuoLXDM.eq(caoZuoLXDM)))
-                .where(QueryDSLUtils.whereIf(StringUtil.hasText(likeQuery),qModel.bingRenID.contains(likeQuery)
+                .where(QueryDSLUtils.whereIf(caoZuoKSRQ != null, qModel.caoZuoSJ.goe(DateUtil.get0Dian(caoZuoKSRQ))))
+                .where(QueryDSLUtils.whereIf(caoZuoJSRQ != null, qModel.caoZuoSJ.loe(DateUtil.getLastDian(caoZuoJSRQ))))
+                .where(QueryDSLUtils.whereIfHasText(caoZuoLXDM, qModel.caoZuoLXDM.eq(caoZuoLXDM)))
+                .where(QueryDSLUtils.whereIfHasText(likeQuery, qModel.bingRenID.contains(likeQuery)
                         .or(qModel.xingMing.contains(likeQuery))
                         .or(qModel.caoZuoRXM.contains(likeQuery))))
                 .orderBy(qModel.caoZuoSJ.desc())
                 .offset(PageRequestUtil.of(page, pageSize).getOffset())
                 .limit(pageSize)
                 .fetch();
-        return MapUtils.copyListProperties(zhuSuoYCZRZModels,BR_DA_ZhuSuoYCZRZDto::new);
+        return MapUtils.copyListProperties(zhuSuoYCZRZModels, BR_DA_ZhuSuoYCZRZDto::new);
     }
 
     @Override

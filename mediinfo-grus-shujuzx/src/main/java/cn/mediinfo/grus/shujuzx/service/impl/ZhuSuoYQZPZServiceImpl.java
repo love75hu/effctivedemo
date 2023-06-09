@@ -181,8 +181,8 @@ public class ZhuSuoYQZPZServiceImpl implements ZhuSuoYQZPZService {
         var qModel = QBR_ZD_HeBingQZPZModel.bR_ZD_HeBingQZPZModel;
         var modelList = new JPAQueryFactory(entityManager).select(qModel).from(qModel)
                 .where(qModel.fuLeiID.eq(FuLeiID).and(qModel.moJiBZ.eq(1)).and(qModel.zuoFeiBZ.eq(0)))
-                .where(QueryDSLUtils.whereIf(StringUtil.hasText(LikeQuery),qModel.daiMa.contains(LikeQuery)))
-                .where(QueryDSLUtils.whereIf(StringUtil.hasText(LikeQuery),qModel.mingCheng.contains(LikeQuery)))
+                .where(QueryDSLUtils.whereIfHasText(LikeQuery,qModel.daiMa.contains(LikeQuery)))
+                .where(QueryDSLUtils.whereIfHasText(LikeQuery,qModel.mingCheng.contains(LikeQuery)))
                 .orderBy(qModel.shunXuHao.asc())
                 .fetch();
         return MapUtils.copyListProperties(modelList,BR_ZD_HeBingQZPZListDto::new);

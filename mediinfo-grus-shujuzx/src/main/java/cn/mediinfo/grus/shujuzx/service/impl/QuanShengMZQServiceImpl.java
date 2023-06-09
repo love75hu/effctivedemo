@@ -1,5 +1,6 @@
 package cn.mediinfo.grus.shujuzx.service.impl;
 
+import cn.mediinfo.grus.shujuzx.constant.ChaXunMSEnum;
 import cn.mediinfo.grus.shujuzx.constant.ShuJuZXConstant;
 import cn.mediinfo.grus.shujuzx.dto.QuanShengMZQs.PeiZhiXXDtos;
 import cn.mediinfo.grus.shujuzx.dto.QuanShengMZQs.YinSiPZItem;
@@ -48,14 +49,13 @@ public class QuanShengMZQServiceImpl implements QuanShengMZQService {
         var yinSiGZList = new JPAQueryFactory(entityManager)
                 .select(yinSiPZ)
                 .from(yinSiPZ)
-                .where(yinSiPZ.qiYongBZ.eq(1)
-                        .and(yinSiPZ.chaXunMSDM.eq(chaXunMSDM)
-                                .or(yinSiPZ.chaXunMSDM.eq("1")))
-                        .and(yinSiPZ.zuZhiJGID.eq(lyraIdentityService.getJiGouID())
-                                .or(yinSiPZ.zuZhiJGID.eq(ShuJuZXConstant.TONGYONG_JGID))))
+                .where(yinSiPZ.zuZhiJGID.eq(lyraIdentityService.getJiGouID())
+                        .or(yinSiPZ.zuZhiJGID.eq(ShuJuZXConstant.TONGYONG_JGID))
+                        .and(yinSiPZ.qiYongBZ.eq(1)
+                                .and(yinSiPZ.chaXunMSDM.eq(chaXunMSDM)
+                                        .or(yinSiPZ.chaXunMSDM.eq(ChaXunMSEnum.TONG_YONG_MO_SHI.getValue())))))
                 .orderBy(yinSiPZ.shunXuHao.asc())
-                .stream()
-                .toList();
+                .fetch();
         result.setYinSiGZList(MapUtils.copyListProperties(yinSiGZList
                 .stream()
                 .filter(x -> Objects.equals(x.getZuZhiJGID(), lyraIdentityService.getJiGouID())
@@ -72,14 +72,14 @@ public class QuanShengMZQServiceImpl implements QuanShengMZQService {
             result.setYinSiGZList(MapUtils.copyListProperties(yinSiGZList
                     .stream()
                     .filter(x -> Objects.equals(x.getZuZhiJGID(), lyraIdentityService.getJiGouID())
-                            && Objects.equals(x.getChaXunMSDM(), "1"))
+                            && Objects.equals(x.getChaXunMSDM(), ChaXunMSEnum.TONG_YONG_MO_SHI.getValue()))
                     .toList(), YinSiPZItem::new));
         }
         if (result.getYinSiGZList().isEmpty()) {
             result.setYinSiGZList(MapUtils.copyListProperties(yinSiGZList
                     .stream()
                     .filter(x -> Objects.equals(x.getZuZhiJGID(), ShuJuZXConstant.TONGYONG_JGID)
-                            && Objects.equals(x.getChaXunMSDM(), "1"))
+                            && Objects.equals(x.getChaXunMSDM(), ChaXunMSEnum.TONG_YONG_MO_SHI.getValue()))
                     .toList(), YinSiPZItem::new));
         }
 
@@ -89,11 +89,10 @@ public class QuanShengMZQServiceImpl implements QuanShengMZQService {
         var zhanShiPZList = new JPAQueryFactory(entityManager)
                 .select(zhanShiPZ)
                 .from(zhanShiPZ)
+                .where(zhanShiPZ.zuZhiJGID.eq(lyraIdentityService.getJiGouID()).or(zhanShiPZ.zuZhiJGID.eq(ShuJuZXConstant.TONGYONG_JGID)))
                 .where(zhanShiPZ.qiYongBZ.eq(1)
                         .and(zhanShiPZ.chaXunMSDM.eq(chaXunMSDM)
-                                .or(zhanShiPZ.chaXunMSDM.eq("1")))
-                        .and(zhanShiPZ.zuZhiJGID.eq(lyraIdentityService.getJiGouID())
-                                .or(zhanShiPZ.zuZhiJGID.eq(ShuJuZXConstant.TONGYONG_JGID))))
+                                .or(zhanShiPZ.chaXunMSDM.eq(ChaXunMSEnum.TONG_YONG_MO_SHI.getValue()))))
                 .orderBy(zhanShiPZ.shunXuHao.asc())
                 .stream()
                 .toList();
@@ -120,7 +119,7 @@ public class QuanShengMZQServiceImpl implements QuanShengMZQService {
                         .stream()
                         .filter(x -> Objects.equals(x.getZuZhiJGID(), lyraIdentityService.getJiGouID())
                                 && Objects.equals(x.getPeiZhiLXDM(), peiZhiLXDM)
-                                && Objects.equals(x.getChaXunMSDM(), "1"))
+                                && Objects.equals(x.getChaXunMSDM(), ChaXunMSEnum.TONG_YONG_MO_SHI.getValue()))
                         .toList(), ZhanShiPZItem::new);
             }
             if (list.isEmpty()) {
@@ -128,7 +127,7 @@ public class QuanShengMZQServiceImpl implements QuanShengMZQService {
                         .stream()
                         .filter(x -> Objects.equals(x.getZuZhiJGID(), ShuJuZXConstant.TONGYONG_JGID)
                                 && Objects.equals(x.getPeiZhiLXDM(), peiZhiLXDM)
-                                && Objects.equals(x.getChaXunMSDM(), "1"))
+                                && Objects.equals(x.getChaXunMSDM(), ChaXunMSEnum.TONG_YONG_MO_SHI.getValue()))
                         .toList(), ZhanShiPZItem::new);
             }
             if (!list.isEmpty()) {

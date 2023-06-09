@@ -15,9 +15,11 @@ import org.springframework.stereotype.Service;
 public class XiaoFeiXXServiceImpl implements XiaoFeiXXService {
     private final BingRenYLSJService bingRenYLSJService;
 
-    public XiaoFeiXXServiceImpl(BingRenYLSJService bingRenYLSJService) {
+    public XiaoFeiXXServiceImpl(
+            BingRenYLSJService bingRenYLSJService) {
         this.bingRenYLSJService = bingRenYLSJService;
     }
+
 
     @Override
     public MsfJpaRepository xiaoFeiGXJZCSXX(BaseEventDto<Integer> eventDto) throws TongYongYWException {

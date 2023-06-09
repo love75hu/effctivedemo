@@ -9,7 +9,7 @@ public interface SC_ZD_BiHuanJDRepository extends MsfJpaRepository<SC_ZD_BiHuanJ
 
     List<SC_ZD_BiHuanJDModel> findByZuZhiJGID(String zuZhiJGID);
 
-    Boolean existsByBiHuanLXDMAndJieDianMC(String biHuanLXDM, String jieDianMC);
+    Boolean existsByZuZhiJGIDAndBiHuanLXDMAndJieDianMC(String zuZhiJGID, String biHuanLXDM, String jieDianMC);
 
-    Boolean existsByJieDianID(String jieDianID);
+    Boolean existsByZuZhiJGIDAndJieDianID(String zuZhiJGID, String jieDianID);
 }

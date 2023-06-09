@@ -15,15 +15,17 @@ public interface JiuZhenRemoteService {
 
     /**
      * 通过病人id集合 获取就诊次数
+     *
      * @param bingRenIDs 病人集合
      */
     @PostMapping("/api/v1.0/JiuZhen/GetJiuZhenCSByBRIDs")
     MsfResponse<List<JZ_LC_JiuZhenSLRso>> GetJiuZhenCSByBRIDs(@SpringQueryMap List<String> bingRenIDs);
+
     /**
      * 统计病人门诊住院就诊次数
      */
     @PostMapping("/api/v1.0/JiuZhen/BinRenJZCSTJ")
-    MsfResponse<List<BinRenJZCSTJDto>>BinRenJZCSTJ(@RequestParam Integer shouCiZX,@RequestParam Integer zhiXingSJ);
+    MsfResponse<List<BinRenJZCSTJDto>> BinRenJZCSTJ(@RequestParam Integer shouCiZX, @RequestParam Integer zhiXingSJ);
 
 
 }

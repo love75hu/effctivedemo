@@ -51,6 +51,10 @@ mediinfo:
       mediinfo-vela-jiuzhen: "http://172.19.84.61:30244"
   sequence:
     provider: redis
+  string-generator:
+    provider: snowflake
+    snowflake:
+      workid: 1
 logging:
   level:
     root: info

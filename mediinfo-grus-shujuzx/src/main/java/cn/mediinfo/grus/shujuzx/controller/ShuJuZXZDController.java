@@ -50,7 +50,7 @@ public class ShuJuZXZDController {
      */
     @PostMapping("SaveYinSiSZList")
     @Operation(summary = "保存隐私设置")
-    public MsfResponse<Boolean> saveYinSiSZList(SC_ZD_YinSiPZCreateDto dto) {
+    public MsfResponse<Boolean> saveYinSiSZList(@RequestBody SC_ZD_YinSiPZCreateDto dto) {
         return MsfResponse.success(yinSiGZSZService.saveYinSiSZList(dto));
     }
 
@@ -59,7 +59,7 @@ public class ShuJuZXZDController {
      */
     @PostMapping("SaveZhanShiPZ")
     @Operation(summary = "保存展示配置")
-    public MsfResponse<Boolean> saveZhanShiPZ(SC_ZD_ZhanShiPZCreateDto dto) {
+    public MsfResponse<Boolean> saveZhanShiPZ(@RequestBody SC_ZD_ZhanShiPZCreateDto dto) {
         return MsfResponse.success(yinSiGZSZService.saveZhanShiPZ(dto));
     }
 
@@ -68,7 +68,7 @@ public class ShuJuZXZDController {
      */
     @PostMapping("UpdateYinSiGZ")
     @Operation(summary = "修改隐私规则")
-    public MsfResponse<Integer> updateYinSiGZ(SC_ZD_YinSiGZSZInDto yinSiGZSZInDto) throws MsfException {
+    public MsfResponse<Integer> updateYinSiGZ(@RequestBody SC_ZD_YinSiGZSZInDto yinSiGZSZInDto) throws MsfException {
         return MsfResponse.success(yinSiGZSZService.updateYinSiGZ(yinSiGZSZInDto));
     }
 
@@ -241,7 +241,7 @@ public class ShuJuZXZDController {
      */
     @GetMapping("GetYinSiGZSZList")
     @Operation(summary = "获取隐私规则列表")
-    public MsfResponse<List<SC_ZD_YinSiGZSZOutDto>> getYinSiGZSZList(String likeQuery, @RequestParam(required = false) Integer pageIndex, @RequestParam(required = false) Integer pageSize) {
+    public MsfResponse<List<SC_ZD_YinSiGZSZOutDto>> getYinSiGZSZList(String likeQuery, @RequestParam(required = false,defaultValue = "1") Integer pageIndex, @RequestParam(required = false,defaultValue = "10") Integer pageSize) {
         return MsfResponse.success(yinSiGZSZService.getYinSiGZSZList(likeQuery, pageIndex, pageSize));
     }
 

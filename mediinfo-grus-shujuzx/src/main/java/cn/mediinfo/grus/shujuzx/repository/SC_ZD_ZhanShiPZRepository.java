@@ -2,6 +2,7 @@ package cn.mediinfo.grus.shujuzx.repository;
 
 import cn.mediinfo.grus.shujuzx.model.SC_ZD_ZhanShiPZModel;
 import cn.mediinfo.starter.base.orm.MsfJpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
@@ -12,14 +13,14 @@ public interface SC_ZD_ZhanShiPZRepository extends MsfJpaRepository<SC_ZD_ZhanSh
     public List<SC_ZD_ZhanShiPZModel> findByZuZhiJGIDAndIdIn(String zuZhiJGID,List<String> idList);
 
     /**
-     *
-     * @param zuZhiJGID0 0
+     *根据组织机构id和查询模式代码及配置类型ID获取展示配置信息集合
      * @param zuZhiJGID 组织结构id
      * @param chaXunMSDM 查询模式代码
      * @param peiZhiLXDM 配置类型代码
      * @return 展示配置信息集合
      */
-    public List<SC_ZD_ZhanShiPZModel> findByZuZhiJGIDOrZuZhiJGIDAndChaXunMSDMAndPeiZhiLXDM(String zuZhiJGID0,String zuZhiJGID,String chaXunMSDM,String peiZhiLXDM);
+    @Query("select a from SC_ZD_ZhanShiPZModel as a where(a.zuZhiJGID = '0' or a.zuZhiJGID = :zuZhiJGID) and a.chaXunMSDM = :chaXunMSDM and a.peiZhiLXDM = :peiZhiLXDM")
+    public List<SC_ZD_ZhanShiPZModel> getZhanShiPZList(String zuZhiJGID,String chaXunMSDM,String peiZhiLXDM);
     /**
      *
      * @param zuZhiJGID 组织结构id

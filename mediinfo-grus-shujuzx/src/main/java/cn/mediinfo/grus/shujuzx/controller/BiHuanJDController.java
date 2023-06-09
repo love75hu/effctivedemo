@@ -123,7 +123,11 @@ public class BiHuanJDController {
      */
     @Operation(summary = "根据闭环类型获取闭环节点")
     @GetMapping("GetBiHuanJDByBHLX")
-    public MsfResponse<List<SC_ZD_BiHuanJDListDto>> getBiHuanJDByBHLX(String biHuanLXDM, Integer zhuYuanSYBZ, Integer menZhenSYBZ, Integer jiZhenSYBZ, Integer tiJianSYBZ) {
+    public MsfResponse<List<SC_ZD_BiHuanJDListDto>> getBiHuanJDByBHLX(@RequestParam String biHuanLXDM,
+                                                                      @RequestParam(required = false) Integer zhuYuanSYBZ,
+                                                                      @RequestParam(required = false) Integer menZhenSYBZ,
+                                                                      @RequestParam(required = false) Integer jiZhenSYBZ,
+                                                                      @RequestParam(required = false) Integer tiJianSYBZ) {
         return MsfResponse.success(biHuanJDService.getBiHuanJDByBHLX(biHuanLXDM, zhuYuanSYBZ, menZhenSYBZ, jiZhenSYBZ, tiJianSYBZ));
     }
 }

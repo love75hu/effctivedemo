@@ -1,12 +1,10 @@
 package cn.mediinfo.grus.shujuzx.service.impl;
 
 import cn.mediinfo.grus.shujuzx.constant.ShuJuZXConstant;
-import cn.mediinfo.grus.shujuzx.constant.ShuJuZXConstant;
 import cn.mediinfo.grus.shujuzx.dto.BiHuanJDSZs.SC_ZD_BiHuanJDCreateDto;
 import cn.mediinfo.grus.shujuzx.dto.BiHuanJDSZs.SC_ZD_BiHuanJDDto;
 import cn.mediinfo.grus.shujuzx.dto.BiHuanJDSZs.SC_ZD_BiHuanJDListDto;
 import cn.mediinfo.grus.shujuzx.dto.BiHuanJDSZs.SC_ZD_BiHuanJDUpdateDto;
-import cn.mediinfo.grus.shujuzx.dto.ShuJuYLBs.SC_ZD_ShuJuYLBDto;
 import cn.mediinfo.grus.shujuzx.model.QSC_ZD_BiHuanJDModel;
 import cn.mediinfo.grus.shujuzx.model.SC_ZD_BiHuanJDModel;
 import cn.mediinfo.grus.shujuzx.repository.SC_ZD_BiHuanJDRepository;
@@ -17,10 +15,10 @@ import cn.mediinfo.starter.base.lyra.service.LyraIdentityService;
 import cn.mediinfo.starter.base.lyra.service.SequenceService;
 import cn.mediinfo.starter.base.util.MapUtils;
 import cn.mediinfo.starter.base.util.PageRequestUtil;
+import cn.mediinfo.starter.base.util.QueryDSLUtils;
 import cn.mediinfo.starter.base.util.StringUtil;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -78,10 +76,8 @@ public class BiHuanJDSZServiceImpl implements BiHuanJDSZService {
     public long getBiHuanJDCount(String biHuanLXDM, String likeQuery) {
         QSC_ZD_BiHuanJDModel biHuanJD = QSC_ZD_BiHuanJDModel.sC_ZD_BiHuanJDModel;
         var query = new JPAQueryFactory(entityManager).select(biHuanJD).from(biHuanJD);
-        query.where(biHuanJD.biHuanLXDM.eq(biHuanLXDM));
-        if (StringUtil.hasText(likeQuery)) {
-            query.where(biHuanJD.jieDianID.contains(likeQuery).or(biHuanJD.jieDianMC.contains(likeQuery)));
-        }
+        query.where(biHuanJD.biHuanLXDM.eq(biHuanLXDM))
+                .where(QueryDSLUtils.whereIfHasText(likeQuery,biHuanJD.jieDianID.contains(likeQuery).or(biHuanJD.jieDianMC.contains(likeQuery))));
         return query.fetch().size();
     }
 
@@ -93,15 +89,15 @@ public class BiHuanJDSZServiceImpl implements BiHuanJDSZService {
      * @throws TongYongYWException
      */
     @Override
-    @Transactional(rollbackOn = Exception.class)
     public SC_ZD_BiHuanJDDto addBiHuanJD(SC_ZD_BiHuanJDCreateDto createDto) throws TongYongYWException {
-        var JieDianMC = sc_zd_biHuanJDRepository.existsByBiHuanLXDMAndJieDianMC(createDto.getBiHuanLXDM(), createDto.getJieDianMC());
-        if (JieDianMC) {
+        var zuZhiJGID = lyraIdentityService.getJiGouID();
+        var existsJieDianMC = sc_zd_biHuanJDRepository.existsByZuZhiJGIDAndBiHuanLXDMAndJieDianMC(zuZhiJGID, createDto.getBiHuanLXDM(), createDto.getJieDianMC());
+        if (existsJieDianMC) {
             throw new TongYongYWException("节点名称已存在!");
         }
         createDto.setJieDianID(sequenceService.getXuHao("SC_ZD_BiHuan_JieDianID", 6));
-        var JieDianID = sc_zd_biHuanJDRepository.existsByJieDianID(createDto.getJieDianID());
-        if (JieDianID) {
+        var existsJieDianID = sc_zd_biHuanJDRepository.existsByZuZhiJGIDAndJieDianID(zuZhiJGID, createDto.getJieDianID());
+        if (existsJieDianID) {
             throw new TongYongYWException("节点ID已存在!");
         }
         var entity = MapUtils.copyProperties(createDto, SC_ZD_BiHuanJDModel::new);
@@ -120,10 +116,9 @@ public class BiHuanJDSZServiceImpl implements BiHuanJDSZService {
      * @throws WeiZhaoDSJException
      */
     @Override
-    @Transactional(rollbackOn = Exception.class)
     public SC_ZD_BiHuanJDDto updateBiHuanJD(SC_ZD_BiHuanJDUpdateDto updateDto) throws TongYongYWException, WeiZhaoDSJException {
         QSC_ZD_BiHuanJDModel biHuanJD = QSC_ZD_BiHuanJDModel.sC_ZD_BiHuanJDModel;
-        var query = new JPAQueryFactory(entityManager)
+        var biHuanJDEntity = new JPAQueryFactory(entityManager)
                 .select(biHuanJD)
                 .from(biHuanJD)
                 .where(biHuanJD.id.ne(updateDto.getId())
@@ -131,7 +126,7 @@ public class BiHuanJDSZServiceImpl implements BiHuanJDSZService {
                                 .or(biHuanJD.biHuanLXDM.eq(updateDto.getBiHuanLXDM())
                                         .and(biHuanJD.jieDianMC.eq(updateDto.getJieDianMC())))))
                 .fetchFirst();
-        if (query == null) {
+        if (biHuanJDEntity == null) {
             throw new TongYongYWException("节点ID或节点名称已存在!");
         }
         var entity = sc_zd_biHuanJDRepository.findById(updateDto.getId()).orElse(null);
@@ -163,7 +158,6 @@ public class BiHuanJDSZServiceImpl implements BiHuanJDSZService {
      * @throws WeiZhaoDSJException
      */
     @Override
-    @Transactional(rollbackOn = Exception.class)
     public Boolean zuoFeiBiHuanJD(String id) throws WeiZhaoDSJException {
         var entity = sc_zd_biHuanJDRepository.findById(id).orElse(null);
         if (entity == null) {
@@ -189,21 +183,12 @@ public class BiHuanJDSZServiceImpl implements BiHuanJDSZService {
         var query = new JPAQueryFactory(entityManager)
                 .select(biHuanJD)
                 .from(biHuanJD)
-                .where(biHuanJD.biHuanLXDM.eq(biHuanLXDM));
-        if (zhuYuanSYBZ == 1) {
-            query.where(biHuanJD.zhuYuanSYBZ.eq(zhuYuanSYBZ));
-        }
-        if (menZhenSYBZ == 1) {
-            query.where(biHuanJD.menZhenSYBZ.eq(menZhenSYBZ));
-        }
-        if (jiZhenSYBZ == 1) {
-            query.where(biHuanJD.jiZhenSYBZ.eq(jiZhenSYBZ));
-        }
-        if (tiJianSYBZ == 1) {
-            query.where(biHuanJD.tiJianSYBZ.eq(tiJianSYBZ));
-        }
-        query.orderBy(biHuanJD.shunXuHao.asc());
+                .where(biHuanJD.biHuanLXDM.eq(biHuanLXDM)
+                        .and(QueryDSLUtils.whereIf(zhuYuanSYBZ == 1, biHuanJD.zhuYuanSYBZ.eq(zhuYuanSYBZ)))
+                        .and(QueryDSLUtils.whereIf(menZhenSYBZ == 1, biHuanJD.zhuYuanSYBZ.eq(menZhenSYBZ)))
+                        .and(QueryDSLUtils.whereIf(jiZhenSYBZ == 1, biHuanJD.zhuYuanSYBZ.eq(jiZhenSYBZ)))
+                        .and(QueryDSLUtils.whereIf(tiJianSYBZ == 1, biHuanJD.zhuYuanSYBZ.eq(tiJianSYBZ))))
+                .orderBy(biHuanJD.shunXuHao.asc());
         return MapUtils.copyListProperties(query.fetch(), SC_ZD_BiHuanJDListDto::new);
     }
-
 }

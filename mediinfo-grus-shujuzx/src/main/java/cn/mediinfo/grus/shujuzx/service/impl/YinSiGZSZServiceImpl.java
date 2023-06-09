@@ -309,19 +309,13 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
      */
     @Override
     public List<SC_ZD_YinSiGZSZOutDto> getYinSiGZSZList(String likeQuery,Integer pageIndex, Integer pageSize) {
-       if (Objects.isNull(pageIndex)){
-           pageIndex = 1;
-       }
-       if (Objects.isNull(pageSize)){
-           pageSize = 10;
-       }
+        pageIndex = Objects.isNull(pageIndex)? 1 : pageIndex;
+        pageSize = Objects.isNull(pageSize)? 10 : pageSize;
         QSC_ZD_YinSiGZSZModel yinSiGZSZModel = QSC_ZD_YinSiGZSZModel.sC_ZD_YinSiGZSZModel;
-        JPAQuery<SC_ZD_YinSiGZSZModel> jpaQuery = new JPAQueryFactory(entityManager).select(yinSiGZSZModel).from(yinSiGZSZModel).where(yinSiGZSZModel.zuZhiJGID.eq("0"));
-        if (StringUtil.hasText(likeQuery)) {
-            jpaQuery.where(yinSiGZSZModel.shuJuYMC.contains(likeQuery));
-        }
+        JPAQuery<SC_ZD_YinSiGZSZModel> jpaQuery = new JPAQueryFactory(entityManager).select(yinSiGZSZModel).from(yinSiGZSZModel).where(yinSiGZSZModel.zuZhiJGID.eq("0"))
+                .where(QueryDSLUtils.whereIfHasText(likeQuery,yinSiGZSZModel.shuJuYMC.contains(likeQuery)));
         List<SC_ZD_YinSiGZSZModel> yinSiGZSZModelList = jpaQuery.orderBy(yinSiGZSZModel.shunXuHao.asc())
-                .limit(pageSize).offset(PageRequestUtil.of(pageIndex, pageSize).getOffset()).fetch();
+                .offset(PageRequestUtil.of(pageIndex, pageSize).getOffset()).limit(pageSize).fetch();
         return MapUtils.copyListProperties(yinSiGZSZModelList, SC_ZD_YinSiGZSZOutDto::new);
     }
 

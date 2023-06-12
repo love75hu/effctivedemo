@@ -3,6 +3,7 @@ package cn.mediinfo.grus.shujuzx.service;
 import cn.mediinfo.grus.shujuzx.Events.BaseEventDto;
 import cn.mediinfo.grus.shujuzx.dto.BingRenYLSJs.SC_LC_BingRenYLSJInDto;
 import cn.mediinfo.starter.base.exception.TongYongYWException;
+import cn.mediinfo.starter.base.exception.YuanChengException;
 
 public interface BingRenYLSJService {
     /**
@@ -29,5 +30,5 @@ public interface BingRenYLSJService {
      * @return
      * @throws TongYongYWException
      */
-    Integer updateBingRenYLSJ(Integer shouCiZX, Integer zhiXingSJ) throws TongYongYWException;
+    Integer updateBingRenYLSJ(Integer shouCiZX, Integer zhiXingSJ) throws YuanChengException;
 }

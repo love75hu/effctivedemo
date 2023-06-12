@@ -12,6 +12,7 @@ import cn.mediinfo.grus.shujuzx.remoteservice.JiuZhenRemoteService;
 import cn.mediinfo.grus.shujuzx.repository.SC_LC_BingRenYLSJRepository;
 import cn.mediinfo.grus.shujuzx.service.BingRenYLSJService;
 import cn.mediinfo.starter.base.exception.TongYongYWException;
+import cn.mediinfo.starter.base.exception.YuanChengException;
 import cn.mediinfo.starter.base.lyra.service.LyraIdentityService;
 import cn.mediinfo.starter.base.response.MsfResponse;
 import cn.mediinfo.starter.base.util.MapUtils;
@@ -73,7 +74,7 @@ public class BingRenYLSJServiceImpl implements BingRenYLSJService {
 
     @Override
     @Transactional(rollbackOn = Exception.class)
-    public Integer updateBingRenYLSJ(Integer shouCiZX, Integer zhiXingSJ) throws TongYongYWException {
+    public Integer updateBingRenYLSJ(Integer shouCiZX, Integer zhiXingSJ) throws YuanChengException {
         //要修改的值
         var binRenJZCSTJList = jiuZhenRemoteService.BinRenJZCSTJ(shouCiZX, zhiXingSJ).getData("调用就诊远程服务报错");
         //病人id集合

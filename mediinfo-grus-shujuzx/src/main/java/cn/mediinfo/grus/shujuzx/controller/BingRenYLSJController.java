@@ -2,7 +2,9 @@ package cn.mediinfo.grus.shujuzx.controller;
 
 import cn.mediinfo.grus.shujuzx.dto.BingRenYLSJs.SC_LC_BingRenYLSJInDto;
 import cn.mediinfo.grus.shujuzx.service.BingRenYLSJService;
+import cn.mediinfo.starter.base.exception.MsfResponseException;
 import cn.mediinfo.starter.base.exception.TongYongYWException;
+import cn.mediinfo.starter.base.exception.YuanChengException;
 import cn.mediinfo.starter.base.response.MsfResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -45,7 +47,7 @@ public class BingRenYLSJController {
     @Operation(summary = "批量更新病人医疗事件")
     @PostMapping("UpdateBingRenYLSJ")
     public MsfResponse<Integer> updateBingRenYLSJ(@RequestParam Integer shouCiZX,
-                                                  @RequestParam Integer zhiXingSJ) throws TongYongYWException {
+                                                  @RequestParam Integer zhiXingSJ) throws YuanChengException {
         return MsfResponse.success(bingRenYLSJService.updateBingRenYLSJ(shouCiZX, zhiXingSJ));
     }
 }

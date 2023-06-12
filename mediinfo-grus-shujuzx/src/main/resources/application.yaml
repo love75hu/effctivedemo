@@ -13,16 +13,16 @@ spring:
         jwt:
           issuer-uri: http://mediinfo-lyra-authserver/mediinfo-lyra-authserver
   datasource:
-    driver-class-name: org.postgresql.Driver
+    driver-class-name: oracle.jdbc.OracleDriver
     #currentSchema 指定默认连接的scheme
-    url: jdbc:postgresql://172.19.80.171:5432/lyra_his?currentSchema=lyra_his
-    username: lyra_his
-    password: lyra_his
+    url: jdbc:oracle:thin:@172.19.84.161:1521:orcl
+    username: LYRA_HIS
+    password: LYRA_HIS
   jpa:
     properties:
       hibernate:
         #根据类型可以生成特定的sql,https://docs.jboss.org/hibernate/orm/6.1/javadocs/org/hibernate/dialect/package-summary.html
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+        dialect: org.hibernate.dialect.Oracle10gDialect
     #打印sql日志
     #show-sql: true
   data:

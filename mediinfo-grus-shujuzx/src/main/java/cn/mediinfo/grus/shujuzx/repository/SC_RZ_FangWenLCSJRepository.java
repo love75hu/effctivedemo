@@ -1,7 +1,8 @@
 package cn.mediinfo.grus.shujuzx.repository;
 
+import cn.mediinfo.grus.shujuzx.model.QSC_RZ_FangWenLCSJModel;
 import cn.mediinfo.grus.shujuzx.model.SC_RZ_FangWenLCSJModel;
 import cn.mediinfo.starter.base.orm.MsfJpaRepository;
 
-public interface SC_RZ_FangWenLCSJRepository extends MsfJpaRepository<SC_RZ_FangWenLCSJModel, String> {
+public interface SC_RZ_FangWenLCSJRepository extends MsfJpaRepository<QSC_RZ_FangWenLCSJModel,SC_RZ_FangWenLCSJModel, String> {
 }

@@ -10,14 +10,14 @@ spring:
         jwt:
           issuer-uri: http://172.19.80.10:30003/mediinfo-lyra-authserver
   datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://172.19.80.171:5432/lyra_his?currentSchema=lyra_his
-    username: lyra_his
-    password: lyra_his
+    driver-class-name: oracle.jdbc.OracleDriver
+    url: jdbc:oracle:thin:@172.19.84.161:1521:orcl
+    username: LYRA_HIS
+    password: LYRA_HIS
   jpa:
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+        dialect: org.hibernate.dialect.Oracle10gDialect
     show-sql: true
   data:
     redis:

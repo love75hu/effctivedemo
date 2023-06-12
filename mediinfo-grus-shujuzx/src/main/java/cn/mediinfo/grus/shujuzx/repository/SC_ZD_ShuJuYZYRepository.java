@@ -1,11 +1,12 @@
 package cn.mediinfo.grus.shujuzx.repository;
 
+import cn.mediinfo.grus.shujuzx.model.QSC_ZD_ShuJuYZYModel;
 import cn.mediinfo.grus.shujuzx.model.SC_ZD_ShuJuYZYModel;
 import cn.mediinfo.starter.base.orm.MsfJpaRepository;
 
 import java.util.List;
 
-public interface SC_ZD_ShuJuYZYRepository extends MsfJpaRepository<SC_ZD_ShuJuYZYModel, String> {
+public interface SC_ZD_ShuJuYZYRepository extends MsfJpaRepository<QSC_ZD_ShuJuYZYModel,SC_ZD_ShuJuYZYModel, String> {
     Boolean existsByShuJuYLBIDAndZhiYuID(String shuJuYLBID, String zhiYuID);
 
     Boolean existsByIdIsNotAndShuJuYLBIDAndZhiYuID(String id, String ShuJuYLBID, String zhiYuID);

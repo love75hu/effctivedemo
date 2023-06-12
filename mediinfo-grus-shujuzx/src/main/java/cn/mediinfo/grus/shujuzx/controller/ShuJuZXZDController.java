@@ -1,5 +1,7 @@
 package cn.mediinfo.grus.shujuzx.controller;
 
+import cn.mediinfo.grus.shujuzx.dto.BiHuanLCs.SC_ZD_BiHuanLCBJInDto;
+import cn.mediinfo.grus.shujuzx.dto.BiHuanLCs.SC_ZD_BiHuanLCInDto;
 import cn.mediinfo.grus.shujuzx.dto.BiHuanLCs.SC_ZD_BiHuanLCOutDto;
 import cn.mediinfo.grus.shujuzx.dto.YinSiGZSZs.*;
 import cn.mediinfo.grus.shujuzx.service.BiHuanLCService;
@@ -11,15 +13,19 @@ import cn.mediinfo.starter.base.util.StringUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @Tag(name = "ShuJuZXZDController", description = "临床数据中心字典")
@@ -241,7 +247,7 @@ public class ShuJuZXZDController {
      */
     @GetMapping("GetYinSiGZSZList")
     @Operation(summary = "获取隐私规则列表")
-    public MsfResponse<List<SC_ZD_YinSiGZSZOutDto>> getYinSiGZSZList(String likeQuery, @RequestParam(required = false,defaultValue = "1") Integer pageIndex, @RequestParam(required = false,defaultValue = "10") Integer pageSize) {
+    public MsfResponse<List<SC_ZD_YinSiGZSZOutDto>> getYinSiGZSZList(String likeQuery, @RequestParam(required = false, defaultValue = "1") Integer pageIndex, @RequestParam(required = false, defaultValue = "10") Integer pageSize) {
         return MsfResponse.success(yinSiGZSZService.getYinSiGZSZList(likeQuery, pageIndex, pageSize));
     }
 
@@ -262,6 +268,7 @@ public class ShuJuZXZDController {
 
     /**
      * 获取隐私设置列表
+     *
      * @param chaXunMSDM 查询模式代码
      * @param zuZhiJGID  组织机构ID
      * @param likeQuery  条件
@@ -278,8 +285,10 @@ public class ShuJuZXZDController {
         }
         return MsfResponse.success(yinSiGZSZService.getYinSiSZList(chaXunMSDM, zuZhiJGID, likeQuery));
     }
+
     /**
      * 获取展示配置列表
+     *
      * @param zuZhiJGID  组织机构ID
      * @param chaXunMSDM 查询模式代码
      * @param peiZhiLXDM 配置类型代码
@@ -287,19 +296,65 @@ public class ShuJuZXZDController {
      */
     @GetMapping("GetZhanShiPZList")
     @Operation(summary = "获取展示配置列表")
-    public MsfResponse<List<SC_ZD_ZhanShiPZDto>> getZhanShiPZList(String zuZhiJGID, String chaXunMSDM, String peiZhiLXDM){
-        if (!StringUtil.hasText(zuZhiJGID)){
+    public MsfResponse<List<SC_ZD_ZhanShiPZDto>> getZhanShiPZList(String zuZhiJGID, String chaXunMSDM, String peiZhiLXDM) {
+        if (!StringUtil.hasText(zuZhiJGID)) {
             return MsfResponse.fail("组织机构不能为空！");
         }
-        if (!StringUtil.hasText(chaXunMSDM)){
+        if (!StringUtil.hasText(chaXunMSDM)) {
             return MsfResponse.fail("查询模式代码不能为空！");
         }
-        if (!StringUtil.hasText(peiZhiLXDM)){
+        if (!StringUtil.hasText(peiZhiLXDM)) {
             return MsfResponse.fail("配置类型不能为空！");
         }
         return MsfResponse.success(yinSiGZSZService.getZhanShiPZList(zuZhiJGID, chaXunMSDM, peiZhiLXDM));
     }
 
+    /**
+     * 新增一个闭环流程
+     */
+    @PostMapping("AddBiHuanLC")
+    @Operation(summary = "新增一个闭环流程")
+    public MsfResponse<Integer> addBiHuanLC(@RequestBody SC_ZD_BiHuanLCInDto biHuanLCDto) throws MsfException {
+        return MsfResponse.success(biHuanLCService.addBiHuanLC(biHuanLCDto));
+    }
 
+    /**
+     *根据闭环类型代码获取闭环节点列表
+     */
+    @GetMapping("GetBiHuanLCList")
+    @Operation(summary = "根据闭环类型代码获取闭环节点列表")
+    public MsfResponse<List<SC_ZD_BiHuanLCOutDto>> getBiHuanLCList(String zuZhiJGID, String biHuanLXDM, String likeQuery){
+        return MsfResponse.success(biHuanLCService.getBiHuanLCList(zuZhiJGID, biHuanLXDM, likeQuery));
+    }
+    /**
+     * 启用闭环流程
+     */
+    @PutMapping("QiYongBiHuanLC")
+    @Operation(summary = "启用闭环流程")
+    public MsfResponse<Integer> qiYongBiHuanLC(String id, String zuZhiJGID) throws MsfException{
+        return MsfResponse.success(biHuanLCService.qiYongBiHuanLC(id, zuZhiJGID));
+    }
+    /**
+     * 停用闭环流程
+     */
+    @PutMapping("TingYongBiHuanLC")
+    @Operation(summary = "停用闭环流程")
+    public MsfResponse<Integer> tingYongBiHuanLC(String id) throws MsfException{
+        if (!StringUtil.hasText(id)){
+            return MsfResponse.fail("入参id不能为空！");
+        }
+        return MsfResponse.success(biHuanLCService.tingYongBiHuanLC(id));
+    }
+    /**
+     * 编辑一条闭环流程
+     */
+    @PutMapping("UpdateBiHuanLC")
+    @Operation(summary = "编辑一条闭环流程")
+    public MsfResponse<Integer> updateBiHuanLC(@RequestBody SC_ZD_BiHuanLCBJInDto biHuanLCBJInDto) throws MsfException{
+        if (Objects.isNull(biHuanLCBJInDto) && !StringUtil.hasText(biHuanLCBJInDto.getLiuChengMC())){
+            return MsfResponse.fail("流程名称不能为空！");
+        }
+        return MsfResponse.success(biHuanLCService.updateBiHuanLC(biHuanLCBJInDto));
+    }
 
 }

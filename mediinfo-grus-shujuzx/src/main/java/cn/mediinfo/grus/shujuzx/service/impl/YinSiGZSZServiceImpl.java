@@ -300,7 +300,7 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
         JPAQuery<SC_ZD_YinSiGZSZModel> jpaQuery = new JPAQueryFactory(entityManager)
                 .select(yinSiGZSZModel).from(yinSiGZSZModel)
                 .where(yinSiGZSZModel.zuZhiJGID.eq("0"))
-                .where(QueryDSLUtils.whereIfHasText(likeQuery,yinSiGZSZModel.shuJuYMC.contains(likeQuery)));
+                .where(QueryDSLUtils.whereIfHasText(likeQuery,()->yinSiGZSZModel.shuJuYMC.contains(likeQuery)));
         return jpaQuery.fetch().size();
     }
 
@@ -311,7 +311,7 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
     public List<SC_ZD_YinSiGZSZOutDto> getYinSiGZSZList(String likeQuery,Integer pageIndex, Integer pageSize) {
         QSC_ZD_YinSiGZSZModel yinSiGZSZModel = QSC_ZD_YinSiGZSZModel.sC_ZD_YinSiGZSZModel;
         JPAQuery<SC_ZD_YinSiGZSZModel> jpaQuery = new JPAQueryFactory(entityManager).select(yinSiGZSZModel).from(yinSiGZSZModel).where(yinSiGZSZModel.zuZhiJGID.eq("0"))
-                .where(QueryDSLUtils.whereIfHasText(likeQuery,yinSiGZSZModel.shuJuYMC.contains(likeQuery)));
+                .where(QueryDSLUtils.whereIfHasText(likeQuery,()->yinSiGZSZModel.shuJuYMC.contains(likeQuery)));
         List<SC_ZD_YinSiGZSZModel> yinSiGZSZModelList = jpaQuery.orderBy(yinSiGZSZModel.shunXuHao.asc())
                 .offset(PageRequestUtil.of(pageIndex, pageSize).getOffset()).limit(pageSize).fetch();
         return MapUtils.copyListProperties(yinSiGZSZModelList, SC_ZD_YinSiGZSZOutDto::new);

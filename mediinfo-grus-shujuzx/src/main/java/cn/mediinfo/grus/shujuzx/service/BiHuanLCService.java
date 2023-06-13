@@ -2,8 +2,10 @@ package cn.mediinfo.grus.shujuzx.service;
 
 import cn.mediinfo.grus.shujuzx.dto.BiHuanLCs.SC_ZD_BiHuanLCBJInDto;
 import cn.mediinfo.grus.shujuzx.dto.BiHuanLCs.SC_ZD_BiHuanLCInDto;
+import cn.mediinfo.grus.shujuzx.dto.BiHuanLCs.SC_ZD_BiHuanLCJDSXHDto;
 import cn.mediinfo.grus.shujuzx.dto.BiHuanLCs.SC_ZD_BiHuanLCOutDto;
 import cn.mediinfo.starter.base.exception.MsfException;
+import cn.mediinfo.starter.base.exception.TongYongYWException;
 
 import java.util.List;
 
@@ -37,4 +39,16 @@ public interface BiHuanLCService {
      * 编辑一条闭环流程
      */
     public Integer updateBiHuanLC(SC_ZD_BiHuanLCBJInDto biHuanLCBJInDto) throws MsfException;
+    /**
+     * 更新闭环节点流程顺序号
+     */
+    public Integer updateBiHuanLCJDSXH(List<SC_ZD_BiHuanLCJDSXHDto> jdSxhDtos);
+    /**
+     * 更新闭环流程
+     */
+    public Integer updateBiHuanLCList(String zuZhiJGID, String zuZhiJGMC, String biHuanLXDM);
+    /**
+     * 作废一条闭环流程
+     */
+    public Integer zuoFeiBiHuanLC(String id) throws TongYongYWException;
 }

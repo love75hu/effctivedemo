@@ -2,6 +2,7 @@ package cn.mediinfo.grus.shujuzx.controller;
 
 import cn.mediinfo.grus.shujuzx.dto.BiHuanLCs.SC_ZD_BiHuanLCBJInDto;
 import cn.mediinfo.grus.shujuzx.dto.BiHuanLCs.SC_ZD_BiHuanLCInDto;
+import cn.mediinfo.grus.shujuzx.dto.BiHuanLCs.SC_ZD_BiHuanLCJDSXHDto;
 import cn.mediinfo.grus.shujuzx.dto.BiHuanLCs.SC_ZD_BiHuanLCOutDto;
 import cn.mediinfo.grus.shujuzx.dto.YinSiGZSZs.*;
 import cn.mediinfo.grus.shujuzx.service.BiHuanLCService;
@@ -356,5 +357,28 @@ public class ShuJuZXZDController {
         }
         return MsfResponse.success(biHuanLCService.updateBiHuanLC(biHuanLCBJInDto));
     }
-
+    /**
+     * 更新闭环节点流程顺序号
+     */
+    @PutMapping("UpdateBiHuanLCJDSXH")
+    @Operation(summary = "更新闭环节点流程顺序号")
+    public MsfResponse<Integer> updateBiHuanLCJDSXH(@RequestBody List<SC_ZD_BiHuanLCJDSXHDto> jdSxhDtos){
+        return MsfResponse.success(biHuanLCService.updateBiHuanLCJDSXH(jdSxhDtos));
+    }
+    /**
+     * 更新闭环流程
+     */
+    @PutMapping("UpdateBiHuanLCList")
+    @Operation(summary = "更新闭环流程")
+    public MsfResponse<Integer> updateBiHuanLCList(String zuZhiJGID, String zuZhiJGMC, String biHuanLXDM){
+        return MsfResponse.success(biHuanLCService.updateBiHuanLCList(zuZhiJGID, zuZhiJGMC, biHuanLXDM));
+    }
+    /**
+     * 作废一条闭环流程
+     */
+    @DeleteMapping("ZuoFeiBiHuanLC")
+    @Operation(summary = "作废一条闭环流程")
+    public MsfResponse<Integer> zuoFeiBiHuanLC(String id) throws TongYongYWException{
+        return MsfResponse.success(biHuanLCService.zuoFeiBiHuanLC(id));
+    }
 }

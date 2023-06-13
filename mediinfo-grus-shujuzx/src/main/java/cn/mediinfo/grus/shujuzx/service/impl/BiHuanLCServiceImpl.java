@@ -1,9 +1,6 @@
 package cn.mediinfo.grus.shujuzx.service.impl;
 
-import cn.mediinfo.grus.shujuzx.dto.BiHuanLCs.SC_ZD_BiHuanLCBJInDto;
-import cn.mediinfo.grus.shujuzx.dto.BiHuanLCs.SC_ZD_BiHuanLCInDto;
-import cn.mediinfo.grus.shujuzx.dto.BiHuanLCs.SC_ZD_BiHuanLCJDDto;
-import cn.mediinfo.grus.shujuzx.dto.BiHuanLCs.SC_ZD_BiHuanLCOutDto;
+import cn.mediinfo.grus.shujuzx.dto.BiHuanLCs.*;
 import cn.mediinfo.grus.shujuzx.model.*;
 import cn.mediinfo.grus.shujuzx.po.bihuanlc.BiHUanLCPO;
 import cn.mediinfo.grus.shujuzx.po.bihuanlc.BiHUanPO;
@@ -220,5 +217,67 @@ public class BiHuanLCServiceImpl implements BiHuanLCService {
             biHuanLCJDRepository.softDelete(biHuanLCJDModel.id.in(biHuanLCBJInDto.getDeleteIds()));
         }
         return 0;
+    }
+
+    /**
+     * 更新闭环节点流程顺序号
+     */
+    @Override
+    public Integer updateBiHuanLCJDSXH(List<SC_ZD_BiHuanLCJDSXHDto> jdSxhDtos) {
+        List<String> idList = jdSxhDtos.stream().map(SC_ZD_BiHuanLCJDSXHDto::getId).toList();
+        List<SC_ZD_BiHuanLCJDModel> biHuanLCJDList = biHuanLCJDRepository.asQuerydsl().whereIn(t -> t.id, idList, 1).select(SC_ZD_BiHuanLCJDModel.class).fetch();
+        biHuanLCJDList.forEach(item->{
+            Integer shunXuHao = jdSxhDtos.stream().filter(t -> Objects.equals(t.getId(), item.getId())).map(SC_ZD_BiHuanLCJDSXHDto::getShunXuHao).findFirst().orElseGet(() -> -1);
+            item.setShunXuHao(shunXuHao == -1?item.getShunXuHao():shunXuHao);
+        });
+        biHuanLCJDRepository.saveAll(biHuanLCJDList);
+        return 1;
+    }
+    /**
+     * 更新闭环流程
+     */
+    @Override
+    @Transactional(rollbackOn = Exception.class)
+    public Integer updateBiHuanLCList(String zuZhiJGID, String zuZhiJGMC, String biHuanLXDM) {
+        List<String> zuZhiJGIDList = List.of("0", zuZhiJGID );
+        List<SC_ZD_BiHuanLCModel> biHuanLCList = biHuanLCRepository.asQuerydsl().whereIn(t -> t.zuZhiJGID, zuZhiJGIDList, 1).where(t -> t.biHuanLXDM.eq(biHuanLXDM)).select(SC_ZD_BiHuanLCModel.class).fetch();
+        List<SC_ZD_BiHuanLCModel> tongYongList = biHuanLCList.stream().filter(p ->"0".equals(p.getZuZhiJGID())).toList();
+        List<String> yiCunZaiList = biHuanLCList.stream().filter(p -> Objects.equals(p.getZuZhiJGID() , zuZhiJGID)).map(SC_ZD_BiHuanLCModel::getLiuChengID).toList();
+        List<SC_ZD_BiHuanLCModel> weiCunZaiList = tongYongList.stream().filter(p -> !yiCunZaiList.contains(p.getLiuChengID())).toList();
+        if (!CollectionUtils.isEmpty(weiCunZaiList)){
+            List<SC_ZD_BiHuanLCJDModel> addBiHuanLCJDList = new ArrayList<>();
+            List<String> biHuanLCIDList = weiCunZaiList.stream().map(SC_ZD_BiHuanLCModel::getLiuChengID).toList();
+            List<SC_ZD_BiHuanLCJDModel> biHuanLCJDList = biHuanLCJDRepository.asQuerydsl().where(t -> t.zuZhiJGID.eq("0")).whereIn(p -> p.liuChengID, biHuanLCIDList, 1).select(SC_ZD_BiHuanLCJDModel.class).fetch();
+            weiCunZaiList.forEach(item->{
+                item.setId(null);
+                item.setZuZhiJGID(zuZhiJGID);
+                item.setZuZhiJGMC(zuZhiJGMC);
+                var jdList = biHuanLCJDList.stream().filter(x ->Objects.equals(x.getLiuChengID(),item.getLiuChengID()))
+                .map(t->MapUtils.copyProperties(t,SC_ZD_BiHuanLCJDModel::new,(model, update)->{
+                    update.setId(null);
+                    update.setZuZhiJGID(zuZhiJGID);
+                    update.setZuZhiJGMC(zuZhiJGMC);
+                })).toList();
+               addBiHuanLCJDList.addAll(jdList);
+            });
+            biHuanLCRepository.saveAll(weiCunZaiList);
+            biHuanLCJDRepository.saveAll(addBiHuanLCJDList);
+        }
+        return 1;
+    }
+    /**
+     * 作废一条闭环流程
+     */
+    @Override
+    @Transactional(rollbackOn = Exception.class)
+    public Integer zuoFeiBiHuanLC(String id) throws TongYongYWException{
+        SC_ZD_BiHuanLCModel biHuanLCXX = biHuanLCRepository.findById(id).orElseGet(() -> null);
+        if (Objects.isNull(biHuanLCXX)){
+            throw new TongYongYWException("未找到该流程信息，请确认！");
+        }
+        biHuanLCRepository.softDelete(id);
+        QSC_ZD_BiHuanLCModel biHuanLCModel = QSC_ZD_BiHuanLCModel.sC_ZD_BiHuanLCModel;
+        biHuanLCJDRepository.softDelete(biHuanLCModel.zuZhiJGID.eq(biHuanLCXX.getZuZhiJGID()).and(biHuanLCModel.liuChengID.eq(biHuanLCXX.getLiuChengID())));
+        return 1;
     }
 }

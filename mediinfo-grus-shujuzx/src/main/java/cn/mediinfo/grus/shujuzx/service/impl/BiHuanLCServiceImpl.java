@@ -201,7 +201,7 @@ public class BiHuanLCServiceImpl implements BiHuanLCService {
         biHuanLCJDRepository.saveAll(addJDList);
         }
         if (!CollectionUtils.isEmpty(biHuanLCBJInDto.getUpdatebiHuanJDLCList())){
-            List<String> jieDianIDList = biHuanLCBJInDto.getUpdatebiHuanJDLCList().stream().map(p -> p.getId()).toList();
+            List<String> jieDianIDList = biHuanLCBJInDto.getUpdatebiHuanJDLCList().stream().map(SC_ZD_BiHuanLCJDDto::getId).toList();
             QSC_ZD_BiHuanLCJDModel biHuanLCJDModel = QSC_ZD_BiHuanLCJDModel.sC_ZD_BiHuanLCJDModel;
             List<SC_ZD_BiHuanLCJDModel> liuChengJDList = new JPAQueryFactory(entityManager).select(biHuanLCJDModel).from(biHuanLCJDModel).where(biHuanLCJDModel.id.in(jieDianIDList)).fetch();
             if (Objects.nonNull(liuChengJDList)){
@@ -225,10 +225,10 @@ public class BiHuanLCServiceImpl implements BiHuanLCService {
     @Override
     public Integer updateBiHuanLCJDSXH(List<SC_ZD_BiHuanLCJDSXHDto> jdSxhDtos) {
         List<String> idList = jdSxhDtos.stream().map(SC_ZD_BiHuanLCJDSXHDto::getId).toList();
-        List<SC_ZD_BiHuanLCJDModel> biHuanLCJDList = biHuanLCJDRepository.asQuerydsl().whereIn(t -> t.id, idList, 1).select(SC_ZD_BiHuanLCJDModel.class).fetch();
+        List<SC_ZD_BiHuanLCJDModel> biHuanLCJDList = biHuanLCJDRepository.asQuerydsl().whereIn(t -> t.id, idList, 999).select(SC_ZD_BiHuanLCJDModel.class).fetch();
         biHuanLCJDList.forEach(item->{
             Integer shunXuHao = jdSxhDtos.stream().filter(t -> Objects.equals(t.getId(), item.getId())).map(SC_ZD_BiHuanLCJDSXHDto::getShunXuHao).findFirst().orElseGet(() -> -1);
-            item.setShunXuHao(shunXuHao == -1?item.getShunXuHao():shunXuHao);
+            item.setShunXuHao(shunXuHao == -1?item.getShunXuHao():null);
         });
         biHuanLCJDRepository.saveAll(biHuanLCJDList);
         return 1;
@@ -240,14 +240,14 @@ public class BiHuanLCServiceImpl implements BiHuanLCService {
     @Transactional(rollbackOn = Exception.class)
     public Integer updateBiHuanLCList(String zuZhiJGID, String zuZhiJGMC, String biHuanLXDM) {
         List<String> zuZhiJGIDList = List.of("0", zuZhiJGID );
-        List<SC_ZD_BiHuanLCModel> biHuanLCList = biHuanLCRepository.asQuerydsl().whereIn(t -> t.zuZhiJGID, zuZhiJGIDList, 1).where(t -> t.biHuanLXDM.eq(biHuanLXDM)).select(SC_ZD_BiHuanLCModel.class).fetch();
+        List<SC_ZD_BiHuanLCModel> biHuanLCList = biHuanLCRepository.asQuerydsl().whereIn(t -> t.zuZhiJGID, zuZhiJGIDList, 999).where(t -> t.biHuanLXDM.eq(biHuanLXDM)).select(SC_ZD_BiHuanLCModel.class).fetch();
         List<SC_ZD_BiHuanLCModel> tongYongList = biHuanLCList.stream().filter(p ->"0".equals(p.getZuZhiJGID())).toList();
         List<String> yiCunZaiList = biHuanLCList.stream().filter(p -> Objects.equals(p.getZuZhiJGID() , zuZhiJGID)).map(SC_ZD_BiHuanLCModel::getLiuChengID).toList();
         List<SC_ZD_BiHuanLCModel> weiCunZaiList = tongYongList.stream().filter(p -> !yiCunZaiList.contains(p.getLiuChengID())).toList();
         if (!CollectionUtils.isEmpty(weiCunZaiList)){
             List<SC_ZD_BiHuanLCJDModel> addBiHuanLCJDList = new ArrayList<>();
             List<String> biHuanLCIDList = weiCunZaiList.stream().map(SC_ZD_BiHuanLCModel::getLiuChengID).toList();
-            List<SC_ZD_BiHuanLCJDModel> biHuanLCJDList = biHuanLCJDRepository.asQuerydsl().where(t -> t.zuZhiJGID.eq("0")).whereIn(p -> p.liuChengID, biHuanLCIDList, 1).select(SC_ZD_BiHuanLCJDModel.class).fetch();
+            List<SC_ZD_BiHuanLCJDModel> biHuanLCJDList = biHuanLCJDRepository.asQuerydsl().where(t -> t.zuZhiJGID.eq("0")).whereIn(p -> p.liuChengID, biHuanLCIDList, 999).select(SC_ZD_BiHuanLCJDModel.class).fetch();
             weiCunZaiList.forEach(item->{
                 item.setId(null);
                 item.setZuZhiJGID(zuZhiJGID);

@@ -302,7 +302,7 @@ public class ShuJuZXZSYController {
      * @throws TongYongYWException 通用异常
      */
     @Operation(summary = "合并")
-    @GetMapping("HeBing")
+    @PostMapping("HeBing")
     public MsfResponse<Boolean> heBing(@RequestBody SaveHeBingDto saveDto) throws TongYongYWException {
         return MsfResponse.success(zhuSuoYGLService.heBing(saveDto));
     }
@@ -313,7 +313,7 @@ public class ShuJuZXZSYController {
      * @throws TongYongYWException 通用异常
      */
     @Operation(summary = "忽略合并")
-    @GetMapping("HuLueHB")
+    @PostMapping("HuLueHB")
     public MsfResponse<Boolean> huLueHB(@RequestBody HuLueHBDto saveDto) throws TongYongYWException {
         return MsfResponse.success(zhuSuoYGLService.huLueHB(saveDto));
     }
@@ -324,7 +324,7 @@ public class ShuJuZXZSYController {
      * @throws TongYongYWException 通用异常
      */
     @Operation(summary = "主索引修改病人基本信息")
-    @GetMapping("UpdateBingRenJBXX")
+    @PostMapping("UpdateBingRenJBXX")
     public MsfResponse<String> updateBingRenJBXX(@RequestBody BR_DA_JiBenXXCreateDto saveDto) throws TongYongYWException {
         return MsfResponse.success(zhuSuoYGLService.updateBingRenJBXX(saveDto));
     }

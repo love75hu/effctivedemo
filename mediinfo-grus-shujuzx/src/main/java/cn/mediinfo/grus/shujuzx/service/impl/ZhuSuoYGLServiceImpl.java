@@ -111,10 +111,10 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
             item.setJiaoChaSYCount((int) jiaoChaSYCounts.stream().filter(x -> Objects.equals(x, item.getId())).count());
             item.setXianZhuZXX(StringUtil.concat(item.getXianZhuZXX(), item.getXianZhuZXZMC(), item.getXianZhuZCJMC(), item.getXianZhuZQTXX()));
         }
-        return xiangSiBRXXList.stream().sorted(Comparator.comparing(BR_DA_JiBenXXByZSYGLDto::getHeBingBZ).reversed()
-                        .thenComparing(Comparator.comparing(BR_DA_JiBenXXByZSYGLDto::getHeBingSJ).reversed())
-                        .thenComparing(Comparator.comparing(BR_DA_JiBenXXByZSYGLDto::getXiangSiDu).reversed())
-                        .thenComparing(Comparator.comparing(BR_DA_JiBenXXByZSYGLDto::getJiaoChaSYCount).reversed()))
+        return xiangSiBRXXList.stream().sorted(Comparator.comparing(BR_DA_JiBenXXByZSYGLDto::getHeBingBZ,Comparator.nullsFirst(Integer::compareTo)).reversed()
+                        .thenComparing(Comparator.comparing(BR_DA_JiBenXXByZSYGLDto::getHeBingSJ,Comparator.nullsFirst(Date::compareTo)).reversed())
+                        .thenComparing(Comparator.comparing(BR_DA_JiBenXXByZSYGLDto::getXiangSiDu,Comparator.nullsFirst(BigDecimal::compareTo)).reversed())
+                        .thenComparing(Comparator.comparing(BR_DA_JiBenXXByZSYGLDto::getJiaoChaSYCount,Comparator.nullsFirst(Integer::compareTo)).reversed()))
                 .collect(Collectors.toList());
     }
 
@@ -174,6 +174,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
         var qJiBenXX = QBR_DA_JiBenXXModel.bR_DA_JiBenXXModel;
         var qHeBingJL = QBR_DA_HeBingJLModel.bR_DA_HeBingJLModel;
         var count = new JPAQueryFactory(entityManager).select(qJiBenXX.count())
+                .from(qJiBenXX)
                 .leftJoin(qHeBingJL)
                 .on(qJiBenXX.id.eq(qHeBingJL.bingRenID))
                 .where(QueryDSLUtils.whereIf(!ObjectUtils.isEmpty(kaiShiSJ), qJiBenXX.jianDangSJ.goe(kaiShiSJ)))
@@ -203,6 +204,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
         var result = new JPAQueryFactory(entityManager).select(
                         Projections.bean(BR_DA_JiBenXXByZSYGLDto.class, qJiBenXX,
                                 qHeBingJL.heBingZTDM, qHeBingJL.heBingZTMC, qHeBingJL.zuiDaXSD, qHeBingJL.heBingShu, qHeBingJL.xiangSiShu))
+                .from(qJiBenXX)
                 .leftJoin(qHeBingJL)
                 .on(qJiBenXX.id.eq(qHeBingJL.bingRenID))
                 .where(QueryDSLUtils.whereIf(!ObjectUtils.isEmpty(kaiShiSJ), qJiBenXX.jianDangSJ.goe(kaiShiSJ)))
@@ -475,55 +477,59 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
         if (tModel == null || CollectionUtils.isEmpty(tuoMinPZList)) {
             return tModel;
         }
+        Class<?> type = tModel.getClass(); // 获取类型
         for (var tuoMinPZ : tuoMinPZList) {
-            Class<?> type = tModel.getClass(); // 获取类型
-            Field propertyInfo = type.getDeclaredField(tuoMinPZ.getShuJuYLM()); // 获取属性
-            propertyInfo.setAccessible(true);
-            String t = propertyInfo.getType().getName();
-            if (t.equals("java.lang.String")) {
-                Object value = propertyInfo.get(tModel);
-                if (ObjectUtils.isEmpty(value) || !StringUtil.hasText(value.toString())) {
-                    continue;
+            try {
+                Field propertyInfo = type.getDeclaredField(tuoMinPZ.getShuJuYLM()); // 获取属性
+                propertyInfo.setAccessible(true);
+                String t = propertyInfo.getType().getName();
+                if (t.equals("java.lang.String")) {
+                    Object value = propertyInfo.get(tModel);
+                    if (ObjectUtils.isEmpty(value) || !StringUtil.hasText(value.toString())) {
+                        continue;
+                    }
+                    if (Objects.equals(tuoMinPZ.getTuoMinFSDM(), "1")) {
+                        //1-全部替换为所需字符，如 *
+                        propertyInfo.set(tModel, (tuoMinPZ.getTuoMinGZ() != null ? tuoMinPZ.getTuoMinGZ() : "*").repeat(value.toString().length())); //给对应属性赋值
+                    } else if (Objects.equals(tuoMinPZ.getTuoMinFSDM(), "2")) {
+                        //2-部分替换为设置字符：如：000***000，0为占位符
+                        char[] charArray = value.toString().toCharArray();
+                        int index = 1;
+                        int j = 1;
+                        String fuHao2 = "";
+                        if (StringUtil.hasText(tuoMinPZ.getTuoMinGZ())) {
+                            String[] tuoMinGZs = tuoMinPZ.getTuoMinGZ().split(",");
+                            if (tuoMinGZs.length > 0) {
+                                index = tuoMinGZs[0].isEmpty() ? 0 : Integer.parseInt(tuoMinGZs[0]);
+                            }
+                            if (tuoMinGZs.length > 1) {
+                                j = tuoMinGZs[1].isEmpty() ? 0 : Integer.parseInt(tuoMinGZs[1]);
+                            }
+                            if (tuoMinGZs.length > 2) {
+                                fuHao2 = tuoMinGZs[2].isEmpty() ? "*" : tuoMinGZs[2];
+                            }
+                        }
+                        for (int i = index; i < index + j; i++) {
+                            if (charArray.length - 1 < i) {
+                                break;
+                            }
+                            charArray[i] = fuHao2.charAt(0);
+                        }
+                        propertyInfo.set(tModel, new String(charArray));//给对应属性赋值
+                    } else if (Objects.equals(tuoMinPZ.getTuoMinFSDM(), "3")) {
+                        //3-正则替换
+                        if (StringUtil.hasText(tuoMinPZ.getTuoMinGZ()) && tuoMinPZ.getTuoMinGZ().split(",").length > 1) {
+                            Pattern pattern = Pattern.compile(tuoMinPZ.getTuoMinGZ().split(",")[0]);
+                            String replaceWord = tuoMinPZ.getTuoMinGZ().split(",")[1];
+                            value = pattern.matcher(value.toString()).replaceAll(replaceWord);
+                        }
+                        propertyInfo.set(tModel, value);//给对应属性赋值
+                    }
+                } else {
+                    propertyInfo.set(tModel, null);
                 }
-                if (Objects.equals(tuoMinPZ.getTuoMinFSDM(), "1")) {
-                    //1-全部替换为所需字符，如 *
-                    propertyInfo.set(tModel, (tuoMinPZ.getTuoMinGZ() != null ? tuoMinPZ.getTuoMinGZ() : "*").repeat(value.toString().length())); //给对应属性赋值
-                } else if (Objects.equals(tuoMinPZ.getTuoMinFSDM(), "2")) {
-                    //2-部分替换为设置字符：如：000***000，0为占位符
-                    char[] charArray = value.toString().toCharArray();
-                    int index = 1;
-                    int j = 1;
-                    String fuHao2 = "";
-                    if (StringUtil.hasText(tuoMinPZ.getTuoMinGZ())) {
-                        String[] tuoMinGZs = tuoMinPZ.getTuoMinGZ().split(",");
-                        if (tuoMinGZs.length > 0) {
-                            index = tuoMinGZs[0].isEmpty() ? 0 : Integer.parseInt(tuoMinGZs[0]);
-                        }
-                        if (tuoMinGZs.length > 1) {
-                            j = tuoMinGZs[1].isEmpty() ? 0 : Integer.parseInt(tuoMinGZs[1]);
-                        }
-                        if (tuoMinGZs.length > 2) {
-                            fuHao2 = tuoMinGZs[2].isEmpty() ? "*" : tuoMinGZs[2];
-                        }
-                    }
-                    for (int i = index; i < index + j; i++) {
-                        if (charArray.length - 1 < i) {
-                            break;
-                        }
-                        charArray[i] = fuHao2.charAt(0);
-                    }
-                    propertyInfo.set(tModel, new String(charArray));//给对应属性赋值
-                } else if (Objects.equals(tuoMinPZ.getTuoMinFSDM(), "3")) {
-                    //3-正则替换
-                    if (StringUtil.hasText(tuoMinPZ.getTuoMinGZ()) && tuoMinPZ.getTuoMinGZ().split(",").length > 1) {
-                        Pattern pattern = Pattern.compile(tuoMinPZ.getTuoMinGZ().split(",")[0]);
-                        String replaceWord = tuoMinPZ.getTuoMinGZ().split(",")[1];
-                        value = pattern.matcher(value.toString()).replaceAll(replaceWord);
-                    }
-                    propertyInfo.set(tModel, value);//给对应属性赋值
-                }
-            } else {
-                propertyInfo.set(tModel, null);
+            }catch (NoSuchFieldException ex){
+                //do something
             }
         }
         return tModel;

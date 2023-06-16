@@ -14,4 +14,8 @@ public interface BR_DA_XiangSiSYRepository extends MsfJpaRepository<QBR_DA_Xiang
     @Query("select s from BR_DA_XiangSiSYModel s where s.heBingBZ=0 and s.huLueBZ =0 and ((s.bingRenID1 in (:xiangSiBRIDList) and s.bingRenID2 != :bingRenID) or (s.bingRenID2 in(:xiangSiBRIDList) and s.bingRenID1 !=:bingRenID))")
     List<BR_DA_XiangSiSYModel> getDeleteXiangSiSYList(@Param("bingRenID")String bingRenID, @Param("xiangSiBRIDList")List<String> xiangSiBRIDList);
     BR_DA_XiangSiSYModel findFirstByBingRenID1AndBingRenID2NotAndHuLueBZOrderByXiangSiDuDesc(String bingRenID1,String bingRenID2,Integer huLueBZ);
+
+    List<BR_DA_XiangSiSYModel> findByBingRenID1InOrBingRenID2In(List<String> bingRenID1,List<String> bingRenID2);
+
+    List<BR_DA_XiangSiSYModel> findByBingRenID1InAndHuLueBZAndHeBingBZ(List<String> bingRenID1,Integer huLueBZ,Integer heBingBZ);
 }

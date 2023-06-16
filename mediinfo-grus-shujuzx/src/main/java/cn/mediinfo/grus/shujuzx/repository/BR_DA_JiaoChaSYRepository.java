@@ -13,4 +13,20 @@ public interface BR_DA_JiaoChaSYRepository extends MsfJpaRepository<QBR_DA_JiaoC
 
     @Query("SELECT s.zhuBingRID from BR_DA_JiaoChaSYModel s where s.zhuBingRID in :xiangSiBRIDs")
     List<String> getJiaoChaZhuBRIDList(List<String> xiangSiBRIDs);
+
+    Boolean existsByZhuBingRIDAndGuanLianBRIDNot(String zhuBingRID,String guanLianBRID);
+
+    Boolean existsByZhuBingRID(String zhuBingRID);
+
+    List<BR_DA_JiaoChaSYModel> findByGuanLianBRIDAndZhuBingRIDNot(String guanLianBRID,String zhuBingRID);
+
+    List<BR_DA_JiaoChaSYModel> findByZhuBingRIDIn(List<String> zhuBingRID);
+
+    List<BR_DA_JiaoChaSYModel> findByZhuBingRIDInOrGuanLianBRIDIn(List<String> zhuBingRID,List<String> guanLianBRID);
+
+    BR_DA_JiaoChaSYModel findFirstByZiDongHBBZOrderByChuangJianSJDesc(Integer ziDongHBBZ);
+
+
+
+
 }

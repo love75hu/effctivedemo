@@ -324,7 +324,7 @@ public class ShuJuZXZDController {
      */
     @GetMapping("GetBiHuanLCList")
     @Operation(summary = "根据闭环类型代码获取闭环节点列表")
-    public MsfResponse<List<SC_ZD_BiHuanLCOutDto>> getBiHuanLCList(String zuZhiJGID, String biHuanLXDM, String likeQuery){
+    public MsfResponse<List<SC_ZD_BiHuanLCOutDto>> getBiHuanLCList(String zuZhiJGID, String biHuanLXDM, @RequestParam(required = false) String likeQuery){
         return MsfResponse.success(biHuanLCService.getBiHuanLCList(zuZhiJGID, biHuanLXDM, likeQuery));
     }
     /**

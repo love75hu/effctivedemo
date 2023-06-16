@@ -6,7 +6,6 @@ plugins {
 
 group = 'cn.mediinfo'
 sourceCompatibility = '17'
-version = '1.0-SNAPSHOT'
 dependencyManagement {
 
     imports {

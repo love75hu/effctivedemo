@@ -63,4 +63,12 @@ public interface ZhuSuoYGLService {
      * @throws TongYongYWException 通用异常
      */
     String updateBingRenJBXX(BR_DA_JiBenXXCreateDto dto) throws TongYongYWException;
+
+    /**
+     * 取消合并
+     * @return Boolean
+     */
+    Boolean quXiaoHB(HuLueHBDto dto) throws TongYongYWException;
+
+    String zengLiangPPXSHZ();
 }

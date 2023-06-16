@@ -328,4 +328,19 @@ public class ShuJuZXZSYController {
     public MsfResponse<String> updateBingRenJBXX(@RequestBody BR_DA_JiBenXXCreateDto saveDto) throws TongYongYWException {
         return MsfResponse.success(zhuSuoYGLService.updateBingRenJBXX(saveDto));
     }
+
+
+    @Operation(summary = "取消合并")
+    @PostMapping("QuXiaoHB")
+    public MsfResponse<Boolean> QuXiaoHB(@RequestBody HuLueHBDto saveDto) throws TongYongYWException {
+        return MsfResponse.success(zhuSuoYGLService.quXiaoHB(saveDto));
+    }
+
+    @Operation(summary = "增量匹配相似患者")
+    @GetMapping("ZengLiangPPXSHZ")
+    public MsfResponse<String> ZengLiangPPXSHZ() {
+        return MsfResponse.success(zhuSuoYGLService.zengLiangPPXSHZ());
+    }
+
+
 }

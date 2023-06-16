@@ -14,6 +14,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Service;
 
+import javax.print.DocFlavor;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
@@ -36,18 +37,16 @@ public class ZhuSuoYCZRZServiceImpl implements ZhuSuoYCZRZService {
 
     @Override
     public List<BR_DA_ZhuSuoYCZRZDto> getZhuSuoYCZRZList(Integer page, Integer pageSize, Date caoZuoKSRQ, Date caoZuoJSRQ, String caoZuoLXDM, String likeQuery) throws TongYongYWException, ParseException {
-        var qModel = QBR_DA_ZhuSuoYCZRZModel.bR_DA_ZhuSuoYCZRZModel;
-        var zhuSuoYCZRZModels = new JPAQueryFactory(entityManager).select(qModel)
-                .where(QueryDSLUtils.whereIf(caoZuoKSRQ != null, qModel.caoZuoSJ.goe(DateUtil.get0Dian(caoZuoKSRQ))))
-                .where(QueryDSLUtils.whereIf(caoZuoJSRQ != null, qModel.caoZuoSJ.loe(DateUtil.getLastDian(caoZuoJSRQ))))
-                .where(QueryDSLUtils.whereIfHasText(caoZuoLXDM, qModel.caoZuoLXDM.eq(caoZuoLXDM)))
-                .where(QueryDSLUtils.whereIfHasText(likeQuery, qModel.bingRenID.contains(likeQuery)
-                        .or(qModel.xingMing.contains(likeQuery))
-                        .or(qModel.caoZuoRXM.contains(likeQuery))))
-                .orderBy(qModel.caoZuoSJ.desc())
-                .offset(PageRequestUtil.of(page, pageSize).getOffset())
-                .limit(pageSize)
-                .fetch();
+        Date finalCaoZuoJSRQ = DateUtil.get0Dian(caoZuoKSRQ);
+        Date finalCaoZuoKSRQ = DateUtil.getLastDian(caoZuoJSRQ);
+        var zhuSuoYCZRZModels = brDaZhuSuoYCZRZRepository.asQuerydsl()
+                .whereIf(caoZuoKSRQ != null,o->o.caoZuoSJ.goe(finalCaoZuoKSRQ))
+                .whereIf(caoZuoJSRQ != null,o->o.caoZuoSJ.loe(finalCaoZuoJSRQ))
+                .whereIf(StringUtil.hasText(caoZuoLXDM),o->o.caoZuoLXDM.eq(caoZuoLXDM))
+                .whereIf(StringUtil.hasText(likeQuery),o->o.bingRenID.contains(likeQuery).or(o.xingMing.contains(likeQuery)).or(o.caoZuoRXM.contains(likeQuery)))
+                .orderBy(o->o.caoZuoSJ.desc())
+                .select(o->o)
+                .fetchPage(PageRequestUtil.of(page, pageSize));
         return MapUtils.copyListProperties(zhuSuoYCZRZModels, BR_DA_ZhuSuoYCZRZDto::new);
     }
 

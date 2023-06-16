@@ -62,12 +62,17 @@ public class BiHuanLCServiceImpl implements BiHuanLCService {
                 .leftJoin(biHuanJDModel)
                 .on(biHuanJDModel.zuZhiJGID.eq(zuZhiJGID).and(biHuanLCModel.liuChengID.eq(biHuanJDModel.liuChengID))).fetch();
         //查询出所有的流程节点信息
-        var allbhlcjd = biHUanDtos.stream().map(t->t.getLcjdModel().getLiuChengID()).distinct().toList();
-        List<SC_ZD_BiHuanLCModel> scZdBiHuanLCModels = biHUanDtos.stream().map(BiHUanPO::getLcModel)
+        var bhlcjdList = biHUanDtos.stream().map(BiHUanPO::getLcjdModel).distinct().toList();
+        List<SC_ZD_BiHuanLCModel> scZdBiHuanLCModels = biHUanDtos.stream()
+                .map(BiHUanPO::getLcModel)
                 .filter(ExpressionUtils.distinctByKeys(SC_ZD_BiHuanLCModel::getLiuChengID))
-                .filter(t -> allbhlcjd.contains(t.getLiuChengID()))
-                .sorted(Comparator.comparing(SC_ZD_BiHuanLCModel::getShunXuHao)).toList();
-        return  MapUtils.copyListProperties(scZdBiHuanLCModels,SC_ZD_BiHuanLCOutDto::new);
+                .map(t -> {
+                    t.setShunXuHao(Objects.isNull(t.getShunXuHao()) ? 0 : t.getShunXuHao());
+                    return t;
+                }).sorted(Comparator.comparing(SC_ZD_BiHuanLCModel::getShunXuHao)).toList();
+        return MapUtils.copyListProperties(scZdBiHuanLCModels, SC_ZD_BiHuanLCOutDto::new, (model, dto) -> {
+            dto.setBiHuanJDLCList(MapUtils.copyListProperties(bhlcjdList.stream().filter(x -> Objects.equals(x.getLiuChengID(), model.getLiuChengID())).sorted(Comparator.comparing(SC_ZD_BiHuanLCJDModel::getShunXuHao)).toList(), SC_ZD_BiHuanLCJDDto::new));
+        });
     }
 
     /**
@@ -75,7 +80,6 @@ public class BiHuanLCServiceImpl implements BiHuanLCService {
      */
     @Override
     public SC_ZD_BiHuanLCOutDto getBiHuanLCForLX(String zuZhiJGID, String biHuanLXDM, Integer menZhenSYBZ, Integer zhuYuanSYBZ, Integer jiZhenSYBZ, Integer tiJianSYBZ) {
-
         QSC_ZD_BiHuanLCModel biHuanLCModel  = QSC_ZD_BiHuanLCModel.sC_ZD_BiHuanLCModel;
         QSC_ZD_BiHuanLCJDModel biHuanJDModel = QSC_ZD_BiHuanLCJDModel.sC_ZD_BiHuanLCJDModel;
         List<BiHUanPO> biHUanDtos = new JPAQueryFactory(entityManager)
@@ -83,9 +87,18 @@ public class BiHuanLCServiceImpl implements BiHuanLCService {
                 .from(biHuanLCModel).where(biHuanLCModel.zuZhiJGID.eq(zuZhiJGID).and(biHuanLCModel.biHuanLXDM.eq(biHuanLXDM)))
                 .leftJoin(biHuanJDModel).on(biHuanJDModel.zuZhiJGID.eq(zuZhiJGID).and(biHuanLCModel.liuChengID.eq(biHuanJDModel.liuChengID))).fetch();
         //查询出所有的流程节点信息
-        var allbhlcjd = biHUanDtos.stream().map(t->t.getLcjdModel().getLiuChengID()).distinct().toList();
-        SC_ZD_BiHuanLCModel liuChengModel = biHUanDtos.stream().map(BiHUanPO::getLcModel).filter(ExpressionUtils.distinctByKeys(SC_ZD_BiHuanLCModel::getLiuChengID)).filter(t -> allbhlcjd.contains(t.getLiuChengID())).sorted(Comparator.comparing(SC_ZD_BiHuanLCModel::getShunXuHao)).findFirst().orElseGet(null);
-        return MapUtils.copyProperties(liuChengModel,SC_ZD_BiHuanLCOutDto::new);
+        var allbhlcjd = biHUanDtos.stream().map(BiHUanPO::getLcjdModel).distinct().toList();
+        SC_ZD_BiHuanLCModel scZdBiHuanLCModel = biHUanDtos.stream()
+                .map(BiHUanPO::getLcModel)
+                .filter(ExpressionUtils.distinctByKeys(SC_ZD_BiHuanLCModel::getLiuChengID))
+                .map(t -> {
+                    t.setShunXuHao(Objects.isNull(t.getShunXuHao()) ? 0 : t.getShunXuHao());
+                    return t;
+                }).findFirst().orElseGet(null);
+        return MapUtils.copyProperties(scZdBiHuanLCModel, SC_ZD_BiHuanLCOutDto::new, (model, dto) -> {
+            dto.setBiHuanJDLCList(MapUtils.copyListProperties(allbhlcjd.stream().filter(x -> Objects.equals(x.getLiuChengID(), model.getLiuChengID())).sorted(Comparator.comparing(SC_ZD_BiHuanLCJDModel::getShunXuHao)).toList(), SC_ZD_BiHuanLCJDDto::new));
+        });
+
     }
     /**
      * 新增一个闭环流程
@@ -119,22 +132,22 @@ public class BiHuanLCServiceImpl implements BiHuanLCService {
      */
     @Override
     public List<SC_ZD_BiHuanLCOutDto> getBiHuanLCList(String zuZhiJGID, String biHuanLXDM, String likeQuery) {
-        QSC_ZD_BiHuanLCModel biHuanLCModel = QSC_ZD_BiHuanLCModel.sC_ZD_BiHuanLCModel;
-        QSC_ZD_BiHuanLCJDModel biHuanLCJDModel = QSC_ZD_BiHuanLCJDModel.sC_ZD_BiHuanLCJDModel;
-//        List<BiHUanPO> biHuanLCXXList = new JPAQueryFactory(entityManager).select(Projections.bean(BiHUanPO.class, biHuanLCModel, biHuanLCJDModel)).from(biHuanLCModel)
-//                .where(biHuanLCModel.zuZhiJGID.eq(zuZhiJGID).and(biHuanLCModel.biHuanLXDM.eq(biHuanLXDM))
-//                        .and(QueryDSLUtils.whereIfHasText(likeQuery, ()->biHuanLCModel.biHuanLXMC.contains(likeQuery))))
-//                .leftJoin(biHuanLCJDModel)
-//                .on(biHuanLCJDModel.zuZhiJGID.eq(zuZhiJGID).and(biHuanLCModel.liuChengID.eq(biHuanLCJDModel.liuChengID)))
-//                .fetch();
-                List<BiHUanPO> biHuanLCXXList = biHuanLCRepository.asQuerydsl().where(c -> c.zuZhiJGID.eq(zuZhiJGID).and(c.biHuanLXDM.eq(biHuanLXDM)))
+        List<BiHUanPO> biHuanLCXXList = biHuanLCRepository.asQuerydsl().where(c -> c.zuZhiJGID.eq(zuZhiJGID).and(c.biHuanLXDM.eq(biHuanLXDM)))
                 .whereIf(StringUtil.hasText(likeQuery), t -> t.biHuanLXMC.contains(likeQuery))
                 .leftJoin(biHuanLCJDRepository.asQuerydsl(), (c, d) -> d.zuZhiJGID.eq(zuZhiJGID).and(c.liuChengID.eq(d.liuChengID)), BiHUanLCPO::new)
                 .select(c -> new Expression<?>[]{c.getLcModel(), c.getLcjdModel()}, BiHUanPO.class).fetch();
         //查询出所有的流程节点信息
-        List<String> allbhlcjd = biHuanLCXXList.stream().map(t->t.getLcjdModel().getLiuChengID()).distinct().toList();
-        List<SC_ZD_BiHuanLCModel> scZdBiHuanLCModels = biHuanLCXXList.stream().map(BiHUanPO::getLcModel).filter(ExpressionUtils.distinctByKeys(SC_ZD_BiHuanLCModel::getLiuChengID)).filter(t -> allbhlcjd.contains(t.getLiuChengID())).sorted(Comparator.comparing(SC_ZD_BiHuanLCModel::getShunXuHao)).toList();
-        return MapUtils.copyListProperties(scZdBiHuanLCModels,SC_ZD_BiHuanLCOutDto::new);
+        var allbhlcjd = biHuanLCXXList.stream().map(BiHUanPO::getLcjdModel).distinct().toList();
+        List<SC_ZD_BiHuanLCModel> scZdBiHuanLCModels = biHuanLCXXList.stream()
+                .map(BiHUanPO::getLcModel)
+                .filter(ExpressionUtils.distinctByKeys(SC_ZD_BiHuanLCModel::getLiuChengID))
+                .map(t -> {
+                    t.setShunXuHao(Objects.isNull(t.getShunXuHao()) ? 0 : t.getShunXuHao());
+                    return t;
+                }).sorted(Comparator.comparing(SC_ZD_BiHuanLCModel::getShunXuHao)).toList();
+        return MapUtils.copyListProperties(scZdBiHuanLCModels, SC_ZD_BiHuanLCOutDto::new, (model, dto) -> {
+            dto.setBiHuanJDLCList(MapUtils.copyListProperties(allbhlcjd.stream().filter(x -> Objects.equals(x.getLiuChengID(), model.getLiuChengID())).sorted(Comparator.comparing(SC_ZD_BiHuanLCJDModel::getShunXuHao)).toList(), SC_ZD_BiHuanLCJDDto::new));
+        });
     }
     /**
      * 启用闭环流程

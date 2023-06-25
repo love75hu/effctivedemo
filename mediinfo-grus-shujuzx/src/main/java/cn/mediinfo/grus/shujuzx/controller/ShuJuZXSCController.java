@@ -51,7 +51,7 @@ public class ShuJuZXSCController {
 
     @Operation(summary = "移除某一条收藏夹明细")
     @DeleteMapping("YiChuShouCangJMX")
-    public MsfResponse<Integer> yiChuShouCangJMX(@RequestParam String id) throws TongYongYWException {
+    public MsfResponse<Integer> yiChuShouCangJMX(@RequestParam String id){
         return MsfResponse.success(shuJuZXWDSCService.yiChuShouCangJMX(id));
     }
 
@@ -63,13 +63,13 @@ public class ShuJuZXSCController {
 
     @Operation(summary = "获取当前登录人的收藏夹列表")
     @GetMapping("GetShouCangJiaList")
-    public MsfResponse<List<SC_SC_ShouCangJXXOutDto>> getShouCangJiaList(String likeQuery) {
+    public MsfResponse<List<SC_SC_ShouCangJXXOutDto>> getShouCangJiaList(@RequestParam(required = false) String likeQuery) {
         return MsfResponse.success(shuJuZXWDSCService.getShouCangJiaList(likeQuery));
     }
 
     @Operation(summary = "根据收藏夹id和其他查询条件获取收藏夹明细条数")
     @GetMapping("GetShouCangJMXCount")
-    public MsfResponse<Integer> getShouCangJMXCount(String likeQuery, @RequestParam String shouCangJID) {
+    public MsfResponse<Integer> getShouCangJMXCount(@RequestParam(required = false) String likeQuery, @RequestParam String shouCangJID) {
         return MsfResponse.success(shuJuZXWDSCService.getShouCangJMXCount(likeQuery, shouCangJID));
     }
 

@@ -39,7 +39,7 @@ public interface ShuJuZXWDSCService {
      * @param id
      * @return
      */
-    Integer yiChuShouCangJMX(String id) throws TongYongYWException;
+    Integer yiChuShouCangJMX(String id);
 
     /**
      * 作废收藏夹

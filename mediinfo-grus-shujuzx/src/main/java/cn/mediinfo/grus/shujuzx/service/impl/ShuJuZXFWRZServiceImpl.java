@@ -61,11 +61,11 @@ public class ShuJuZXFWRZServiceImpl implements ShuJuZXFWRZService {
         return new JPAQueryFactory(entityManager)
                 .select(sjModel)
                 .from(sjModel)
-                .where(QueryDSLUtils.whereIf(fangWenKSRQ != null, sjModel.fangWenSJ.goe(fangWenKSRQ)))
-                .where(QueryDSLUtils.whereIf(fangWenJSRQ != null, sjModel.fangWenSJ.lt(DateUtil.dateAddDays(fangWenJSRQ, 1))))
-                .where(QueryDSLUtils.whereIf(StringUtil.hasText(bingRenID), sjModel.bingRenID.eq(bingRenID)))
-                .where(QueryDSLUtils.whereIf(StringUtil.hasText(xingMing), sjModel.xingMing.eq(xingMing)))
-                .where(QueryDSLUtils.whereIf(StringUtil.hasText(fangWenRXM), sjModel.fangWenRXM.eq(fangWenRXM)))
+                .where(QueryDSLUtils.whereIf(fangWenKSRQ != null, ()->sjModel.fangWenSJ.goe(fangWenKSRQ)))
+                .where(QueryDSLUtils.whereIf(fangWenJSRQ != null, ()->sjModel.fangWenSJ.lt(DateUtil.dateAddDays(fangWenJSRQ, 1))))
+                .where(QueryDSLUtils.whereIf(StringUtil.hasText(bingRenID), ()->sjModel.bingRenID.eq(bingRenID)))
+                .where(QueryDSLUtils.whereIf(StringUtil.hasText(xingMing), ()->sjModel.xingMing.eq(xingMing)))
+                .where(QueryDSLUtils.whereIf(StringUtil.hasText(fangWenRXM), ()->sjModel.fangWenRXM.eq(fangWenRXM)))
                 .fetch().size();
     }
 
@@ -75,11 +75,11 @@ public class ShuJuZXFWRZServiceImpl implements ShuJuZXFWRZService {
         List<SC_RZ_FangWenLCSJModel> list = new JPAQueryFactory(entityManager)
                 .select(sjModel)
                 .from(sjModel)
-                .where(QueryDSLUtils.whereIf(fangWenKSRQ != null, sjModel.fangWenSJ.goe(fangWenKSRQ)))
-                .where(QueryDSLUtils.whereIf(fangWenJSRQ != null, sjModel.fangWenSJ.lt(DateUtil.dateAddDays(fangWenJSRQ, 1))))
-                .where(QueryDSLUtils.whereIf(StringUtil.hasText(bingRenID), sjModel.bingRenID.eq(bingRenID)))
-                .where(QueryDSLUtils.whereIf(StringUtil.hasText(xingMing), sjModel.xingMing.eq(xingMing)))
-                .where(QueryDSLUtils.whereIf(StringUtil.hasText(fangWenRXM), sjModel.fangWenRXM.eq(fangWenRXM)))
+                .where(QueryDSLUtils.whereIf(fangWenKSRQ != null, ()->sjModel.fangWenSJ.goe(fangWenKSRQ)))
+                .where(QueryDSLUtils.whereIf(fangWenJSRQ != null, ()->sjModel.fangWenSJ.lt(DateUtil.dateAddDays(fangWenJSRQ, 1))))
+                .where(QueryDSLUtils.whereIf(StringUtil.hasText(bingRenID), ()->sjModel.bingRenID.eq(bingRenID)))
+                .where(QueryDSLUtils.whereIf(StringUtil.hasText(xingMing), ()->sjModel.xingMing.eq(xingMing)))
+                .where(QueryDSLUtils.whereIf(StringUtil.hasText(fangWenRXM), ()->sjModel.fangWenRXM.eq(fangWenRXM)))
                 .orderBy(sjModel.fangWenSJ.desc())
                 .offset(PageRequestUtil.of(pageIndex, pageSize).getOffset()).limit(pageSize)
                 .fetch();

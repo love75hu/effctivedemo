@@ -16,7 +16,7 @@ import cn.mediinfo.starter.base.util.QueryDSLUtils;
 import cn.mediinfo.starter.base.util.StringUtil;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -47,13 +47,12 @@ public class ShuJuZXWDSCServiceImpl implements ShuJuZXWDSCService {
         this.entityManager = entityManager;
     }
     @Override
-    @Transactional(rollbackOn = Exception.class)
     public Integer addShouCangJia(SC_SC_ShouCangJXXInDto shouCangJInDto) throws TongYongYWException {
         if (sc_sc_shouCangJXXRepository.existsByShouCangJMC(shouCangJInDto.getShouCangJMC())) {
             throw new TongYongYWException("收藏夹名称已存在,请重新确认!");
         }
         SC_SC_ShouCangJXXModel addModel = new SC_SC_ShouCangJXXModel();
-        MapUtils.mergeProperties(shouCangJInDto, addModel);
+        MapUtils.mergeProperties(shouCangJInDto, addModel,false);
         addModel.setZuZhiJGID(lyraIdentityService.getJiGouID());
         addModel.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
         addModel.setYongHuID(lyraIdentityService.getYongHuId());
@@ -63,10 +62,9 @@ public class ShuJuZXWDSCServiceImpl implements ShuJuZXWDSCService {
     }
 
     @Override
-    @Transactional(rollbackOn = Exception.class)
     public Integer addShouCangJMX(SC_SC_ShouCangJMXInDto shouCangJMXInDto) {
         SC_SC_ShouCangJMXModel addModel = new SC_SC_ShouCangJMXModel();
-        MapUtils.mergeProperties(shouCangJMXInDto, addModel,true);
+        MapUtils.mergeProperties(shouCangJMXInDto, addModel,false);
         addModel.setZuZhiJGID(lyraIdentityService.getJiGouID());
         addModel.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
         addModel.setShouCangRID(lyraIdentityService.getYongHuId());
@@ -77,7 +75,7 @@ public class ShuJuZXWDSCServiceImpl implements ShuJuZXWDSCService {
     }
 
     @Override
-    @Transactional(rollbackOn = Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     public Integer updateShouCangJia(SC_SC_ShouCangJXXInDto shouCangJInDto) throws TongYongYWException {
         SC_SC_ShouCangJXXModel updateModel = sc_sc_shouCangJXXRepository.findById(shouCangJInDto.getId()).orElse(null);
         if (updateModel == null) {
@@ -85,7 +83,7 @@ public class ShuJuZXWDSCServiceImpl implements ShuJuZXWDSCService {
 
         }
         List<SC_SC_ShouCangJMXModel> shouCangJMXList = sc_sc_shouCangJMXRepository.findByShouCangJID(shouCangJInDto.getId());
-        MapUtils.mergeProperties(shouCangJInDto,updateModel);
+        MapUtils.mergeProperties(shouCangJInDto,updateModel,true);
         sc_sc_shouCangJXXRepository.save(updateModel);
         shouCangJMXList.forEach(s->s.setShouCangJMC(shouCangJInDto.getShouCangJMC()));
         sc_sc_shouCangJMXRepository.saveAll(shouCangJMXList);
@@ -93,14 +91,13 @@ public class ShuJuZXWDSCServiceImpl implements ShuJuZXWDSCService {
     }
 
     @Override
-    @Transactional(rollbackOn = Exception.class)
-    public Integer yiChuShouCangJMX(String id) throws TongYongYWException {
+    public Integer yiChuShouCangJMX(String id){
         sc_sc_shouCangJMXRepository.softDelete(id);
         return 1;
     }
 
     @Override
-    @Transactional(rollbackOn = Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     public Integer zuoFeiShouCangJia(String id) throws TongYongYWException {
         if (!sc_sc_shouCangJXXRepository.existsById(id)) {
             throw new TongYongYWException("未找到相关可作废的信息!");
@@ -131,7 +128,7 @@ public class ShuJuZXWDSCServiceImpl implements ShuJuZXWDSCService {
                         .and(xxModel.zuZhiJGID.eq(mxModel.zuZhiJGID)))
                 .where(xxModel.zuZhiJGID.eq(lyraIdentityService.getJiGouID())
                         .and(xxModel.yongHuID.eq(lyraIdentityService.getYongHuId())))
-                .where(QueryDSLUtils.whereIf(Objects.nonNull(likeQuery), xxModel.shouCangJMC.contains(likeQuery)))
+                .where(QueryDSLUtils.whereIf(Objects.nonNull(likeQuery), ()->xxModel.shouCangJMC.contains(likeQuery)))
                 .fetch();
 
         return list
@@ -172,7 +169,7 @@ public class ShuJuZXWDSCServiceImpl implements ShuJuZXWDSCService {
                 .select(sjModel)
                 .from(sjModel)
                 .where(sjModel.bingRenID.in(bingRenIDList))
-                .where(QueryDSLUtils.whereIf(StringUtil.hasText(likeQuery),
+                .where(QueryDSLUtils.whereIf(StringUtil.hasText(likeQuery),()->
                         sjModel.xingMing.contains(likeQuery)
                                 .or(sjModel.id.contains(likeQuery)
                                         .or(sjModel.zhengJianHM.contains(likeQuery)))))
@@ -192,7 +189,7 @@ public class ShuJuZXWDSCServiceImpl implements ShuJuZXWDSCService {
                 .select(sjModel)
                 .from(sjModel)
                 .where(sjModel.bingRenID.in(bingRenIDList))
-                .where(QueryDSLUtils.whereIf(StringUtil.hasText(likeQuery),
+                .where(QueryDSLUtils.whereIf(StringUtil.hasText(likeQuery),()->
                         sjModel.xingMing.contains(likeQuery)
                                 .or(sjModel.id.contains(likeQuery)
                                         .or(sjModel.zhengJianHM.contains(likeQuery)))))

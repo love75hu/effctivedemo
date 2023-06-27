@@ -3,9 +3,10 @@ package cn.mediinfo.grus.shujuzx.repository;
 import cn.mediinfo.grus.shujuzx.model.QSC_ZD_YinSiPZModel;
 import cn.mediinfo.grus.shujuzx.model.SC_ZD_YinSiPZModel;
 import cn.mediinfo.starter.base.orm.MsfJpaRepository;
+import cn.mediinfo.starter.base.orm.jpa.MsfDataSource;
 
 import java.util.List;
-
+@MsfDataSource("datasourcesjzx")
 public interface SC_ZD_YinSiPZRepository extends MsfJpaRepository<QSC_ZD_YinSiPZModel,SC_ZD_YinSiPZModel, String> {
 
     /**

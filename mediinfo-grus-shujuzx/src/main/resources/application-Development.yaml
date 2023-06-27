@@ -23,10 +23,23 @@ spring:
     url: jdbc:oracle:thin:@172.19.84.161:1521:orcl
     username: LYRA_HIS
     password: LYRA_HIS
+    multiple:
+      datasourcesjzx:
+        driver-class-name: org.postgresql.Driver
+        url: jdbc:postgresql://172.19.80.171:5432/lyra_his?currentSchema=grus_sc
+        username: lyra_his
+        password: lyra_his
+      datasourcebr:
+        driver-class-name: org.postgresql.Driver
+        url: jdbc:postgresql://172.19.80.171:5432/lyra_his?currentSchema=vela_br
+        username: lyra_his
+        password: lyra_his
+
   jpa:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.Oracle10gDialect
+        postgresql-dialect: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
   data:
     redis:

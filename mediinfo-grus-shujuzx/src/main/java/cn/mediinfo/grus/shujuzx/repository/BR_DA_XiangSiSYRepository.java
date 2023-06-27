@@ -3,11 +3,12 @@ package cn.mediinfo.grus.shujuzx.repository;
 import cn.mediinfo.grus.shujuzx.model.BR_DA_XiangSiSYModel;
 import cn.mediinfo.grus.shujuzx.model.QBR_DA_XiangSiSYModel;
 import cn.mediinfo.starter.base.orm.MsfJpaRepository;
+import cn.mediinfo.starter.base.orm.jpa.MsfDataSource;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-
+@MsfDataSource("datasourcebr")
 public interface BR_DA_XiangSiSYRepository extends MsfJpaRepository<QBR_DA_XiangSiSYModel,BR_DA_XiangSiSYModel, String> {
     @Query("select s from BR_DA_XiangSiSYModel s where (s.bingRenID1 = :bingRenID and s.bingRenID2 in(:xiangSiBRIDList)) or (s.bingRenID2 = :bingRenID and s.bingRenID1 in(:xiangSiBRIDList))")
     List<BR_DA_XiangSiSYModel> getXiangSiSYList(@Param("bingRenID")String bingRenID, @Param("xiangSiBRIDList")List<String> xiangSiBRIDList);

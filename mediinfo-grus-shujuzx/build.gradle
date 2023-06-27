@@ -9,7 +9,7 @@ sourceCompatibility = '17'
 dependencyManagement {
 
     imports {
-        mavenBom 'cn.mediinfo:mediinfo-bom-dependencies:0.0.139'
+        mavenBom 'cn.mediinfo:mediinfo-bom-dependencies:0.0.141.beta2'
     }
 }
 repositories {

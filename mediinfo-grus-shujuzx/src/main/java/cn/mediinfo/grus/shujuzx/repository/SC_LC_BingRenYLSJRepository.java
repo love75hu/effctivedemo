@@ -3,9 +3,10 @@ package cn.mediinfo.grus.shujuzx.repository;
 import cn.mediinfo.grus.shujuzx.model.QSC_LC_BingRenYLSJModel;
 import cn.mediinfo.grus.shujuzx.model.SC_LC_BingRenYLSJModel;
 import cn.mediinfo.starter.base.orm.MsfJpaRepository;
+import cn.mediinfo.starter.base.orm.jpa.MsfDataSource;
 
 import java.util.List;
-
+@MsfDataSource("datasourcesjzx")
 public interface SC_LC_BingRenYLSJRepository extends MsfJpaRepository<QSC_LC_BingRenYLSJModel,SC_LC_BingRenYLSJModel, String> {
 
     /**

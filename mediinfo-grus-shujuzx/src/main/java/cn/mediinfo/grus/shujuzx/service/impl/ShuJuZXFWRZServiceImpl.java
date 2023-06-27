@@ -50,7 +50,7 @@ public class ShuJuZXFWRZServiceImpl implements ShuJuZXFWRZService {
         fangWenRZ.setFangWenRID(userID);
         fangWenRZ.setFangWenRXM(userName);
         fangWenRZ.setFangWenSJ(new Date());
-        MapUtils.mergeProperties(fangWenRZ, addFangWenRZDto);
+        MapUtils.mergeProperties(addFangWenRZDto,fangWenRZ,true);
         sc_rz_fangWenLCSJRepository.save(fangWenRZ);
         return true;
     }

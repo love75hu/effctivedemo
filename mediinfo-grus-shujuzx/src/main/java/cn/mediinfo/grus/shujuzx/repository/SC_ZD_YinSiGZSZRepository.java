@@ -5,10 +5,11 @@ import cn.mediinfo.grus.shujuzx.model.SC_ZD_YinSiGZSZModel;
 import cn.mediinfo.grus.shujuzx.model.SC_ZD_YinSiPZModel;
 import cn.mediinfo.grus.shujuzx.po.yinsigzsz.YinSiGZSZSJYpPO;
 import cn.mediinfo.starter.base.orm.MsfJpaRepository;
+import cn.mediinfo.starter.base.orm.jpa.MsfDataSource;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
-
+@MsfDataSource("datasourcesjzx")
 public interface SC_ZD_YinSiGZSZRepository extends MsfJpaRepository<QSC_ZD_YinSiGZSZModel,SC_ZD_YinSiGZSZModel, String> {
     /**
      *判断数据源名称是否存在

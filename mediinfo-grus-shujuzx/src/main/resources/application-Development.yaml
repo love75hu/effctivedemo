@@ -7,7 +7,11 @@ server:
   shutdown: graceful #开启优雅停机
 
 spring:
-
+  cache:
+    type: redis  #必须配置为redis
+    redis:
+      key-prefix: "mediinfo_grus"  #前缀
+      time-to-live: 3600000   #缓存有效期，毫秒为单位
   mvc:
     # 前端参数格式化
     format:
@@ -20,7 +24,7 @@ spring:
           issuer-uri: http://172.19.80.10:30003/mediinfo-lyra-authserver
   datasource:
     driver-class-name: oracle.jdbc.OracleDriver
-    url: jdbc:oracle:thin:@172.19.84.161:1521:orcl
+    url: jdbc:oracle:thin:@172.19.80.161:1521:orcl
     username: LYRA_HIS
     password: LYRA_HIS
     multiple:
@@ -34,7 +38,6 @@ spring:
         url: jdbc:postgresql://172.19.80.171:5432/lyra_his?currentSchema=vela_br
         username: lyra_his
         password: lyra_his
-
   jpa:
     properties:
       hibernate:
@@ -56,12 +59,10 @@ spring:
     timeout-per-shutdown-phase: 30s
   application:
     name:
-
-
 mediinfo:
   remote:
     urls:
-      mediinfo-vela-jiuzhen: "http://172.19.84.61:30244"
+      mediinfo-grus-huanzhe-query: "http://172.19.80.10:30003/mediinfo-grus-huanzhe-query"
   sequence:
     provider: redis
   string-generator:

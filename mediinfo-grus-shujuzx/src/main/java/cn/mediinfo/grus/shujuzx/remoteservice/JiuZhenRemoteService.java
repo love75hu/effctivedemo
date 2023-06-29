@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-@FeignClient(value = "mediinfo-vela-jiuzhen", path = "mediinfo-vela-jiuzhen")
+@FeignClient(value = "mediinfo-grus-huanzhe-query", path = "mediinfo-grus-huanzhe-query")
 public interface JiuZhenRemoteService {
 
     /**

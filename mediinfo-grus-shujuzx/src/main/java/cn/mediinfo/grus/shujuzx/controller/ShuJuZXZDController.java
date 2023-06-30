@@ -48,7 +48,7 @@ public class ShuJuZXZDController {
      */
     @PostMapping("AddYinSiGZ")
     @Operation(summary = "新增隐私规则")
-    public MsfResponse<Integer> addYinSiGZ(SC_ZD_YinSiGZSZInDto yinSiGZSZInDto) throws MsfException {
+    public MsfResponse<Integer> addYinSiGZ(@RequestBody SC_ZD_YinSiGZSZInDto yinSiGZSZInDto) throws MsfException {
         return MsfResponse.success(yinSiGZSZService.addYinSiGZ(yinSiGZSZInDto));
     }
 
@@ -73,7 +73,7 @@ public class ShuJuZXZDController {
     /**
      * 修改隐私规则
      */
-    @PostMapping("UpdateYinSiGZ")
+    @PutMapping("UpdateYinSiGZ")
     @Operation(summary = "修改隐私规则")
     public MsfResponse<Integer> updateYinSiGZ(@RequestBody SC_ZD_YinSiGZSZInDto yinSiGZSZInDto) throws MsfException {
         return MsfResponse.success(yinSiGZSZService.updateYinSiGZ(yinSiGZSZInDto));
@@ -82,7 +82,7 @@ public class ShuJuZXZDController {
     /**
      * 作废隐私规则
      */
-    @PostMapping("ZuoFeiYinSiGZ")
+    @DeleteMapping("ZuoFeiYinSiGZ")
     @Operation(summary = "作废隐私规则")
     public MsfResponse<Integer> zuoFeiYinSiGZ(String id) throws MsfException {
         return MsfResponse.success(yinSiGZSZService.zuoFeiYinSiGZ(id));
@@ -91,7 +91,7 @@ public class ShuJuZXZDController {
     /**
      * 移除隐私配置
      */
-    @PostMapping("ZuoFeiYinSiSZ")
+    @DeleteMapping("ZuoFeiYinSiSZ")
     @Operation(summary = "移除隐私配置")
     public MsfResponse<Boolean> zuoFeiYinSiSZ(String id) {
         return MsfResponse.success(yinSiGZSZService.zuoFeiYinSiSZ(id));
@@ -100,7 +100,7 @@ public class ShuJuZXZDController {
     /**
      * 启用隐私设置
      */
-    @PostMapping("QiYongYinSiSZ")
+    @GetMapping("QiYongYinSiSZ")
     @Operation(summary = "启用隐私设置")
     public MsfResponse<Boolean> qiYongYinSiSZ(String id, Integer qiYongBZ) {
         return MsfResponse.success(yinSiGZSZService.qiYongYinSiSZ(id, qiYongBZ));

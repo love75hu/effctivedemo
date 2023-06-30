@@ -58,7 +58,7 @@ public class ShuJuZXFWRZServiceImpl implements ShuJuZXFWRZService {
     @Override
     public Integer getFangWenRZCount(Date fangWenKSRQ, Date fangWenJSRQ, String bingRenID, String xingMing, String fangWenRXM) {
         QSC_RZ_FangWenLCSJModel sjModel=QSC_RZ_FangWenLCSJModel.sC_RZ_FangWenLCSJModel;
-        return new JPAQueryFactory(entityManager)
+        return new JPAQueryFactory(sc_rz_fangWenLCSJRepository.getEntityManager())
                 .select(sjModel)
                 .from(sjModel)
                 .where(QueryDSLUtils.whereIf(fangWenKSRQ != null, ()->sjModel.fangWenSJ.goe(fangWenKSRQ)))
@@ -72,7 +72,7 @@ public class ShuJuZXFWRZServiceImpl implements ShuJuZXFWRZService {
     @Override
     public List<ShuJuZXFWRZDto> getFangWenRZList(Date fangWenKSRQ, Date fangWenJSRQ, String bingRenID, String xingMing, String fangWenRXM, Integer pageIndex, Integer pageSize) {
         QSC_RZ_FangWenLCSJModel sjModel = QSC_RZ_FangWenLCSJModel.sC_RZ_FangWenLCSJModel;
-        List<SC_RZ_FangWenLCSJModel> list = new JPAQueryFactory(entityManager)
+        List<SC_RZ_FangWenLCSJModel> list = new JPAQueryFactory(sc_rz_fangWenLCSJRepository.getEntityManager())
                 .select(sjModel)
                 .from(sjModel)
                 .where(QueryDSLUtils.whereIf(fangWenKSRQ != null, ()->sjModel.fangWenSJ.goe(fangWenKSRQ)))

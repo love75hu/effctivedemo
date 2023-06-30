@@ -5,6 +5,7 @@ import cn.mediinfo.grus.shujuzx.dto.ShuJuZXSCs.SC_SC_ShouCangJMXOutDto;
 import cn.mediinfo.grus.shujuzx.dto.ShuJuZXSCs.SC_SC_ShouCangJXXInDto;
 import cn.mediinfo.grus.shujuzx.dto.ShuJuZXSCs.SC_SC_ShouCangJXXOutDto;
 import cn.mediinfo.grus.shujuzx.model.*;
+import cn.mediinfo.grus.shujuzx.repository.SC_LC_BingRenYLSJRepository;
 import cn.mediinfo.grus.shujuzx.repository.SC_SC_ShouCangJMXRepository;
 import cn.mediinfo.grus.shujuzx.repository.SC_SC_ShouCangJXXRepository;
 import cn.mediinfo.grus.shujuzx.service.ShuJuZXWDSCService;
@@ -34,16 +35,18 @@ public class ShuJuZXWDSCServiceImpl implements ShuJuZXWDSCService {
 
     private final SC_SC_ShouCangJXXRepository sc_sc_shouCangJXXRepository;
     private final SC_SC_ShouCangJMXRepository sc_sc_shouCangJMXRepository;
+    private final SC_LC_BingRenYLSJRepository sc_lc_bingRenYLSJRepository;
     private final EntityManager entityManager;
 
     private record XMModelAndXXModelPO(String id,String shouCangJMC,String beiZhu,Integer shunXuHao,SC_SC_ShouCangJMXModel mxModel) {}
 
 
 
-    public ShuJuZXWDSCServiceImpl(LyraIdentityService lyraIdentityService, SC_SC_ShouCangJXXRepository scScShouCangJXXRepository, SC_SC_ShouCangJMXRepository scScShouCangJMXRepository, EntityManager entityManager) {
+    public ShuJuZXWDSCServiceImpl(LyraIdentityService lyraIdentityService, SC_SC_ShouCangJXXRepository scScShouCangJXXRepository, SC_SC_ShouCangJMXRepository scScShouCangJMXRepository, SC_LC_BingRenYLSJRepository scLcBingRenYLSJRepository, EntityManager entityManager) {
         this.lyraIdentityService = lyraIdentityService;
         this.sc_sc_shouCangJXXRepository = scScShouCangJXXRepository;
         this.sc_sc_shouCangJMXRepository = scScShouCangJMXRepository;
+        this.sc_lc_bingRenYLSJRepository = scLcBingRenYLSJRepository;
         this.entityManager = entityManager;
     }
     @Override
@@ -112,7 +115,7 @@ public class ShuJuZXWDSCServiceImpl implements ShuJuZXWDSCService {
     public List<SC_SC_ShouCangJXXOutDto> getShouCangJiaList(String likeQuery) {
         QSC_SC_ShouCangJXXModel xxModel = QSC_SC_ShouCangJXXModel.sC_SC_ShouCangJXXModel;
         QSC_SC_ShouCangJMXModel mxModel = QSC_SC_ShouCangJMXModel.sC_SC_ShouCangJMXModel;
-        List<XMModelAndXXModelPO> list = new JPAQueryFactory(entityManager)
+        var list = new JPAQueryFactory(sc_sc_shouCangJXXRepository.getEntityManager())
                 .select(
                         QueryDSLUtils.record(XMModelAndXXModelPO.class,
                                 xxModel.id,
@@ -126,8 +129,8 @@ public class ShuJuZXWDSCServiceImpl implements ShuJuZXWDSCService {
                 .leftJoin(mxModel)
                 .on(xxModel.id.eq(mxModel.shouCangJID)
                         .and(xxModel.zuZhiJGID.eq(mxModel.zuZhiJGID)))
-                .where(xxModel.zuZhiJGID.eq(lyraIdentityService.getJiGouID())
-                        .and(xxModel.yongHuID.eq(lyraIdentityService.getYongHuId())))
+//                .where(xxModel.zuZhiJGID.eq(lyraIdentityService.getJiGouID())
+//                        .and(xxModel.yongHuID.eq(lyraIdentityService.getYongHuId())))
                 .where(QueryDSLUtils.whereIf(Objects.nonNull(likeQuery), ()->xxModel.shouCangJMC.contains(likeQuery)))
                 .fetch();
 
@@ -149,12 +152,12 @@ public class ShuJuZXWDSCServiceImpl implements ShuJuZXWDSCService {
                             dto.setBeiZhu((String) s.getKey().get(2));
                             dto.setShunXuHao((Integer) s.getKey().get(3));
                             // 患者数量
-                            long count = s.getValue().stream().filter(a -> Objects.equals(a.mxModel().getShouCangJID(), s.getKey().get(0))).count();
+                            long count = s.getValue().stream().filter(a -> a.mxModel() != null && Objects.equals(a.mxModel().getShouCangJID(), s.getKey().get(0))).count();
                             dto.setHuanZheShu((int) count);
                             return dto;
                         }
                 )
-                .sorted(Comparator.comparingInt(SC_SC_ShouCangJXXOutDto::getShunXuHao))
+                .sorted(Comparator.comparing(SC_SC_ShouCangJXXOutDto::getShunXuHao,Comparator.nullsFirst(Comparator.naturalOrder())))
                 .toList();
     }
 
@@ -165,7 +168,7 @@ public class ShuJuZXWDSCServiceImpl implements ShuJuZXWDSCService {
         //通过明细的病人id 获取病人信息
         List<String> bingRenIDList = shouCangMXList.stream().map(SC_SC_ShouCangJMXModel::getBingRenID).distinct().toList();
         QSC_LC_BingRenYLSJModel sjModel=QSC_LC_BingRenYLSJModel.sC_LC_BingRenYLSJModel;
-        return new JPAQueryFactory(entityManager)
+        return new JPAQueryFactory(sc_lc_bingRenYLSJRepository.getEntityManager())
                 .select(sjModel)
                 .from(sjModel)
                 .where(sjModel.bingRenID.in(bingRenIDList))
@@ -185,7 +188,7 @@ public class ShuJuZXWDSCServiceImpl implements ShuJuZXWDSCService {
         List<String> bingRenIDList = shouCangMXList.stream().map(SC_SC_ShouCangJMXOutDto::getBingRenID).distinct().toList();
         QSC_LC_BingRenYLSJModel sjModel = QSC_LC_BingRenYLSJModel.sC_LC_BingRenYLSJModel;
 
-        List<SC_LC_BingRenYLSJModel> bingRenXXList = new JPAQueryFactory(entityManager)
+        List<SC_LC_BingRenYLSJModel> bingRenXXList = new JPAQueryFactory(sc_lc_bingRenYLSJRepository.getEntityManager())
                 .select(sjModel)
                 .from(sjModel)
                 .where(sjModel.bingRenID.in(bingRenIDList))

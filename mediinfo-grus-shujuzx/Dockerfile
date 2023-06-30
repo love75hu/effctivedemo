@@ -1,4 +1,4 @@
-FROM 172.19.30.186:8000/pub/java-openjdk-runtime:skywalking-agent-8.15.0-java17 as base
+FROM 172.19.30.186:8000/openjdk/openjdk:jdk17-alpine as base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
@@ -12,5 +12,4 @@ FROM base as final
 WORKDIR /app
 COPY --from=build /app/build/libs .
 COPY --from=build /app/build/resources/main .
-
-CMD ["bash", "/app/appRun.sh","--jar","mediinfo-grus-shujuzx-java.jar"]
+ENTRYPOINT ["java","-Dfile.encoding=utf-8","-Dspring.config.location=/app/application.yaml","-jar","mediinfo-grus-shujuzx-java-0.0.1-SNAPSHOT.jar"]

@@ -56,10 +56,8 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
     public final YinSiGZSZService yinSiGZSZService;
     public final ZhuSuoYCZRZService zhuSuoYCZRZService;
     private final LyraIdentityService lyraIdentityService;
-    @PersistenceContext
-    private final EntityManager entityManager;
 
-    public ZhuSuoYGLServiceImpl(BR_DA_XiangSiSYRepository brDaXiangSiSYRepository, BR_DA_JiaoChaSYRepository brDaJiaoChaSYRepository, BR_DA_JiBenXXRepository brDaJiBenXXRepository, BR_DA_HeBingJLRepository brDaHeBingJLRepository, BR_DA_JieZhiXXRepository brDaJieZhiXXRepository, BR_DA_KuoZhanXXRepository brDaKuoZhanXXRepository, BR_ZD_HeBingGZRepository brZdHeBingGZRepository, BR_ZD_HeBingGZMXRepository brZdHeBingGZMXRepository, YinSiGZSZService yinSiGZSZService, ZhuSuoYCZRZService zhuSuoYCZRZService, LyraIdentityService lyraIdentityService, EntityManager entityManager,BR_DA_ZhuSuoYCZRZRepository zhuSuoYCZRZRepository) {
+    public ZhuSuoYGLServiceImpl(BR_DA_XiangSiSYRepository brDaXiangSiSYRepository, BR_DA_JiaoChaSYRepository brDaJiaoChaSYRepository, BR_DA_JiBenXXRepository brDaJiBenXXRepository, BR_DA_HeBingJLRepository brDaHeBingJLRepository, BR_DA_JieZhiXXRepository brDaJieZhiXXRepository, BR_DA_KuoZhanXXRepository brDaKuoZhanXXRepository, BR_ZD_HeBingGZRepository brZdHeBingGZRepository, BR_ZD_HeBingGZMXRepository brZdHeBingGZMXRepository, YinSiGZSZService yinSiGZSZService, ZhuSuoYCZRZService zhuSuoYCZRZService, LyraIdentityService lyraIdentityService,BR_DA_ZhuSuoYCZRZRepository zhuSuoYCZRZRepository) {
         this.brDaXiangSiSYRepository = brDaXiangSiSYRepository;
         this.brDaJiaoChaSYRepository = brDaJiaoChaSYRepository;
         this.brDaJiBenXXRepository = brDaJiBenXXRepository;
@@ -72,7 +70,6 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
         this.zhuSuoYCZRZService = zhuSuoYCZRZService;
         this.lyraIdentityService = lyraIdentityService;
         this.zhuSuoYCZRZRepository = zhuSuoYCZRZRepository;
-        this.entityManager = entityManager;
     }
 
     /**
@@ -84,7 +81,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
     @Override
     public List<BR_DA_JiBenXXByZSYGLDto> getXiangSiSYList(String zhuSuoYBRID) throws TongYongYWException {
         var qModel = QBR_DA_XiangSiSYModel.bR_DA_XiangSiSYModel;
-        var xiangSiBRIDList = new JPAQueryFactory(entityManager).select(
+        var xiangSiBRIDList = new JPAQueryFactory(brDaXiangSiSYRepository.getEntityManager()).select(
                         Projections.bean(BR_DA_XiangSiSYModel.class, qModel.bingRenID2, qModel.xiangSiDu, qModel.bingRenID1))
                 .from(qModel)
                 .where(qModel.bingRenID1.eq(zhuSuoYBRID).and(qModel.huLueBZ.eq(0)))
@@ -184,7 +181,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
     public Integer getZhuSuoYinCount(Date kaiShiSJ, Date jieShuSJ, Integer xiangSiDu, String MPI, String xingMing, String lianXiDH, String shenFenZH) throws TongYongYWException, ParseException {
         var qJiBenXX = QBR_DA_JiBenXXModel.bR_DA_JiBenXXModel;
         var qHeBingJL = QBR_DA_HeBingJLModel.bR_DA_HeBingJLModel;
-        var count = new JPAQueryFactory(entityManager).select(qJiBenXX.count())
+        var count = new JPAQueryFactory(brDaJiBenXXRepository.getEntityManager()).select(qJiBenXX.count())
                 .from(qJiBenXX)
                 .leftJoin(qHeBingJL)
                 .on(qJiBenXX.id.eq(qHeBingJL.bingRenID))
@@ -212,7 +209,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
     public List<BR_DA_JiBenXXByZSYGLDto> getZhuSuoYGLList(Integer pageIndex, Integer pageSize, Date kaiShiSJ, Date jieShuSJ, Integer xiangSiDu, String MPI, String xingMing, String lianXiDH, String shenFenZH, String jiuZhenKH) throws TongYongYWException {
         var qJiBenXX = QBR_DA_JiBenXXModel.bR_DA_JiBenXXModel;
         var qHeBingJL = QBR_DA_HeBingJLModel.bR_DA_HeBingJLModel;
-        var result = new JPAQueryFactory(entityManager).select(
+        var result = new JPAQueryFactory(brDaJiBenXXRepository.getEntityManager()).select(
                         Projections.bean(BR_DA_JiBenXXByZSYGLDto.class, qJiBenXX,
                                 qHeBingJL.heBingZTDM, qHeBingJL.heBingZTMC, qHeBingJL.zuiDaXSD, qHeBingJL.heBingShu, qHeBingJL.xiangSiShu))
                 .from(qJiBenXX)
@@ -265,7 +262,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
         }
         //获取相似索引病人Id
         var qXSBRModel = QBR_DA_XiangSiSYModel.bR_DA_XiangSiSYModel;
-        var xiangSiBRs = new JPAQueryFactory(entityManager).select(Projections.bean(BR_DA_XiangSiSYModel.class,qXSBRModel.bingRenID2,qXSBRModel.xiangSiDu))
+        var xiangSiBRs = new JPAQueryFactory(brDaXiangSiSYRepository.getEntityManager()).select(Projections.bean(BR_DA_XiangSiSYModel.class,qXSBRModel.bingRenID2,qXSBRModel.xiangSiDu))
                             .from(qXSBRModel)
                 .where(qXSBRModel.bingRenID1.eq(bingRenID).and(qXSBRModel.heBingBZ.eq(0)).and(qXSBRModel.huLueBZ.eq(0)))
                 .where(QueryDSLUtils.whereIf(xiangSiDu>0,qXSBRModel.xiangSiDu.goe(xiangSiDu)))

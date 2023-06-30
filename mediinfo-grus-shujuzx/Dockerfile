@@ -13,3 +13,4 @@ WORKDIR /app
 COPY --from=build /app/build/libs .
 COPY --from=build /app/build/resources/main .
 ENTRYPOINT ["java","-Dfile.encoding=utf-8","-Dspring.config.location=/app/application.yaml","-jar","mediinfo-grus-shujuzx-java-0.0.1-SNAPSHOT.jar"]
+

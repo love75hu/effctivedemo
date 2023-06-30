@@ -493,7 +493,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
                 .select(x -> x.guanLianBRID).fetch();
         guanLianBRIds.add(dto.getXiangSiSYBRID());
         QBR_DA_JiaoChaSYModel brDaJiaoChaSYModel = QBR_DA_JiaoChaSYModel.bR_DA_JiaoChaSYModel;
-        List<BR_DA_JiaoChaSYModel> deteleJiaoChaSYList = new JPAQueryFactory(entityManager)
+        List<BR_DA_JiaoChaSYModel> deteleJiaoChaSYList = new JPAQueryFactory(brDaJiaoChaSYRepository.getEntityManager())
                 .select(brDaJiaoChaSYModel)
                 .from(brDaJiaoChaSYModel)
                 .where(brDaJiaoChaSYModel.guanLianBRID.in(guanLianBRIds).and(brDaJiaoChaSYModel.zhuBingRID.eq(dto.getZhuSuoYBRID())))

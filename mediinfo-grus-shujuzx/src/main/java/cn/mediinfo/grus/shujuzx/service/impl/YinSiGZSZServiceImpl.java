@@ -39,16 +39,13 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
     private final SC_ZD_YinSiPZRepository yinSiPZRepository;
     private final SC_ZD_YinSiGZSZRepository yinSiGZSZRepository;
     private final SC_ZD_ZhanShiPZRepository zhanShiPZRepository;
-    @PersistenceContext
-    private final EntityManager entityManager;
 
     public YinSiGZSZServiceImpl(SC_ZD_YinSiPZRepository yinSiPZRepository,
                                 SC_ZD_YinSiGZSZRepository yinSiGZSZRepository,
-                                SC_ZD_ZhanShiPZRepository zhanShiPZRepository, EntityManager entityManager) {
+                                SC_ZD_ZhanShiPZRepository zhanShiPZRepository) {
         this.yinSiPZRepository = yinSiPZRepository;
         this.yinSiGZSZRepository = yinSiGZSZRepository;
         this.zhanShiPZRepository = zhanShiPZRepository;
-        this.entityManager = entityManager;
     }
 
     /**
@@ -297,7 +294,7 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
     @Override
     public Integer getYinSiGZSZCount(String likeQuery) {
         QSC_ZD_YinSiGZSZModel yinSiGZSZModel = QSC_ZD_YinSiGZSZModel.sC_ZD_YinSiGZSZModel;
-        JPAQuery<SC_ZD_YinSiGZSZModel> jpaQuery = new JPAQueryFactory(entityManager)
+        JPAQuery<SC_ZD_YinSiGZSZModel> jpaQuery = new JPAQueryFactory(yinSiGZSZRepository.getEntityManager())
                 .select(yinSiGZSZModel).from(yinSiGZSZModel)
                 .where(yinSiGZSZModel.zuZhiJGID.eq("0"))
                 .where(QueryDSLUtils.whereIfHasText(likeQuery,()->yinSiGZSZModel.shuJuYMC.contains(likeQuery)));
@@ -310,7 +307,7 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
     @Override
     public List<SC_ZD_YinSiGZSZOutDto> getYinSiGZSZList(String likeQuery,Integer pageIndex, Integer pageSize) {
         QSC_ZD_YinSiGZSZModel yinSiGZSZModel = QSC_ZD_YinSiGZSZModel.sC_ZD_YinSiGZSZModel;
-        JPAQuery<SC_ZD_YinSiGZSZModel> jpaQuery = new JPAQueryFactory(entityManager).select(yinSiGZSZModel).from(yinSiGZSZModel).where(yinSiGZSZModel.zuZhiJGID.eq("0"))
+        JPAQuery<SC_ZD_YinSiGZSZModel> jpaQuery = new JPAQueryFactory(yinSiGZSZRepository.getEntityManager()).select(yinSiGZSZModel).from(yinSiGZSZModel).where(yinSiGZSZModel.zuZhiJGID.eq("0"))
                 .where(QueryDSLUtils.whereIfHasText(likeQuery,()->yinSiGZSZModel.shuJuYMC.contains(likeQuery)));
         List<SC_ZD_YinSiGZSZModel> yinSiGZSZModelList = jpaQuery.orderBy(yinSiGZSZModel.shunXuHao.asc())
                 .offset(PageRequestUtil.of(pageIndex, pageSize).getOffset()).limit(pageSize).fetch();
@@ -351,7 +348,7 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
     @Override
     public List<SC_ZD_YinSiPZDto> getYinSiSZList(String chaXunMSDM, String zuZhiJGID, String likeQuery) {
         QSC_ZD_YinSiPZModel yinSiPZModel = QSC_ZD_YinSiPZModel.sC_ZD_YinSiPZModel;
-        JPAQuery<SC_ZD_YinSiPZModel> jpaQuery = new JPAQueryFactory(entityManager).select(yinSiPZModel).from(yinSiPZModel)
+        JPAQuery<SC_ZD_YinSiPZModel> jpaQuery = new JPAQueryFactory(yinSiPZRepository.getEntityManager()).select(yinSiPZModel).from(yinSiPZModel)
                 .where(yinSiPZModel.zuZhiJGID.eq(zuZhiJGID).and(yinSiPZModel.chaXunMSDM.eq(chaXunMSDM)));
         if (StringUtil.hasText(likeQuery)) {
             jpaQuery.where(yinSiPZModel.shuJuYLM.contains(likeQuery.toUpperCase()).or(yinSiPZModel.shuJuYMC.contains(likeQuery.toUpperCase())));

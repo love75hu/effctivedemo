@@ -10,7 +10,6 @@ import cn.mediinfo.grus.shujuzx.model.SC_ZD_ShuJuYLBModel;
 import cn.mediinfo.grus.shujuzx.repository.SC_ZD_ShuJuYLBRepository;
 import cn.mediinfo.grus.shujuzx.repository.SC_ZD_ShuJuYZYRepository;
 import cn.mediinfo.grus.shujuzx.service.ShuJuYLBService;
-import cn.mediinfo.starter.base.exception.MsfResponseException;
 import cn.mediinfo.starter.base.exception.TongYongYWException;
 import cn.mediinfo.starter.base.exception.WeiZhaoDSJException;
 import cn.mediinfo.starter.base.lyra.service.LyraIdentityService;
@@ -160,7 +159,7 @@ public class ShuJuYLBServiceImpl implements ShuJuYLBService {
         //获取输入码类型
         var shuRuMLX = lyraIdentityService.getShuRuMLX();
         QSC_ZD_ShuJuYLBModel shuJuYLB = QSC_ZD_ShuJuYLBModel.sC_ZD_ShuJuYLBModel;
-        var factory = new JPAQueryFactory(entityManager);
+        var factory = new JPAQueryFactory(sc_zd_shuJuYLBRepository.getEntityManager());
         var query = factory.select(shuJuYLB).from(shuJuYLB);
 
         //组织机构过滤
@@ -197,7 +196,7 @@ public class ShuJuYLBServiceImpl implements ShuJuYLBService {
         //获取输入码类型
         var shuRuMLX = lyraIdentityService.getShuRuMLX();
         QSC_ZD_ShuJuYLBModel shuJuYLB = QSC_ZD_ShuJuYLBModel.sC_ZD_ShuJuYLBModel;
-        var factory = new JPAQueryFactory(entityManager);
+        var factory = new JPAQueryFactory(sc_zd_shuJuYLBRepository.getEntityManager());
         var query = factory.select(shuJuYLB).from(shuJuYLB);
 
         //组织机构过滤

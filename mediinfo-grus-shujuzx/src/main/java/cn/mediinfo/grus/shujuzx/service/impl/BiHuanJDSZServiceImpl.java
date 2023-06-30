@@ -53,7 +53,7 @@ public class BiHuanJDSZServiceImpl implements BiHuanJDSZService {
     @Override
     public List<SC_ZD_BiHuanJDListDto> getBiHuanJDList(String biHuanLXDM, String likeQuery, Integer pageIndex, Integer pageSize) {
         QSC_ZD_BiHuanJDModel biHuanJD = QSC_ZD_BiHuanJDModel.sC_ZD_BiHuanJDModel;
-        var query = new JPAQueryFactory(entityManager).select(biHuanJD).from(biHuanJD);
+        var query = new JPAQueryFactory(sc_zd_biHuanJDRepository.getEntityManager()).select(biHuanJD).from(biHuanJD);
         query.where(biHuanJD.biHuanLXDM.eq(biHuanLXDM));
         if (StringUtil.hasText(likeQuery)) {
             query.where(biHuanJD.jieDianID.contains(likeQuery).or(biHuanJD.jieDianMC.contains(likeQuery)));
@@ -75,7 +75,7 @@ public class BiHuanJDSZServiceImpl implements BiHuanJDSZService {
     @Override
     public long getBiHuanJDCount(String biHuanLXDM, String likeQuery) {
         QSC_ZD_BiHuanJDModel biHuanJD = QSC_ZD_BiHuanJDModel.sC_ZD_BiHuanJDModel;
-        var query = new JPAQueryFactory(entityManager).select(biHuanJD).from(biHuanJD);
+        var query = new JPAQueryFactory(sc_zd_biHuanJDRepository.getEntityManager()).select(biHuanJD).from(biHuanJD);
         query.where(biHuanJD.biHuanLXDM.eq(biHuanLXDM))
                 .where(QueryDSLUtils.whereIfHasText(likeQuery,biHuanJD.jieDianID.contains(likeQuery).or(biHuanJD.jieDianMC.contains(likeQuery))));
         return query.fetch().size();
@@ -118,7 +118,7 @@ public class BiHuanJDSZServiceImpl implements BiHuanJDSZService {
     @Override
     public SC_ZD_BiHuanJDDto updateBiHuanJD(SC_ZD_BiHuanJDUpdateDto updateDto) throws TongYongYWException, WeiZhaoDSJException {
         QSC_ZD_BiHuanJDModel biHuanJD = QSC_ZD_BiHuanJDModel.sC_ZD_BiHuanJDModel;
-        var biHuanJDEntity = new JPAQueryFactory(entityManager)
+        var biHuanJDEntity = new JPAQueryFactory(sc_zd_biHuanJDRepository.getEntityManager())
                 .select(biHuanJD)
                 .from(biHuanJD)
                 .where(biHuanJD.id.ne(updateDto.getId())
@@ -180,7 +180,7 @@ public class BiHuanJDSZServiceImpl implements BiHuanJDSZService {
     @Override
     public List<SC_ZD_BiHuanJDListDto> getBiHuanJDByBHLX(String biHuanLXDM, Integer zhuYuanSYBZ, Integer menZhenSYBZ, Integer jiZhenSYBZ, Integer tiJianSYBZ) {
         QSC_ZD_BiHuanJDModel biHuanJD = QSC_ZD_BiHuanJDModel.sC_ZD_BiHuanJDModel;
-        var query = new JPAQueryFactory(entityManager)
+        var query = new JPAQueryFactory(sc_zd_biHuanJDRepository.getEntityManager())
                 .select(biHuanJD)
                 .from(biHuanJD)
                 .where(biHuanJD.biHuanLXDM.eq(biHuanLXDM)

@@ -198,7 +198,7 @@ public class ShuJuYZYServiceImpl implements ShuJuYZYService {
     @Override
     public List<SC_ZD_ShuJuYZYDto> getShuJuYZYList(String zuZhiJGID, String shuJuYLBID, String likeQuery, Integer pageIndex, Integer pageSize) throws WeiZhaoDSJException {
         QSC_ZD_ShuJuYLBModel shuJuYLB = QSC_ZD_ShuJuYLBModel.sC_ZD_ShuJuYLBModel;
-        var factoryLB = new JPAQueryFactory(entityManager);
+        var factoryLB = new JPAQueryFactory(sc_zd_shuJuYLBRepository.getEntityManager());
         var queryLB = factoryLB.select(shuJuYLB).from(shuJuYLB).where(shuJuYLB.shuJuYLBID.eq(shuJuYLBID));
         if (StringUtils.hasText(zuZhiJGID)) {
             queryLB.where(shuJuYLB.zuZhiJGID.eq(zuZhiJGID));
@@ -208,7 +208,7 @@ public class ShuJuYZYServiceImpl implements ShuJuYZYService {
         }
 
         QSC_ZD_ShuJuYZYModel shuJuYZY = QSC_ZD_ShuJuYZYModel.sC_ZD_ShuJuYZYModel;
-        var factory = new JPAQueryFactory(entityManager);
+        var factory = new JPAQueryFactory(sc_zd_shuJuYZYRepository.getEntityManager());
         var query = factory.select(shuJuYZY).from(shuJuYZY);
 
         query.where(shuJuYZY.shuJuYLBID.eq(shuJuYLBID));
@@ -251,7 +251,7 @@ public class ShuJuYZYServiceImpl implements ShuJuYZYService {
     @Override
     public long getShuJuYZYCount(String zuZhiJGID, String shuJuYLBID, String likeQuery, Integer pageIndex, Integer pageSize) throws WeiZhaoDSJException {
         QSC_ZD_ShuJuYLBModel shuJuYLB = QSC_ZD_ShuJuYLBModel.sC_ZD_ShuJuYLBModel;
-        var factoryLB = new JPAQueryFactory(entityManager);
+        var factoryLB = new JPAQueryFactory(sc_zd_shuJuYLBRepository.getEntityManager());
         var queryLB = factoryLB.select(shuJuYLB).from(shuJuYLB).where(shuJuYLB.shuJuYLBID.eq(shuJuYLBID));
         if (StringUtils.hasText(zuZhiJGID)) {
             queryLB.where(shuJuYLB.zuZhiJGID.eq(zuZhiJGID));
@@ -261,7 +261,7 @@ public class ShuJuYZYServiceImpl implements ShuJuYZYService {
         }
 
         QSC_ZD_ShuJuYZYModel shuJuYZY = QSC_ZD_ShuJuYZYModel.sC_ZD_ShuJuYZYModel;
-        var factory = new JPAQueryFactory(entityManager);
+        var factory = new JPAQueryFactory(sc_zd_shuJuYZYRepository.getEntityManager());
         var query = factory.select(shuJuYZY).from(shuJuYZY);
 
         query.where(shuJuYZY.shuJuYLBID.eq(shuJuYLBID));

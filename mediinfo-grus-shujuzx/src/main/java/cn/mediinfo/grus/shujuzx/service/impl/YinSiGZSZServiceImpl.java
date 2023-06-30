@@ -121,7 +121,6 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
      * 修改隐私规则
      */
     @Override
-    @Transactional(rollbackOn = Exception.class)
     public Integer updateYinSiGZ(SC_ZD_YinSiGZSZInDto yinSiGZSZInDto) throws MsfException {
         SC_ZD_YinSiGZSZModel updateModel = yinSiGZSZRepository.findById(yinSiGZSZInDto.getId()).orElseGet(null);
         if (Objects.isNull(updateModel)) {

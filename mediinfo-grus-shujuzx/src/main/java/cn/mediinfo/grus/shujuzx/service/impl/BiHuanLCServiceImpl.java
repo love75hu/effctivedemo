@@ -37,15 +37,12 @@ import java.util.*;
 public class BiHuanLCServiceImpl implements BiHuanLCService {
     private final SC_ZD_BiHuanLCRepository biHuanLCRepository;
     private final SC_ZD_BiHuanLCJDRepository biHuanLCJDRepository;
-    @PersistenceContext
-    private final EntityManager entityManager;
 
     private final SequenceService sequenceService;
 
-    public BiHuanLCServiceImpl(SC_ZD_BiHuanLCRepository biHuanLCRepository, SC_ZD_BiHuanLCJDRepository biHuanLCJDRepository, EntityManager entityManager,SequenceService sequenceService) {
+    public BiHuanLCServiceImpl(SC_ZD_BiHuanLCRepository biHuanLCRepository, SC_ZD_BiHuanLCJDRepository biHuanLCJDRepository, SequenceService sequenceService) {
         this.biHuanLCRepository = biHuanLCRepository;
         this.biHuanLCJDRepository = biHuanLCJDRepository;
-        this.entityManager = entityManager;
         this.sequenceService = sequenceService;
     }
 
@@ -56,7 +53,7 @@ public class BiHuanLCServiceImpl implements BiHuanLCService {
     public List<SC_ZD_BiHuanLCOutDto> getBiHuanLCByID(String id, String zuZhiJGID) {
         QSC_ZD_BiHuanLCModel biHuanLCModel  = QSC_ZD_BiHuanLCModel.sC_ZD_BiHuanLCModel;
         QSC_ZD_BiHuanLCJDModel biHuanJDModel = QSC_ZD_BiHuanLCJDModel.sC_ZD_BiHuanLCJDModel;
-        List<BiHUanPO> biHUanDtos = new JPAQueryFactory(entityManager)
+        List<BiHUanPO> biHUanDtos = new JPAQueryFactory(biHuanLCRepository.getEntityManager())
                 .select(QueryDSLUtils.record(BiHUanPO.class, biHuanLCModel, biHuanJDModel))
                 .from(biHuanLCModel).where(biHuanLCModel.id.eq(id))
                 .leftJoin(biHuanJDModel)
@@ -82,7 +79,7 @@ public class BiHuanLCServiceImpl implements BiHuanLCService {
     public SC_ZD_BiHuanLCOutDto getBiHuanLCForLX(String zuZhiJGID, String biHuanLXDM, Integer menZhenSYBZ, Integer zhuYuanSYBZ, Integer jiZhenSYBZ, Integer tiJianSYBZ) {
         QSC_ZD_BiHuanLCModel biHuanLCModel  = QSC_ZD_BiHuanLCModel.sC_ZD_BiHuanLCModel;
         QSC_ZD_BiHuanLCJDModel biHuanJDModel = QSC_ZD_BiHuanLCJDModel.sC_ZD_BiHuanLCJDModel;
-        List<BiHUanPO> biHUanDtos = new JPAQueryFactory(entityManager)
+        List<BiHUanPO> biHUanDtos = new JPAQueryFactory(biHuanLCRepository.getEntityManager())
                 .select(QueryDSLUtils.record(BiHUanPO.class, biHuanLCModel, biHuanJDModel))
                 .from(biHuanLCModel).where(biHuanLCModel.zuZhiJGID.eq(zuZhiJGID).and(biHuanLCModel.biHuanLXDM.eq(biHuanLXDM)))
                 .leftJoin(biHuanJDModel).on(biHuanJDModel.zuZhiJGID.eq(zuZhiJGID).and(biHuanLCModel.liuChengID.eq(biHuanJDModel.liuChengID))).fetch();
@@ -216,7 +213,7 @@ public class BiHuanLCServiceImpl implements BiHuanLCService {
         if (!CollectionUtils.isEmpty(biHuanLCBJInDto.getUpdatebiHuanJDLCList())){
             List<String> jieDianIDList = biHuanLCBJInDto.getUpdatebiHuanJDLCList().stream().map(SC_ZD_BiHuanLCJDDto::getId).toList();
             QSC_ZD_BiHuanLCJDModel biHuanLCJDModel = QSC_ZD_BiHuanLCJDModel.sC_ZD_BiHuanLCJDModel;
-            List<SC_ZD_BiHuanLCJDModel> liuChengJDList = new JPAQueryFactory(entityManager).select(biHuanLCJDModel).from(biHuanLCJDModel).where(biHuanLCJDModel.id.in(jieDianIDList)).fetch();
+            List<SC_ZD_BiHuanLCJDModel> liuChengJDList = new JPAQueryFactory(biHuanLCJDRepository.getEntityManager()).select(biHuanLCJDModel).from(biHuanLCJDModel).where(biHuanLCJDModel.id.in(jieDianIDList)).fetch();
             if (Objects.nonNull(liuChengJDList)){
                 liuChengJDList.forEach(item->{
                     SC_ZD_BiHuanLCJDDto scZdBiHuanLCJDDto = biHuanLCBJInDto.getUpdatebiHuanJDLCList().stream().filter(t -> t.getId().equals(item.getId())).findFirst().orElseGet(() -> null);

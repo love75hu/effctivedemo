@@ -42,7 +42,7 @@ public class ShuJuZXSTServiceImpl implements ShuJuZXSTService {
     @Override
     public Integer getBingRenYLSJCount(String bingRenID, String zhengJianHM, String xingMing, Date jianDangKSRQ, Date jianDangJSRQ) throws TongYongYWException, ParseException {
         var qModel = QSC_LC_BingRenYLSJModel.sC_LC_BingRenYLSJModel;
-        var result = new JPAQueryFactory(entityManager).select(qModel.count()).from(qModel)
+        var result = new JPAQueryFactory(scLcBingRenYLSJRepository.getEntityManager()).select(qModel.count()).from(qModel)
                 .where(QueryDSLUtils.whereIf(StringUtil.hasText(bingRenID),qModel.bingRenID.contains(bingRenID)))
                 .where(QueryDSLUtils.whereIf(StringUtil.hasText(zhengJianHM),qModel.zhengJianHM.contains(zhengJianHM)))
                 .where(QueryDSLUtils.whereIf(jianDangKSRQ!=null,qModel.jianDangSJ.goe(jianDangKSRQ)))
@@ -73,7 +73,7 @@ public class ShuJuZXSTServiceImpl implements ShuJuZXSTService {
         var qModel = QSC_LC_BingRenYLSJModel.sC_LC_BingRenYLSJModel;
         pageIndex = pageIndex == null ?1 :pageIndex;
         pageSize = pageSize == null ?15:pageSize;
-        var models = new JPAQueryFactory(entityManager).select(qModel).from(qModel)
+        var models = new JPAQueryFactory(scLcBingRenYLSJRepository.getEntityManager()).select(qModel).from(qModel)
                 .where(QueryDSLUtils.whereIf(StringUtil.hasText(bingRenID),qModel.bingRenID.contains(bingRenID)))
                 .where(QueryDSLUtils.whereIf(StringUtil.hasText(zhengJianHM),qModel.zhengJianHM.contains(zhengJianHM)))
                 .where(QueryDSLUtils.whereIf(StringUtil.hasText(xingMing),

@@ -23,12 +23,10 @@ import java.util.*;
 public class ZhuSuoYQZPZServiceImpl implements ZhuSuoYQZPZService {
     private final BR_ZD_HeBingQZPZRepository brZdHeBingQZPZRepository;
     private final StringGenerator stringGenerator;
-    @PersistenceContext
-    private final EntityManager entityManager;
-    public ZhuSuoYQZPZServiceImpl(BR_ZD_HeBingQZPZRepository brZdHeBingQZPZRepository, StringGenerator stringGenerator, EntityManager entityManager) {
+
+    public ZhuSuoYQZPZServiceImpl(BR_ZD_HeBingQZPZRepository brZdHeBingQZPZRepository, StringGenerator stringGenerator) {
         this.brZdHeBingQZPZRepository = brZdHeBingQZPZRepository;
         this.stringGenerator = stringGenerator;
-        this.entityManager = entityManager;
     }
 
     /**
@@ -178,7 +176,7 @@ public class ZhuSuoYQZPZServiceImpl implements ZhuSuoYQZPZService {
     @Override
     public List<BR_ZD_HeBingQZPZListDto> getQuanZhongPZListByFLID(String FuLeiID, String LikeQuery) throws TongYongYWException {
         var qModel = QBR_ZD_HeBingQZPZModel.bR_ZD_HeBingQZPZModel;
-        var modelList = new JPAQueryFactory(entityManager).select(qModel).from(qModel)
+        var modelList = new JPAQueryFactory(brZdHeBingQZPZRepository.getEntityManager()).select(qModel).from(qModel)
                 .where(qModel.fuLeiID.eq(FuLeiID).and(qModel.moJiBZ.eq(1)).and(qModel.zuoFeiBZ.eq(0)))
                 .where(QueryDSLUtils.whereIfHasText(LikeQuery,qModel.daiMa.contains(LikeQuery)))
                 .where(QueryDSLUtils.whereIfHasText(LikeQuery,qModel.mingCheng.contains(LikeQuery)))

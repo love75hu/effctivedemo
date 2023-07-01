@@ -1,53 +1,91 @@
 server:
-  port: 46092
+  #todo 暂时添加路径用于集群中swagger的访问
+  servlet:
+    context-path: /mediinfo-grus-shujuzx-java
+  port: 80
   #1、 一定不要使用kill -9 操作，使用kill -2 来关闭容器。这样才会触发java内部ShutdownHook操作，kill -9不会触发ShutdownHook。
   #2、可以使用端点监控 POST 请求 /actuator/shutdown 来执行优雅关机。
   shutdown: graceful #开启优雅停机
-
 spring:
-  mvc:
-    # 前端参数格式化
-    format:
-      # String格式化日期
-      date: yyyy-MM-dd HH:mm:ss
+  cache:
+    type: redis  #必须配置为redis
+    redis:
+      key-prefix: "mediinfo_grus"  #前缀
+      time-to-live: 3600000   #缓存有效期，毫秒为单位
   security:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://172.19.80.10:30003/mediinfo-lyra-authserver
+          issuer-uri: http://mediinfo-lyra-authserver/mediinfo-lyra-authserver
   datasource:
     driver-class-name: oracle.jdbc.OracleDriver
-    url: jdbc:oracle:thin:@172.19.84.161:1521:orcl
+    url: jdbc:oracle:thin:@172.19.80.161:1521:orcl
     username: LYRA_HIS
     password: LYRA_HIS
+    multiple:
+      datasourcesjzx:
+        driver-class-name: org.postgresql.Driver
+        url: jdbc:postgresql://172.19.80.171:5432/lyra_his?currentSchema=grus_sc
+        username: lyra_his
+        password: lyra_his
+      datasourcebr:
+        driver-class-name: org.postgresql.Driver
+        url: jdbc:postgresql://172.19.80.171:5432/lyra_his?currentSchema=vela_br
+        username: lyra_his
+        password: lyra_his
   jpa:
     properties:
       hibernate:
+        #根据类型可以生成特定的sql,https://docs.jboss.org/hibernate/orm/6.1/javadocs/org/hibernate/dialect/package-summary.html
         dialect: org.hibernate.dialect.PostgreSQLDialect
-    show-sql: true
+    #打印sql日志
+    #show-sql: true
   data:
     redis:
       database: 9
       host: 172.19.33.31
       lettuce:
         pool:
+          # 连接池最大连接数（使用负值表示没有限制） 默认 8
           max-active: 8
+          # 连接池中的最大空闲连接 默认 8
           max-idle: 8
+          # 连接池最大阻塞等待时间（使用负值表示没有限制） 默认 -1
           max-wait: -1
+          # 连接池中的最小空闲连接 默认 0
           min-idle: 0
       password: 'mediinfo@redis'
       port: 6379
   lifecycle:
-    timeout-per-shutdown-phase: 30s
+    timeout-per-shutdown-phase: 30s #设置缓冲时间 默认30s
   application:
     name:
-
-
+  profiles:
+    active: ${ASPNETCORE_ENVIRONMENT}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  metrics:
+    tags:
+      application: ${spring.application.name}
+logging:
+  config: classpath:logback-spring.xml
+  level:
+    root: info
+    #打印sql参数
+    org.hibernate.SQL: debug
+    org.hibernate.type.descriptor.sql.BasicBinder: trace
+    org.hibernate.type.descriptor.sql.BasicExtractor: trace
 mediinfo:
   remote:
     urls:
-      mediinfo-vela-jiuzhen: "http://172.19.84.61:30244"
-logging:
-  level:
-    root: info
+      mediinfo-grus-huanzhe-query: "http://mediinfo-grus-huanzhe-query/mediinfo-grus-huanzhe-query"
+  sequence:
+    provider: redis
+  string-generator:
+    provider: snowflake
+    snowflake:
+      workid: 1
 

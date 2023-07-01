@@ -11,13 +11,24 @@ spring:
           issuer-uri: http://172.19.80.10:30003/mediinfo-lyra-authserver
   datasource:
     driver-class-name: oracle.jdbc.OracleDriver
-    url: jdbc:oracle:thin:@172.19.84.161:1521:orcl
+    url: jdbc:oracle:thin:@172.19.80.161:1521:orcl
     username: LYRA_HIS
     password: LYRA_HIS
+    multiple:
+      datasourcesjzx:
+        driver-class-name: org.postgresql.Driver
+        url: jdbc:postgresql://172.19.80.171:5432/lyra_his?currentSchema=grus_sc
+        username: lyra_his
+        password: lyra_his
+      datasourcebr:
+        driver-class-name: org.postgresql.Driver
+        url: jdbc:postgresql://172.19.80.171:5432/lyra_his?currentSchema=vela_br
+        username: lyra_his
+        password: lyra_his
   jpa:
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.Oracle10gDialect
+        dialect: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
   data:
     redis:
@@ -37,7 +48,7 @@ spring:
 mediinfo:
   remote:
     urls:
-      mediinfo-vela-jiuzhen: "http://172.19.84.61:30244"
+      mediinfo-grus-huanzhe-query: "http://172.19.80.10:30003/mediinfo-grus-huanzhe-query"
 logging:
   level:
     root: info

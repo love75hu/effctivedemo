@@ -7,33 +7,15 @@ plugins {
 group = 'cn.mediinfo'
 sourceCompatibility = '17'
 dependencyManagement {
-
     imports {
         mavenBom 'cn.mediinfo:mediinfo-bom-dependencies:0.0.141.beta2'
     }
 }
 repositories {
-    mavenCentral()
-    ext.kotlin_version = "1.5.0"
+    mavenLocal()
     maven {
         allowInsecureProtocol = true
-        url 'http://maven.aliyun.com/nexus/content/groups/public/'
-    }
-    maven {
-        allowInsecureProtocol = true
-        url 'http://172.19.30.181:8081/repository/maven-central/'
-        credentials {
-            username 'admin'
-            password 'admin@123'
-        }
-    }
-    maven {
-        allowInsecureProtocol = true
-        url 'http://172.19.30.181:8081/repository/maven-releases/'
-        credentials {
-            username 'admin'
-            password 'admin@123'
-        }
+        url 'http://172.19.30.181:8081/repository/maven-public/'
     }
 }
 

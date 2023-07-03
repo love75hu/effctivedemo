@@ -31,17 +31,14 @@ public class ShuJuYZYServiceImpl implements ShuJuYZYService {
     private final SC_ZD_ShuJuYLBRepository sc_zd_shuJuYLBRepository;
     private final SC_ZD_ShuJuYZYRepository sc_zd_shuJuYZYRepository;
     private final LyraIdentityService lyraIdentityService;
-    private final EntityManager entityManager;
 
     public ShuJuYZYServiceImpl(
             SC_ZD_ShuJuYLBRepository sc_zd_shuJuYLBRepository,
             SC_ZD_ShuJuYZYRepository sc_zd_shuJuYZYRepository,
-            LyraIdentityService lyraIdentityService,
-            EntityManager entityManager) {
+            LyraIdentityService lyraIdentityService) {
         this.sc_zd_shuJuYLBRepository = sc_zd_shuJuYLBRepository;
         this.sc_zd_shuJuYZYRepository = sc_zd_shuJuYZYRepository;
         this.lyraIdentityService = lyraIdentityService;
-        this.entityManager = entityManager;
     }
 
     /**
@@ -178,9 +175,10 @@ public class ShuJuYZYServiceImpl implements ShuJuYZYService {
     @Override
     public List<SC_ZD_ShuJuYZYDto> getShuJuYZYListByLBID(String shuJuYLBID) {
         var entityList = sc_zd_shuJuYZYRepository.findByShuJuYLBID(shuJuYLBID);
+
         return MapUtils.copyListProperties(entityList, SC_ZD_ShuJuYZYDto::new)
                 .stream()
-                .sorted(Comparator.comparing(SC_ZD_ShuJuYZYDto::getShunXuHao))
+                .sorted(Comparator.comparing(SC_ZD_ShuJuYZYDto::getShunXuHao, Comparator.nullsLast(Integer::compareTo)))
                 .toList();
     }
 

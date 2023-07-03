@@ -7,6 +7,8 @@ import cn.mediinfo.grus.shujuzx.constant.ZhuSuoYHBZTConstants;
 import cn.mediinfo.grus.shujuzx.dto.ShuJuZXZSYs.*;
 import cn.mediinfo.grus.shujuzx.dto.YinSiGZSZs.SC_ZD_YinSiPZOutDto;
 import cn.mediinfo.grus.shujuzx.model.*;
+import cn.mediinfo.grus.shujuzx.po.JiBenXXPO;
+import cn.mediinfo.grus.shujuzx.po.bihuanlc.BiHUanPO;
 import cn.mediinfo.grus.shujuzx.repository.*;
 import cn.mediinfo.grus.shujuzx.service.YinSiGZSZService;
 import cn.mediinfo.grus.shujuzx.service.ZhuSuoYCZRZService;
@@ -26,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import javax.print.DocFlavor;
 import java.lang.reflect.Field;
@@ -207,25 +210,46 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
      */
     @Override
     public List<BR_DA_JiBenXXByZSYGLDto> getZhuSuoYGLList(Integer pageIndex, Integer pageSize, Date kaiShiSJ, Date jieShuSJ, Integer xiangSiDu, String MPI, String xingMing, String lianXiDH, String shenFenZH, String jiuZhenKH) throws TongYongYWException {
-        var qJiBenXX = QBR_DA_JiBenXXModel.bR_DA_JiBenXXModel;
-        var qHeBingJL = QBR_DA_HeBingJLModel.bR_DA_HeBingJLModel;
-        var result = new JPAQueryFactory(brDaJiBenXXRepository.getEntityManager()).select(
-                        Projections.bean(BR_DA_JiBenXXByZSYGLDto.class, qJiBenXX,
-                                qHeBingJL.heBingZTDM, qHeBingJL.heBingZTMC, qHeBingJL.zuiDaXSD, qHeBingJL.heBingShu, qHeBingJL.xiangSiShu))
-                .from(qJiBenXX)
-                .leftJoin(qHeBingJL)
-                .on(qJiBenXX.id.eq(qHeBingJL.bingRenID))
-                .where(QueryDSLUtils.whereIf(!ObjectUtils.isEmpty(kaiShiSJ), qJiBenXX.jianDangSJ.goe(kaiShiSJ)))
-                .where(QueryDSLUtils.whereIf(!ObjectUtils.isEmpty(jieShuSJ), qJiBenXX.jianDangSJ.loe(jieShuSJ)))
-                .where(QueryDSLUtils.whereIfHasText(MPI, qJiBenXX.id.contains(MPI)))
-                .where(QueryDSLUtils.whereIfHasText(xingMing, qJiBenXX.xingMing.contains(xingMing)))
-                .where(QueryDSLUtils.whereIfHasText(lianXiDH, qJiBenXX.lianXiDH.contains(lianXiDH)))
-                .where(QueryDSLUtils.whereIfHasText(shenFenZH, qJiBenXX.zhengJianHM.contains(shenFenZH)))
-                .where(qHeBingJL.heBingZTDM.ne(ZhuSuoYHBZTConstant.HEBINGZTMC_WHB).or(qHeBingJL.heBingZTDM.isNull()))
-                .orderBy(qJiBenXX.jianDangSJ.asc().nullsLast())
-                .offset(PageRequestUtil.of(pageIndex, pageSize).getOffset())
-                .limit(pageSize)
-                .fetch();
+//        var qJiBenXX = QBR_DA_JiBenXXModel.bR_DA_JiBenXXModel;
+//        var qHeBingJL = QBR_DA_HeBingJLModel.bR_DA_HeBingJLModel;
+        var result = brDaJiBenXXRepository.asQuerydsl()
+                .whereIf(!ObjectUtils.isEmpty(kaiShiSJ),o->o.jianDangSJ.goe(kaiShiSJ))
+                .whereIf(!ObjectUtils.isEmpty(jieShuSJ),o->o.jianDangSJ.loe(jieShuSJ))
+                .whereIf(StringUtils.hasText(MPI), o->o.id.contains(MPI))
+                .whereIf(StringUtils.hasText(xingMing), o->o.xingMing.contains(xingMing))
+                .whereIf(StringUtils.hasText(lianXiDH), o->o.lianXiDH.contains(lianXiDH))
+                .whereIf(StringUtils.hasText(shenFenZH), o->o.zhengJianHM.contains(shenFenZH))
+                .leftJoin(brDaHeBingJLRepository.asQuerydsl(),(c,d)->c.id.eq(d.bingRenID), JiBenXXPO::new)
+                .where(o->o.getHeBingJLModel().heBingZTDM.ne(ZhuSuoYHBZTConstant.HEBINGZTDM_BHB).or(o.getHeBingJLModel().heBingZTDM.isNull()))
+                .whereIf(xiangSiDu!=null && xiangSiDu>0,o->o.getHeBingJLModel().zuiDaXSD.goe(xiangSiDu))
+                .orderBy(o->o.getJiBenXXModel().jianDangSJ.asc().nullsLast())
+                .select(c -> new Expression<?>[]{
+                        c.getJiBenXXModel(),
+                        c.getHeBingJLModel().heBingZTDM,
+                        c.getHeBingJLModel().heBingZTMC,
+                        c.getHeBingJLModel().zuiDaXSD,
+                        c.getHeBingJLModel().heBingShu,
+                        c.getHeBingJLModel().xiangSiShu
+                }, BR_DA_JiBenXXByZSYGLDto.class)
+                .fetchPage(pageIndex,pageSize);
+//        var result = new JPAQueryFactory(brDaJiBenXXRepository.getEntityManager()).select(
+//                        Projections.bean(BR_DA_JiBenXXByZSYGLDto.class, qJiBenXX,
+//                                qHeBingJL.heBingZTDM, qHeBingJL.heBingZTMC, qHeBingJL.zuiDaXSD, qHeBingJL.heBingShu, qHeBingJL.xiangSiShu))
+//                .from(qJiBenXX)
+//                .leftJoin(qHeBingJL)
+//                .on(qJiBenXX.id.eq(qHeBingJL.bingRenID))
+//                .where(QueryDSLUtils.whereIf(!ObjectUtils.isEmpty(kaiShiSJ), qJiBenXX.jianDangSJ.goe(kaiShiSJ)))
+//                .where(QueryDSLUtils.whereIf(!ObjectUtils.isEmpty(jieShuSJ), qJiBenXX.jianDangSJ.loe(jieShuSJ)))
+//                .where(QueryDSLUtils.whereIfHasText(MPI, qJiBenXX.id.contains(MPI)))
+//                .where(QueryDSLUtils.whereIfHasText(xingMing, qJiBenXX.xingMing.contains(xingMing)))
+//                .where(QueryDSLUtils.whereIfHasText(lianXiDH, qJiBenXX.lianXiDH.contains(lianXiDH)))
+//                .where(QueryDSLUtils.whereIfHasText(shenFenZH, qJiBenXX.zhengJianHM.contains(shenFenZH)))
+//                .where(qHeBingJL.heBingZTDM.ne(ZhuSuoYHBZTConstant.HEBINGZTDM_BHB).or(qHeBingJL.heBingZTDM.isNull()))
+//                .where(QueryDSLUtils.whereIf(xiangSiDu>0,qHeBingJL.zuiDaXSD.goe(xiangSiDu)))
+//                .orderBy(qJiBenXX.jianDangSJ.asc().nullsLast())
+//                .offset(PageRequestUtil.of(pageIndex, pageSize).getOffset())
+//                .limit(pageSize)
+//                .fetch();
         for (var item : result) {
             if (item.getHeBingZTDM() == null) {
                 item.setHeBingZTDM(ZhuSuoYHBZTConstant.HEBINGZTDM_WHB);

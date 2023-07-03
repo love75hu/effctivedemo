@@ -131,7 +131,8 @@ public class BiHuanLCServiceImpl implements BiHuanLCService {
     public List<SC_ZD_BiHuanLCOutDto> getBiHuanLCList(String zuZhiJGID, String biHuanLXDM, String likeQuery) {
         List<BiHUanPO> biHuanLCXXList = biHuanLCRepository.asQuerydsl().where(c -> c.zuZhiJGID.eq(zuZhiJGID).and(c.biHuanLXDM.eq(biHuanLXDM)))
                 .whereIf(StringUtil.hasText(likeQuery), t -> t.biHuanLXMC.contains(likeQuery))
-                .leftJoin(biHuanLCJDRepository.asQuerydsl(), (c, d) -> d.zuZhiJGID.eq(zuZhiJGID).and(c.liuChengID.eq(d.liuChengID)), BiHUanLCPO::new)
+                .leftJoin(biHuanLCJDRepository.asQuerydsl(), (c, d) -> d.zuZhiJGID.eq(zuZhiJGID).and(c.liuChengID.eq(d.liuChengID)),
+                        BiHUanLCPO::new)
                 .select(c -> new Expression<?>[]{c.getLcModel(), c.getLcjdModel()}, BiHUanPO.class).fetch();
         //查询出所有的流程节点信息
         var allbhlcjd = biHuanLCXXList.stream().map(BiHUanPO::getLcjdModel).distinct().toList();

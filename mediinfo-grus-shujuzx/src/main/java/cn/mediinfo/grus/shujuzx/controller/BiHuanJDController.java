@@ -14,8 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import cn.mediinfo.grus.shujuzx.service.BiHuanJDSZService;
-
 import java.util.List;
 
 @RestController
@@ -36,13 +34,17 @@ public class BiHuanJDController {
      *
      * @param biHuanLXDM
      * @param likeQuery
+     * @param PageIndex
+     * @param PageSize
      * @return
      */
     @Operation(summary = "根据闭环类型代码获取闭环节点列表")
     @GetMapping("GetBiHuanJDList")
     public MsfResponse<List<SC_ZD_BiHuanJDListDto>> getBiHuanJDList(@RequestParam String biHuanLXDM,
-                                                                    @RequestParam(required = false) String likeQuery) {
-        return MsfResponse.success(biHuanJDService.getBiHuanJDList(biHuanLXDM, likeQuery, 1, 10));
+                                                                    @RequestParam(required = false) String likeQuery,
+                                                                    Integer PageIndex,
+                                                                    Integer PageSize) {
+        return MsfResponse.success(biHuanJDService.getBiHuanJDList(biHuanLXDM, likeQuery, PageIndex, PageSize));
     }
 
     /**

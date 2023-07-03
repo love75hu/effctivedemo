@@ -18,7 +18,6 @@ import cn.mediinfo.starter.base.util.PageRequestUtil;
 import cn.mediinfo.starter.base.util.QueryDSLUtils;
 import cn.mediinfo.starter.base.util.StringUtil;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import jakarta.persistence.EntityManager;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,17 +25,14 @@ import java.util.List;
 @Service
 public class BiHuanJDSZServiceImpl implements BiHuanJDSZService {
     private final SC_ZD_BiHuanJDRepository sc_zd_biHuanJDRepository;
-    private final EntityManager entityManager;
     private final LyraIdentityService lyraIdentityService;
     private final SequenceService sequenceService;
 
     public BiHuanJDSZServiceImpl(
             SC_ZD_BiHuanJDRepository scZdBiHuanJDRepository,
-            EntityManager entityManager,
             LyraIdentityService lyraIdentityService,
             SequenceService sequenceService) {
         this.sc_zd_biHuanJDRepository = scZdBiHuanJDRepository;
-        this.entityManager = entityManager;
         this.lyraIdentityService = lyraIdentityService;
         this.sequenceService = sequenceService;
     }
@@ -77,7 +73,7 @@ public class BiHuanJDSZServiceImpl implements BiHuanJDSZService {
         QSC_ZD_BiHuanJDModel biHuanJD = QSC_ZD_BiHuanJDModel.sC_ZD_BiHuanJDModel;
         var query = new JPAQueryFactory(sc_zd_biHuanJDRepository.getEntityManager()).select(biHuanJD).from(biHuanJD);
         query.where(biHuanJD.biHuanLXDM.eq(biHuanLXDM))
-                .where(QueryDSLUtils.whereIfHasText(likeQuery,biHuanJD.jieDianID.contains(likeQuery).or(biHuanJD.jieDianMC.contains(likeQuery))));
+                .where(QueryDSLUtils.whereIfHasText(likeQuery, biHuanJD.jieDianID.contains(likeQuery).or(biHuanJD.jieDianMC.contains(likeQuery))));
         return query.fetch().size();
     }
 
@@ -126,7 +122,7 @@ public class BiHuanJDSZServiceImpl implements BiHuanJDSZService {
                                 .or(biHuanJD.biHuanLXDM.eq(updateDto.getBiHuanLXDM())
                                         .and(biHuanJD.jieDianMC.eq(updateDto.getJieDianMC())))))
                 .fetchFirst();
-        if (biHuanJDEntity == null) {
+        if (biHuanJDEntity != null) {
             throw new TongYongYWException("节点ID或节点名称已存在!");
         }
         var entity = sc_zd_biHuanJDRepository.findById(updateDto.getId()).orElse(null);

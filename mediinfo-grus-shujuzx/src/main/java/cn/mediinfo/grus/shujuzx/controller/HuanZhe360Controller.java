@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@Tag(name = "HuanZhe360Controller", description = "云数仓-患者360")
 @RequestMapping({"api/v1.0/HuanZhe360", "api/v1/HuanZhe360"})
 @Slf4j
 @Validated

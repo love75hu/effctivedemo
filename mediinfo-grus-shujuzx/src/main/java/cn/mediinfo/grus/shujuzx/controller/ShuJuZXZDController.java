@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Objects;
 
 @RestController
-@Tag(name = "ShuJuZXZDController", description = "临床数据中心字典")
 @RequestMapping({"api/v1.0/ShuJuZXZD/", "api/v1/ShuJuZXZD/"})
 @Slf4j
 @Validated

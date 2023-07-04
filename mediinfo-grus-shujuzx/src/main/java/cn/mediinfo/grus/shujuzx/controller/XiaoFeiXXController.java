@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.swing.text.MaskFormatter;
 
 @RestController
-@Tag(name = "XiaoFeiXXController", description = "第三方——控制器")
 @RequestMapping({"api/v1.0/XiaoFeiXX", "api/v1/XiaoFeiXX"})
 @Slf4j
 @Validated

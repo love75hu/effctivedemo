@@ -1,7 +1,10 @@
 package cn.mediinfo.grus.shujuzx.service.impl;
 
 import cn.mediinfo.grus.shujuzx.dto.BiHuanLCs.*;
-import cn.mediinfo.grus.shujuzx.model.*;
+import cn.mediinfo.grus.shujuzx.model.QSC_ZD_BiHuanLCJDModel;
+import cn.mediinfo.grus.shujuzx.model.QSC_ZD_BiHuanLCModel;
+import cn.mediinfo.grus.shujuzx.model.SC_ZD_BiHuanLCJDModel;
+import cn.mediinfo.grus.shujuzx.model.SC_ZD_BiHuanLCModel;
 import cn.mediinfo.grus.shujuzx.po.bihuanlc.BiHUanLCPO;
 import cn.mediinfo.grus.shujuzx.po.bihuanlc.BiHUanPO;
 import cn.mediinfo.grus.shujuzx.repository.SC_ZD_BiHuanLCJDRepository;
@@ -11,22 +14,12 @@ import cn.mediinfo.grus.shujuzx.utils.ExpressionUtils;
 import cn.mediinfo.starter.base.exception.MsfException;
 import cn.mediinfo.starter.base.exception.TongYongYWException;
 import cn.mediinfo.starter.base.lyra.service.SequenceService;
-import cn.mediinfo.starter.base.querydsl.Queryable;
-import cn.mediinfo.starter.base.querydsl.QuerydslJoinExpression;
-import cn.mediinfo.starter.base.util.CollectorUtil;
 import cn.mediinfo.starter.base.util.MapUtils;
 import cn.mediinfo.starter.base.util.QueryDSLUtils;
 import cn.mediinfo.starter.base.util.StringUtil;
-import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Path;
-import com.querydsl.core.types.Predicate;
-import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -51,7 +44,7 @@ public class BiHuanLCServiceImpl implements BiHuanLCService {
      */
     @Override
     public List<SC_ZD_BiHuanLCOutDto> getBiHuanLCByID(String id, String zuZhiJGID) {
-        QSC_ZD_BiHuanLCModel biHuanLCModel  = QSC_ZD_BiHuanLCModel.sC_ZD_BiHuanLCModel;
+        QSC_ZD_BiHuanLCModel biHuanLCModel = QSC_ZD_BiHuanLCModel.sC_ZD_BiHuanLCModel;
         QSC_ZD_BiHuanLCJDModel biHuanJDModel = QSC_ZD_BiHuanLCJDModel.sC_ZD_BiHuanLCJDModel;
         List<BiHUanPO> biHUanDtos = new JPAQueryFactory(biHuanLCRepository.getEntityManager())
                 .select(QueryDSLUtils.record(BiHUanPO.class, biHuanLCModel, biHuanJDModel))
@@ -77,7 +70,7 @@ public class BiHuanLCServiceImpl implements BiHuanLCService {
      */
     @Override
     public SC_ZD_BiHuanLCOutDto getBiHuanLCForLX(String zuZhiJGID, String biHuanLXDM, Integer menZhenSYBZ, Integer zhuYuanSYBZ, Integer jiZhenSYBZ, Integer tiJianSYBZ) {
-        QSC_ZD_BiHuanLCModel biHuanLCModel  = QSC_ZD_BiHuanLCModel.sC_ZD_BiHuanLCModel;
+        QSC_ZD_BiHuanLCModel biHuanLCModel = QSC_ZD_BiHuanLCModel.sC_ZD_BiHuanLCModel;
         QSC_ZD_BiHuanLCJDModel biHuanJDModel = QSC_ZD_BiHuanLCJDModel.sC_ZD_BiHuanLCJDModel;
         List<BiHUanPO> biHUanDtos = new JPAQueryFactory(biHuanLCRepository.getEntityManager())
                 .select(QueryDSLUtils.record(BiHUanPO.class, biHuanLCModel, biHuanJDModel))
@@ -97,19 +90,20 @@ public class BiHuanLCServiceImpl implements BiHuanLCService {
         });
 
     }
+
     /**
      * 新增一个闭环流程
      */
     @Override
     @Transactional(rollbackOn = Exception.class)
     public Integer addBiHuanLC(SC_ZD_BiHuanLCInDto biHuanLCDto) throws MsfException {
-      Boolean existBool =  biHuanLCRepository.existsByZuZhiJGIDAndBiHuanLXDMAndLiuChengMC(biHuanLCDto.getZuZhiJGID(),biHuanLCDto.getBiHuanLXDM(),biHuanLCDto.getLiuChengMC());
-      if (existBool){
-          throw  new TongYongYWException("流程名称已存在,请重新确认! ");
-      }
+        Boolean existBool = biHuanLCRepository.existsByZuZhiJGIDAndBiHuanLXDMAndLiuChengMC(biHuanLCDto.getZuZhiJGID(), biHuanLCDto.getBiHuanLXDM(), biHuanLCDto.getLiuChengMC());
+        if (existBool) {
+            throw new TongYongYWException("流程名称已存在,请重新确认! ");
+        }
         SC_ZD_BiHuanLCModel biHuanLCModel = new SC_ZD_BiHuanLCModel();
-        String liuChengID = sequenceService.getXuHao("SC_ZD_BIHUANLC",6);
-        MapUtils.mergeProperties(biHuanLCDto,biHuanLCModel,false,(dto,model)->{
+        String liuChengID = sequenceService.getXuHao("SC_ZD_BIHUANLC", 6);
+        MapUtils.mergeProperties(biHuanLCDto, biHuanLCModel, false, (dto, model) -> {
             model.setLiuChengID(liuChengID);
             model.setQiYongBZ(0);
         });
@@ -124,12 +118,15 @@ public class BiHuanLCServiceImpl implements BiHuanLCService {
         biHuanLCJDRepository.saveAll(scZdBiHuanLCJDModels);
         return 0;
     }
+
     /**
-     *根据闭环类型代码获取闭环节点列表
+     * 根据闭环类型代码获取闭环节点列表
      */
     @Override
     public List<SC_ZD_BiHuanLCOutDto> getBiHuanLCList(String zuZhiJGID, String biHuanLXDM, String likeQuery) {
-        List<BiHUanPO> biHuanLCXXList = biHuanLCRepository.asQuerydsl().where(c -> c.zuZhiJGID.eq(zuZhiJGID).and(c.biHuanLXDM.eq(biHuanLXDM)))
+        List<BiHUanPO> biHuanLCXXList = biHuanLCRepository
+                .asQuerydsl()
+                .where(c -> c.zuZhiJGID.eq(zuZhiJGID).and(c.biHuanLXDM.eq(biHuanLXDM)))
                 .whereIf(StringUtil.hasText(likeQuery), t -> t.biHuanLXMC.contains(likeQuery))
                 .leftJoin(biHuanLCJDRepository.asQuerydsl(), (c, d) -> d.zuZhiJGID.eq(zuZhiJGID).and(c.liuChengID.eq(d.liuChengID)),
                         BiHUanLCPO::new)
@@ -147,61 +144,64 @@ public class BiHuanLCServiceImpl implements BiHuanLCService {
             dto.setBiHuanJDLCList(MapUtils.copyListProperties(allbhlcjd.stream().filter(x -> Objects.equals(x.getLiuChengID(), model.getLiuChengID())).sorted(Comparator.comparing(SC_ZD_BiHuanLCJDModel::getShunXuHao)).toList(), SC_ZD_BiHuanLCJDDto::new));
         });
     }
+
     /**
      * 启用闭环流程
      */
     @Override
-    public Integer qiYongBiHuanLC(String id, String zuZhiJGID) throws MsfException{
+    public Integer qiYongBiHuanLC(String id, String zuZhiJGID) throws MsfException {
         SC_ZD_BiHuanLCModel biHuanLCXX = biHuanLCRepository.findById(id).orElseGet(() -> null);
-        if (Objects.isNull(biHuanLCXX)){
-            throw  new TongYongYWException("未找到相关信息,请重新确认！");
+        if (Objects.isNull(biHuanLCXX)) {
+            throw new TongYongYWException("未找到相关信息,请重新确认！");
         }
         Integer biHuanLCModelCount = biHuanLCRepository.getBiHuanLCModelList(zuZhiJGID, biHuanLCXX.getBiHuanLXDM());
-        if (biHuanLCModelCount > 0){
+        if (biHuanLCModelCount > 0) {
             throw new TongYongYWException("相同使用范围内已有其他闭环流程被启用,请重新确认！");
         }
-       // biHuanLCXX.setQiYongBZ(1);
+        // biHuanLCXX.setQiYongBZ(1);
         QSC_ZD_BiHuanLCModel model = QSC_ZD_BiHuanLCModel.sC_ZD_BiHuanLCModel;
-        Map<Path<?>,Integer> map = new HashMap<>();
-        map.put(model.qiYongBZ,1);
+        Map<Path<?>, Integer> map = new HashMap<>();
+        map.put(model.qiYongBZ, 1);
         //todo update
-        biHuanLCRepository.update(map,model.id.eq(id));
-       // biHuanLCRepository.save(biHuanLCXX);
+        biHuanLCRepository.update(map, model.id.eq(id));
+        // biHuanLCRepository.save(biHuanLCXX);
         return 1;
     }
+
     /**
      * 停用闭环流程
      */
     @Override
     public Integer tingYongBiHuanLC(String id) throws MsfException {
         SC_ZD_BiHuanLCModel biHuanLCXX = biHuanLCRepository.findById(id).orElseGet(() -> null);
-        if (Objects.isNull(biHuanLCXX)){
-            throw  new TongYongYWException("未找到相关信息,请重新确认！");
+        if (Objects.isNull(biHuanLCXX)) {
+            throw new TongYongYWException("未找到相关信息,请重新确认！");
         }
-       // biHuanLCXX.setQiYongBZ(0);
+        // biHuanLCXX.setQiYongBZ(0);
         QSC_ZD_BiHuanLCModel model = QSC_ZD_BiHuanLCModel.sC_ZD_BiHuanLCModel;
-        Map<Path<?>,Integer> map = new HashMap<>();
-        map.put(model.qiYongBZ,0);
+        Map<Path<?>, Integer> map = new HashMap<>();
+        map.put(model.qiYongBZ, 0);
         //todo update
-        biHuanLCRepository.update(map,model.id.eq(id));
+        biHuanLCRepository.update(map, model.id.eq(id));
         return 1;
     }
+
     /**
      * 编辑一条闭环流程
      */
     @Override
-    public Integer updateBiHuanLC(SC_ZD_BiHuanLCBJInDto biHuanLCBJInDto) throws MsfException{
+    public Integer updateBiHuanLC(SC_ZD_BiHuanLCBJInDto biHuanLCBJInDto) throws MsfException {
         Boolean existBool = biHuanLCRepository.existsByZuZhiJGIDAndBiHuanLXDMAndLiuChengMCAndIdIsNot(biHuanLCBJInDto.getZuZhiJGID(), biHuanLCBJInDto.getBiHuanLXDM(), biHuanLCBJInDto.getLiuChengMC(), biHuanLCBJInDto.getId());
-        if (existBool){
+        if (existBool) {
             throw new TongYongYWException("流程名称已存在,请重新确认！");
         }
         Integer biHuanLCListCount = biHuanLCRepository.getBiHuanLCList(biHuanLCBJInDto.getZuZhiJGID(), biHuanLCBJInDto.getBiHuanLXDM(), biHuanLCBJInDto.getId(), biHuanLCBJInDto.getZhuYuanSYBZ(), biHuanLCBJInDto.getMenZhenSYBZ(), biHuanLCBJInDto.getJiZhenSYBZ(), biHuanLCBJInDto.getTiJianSYBZ());
-        if (biHuanLCListCount > 0){
+        if (biHuanLCListCount > 0) {
             throw new TongYongYWException("相同使用范围内已有其他闭环流程被启用,请重新确认！");
         }
-        SC_ZD_BiHuanLCModel updateModel = biHuanLCRepository.findById(biHuanLCBJInDto.getId()).orElseGet(()->null);
-        MapUtils.mergeProperties(biHuanLCBJInDto,updateModel,true);
-        if (!CollectionUtils.isEmpty(biHuanLCBJInDto.getAddbiHuanJDLCList())){
+        SC_ZD_BiHuanLCModel updateModel = biHuanLCRepository.findById(biHuanLCBJInDto.getId()).orElseGet(() -> null);
+        MapUtils.mergeProperties(biHuanLCBJInDto, updateModel, true);
+        if (!CollectionUtils.isEmpty(biHuanLCBJInDto.getAddbiHuanJDLCList())) {
             List<SC_ZD_BiHuanLCJDModel> addJDList = MapUtils.copyListProperties(biHuanLCBJInDto.getAddbiHuanJDLCList(), SC_ZD_BiHuanLCJDModel::new, (dto, model) -> {
                 model.setZuZhiJGID(updateModel.getZuZhiJGID());
                 model.setZuZhiJGMC(updateModel.getZuZhiJGMC());
@@ -209,21 +209,21 @@ public class BiHuanLCServiceImpl implements BiHuanLCService {
                 model.setBiHuanLXMC(updateModel.getBiHuanLXMC());
                 model.setLiuChengID(updateModel.getLiuChengID());
             });
-        biHuanLCJDRepository.saveAll(addJDList);
+            biHuanLCJDRepository.saveAll(addJDList);
         }
-        if (!CollectionUtils.isEmpty(biHuanLCBJInDto.getUpdatebiHuanJDLCList())){
+        if (!CollectionUtils.isEmpty(biHuanLCBJInDto.getUpdatebiHuanJDLCList())) {
             List<String> jieDianIDList = biHuanLCBJInDto.getUpdatebiHuanJDLCList().stream().map(SC_ZD_BiHuanLCJDDto::getId).toList();
             QSC_ZD_BiHuanLCJDModel biHuanLCJDModel = QSC_ZD_BiHuanLCJDModel.sC_ZD_BiHuanLCJDModel;
             List<SC_ZD_BiHuanLCJDModel> liuChengJDList = new JPAQueryFactory(biHuanLCJDRepository.getEntityManager()).select(biHuanLCJDModel).from(biHuanLCJDModel).where(biHuanLCJDModel.id.in(jieDianIDList)).fetch();
-            if (Objects.nonNull(liuChengJDList)){
-                liuChengJDList.forEach(item->{
+            if (Objects.nonNull(liuChengJDList)) {
+                liuChengJDList.forEach(item -> {
                     SC_ZD_BiHuanLCJDDto scZdBiHuanLCJDDto = biHuanLCBJInDto.getUpdatebiHuanJDLCList().stream().filter(t -> t.getId().equals(item.getId())).findFirst().orElseGet(() -> null);
-                    MapUtils.mergeProperties(scZdBiHuanLCJDDto,item);
+                    MapUtils.mergeProperties(scZdBiHuanLCJDDto, item);
                 });
-            biHuanLCJDRepository.saveAll(liuChengJDList);
+                biHuanLCJDRepository.saveAll(liuChengJDList);
             }
         }
-        if (!CollectionUtils.isEmpty(biHuanLCBJInDto.getDeleteIds())){
+        if (!CollectionUtils.isEmpty(biHuanLCBJInDto.getDeleteIds())) {
             QSC_ZD_BiHuanLCJDModel biHuanLCJDModel = QSC_ZD_BiHuanLCJDModel.sC_ZD_BiHuanLCJDModel;
             biHuanLCJDRepository.softDelete(biHuanLCJDModel.id.in(biHuanLCBJInDto.getDeleteIds()));
         }
@@ -237,53 +237,55 @@ public class BiHuanLCServiceImpl implements BiHuanLCService {
     public Integer updateBiHuanLCJDSXH(List<SC_ZD_BiHuanLCJDSXHDto> jdSxhDtos) {
         List<String> idList = jdSxhDtos.stream().map(SC_ZD_BiHuanLCJDSXHDto::getId).toList();
         List<SC_ZD_BiHuanLCJDModel> biHuanLCJDList = biHuanLCJDRepository.asQuerydsl().whereIn(t -> t.id, idList, 999).select(SC_ZD_BiHuanLCJDModel.class).fetch();
-        biHuanLCJDList.forEach(item->{
+        biHuanLCJDList.forEach(item -> {
             Integer shunXuHao = jdSxhDtos.stream().filter(t -> Objects.equals(t.getId(), item.getId())).map(SC_ZD_BiHuanLCJDSXHDto::getShunXuHao).findFirst().orElseGet(() -> -1);
-            item.setShunXuHao(shunXuHao == -1?item.getShunXuHao():null);
+            item.setShunXuHao(shunXuHao == -1 ? item.getShunXuHao() : null);
         });
         biHuanLCJDRepository.saveAll(biHuanLCJDList);
         return 1;
     }
+
     /**
      * 更新闭环流程
      */
     @Override
     @Transactional(rollbackOn = Exception.class)
     public Integer updateBiHuanLCList(String zuZhiJGID, String zuZhiJGMC, String biHuanLXDM) {
-        List<String> zuZhiJGIDList = List.of("0", zuZhiJGID );
+        List<String> zuZhiJGIDList = List.of("0", zuZhiJGID);
         List<SC_ZD_BiHuanLCModel> biHuanLCList = biHuanLCRepository.asQuerydsl().whereIn(t -> t.zuZhiJGID, zuZhiJGIDList, 999).where(t -> t.biHuanLXDM.eq(biHuanLXDM)).select(SC_ZD_BiHuanLCModel.class).fetch();
-        List<SC_ZD_BiHuanLCModel> tongYongList = biHuanLCList.stream().filter(p ->"0".equals(p.getZuZhiJGID())).toList();
-        List<String> yiCunZaiList = biHuanLCList.stream().filter(p -> Objects.equals(p.getZuZhiJGID() , zuZhiJGID)).map(SC_ZD_BiHuanLCModel::getLiuChengID).toList();
+        List<SC_ZD_BiHuanLCModel> tongYongList = biHuanLCList.stream().filter(p -> "0".equals(p.getZuZhiJGID())).toList();
+        List<String> yiCunZaiList = biHuanLCList.stream().filter(p -> Objects.equals(p.getZuZhiJGID(), zuZhiJGID)).map(SC_ZD_BiHuanLCModel::getLiuChengID).toList();
         List<SC_ZD_BiHuanLCModel> weiCunZaiList = tongYongList.stream().filter(p -> !yiCunZaiList.contains(p.getLiuChengID())).toList();
-        if (!CollectionUtils.isEmpty(weiCunZaiList)){
+        if (!CollectionUtils.isEmpty(weiCunZaiList)) {
             List<SC_ZD_BiHuanLCJDModel> addBiHuanLCJDList = new ArrayList<>();
             List<String> biHuanLCIDList = weiCunZaiList.stream().map(SC_ZD_BiHuanLCModel::getLiuChengID).toList();
             List<SC_ZD_BiHuanLCJDModel> biHuanLCJDList = biHuanLCJDRepository.asQuerydsl().where(t -> t.zuZhiJGID.eq("0")).whereIn(p -> p.liuChengID, biHuanLCIDList, 999).select(SC_ZD_BiHuanLCJDModel.class).fetch();
-            weiCunZaiList.forEach(item->{
+            weiCunZaiList.forEach(item -> {
                 item.setId(null);
                 item.setZuZhiJGID(zuZhiJGID);
                 item.setZuZhiJGMC(zuZhiJGMC);
-                var jdList = biHuanLCJDList.stream().filter(x ->Objects.equals(x.getLiuChengID(),item.getLiuChengID()))
-                .map(t->MapUtils.copyProperties(t,SC_ZD_BiHuanLCJDModel::new,(model, update)->{
-                    update.setId(null);
-                    update.setZuZhiJGID(zuZhiJGID);
-                    update.setZuZhiJGMC(zuZhiJGMC);
-                })).toList();
-               addBiHuanLCJDList.addAll(jdList);
+                var jdList = biHuanLCJDList.stream().filter(x -> Objects.equals(x.getLiuChengID(), item.getLiuChengID()))
+                        .map(t -> MapUtils.copyProperties(t, SC_ZD_BiHuanLCJDModel::new, (model, update) -> {
+                            update.setId(null);
+                            update.setZuZhiJGID(zuZhiJGID);
+                            update.setZuZhiJGMC(zuZhiJGMC);
+                        })).toList();
+                addBiHuanLCJDList.addAll(jdList);
             });
             biHuanLCRepository.saveAll(weiCunZaiList);
             biHuanLCJDRepository.saveAll(addBiHuanLCJDList);
         }
         return 1;
     }
+
     /**
      * 作废一条闭环流程
      */
     @Override
     @Transactional(rollbackOn = Exception.class)
-    public Integer zuoFeiBiHuanLC(String id) throws TongYongYWException{
+    public Integer zuoFeiBiHuanLC(String id) throws TongYongYWException {
         SC_ZD_BiHuanLCModel biHuanLCXX = biHuanLCRepository.findById(id).orElseGet(() -> null);
-        if (Objects.isNull(biHuanLCXX)){
+        if (Objects.isNull(biHuanLCXX)) {
             throw new TongYongYWException("未找到该流程信息，请确认！");
         }
         biHuanLCRepository.softDelete(id);

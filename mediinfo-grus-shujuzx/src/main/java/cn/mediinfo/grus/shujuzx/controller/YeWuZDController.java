@@ -210,7 +210,7 @@ public class YeWuZDController {
      */
     @Operation(summary = "查询数据源值域list")
     @GetMapping("GetShuJuYZYList")
-    public MsfResponse<List<SC_ZD_ShuJuYZYDto>> getShuJuYZYList(@RequestParam String zuZhiJGID,
+    public MsfResponse<List<SC_ZD_ShuJuYZYDto>> getShuJuYZYList(@RequestParam(required = false) String zuZhiJGID,
                                                                 @RequestParam String shuJuYLBID,
                                                                 @RequestParam(required = false) String likeQuery) throws WeiZhaoDSJException {
         return MsfResponse.success(shuJuYZYService.getShuJuYZYList(zuZhiJGID, shuJuYLBID, likeQuery, 1, 10));

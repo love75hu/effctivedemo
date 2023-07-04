@@ -44,10 +44,13 @@ public class ShuJuZXFWRZController {
 
     @Operation(summary = "根据查询条件查询360访问日志列表")
     @GetMapping("GetFangWenRZList")
-    public MsfResponse<List<ShuJuZXFWRZDto>> getFangWenRZList(Date fangWenKSRQ, Date fangWenJSRQ, String bingRenID, String xingMing, String fangWenRXM) {
-        // todo:规定统一定义常量、枚举？
-        Integer pageIndex=1;
-        Integer pageSize=15;
+    public MsfResponse<List<ShuJuZXFWRZDto>> getFangWenRZList(@RequestParam(required = false) Date fangWenKSRQ,
+                                                              @RequestParam(required = false) Date fangWenJSRQ,
+                                                              @RequestParam(required = false) String bingRenID,
+                                                              @RequestParam(required = false) String xingMing,
+                                                              @RequestParam(required = false) String fangWenRXM,
+                                                              @RequestParam(required = false,defaultValue = "1") Integer pageIndex,
+                                                              @RequestParam(required = false,defaultValue = "10") Integer pageSize) {
         return MsfResponse.success(shuJuZXFWRZService.getFangWenRZList(fangWenKSRQ, fangWenJSRQ, bingRenID, xingMing, fangWenRXM,pageIndex, pageSize));
     }
 

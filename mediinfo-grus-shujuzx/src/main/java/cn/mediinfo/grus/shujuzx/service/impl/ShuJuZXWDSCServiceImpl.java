@@ -39,6 +39,7 @@ public class ShuJuZXWDSCServiceImpl implements ShuJuZXWDSCService {
     private final EntityManager entityManager;
 
     private record XMModelAndXXModelPO(String id,String shouCangJMC,String beiZhu,Integer shunXuHao,SC_SC_ShouCangJMXModel mxModel) {}
+    private record GroupXMModelAndXXModelPO(String id,String shouCangJMC,String beiZhu,Integer shunXuHao) {}
 
 
 
@@ -129,15 +130,15 @@ public class ShuJuZXWDSCServiceImpl implements ShuJuZXWDSCService {
                 .leftJoin(mxModel)
                 .on(xxModel.id.eq(mxModel.shouCangJID)
                         .and(xxModel.zuZhiJGID.eq(mxModel.zuZhiJGID)))
-//                .where(xxModel.zuZhiJGID.eq(lyraIdentityService.getJiGouID())
-//                        .and(xxModel.yongHuID.eq(lyraIdentityService.getYongHuId())))
+                .where(xxModel.zuZhiJGID.eq(lyraIdentityService.getJiGouID())
+                        .and(xxModel.yongHuID.eq(lyraIdentityService.getYongHuId())))
                 .where(QueryDSLUtils.whereIf(Objects.nonNull(likeQuery), ()->xxModel.shouCangJMC.contains(likeQuery)))
                 .fetch();
 
         return list
                 .stream()
                 .collect(
-                        Collectors.groupingBy(o -> List.of(
+                        Collectors.groupingBy(o -> new GroupXMModelAndXXModelPO(
                                 o.id(),
                                 o.shouCangJMC(),
                                 o.beiZhu(),
@@ -147,17 +148,17 @@ public class ShuJuZXWDSCServiceImpl implements ShuJuZXWDSCService {
                 .stream()
                 .map(s -> {
                             SC_SC_ShouCangJXXOutDto dto = new SC_SC_ShouCangJXXOutDto();
-                            dto.setId(String.valueOf(s.getKey().get(0)));
-                            dto.setShouCangJMC(String.valueOf(s.getKey().get(1)));
-                            dto.setBeiZhu((String) s.getKey().get(2));
-                            dto.setShunXuHao((Integer) s.getKey().get(3));
+                            dto.setId(s.getKey().id);
+                            dto.setShouCangJMC(s.getKey().shouCangJMC);
+                            dto.setBeiZhu(s.getKey().beiZhu);
+                            dto.setShunXuHao(s.getKey().shunXuHao);
                             // 患者数量
-                            long count = s.getValue().stream().filter(a -> a.mxModel() != null && Objects.equals(a.mxModel().getShouCangJID(), s.getKey().get(0))).count();
+                            long count = s.getValue().stream().filter(a -> a.mxModel() != null && Objects.equals(a.mxModel().getShouCangJID(), s.getKey().id)).count();
                             dto.setHuanZheShu((int) count);
                             return dto;
                         }
                 )
-                .sorted(Comparator.comparing(SC_SC_ShouCangJXXOutDto::getShunXuHao,Comparator.nullsFirst(Comparator.naturalOrder())))
+                .sorted(Comparator.comparing(SC_SC_ShouCangJXXOutDto::getShunXuHao, Comparator.nullsFirst(Comparator.naturalOrder())))
                 .toList();
     }
 

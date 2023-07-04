@@ -13,6 +13,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.print.DocFlavor;
 import java.text.ParseException;
@@ -36,14 +37,14 @@ public class ZhuSuoYCZRZServiceImpl implements ZhuSuoYCZRZService {
     }
 
     @Override
-    public List<BR_DA_ZhuSuoYCZRZDto> getZhuSuoYCZRZList(Integer page, Integer pageSize, Date caoZuoKSRQ, Date caoZuoJSRQ, String caoZuoLXDM, String likeQuery) throws TongYongYWException, ParseException {
-        Date finalCaoZuoJSRQ = DateUtil.get0Dian(caoZuoKSRQ);
-        Date finalCaoZuoKSRQ = DateUtil.getLastDian(caoZuoJSRQ);
+    public List<BR_DA_ZhuSuoYCZRZDto> getZhuSuoYCZRZList(Integer page, Integer pageSize, String caoZuoKSRQ, String caoZuoJSRQ, String caoZuoLXDM, String likeQuery) throws TongYongYWException, ParseException {
+        Date finalCaoZuoKSRQ = DateUtil.getDateYYMMDDHHMMSS2(caoZuoKSRQ);
+        Date finalcaoZuoJSRQ = DateUtil.getDateYYMMDDHHMMSS2(caoZuoJSRQ);
         var zhuSuoYCZRZModels = brDaZhuSuoYCZRZRepository.asQuerydsl()
-                .whereIf(caoZuoKSRQ != null,o->o.caoZuoSJ.goe(finalCaoZuoKSRQ))
-                .whereIf(caoZuoJSRQ != null,o->o.caoZuoSJ.loe(finalCaoZuoJSRQ))
-                .whereIf(StringUtil.hasText(caoZuoLXDM),o->o.caoZuoLXDM.eq(caoZuoLXDM))
-                .whereIf(StringUtil.hasText(likeQuery),o->o.bingRenID.contains(likeQuery).or(o.xingMing.contains(likeQuery)).or(o.caoZuoRXM.contains(likeQuery)))
+                .whereIf(finalCaoZuoKSRQ!=null,o->o.caoZuoSJ.goe(finalCaoZuoKSRQ))
+                .whereIf(finalcaoZuoJSRQ!=null, o->o.caoZuoSJ.loe(finalcaoZuoJSRQ))
+                .whereIf(StringUtils.hasText(caoZuoLXDM),o->o.caoZuoLXDM.eq(caoZuoLXDM))
+                .whereIf(StringUtils.hasText(likeQuery),o->o.bingRenID.contains(likeQuery).or(o.xingMing.contains(likeQuery)).or(o.caoZuoRXM.contains(likeQuery)))
                 .orderBy(o->o.caoZuoSJ.desc())
                 .select(o->o)
                 .fetchPage(PageRequestUtil.of(page, pageSize));

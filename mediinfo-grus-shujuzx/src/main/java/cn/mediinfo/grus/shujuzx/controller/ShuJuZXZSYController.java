@@ -231,7 +231,7 @@ public class ShuJuZXZSYController {
      */
     @Operation(summary = "获取主索引操作日志列表")
     @GetMapping("GetZhuSuoYCZRZList")
-    public MsfResponse<List<BR_DA_ZhuSuoYCZRZDto>> getZhuSuoYCZRZList(Integer page,Integer pageSize,Date caoZuoKSRQ,Date caoZuoJSRQ,String caoZuoLXDM,String likeQuery) throws TongYongYWException, ParseException {
+    public MsfResponse<List<BR_DA_ZhuSuoYCZRZDto>> getZhuSuoYCZRZList(Integer page,Integer pageSize,String caoZuoKSRQ,String caoZuoJSRQ,String caoZuoLXDM,String likeQuery) throws TongYongYWException, ParseException {
         var data = zhuSuoYCZRZService.getZhuSuoYCZRZList(page,pageSize,caoZuoKSRQ,caoZuoJSRQ,caoZuoLXDM,likeQuery);
         return MsfResponse.success(data);
     }

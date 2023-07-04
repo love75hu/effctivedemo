@@ -184,18 +184,29 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
     public Integer getZhuSuoYinCount(Date kaiShiSJ, Date jieShuSJ, Integer xiangSiDu, String MPI, String xingMing, String lianXiDH, String shenFenZH) throws TongYongYWException, ParseException {
         var qJiBenXX = QBR_DA_JiBenXXModel.bR_DA_JiBenXXModel;
         var qHeBingJL = QBR_DA_HeBingJLModel.bR_DA_HeBingJLModel;
-        var count = new JPAQueryFactory(brDaJiBenXXRepository.getEntityManager()).select(qJiBenXX.count())
-                .from(qJiBenXX)
-                .leftJoin(qHeBingJL)
-                .on(qJiBenXX.id.eq(qHeBingJL.bingRenID))
-                .where(QueryDSLUtils.whereIf(!ObjectUtils.isEmpty(kaiShiSJ), qJiBenXX.jianDangSJ.goe(kaiShiSJ)))
-                .where(QueryDSLUtils.whereIf(!ObjectUtils.isEmpty(jieShuSJ), qJiBenXX.jianDangSJ.loe(jieShuSJ)))
-                .where(QueryDSLUtils.whereIfHasText(MPI, qJiBenXX.id.contains(MPI)))
-                .where(QueryDSLUtils.whereIfHasText(xingMing, qJiBenXX.xingMing.contains(xingMing)))
-                .where(QueryDSLUtils.whereIfHasText(lianXiDH, qJiBenXX.lianXiDH.contains(lianXiDH)))
-                .where(QueryDSLUtils.whereIfHasText(shenFenZH, qJiBenXX.zhengJianHM.contains(shenFenZH)))
-                .where(qHeBingJL.heBingZTDM.ne(ZhuSuoYHBZTConstant.HEBINGZTMC_WHB).or(qHeBingJL.heBingZTDM.isNull()))
+        var count = brDaJiBenXXRepository.asQuerydsl()
+                .whereIf(!ObjectUtils.isEmpty(kaiShiSJ),o->o.jianDangSJ.goe(kaiShiSJ))
+                .whereIf(!ObjectUtils.isEmpty(jieShuSJ),o->o.jianDangSJ.loe(jieShuSJ))
+                .whereIf(StringUtils.hasText(MPI),o->o.id.contains(MPI))
+                .whereIf(StringUtils.hasText(xingMing),o->o.xingMing.contains(xingMing))
+                .whereIf(StringUtils.hasText(lianXiDH),o->o.lianXiDH.contains(lianXiDH))
+                .whereIf(StringUtils.hasText(shenFenZH),o->o.zhengJianHM.contains(shenFenZH))
+                .leftJoin(brDaHeBingJLRepository.asQuerydsl(),(c,d)->c.id.eq(d.bingRenID), JiBenXXPO::new)
+                .where(o->o.getHeBingJLModel().heBingZTDM.ne(ZhuSuoYHBZTConstant.HEBINGZTDM_WHB).or(o.getHeBingJLModel().heBingZTDM.isNull()))
+                .select(o->o.getJiBenXXModel().count())
                 .fetchOne();
+//        var count = new JPAQueryFactory(brDaJiBenXXRepository.getEntityManager()).select(qJiBenXX.count())
+//                .from(qJiBenXX)
+//                .leftJoin(qHeBingJL)
+//                .on(qJiBenXX.id.eq(qHeBingJL.bingRenID))
+//                .where(QueryDSLUtils.whereIf(!ObjectUtils.isEmpty(kaiShiSJ), qJiBenXX.jianDangSJ.goe(kaiShiSJ)))
+//                .where(QueryDSLUtils.whereIf(!ObjectUtils.isEmpty(jieShuSJ), qJiBenXX.jianDangSJ.loe(jieShuSJ)))
+//                .where(QueryDSLUtils.whereIf(StringUtils.hasText(MPI), qJiBenXX.id.contains(MPI)))
+//                .where(QueryDSLUtils.whereIf(StringUtils.hasText(xingMing), qJiBenXX.xingMing.contains(xingMing)))
+//                .where(QueryDSLUtils.whereIf(StringUtils.hasText(lianXiDH), qJiBenXX.lianXiDH.contains(lianXiDH)))
+//                .where(QueryDSLUtils.whereIf(StringUtils.hasText(shenFenZH), qJiBenXX.zhengJianHM.contains(shenFenZH)))
+//                .where(qHeBingJL.heBingZTDM.ne(ZhuSuoYHBZTConstant.HEBINGZTMC_WHB).or(qHeBingJL.heBingZTDM.isNull()))
+//                .fetchOne();
         if (count != null) {
             return count.intValue();
         }

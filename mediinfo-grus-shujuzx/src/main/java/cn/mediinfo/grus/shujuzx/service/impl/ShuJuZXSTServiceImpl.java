@@ -13,6 +13,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.text.ParseException;
 import java.util.Date;
@@ -70,25 +71,30 @@ public class ShuJuZXSTServiceImpl implements ShuJuZXSTService {
      */
     @Override
     public List<SC_ST_SanLiuLSTOutDto> getBingRenYLSJList(String bingRenID, String zhengJianHM, String xingMing, Date jianDangKSRQ, Date jianDangJSRQ, Integer pageIndex, Integer pageSize) throws TongYongYWException, ParseException {
-        var qModel = QSC_LC_BingRenYLSJModel.sC_LC_BingRenYLSJModel;
         pageIndex = pageIndex == null ?1 :pageIndex;
         pageSize = pageSize == null ?15:pageSize;
-        var models = new JPAQueryFactory(scLcBingRenYLSJRepository.getEntityManager()).select(qModel).from(qModel)
-                .where(QueryDSLUtils.whereIf(StringUtil.hasText(bingRenID),qModel.bingRenID.contains(bingRenID)))
-                .where(QueryDSLUtils.whereIf(StringUtil.hasText(zhengJianHM),qModel.zhengJianHM.contains(zhengJianHM)))
-                .where(QueryDSLUtils.whereIf(StringUtil.hasText(xingMing),
-                        qModel.xingMing.contains(xingMing).or(
+        Date finalJianDangJSRQ;
+        if(jianDangJSRQ!=null){
+            finalJianDangJSRQ = DateUtil.getLastDian(jianDangJSRQ);
+        } else {
+            finalJianDangJSRQ = jianDangJSRQ;
+        }
+        var models = scLcBingRenYLSJRepository.asQuerydsl()
+                .whereIf(StringUtils.hasText(bingRenID),o->o.bingRenID.contains(bingRenID))
+                .whereIf(StringUtils.hasText(zhengJianHM),o->o.zhengJianHM.contains(zhengJianHM))
+                .whereIf(StringUtils.hasText(xingMing),
+                        o->o.xingMing.contains(xingMing).or(
                                 Objects.equals(lyraIdentityService.getShuRuMLX(), "1") ?
-                                        qModel.shuRuMA1.toUpperCase().contains(xingMing.toUpperCase())
+                                        o.shuRuMA1.toUpperCase().contains(xingMing.toUpperCase())
                                         : Objects.equals(lyraIdentityService.getShuRuMLX(), "2") ?
-                                        qModel.shuRuMA2.toUpperCase().contains(xingMing.toUpperCase())
-                                        :qModel.shuRuMA3.toUpperCase().contains(xingMing.toUpperCase()))
-                ))
-                .where(QueryDSLUtils.whereIf(jianDangKSRQ!=null,qModel.jianDangSJ.goe(jianDangKSRQ)))
-                .where(QueryDSLUtils.whereIf(jianDangJSRQ!=null,qModel.jianDangSJ.loe(DateUtil.getLastDian(jianDangJSRQ))))
-                .orderBy(qModel.jianDangSJ.desc(),qModel.bingRenID.asc())
-                .offset(PageRequestUtil.of(pageIndex, pageSize).getOffset()).limit(pageSize)
-                .fetch();
+                                        o.shuRuMA2.toUpperCase().contains(xingMing.toUpperCase())
+                                        :o.shuRuMA3.toUpperCase().contains(xingMing.toUpperCase()))
+                )
+                .whereIf(jianDangKSRQ!=null,o->o.jianDangSJ.goe(jianDangKSRQ))
+                .whereIf(jianDangJSRQ!=null,o-> o.jianDangSJ.loe(finalJianDangJSRQ))
+                .orderBy(o->o.jianDangSJ.desc())
+                .orderBy(o->o.bingRenID.asc())
+                .fetchPage(pageIndex,pageSize);
         var result = MapUtils.copyListProperties(models,SC_ST_SanLiuLSTOutDto::new);
         //收藏夹明细
         var shouChangJMXDtos = MapUtils.copyListProperties(scScShouCangJMXRepository.findByShouCangJID(lyraIdentityService.getYongHuId()), SC_SC_ShouCangJMXListDto::new);

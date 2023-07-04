@@ -102,15 +102,16 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
             List<String> idList = dto.getUpdateList().stream().map(SC_ZD_ZhanShiPZDto::getId).toList();
             var zhanShiPZList = zhanShiPZRepository.findByZuZhiJGIDAndIdIn(zuZhiJGID, idList);
             for (var item : zhanShiPZList) {
-                var zhanShiPZ = dto.getUpdateList().stream().filter(x -> Objects.equals(x.getId(), item.getId())).findFirst().orElseGet(null);
-                if (Objects.nonNull(zhanShiPZ)) {
+                var zhanShiPZ = dto.getUpdateList().stream().filter(x -> Objects.equals(x.getId(), item.getId())).findFirst().orElseGet(()->null);
+                //if (Objects.nonNull(zhanShiPZ)) {
                     MapUtils.mergeProperties(zhanShiPZ, item, true);
-                }
+                //}
             }
             zhanShiPZRepository.saveAll(zhanShiPZList);
         }
         if (dto.getZuoFeiIds().size() > 0) {
-            zhanShiPZRepository.softDelete(dto.getZuoFeiIds());
+            QSC_ZD_ZhanShiPZModel zhanShiPZModel = QSC_ZD_ZhanShiPZModel.sC_ZD_ZhanShiPZModel;
+            zhanShiPZRepository.softDelete(zhanShiPZModel.id.in(dto.getZuoFeiIds()));
         }
         return true;
     }
@@ -259,6 +260,7 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
         zhanShiPZRepository.softDelete(zhanShiPZRepository.findByZuZhiJGIDAndChaXunMSDM(zuZhiJGID, chaXunMSDM));
         //初始化数据
         tongYongSJList.forEach(item -> {
+            item.setId(null);
             item.setZuZhiJGID(zuZhiJGID);
             item.setZuZhiJGMC(zuZhiJGMC);
         });

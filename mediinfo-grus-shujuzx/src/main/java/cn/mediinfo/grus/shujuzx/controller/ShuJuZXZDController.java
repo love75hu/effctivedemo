@@ -114,7 +114,7 @@ public class ShuJuZXZDController {
      * @param chaXunMSDM 查询模式代码
      * @param peiZhiLXDM 配置类型代码
      */
-    @GetMapping("UpdateZhanShiPZ")
+    @PutMapping("UpdateZhanShiPZ")
     @Operation(summary = "更新隐私规则")
     public MsfResponse<Boolean> updateZhanShiPZ(String zuZhiJGID, String zuZhiJGMC, String chaXunMSDM, String peiZhiLXDM) {
         if (!StringUtil.hasText(zuZhiJGID) || !StringUtil.hasText(zuZhiJGMC)) {

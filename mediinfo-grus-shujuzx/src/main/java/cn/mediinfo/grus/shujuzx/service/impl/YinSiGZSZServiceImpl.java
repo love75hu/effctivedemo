@@ -3,6 +3,7 @@ package cn.mediinfo.grus.shujuzx.service.impl;
 import cn.mediinfo.grus.shujuzx.constant.ShuJuZXConstant;
 import cn.mediinfo.grus.shujuzx.dto.YinSiGZSZs.*;
 import cn.mediinfo.grus.shujuzx.model.*;
+import cn.mediinfo.grus.shujuzx.po.yinsigzsz.YinSiGZSZAndYinSiPZListPO;
 import cn.mediinfo.grus.shujuzx.po.yinsigzsz.YinSiGZSZSJYpPO;
 import cn.mediinfo.grus.shujuzx.repository.SC_ZD_YinSiGZSZRepository;
 import cn.mediinfo.grus.shujuzx.repository.SC_ZD_YinSiPZRepository;
@@ -11,10 +12,7 @@ import cn.mediinfo.grus.shujuzx.service.YinSiGZSZService;
 import cn.mediinfo.grus.shujuzx.utils.ExpressionUtils;
 import cn.mediinfo.starter.base.exception.MsfException;
 import cn.mediinfo.starter.base.exception.TongYongYWException;
-import cn.mediinfo.starter.base.util.MapUtils;
-import cn.mediinfo.starter.base.util.PageRequestUtil;
-import cn.mediinfo.starter.base.util.QueryDSLUtils;
-import cn.mediinfo.starter.base.util.StringUtil;
+import cn.mediinfo.starter.base.util.*;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -319,7 +317,11 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
     //todo tichu poceng
     @Override
     public List<SC_ZD_YinSiGZSZOutDto> getYinSiGZSZSJYList(String chaXunMSDM, String zuZhiJGID) {
-        List<SC_ZD_YinSiGZSZOutDto> scZdYinSiGZSZOutDtos = yinSiGZSZRepository.getYinSiGZPZPOList(zuZhiJGID,chaXunMSDM).stream().map(t -> {
+        List<SC_ZD_YinSiGZSZModel> yinSiGZSZModelList = yinSiGZSZRepository.findByZuZhiJGID(zuZhiJGID);
+        List<SC_ZD_YinSiPZModel> yinSiPZModelList = yinSiPZRepository.findByZuZhiJGIDAndChaXunMSDM(zuZhiJGID, chaXunMSDM);
+        List<SC_ZD_YinSiGZSZOutDto> scZdYinSiGZSZOutDtos = yinSiGZSZModelList.stream().collect(CollectorUtil.groupJoin(yinSiPZModelList,
+                        (guiZeSZ, yinSiPZ) -> Objects.equals(guiZeSZ.getShuJuYLM(), yinSiPZ.getShuJuYLM()), YinSiGZSZAndYinSiPZListPO::new)).stream()
+                .flatMap(szpz -> szpz.getYinSiPZModels().stream().map(pz -> new YinSiGZSZSJYpPO(szpz.getYinSiGZSZModel(), pz))).map(t -> {
                     SC_ZD_YinSiGZSZOutDto yinSiGZSZOutDto = new SC_ZD_YinSiGZSZOutDto();
                     yinSiGZSZOutDto.setId(t.getYinSiGZSZModel().getId());
                     yinSiGZSZOutDto.setShuJuYMC(t.getYinSiGZSZModel().getShuJuYMC());
@@ -375,7 +377,7 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
             zhanShiPZModelList.forEach(item->item.setId("0"));
         }
         return zhanShiPZModelList.stream()
-                .sorted(Comparator.comparing(SC_ZD_ZhanShiPZModel::getShunXuHao).thenComparing(SC_ZD_ZhanShiPZModel::getId))
+                .sorted(Comparator.comparing(SC_ZD_ZhanShiPZModel::getShunXuHao,Comparator.nullsLast(Integer::compareTo)).thenComparing(SC_ZD_ZhanShiPZModel::getId))
                 .map(t->MapUtils.copyProperties(t,SC_ZD_ZhanShiPZDto::new)).toList();
     }
 }

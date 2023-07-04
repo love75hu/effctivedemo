@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@Tag(name = "BiHuanJDController", description = "闭环节点")
 @RequestMapping({"api/v1.0/BiHuanJD", "api/v1/BiHuanJD"})
 @Slf4j
 @Validated

@@ -13,7 +13,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@Tag(name = "BingRenYLSJController", description = "病人医疗事件")
 @RequestMapping({"api/v1.0/BingRenYLSJ", "api/v1/BingRenYLSJ"})
 @Slf4j
 @Validated

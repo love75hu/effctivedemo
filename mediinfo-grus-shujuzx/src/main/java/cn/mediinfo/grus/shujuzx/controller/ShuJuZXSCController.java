@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@Tag(name = "ShuJuZXSCController", description = "数据中心-收藏夹")
 @RequestMapping({"api/v1.0/ShuJuZXSC", "api/v1/ShuJuZXSC"})
 @Slf4j
 @Validated

@@ -8,7 +8,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://172.19.80.10:30003/mediinfo-lyra-authserver
+          issuer-uri: http://mediinfo-lyra-authserver/mediinfo-lyra-authserver
   datasource:
     driver-class-name: oracle.jdbc.OracleDriver
     url: jdbc:oracle:thin:@172.19.80.161:1521:orcl
@@ -48,7 +48,7 @@ spring:
 mediinfo:
   remote:
     urls:
-      mediinfo-grus-huanzhe-query: "http://172.19.80.10:30003/mediinfo-grus-huanzhe-query"
+      mediinfo-grus-huanzhe-query: "http://mediinfo-grus-huanzhe-query/mediinfo-grus-huanzhe-query"
 logging:
   level:
     root: info

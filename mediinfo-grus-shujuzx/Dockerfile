@@ -13,4 +13,4 @@ WORKDIR /app
 COPY --from=build /app/build/libs .
 COPY --from=build /app/build/resources/main .
 
-CMD ["bash", "/app/appRun.sh","--jar","mediinfo-grus-shujuzx-java.jar"]
+CMD ["bash", "/app/appRun.sh","--jar","mediinfo-grus-shujuzx.jar"]

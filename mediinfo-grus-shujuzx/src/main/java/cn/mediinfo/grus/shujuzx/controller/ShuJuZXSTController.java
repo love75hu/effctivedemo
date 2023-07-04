@@ -18,7 +18,6 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
-@Tag(name = "ShuJuZXSTController", description = "数据中心-视图")
 @RequestMapping({"api/v1.0/ShuJuZXST", "api/v1/ShuJuZXST"})
 @Slf4j
 @Validated

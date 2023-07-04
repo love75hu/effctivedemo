@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@Tag(name = "YeWuZDController", description = "360业务字典")
 @RequestMapping({"api/v1.0/YeWuZD", "api/v1/YeWuZD"})
 @Slf4j
 @Validated

@@ -62,7 +62,7 @@ spring:
 mediinfo:
   remote:
     urls:
-      mediinfo-grus-huanzhe-query: "http://172.19.80.10:30003/mediinfo-grus-huanzhe-query"
+      mediinfo-grus-huanzhe-query: "http://172.19.80.10:31003/mediinfo-grus-huanzhe-query"
   sequence:
     provider: redis
   string-generator:

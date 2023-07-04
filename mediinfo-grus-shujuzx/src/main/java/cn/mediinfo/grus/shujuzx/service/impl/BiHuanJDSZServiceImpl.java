@@ -21,6 +21,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class BiHuanJDSZServiceImpl implements BiHuanJDSZService {
@@ -175,16 +176,15 @@ public class BiHuanJDSZServiceImpl implements BiHuanJDSZService {
      */
     @Override
     public List<SC_ZD_BiHuanJDListDto> getBiHuanJDByBHLX(String biHuanLXDM, Integer zhuYuanSYBZ, Integer menZhenSYBZ, Integer jiZhenSYBZ, Integer tiJianSYBZ) {
-        QSC_ZD_BiHuanJDModel biHuanJD = QSC_ZD_BiHuanJDModel.sC_ZD_BiHuanJDModel;
-        var query = new JPAQueryFactory(sc_zd_biHuanJDRepository.getEntityManager())
-                .select(biHuanJD)
-                .from(biHuanJD)
-                .where(biHuanJD.biHuanLXDM.eq(biHuanLXDM)
-                        .and(QueryDSLUtils.whereIf(zhuYuanSYBZ == 1, biHuanJD.zhuYuanSYBZ.eq(zhuYuanSYBZ)))
-                        .and(QueryDSLUtils.whereIf(menZhenSYBZ == 1, biHuanJD.zhuYuanSYBZ.eq(menZhenSYBZ)))
-                        .and(QueryDSLUtils.whereIf(jiZhenSYBZ == 1, biHuanJD.zhuYuanSYBZ.eq(jiZhenSYBZ)))
-                        .and(QueryDSLUtils.whereIf(tiJianSYBZ == 1, biHuanJD.zhuYuanSYBZ.eq(tiJianSYBZ))))
-                .orderBy(biHuanJD.shunXuHao.asc());
-        return MapUtils.copyListProperties(query.fetch(), SC_ZD_BiHuanJDListDto::new);
+        return sc_zd_biHuanJDRepository
+                .asQuerydsl()
+                .where(x -> x.biHuanLXDM.eq(biHuanLXDM))
+                .whereIf(Objects.nonNull(zhuYuanSYBZ) && zhuYuanSYBZ == 1, x -> x.zhuYuanSYBZ.eq(zhuYuanSYBZ))
+                .whereIf(Objects.nonNull(menZhenSYBZ) && menZhenSYBZ == 1, x -> x.menZhenSYBZ.eq(menZhenSYBZ))
+                .whereIf(Objects.nonNull(jiZhenSYBZ) && jiZhenSYBZ == 1, x -> x.jiZhenSYBZ.eq(jiZhenSYBZ))
+                .whereIf(Objects.nonNull(tiJianSYBZ) && tiJianSYBZ == 1, x -> x.tiJianSYBZ.eq(tiJianSYBZ))
+                .orderBy(x -> x.shunXuHao.asc())
+                .select(SC_ZD_BiHuanJDListDto.class)
+                .fetch();
     }
 }

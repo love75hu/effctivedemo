@@ -20,4 +20,6 @@ public interface SC_ZD_YinSiGZSZRepository extends MsfJpaRepository<QSC_ZD_YinSi
      */
     @Query("select new cn.mediinfo.grus.shujuzx.po.yinsigzsz.YinSiGZSZSJYpPO(a,b) from SC_ZD_YinSiGZSZModel as a left join SC_ZD_YinSiPZModel as b on a.shuJuYLM = b.shuJuYLM where b.zuZhiJGID = :zuZhiJGID and b.chaXunMSDM =:chaXunMSDM")
     List<YinSiGZSZSJYpPO> getYinSiGZPZPOList(String zuZhiJGID,String chaXunMSDM);
+
+    List<SC_ZD_YinSiGZSZModel> findByZuZhiJGID(String zuZhiJGID);
 }

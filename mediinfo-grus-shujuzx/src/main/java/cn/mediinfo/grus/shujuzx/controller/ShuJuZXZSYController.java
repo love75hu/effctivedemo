@@ -124,7 +124,7 @@ public class ShuJuZXZSYController {
      * @return boolean
      */
     @Operation(summary = "更新一个权重分类")
-    @PostMapping("UpdateQuanZhongFL")
+    @PutMapping("UpdateQuanZhongFL")
     public MsfResponse<Boolean> updateQuanZhongFL(@RequestBody UpdateQuanZhongFLDto dto) throws TongYongYWException {
         var result = zhuSuoYQZPZService.updateQuanZhongFL(dto);
         return MsfResponse.success(result);
@@ -147,7 +147,7 @@ public class ShuJuZXZSYController {
      * @return boolean
      */
     @Operation(summary = "保存权重配置")
-    @DeleteMapping("saveQuanZhongPZ")
+    @PostMapping("saveQuanZhongPZ")
     public MsfResponse<Boolean> saveQuanZhongPZ(@RequestBody SaveQuanZhongPZDto dto) throws TongYongYWException {
         return MsfResponse.success(zhuSuoYQZPZService.saveQuanZhongPZ(dto));
     }

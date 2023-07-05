@@ -9,6 +9,7 @@ import cn.mediinfo.grus.shujuzx.service.ShuJuZXSTService;
 import cn.mediinfo.starter.base.exception.TongYongYWException;
 import cn.mediinfo.starter.base.lyra.service.LyraIdentityService;
 import cn.mediinfo.starter.base.util.*;
+import com.querydsl.core.types.dsl.SimpleExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -42,21 +43,21 @@ public class ShuJuZXSTServiceImpl implements ShuJuZXSTService {
      */
     @Override
     public Integer getBingRenYLSJCount(String bingRenID, String zhengJianHM, String xingMing, Date jianDangKSRQ, Date jianDangJSRQ) throws TongYongYWException, ParseException {
-        var qModel = QSC_LC_BingRenYLSJModel.sC_LC_BingRenYLSJModel;
-        var result = new JPAQueryFactory(scLcBingRenYLSJRepository.getEntityManager()).select(qModel.count()).from(qModel)
-                .where(QueryDSLUtils.whereIf(StringUtil.hasText(bingRenID),qModel.bingRenID.contains(bingRenID)))
-                .where(QueryDSLUtils.whereIf(StringUtil.hasText(zhengJianHM),qModel.zhengJianHM.contains(zhengJianHM)))
-                .where(QueryDSLUtils.whereIf(jianDangKSRQ!=null,qModel.jianDangSJ.goe(jianDangKSRQ)))
-                .where(QueryDSLUtils.whereIf(jianDangJSRQ!=null,qModel.jianDangSJ.loe(DateUtil.getLastDian(jianDangJSRQ))))
-                .where(QueryDSLUtils.whereIf(StringUtil.hasText(xingMing),
-                        qModel.xingMing.contains(xingMing).or(
+        var jianDangJSRQLast = DateUtil.getLastDian(jianDangJSRQ);
+        var result = scLcBingRenYLSJRepository.asQuerydsl()
+                .whereIf(StringUtils.hasText(bingRenID),o->o.bingRenID.contains(bingRenID))
+                .whereIf(StringUtils.hasText(zhengJianHM),o->o.zhengJianHM.contains(zhengJianHM))
+                .whereIf(jianDangKSRQ!=null,o->o.jianDangSJ.goe(jianDangKSRQ))
+                .whereIf(jianDangJSRQ!=null,o->o.jianDangSJ.loe(jianDangJSRQLast))
+                .whereIf(StringUtils.hasText(xingMing),o->
+                        o.xingMing.contains(xingMing).or(
                                 Objects.equals(lyraIdentityService.getShuRuMLX(), "1") ?
-                                        qModel.shuRuMA1.toUpperCase().contains(xingMing.toUpperCase())
+                                        o.shuRuMA1.toUpperCase().contains(xingMing.toUpperCase())
                                         : Objects.equals(lyraIdentityService.getShuRuMLX(), "2") ?
-                                        qModel.shuRuMA2.toUpperCase().contains(xingMing.toUpperCase())
-                                        :qModel.shuRuMA3.toUpperCase().contains(xingMing.toUpperCase()))
-                        ))
-
+                                        o.shuRuMA2.toUpperCase().contains(xingMing.toUpperCase())
+                                        :o.shuRuMA3.toUpperCase().contains(xingMing.toUpperCase()))
+                )
+                .select(SimpleExpression::count)
                 .fetchOne();
         if (result != null) {
             return result.intValue();

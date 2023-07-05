@@ -40,6 +40,9 @@ public class ZhuSuoYCZRZServiceImpl implements ZhuSuoYCZRZService {
     public List<BR_DA_ZhuSuoYCZRZDto> getZhuSuoYCZRZList(Integer page, Integer pageSize, String caoZuoKSRQ, String caoZuoJSRQ, String caoZuoLXDM, String likeQuery) throws TongYongYWException, ParseException {
         Date finalCaoZuoKSRQ = DateUtil.getDateYYMMDDHHMMSS2(caoZuoKSRQ);
         Date finalcaoZuoJSRQ = DateUtil.getDateYYMMDDHHMMSS2(caoZuoJSRQ);
+        if(pageSize == null ||pageSize==0){
+            pageSize = 10;
+        }
         var zhuSuoYCZRZModels = brDaZhuSuoYCZRZRepository.asQuerydsl()
                 .whereIf(finalCaoZuoKSRQ!=null,o->o.caoZuoSJ.goe(finalCaoZuoKSRQ))
                 .whereIf(finalcaoZuoJSRQ!=null, o->o.caoZuoSJ.loe(finalcaoZuoJSRQ))

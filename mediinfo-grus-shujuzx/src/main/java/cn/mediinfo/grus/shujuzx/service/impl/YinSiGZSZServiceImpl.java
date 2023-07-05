@@ -24,6 +24,7 @@ import cn.mediinfo.grus.shujuzx.dto.YinSiGZSZs.SC_ZD_YinSiPZOutDto;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -321,23 +322,27 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
     public List<SC_ZD_YinSiGZSZOutDto> getYinSiGZSZSJYList(String chaXunMSDM, String zuZhiJGID) {
         List<SC_ZD_YinSiGZSZModel> yinSiGZSZModelList = yinSiGZSZRepository.findByZuZhiJGID(zuZhiJGID);
         List<SC_ZD_YinSiPZModel> yinSiPZModelList = yinSiPZRepository.findByZuZhiJGIDAndChaXunMSDM(zuZhiJGID, chaXunMSDM);
-        List<SC_ZD_YinSiGZSZOutDto> scZdYinSiGZSZOutDtos = yinSiGZSZModelList.stream().collect(CollectorUtil.groupJoin(yinSiPZModelList,
-                        (guiZeSZ, yinSiPZ) -> Objects.equals(guiZeSZ.getShuJuYLM(), yinSiPZ.getShuJuYLM()), YinSiGZSZAndYinSiPZListPO::new)).stream()
-                .flatMap(szpz -> szpz.getYinSiPZModels().stream().map(pz -> new YinSiGZSZSJYpPO(szpz.getYinSiGZSZModel(), pz))).map(t -> {
-                    SC_ZD_YinSiGZSZOutDto yinSiGZSZOutDto = new SC_ZD_YinSiGZSZOutDto();
-                    yinSiGZSZOutDto.setId(t.getYinSiGZSZModel().getId());
-                    yinSiGZSZOutDto.setShuJuYMC(t.getYinSiGZSZModel().getShuJuYMC());
-                    yinSiGZSZOutDto.setShuJuYLM(t.getYinSiGZSZModel().getShuJuYLM());
-                    yinSiGZSZOutDto.setTuoMinFSDM(t.getYinSiGZSZModel().getTuoMinFSDM());
-                    yinSiGZSZOutDto.setTuoMinFSMC(t.getYinSiGZSZModel().getTuoMinFSMC());
-                    yinSiGZSZOutDto.setTuoMinGZ(t.getYinSiGZSZModel().getTuoMinGZ());
-                    yinSiGZSZOutDto.setTuoMinSM(t.getYinSiGZSZModel().getTuoMinSM());
-                    yinSiGZSZOutDto.setShunXuHao(t.getYinSiGZSZModel().getShunXuHao());
-                    yinSiGZSZOutDto.setShiFouXZ(StringUtil.hasText(t.getYinSiPZModel().getId()));//是否选中
-                    return yinSiGZSZOutDto;
-                }).sorted(Comparator.comparing(SC_ZD_YinSiGZSZOutDto::getShunXuHao))
-                .filter(ExpressionUtils.distinctByKeys(SC_ZD_YinSiGZSZOutDto::getShunXuHao)).toList();
-        return scZdYinSiGZSZOutDtos;
+        List<YinSiGZSZAndYinSiPZListPO> yinSiGZSZAndYinSiPZListPOS = yinSiGZSZModelList.stream().collect(CollectorUtil.groupJoin(yinSiPZModelList,
+                (guiZeSZ, yinSiPZ) -> Objects.equals(guiZeSZ.getShuJuYLM(), yinSiPZ.getShuJuYLM()), YinSiGZSZAndYinSiPZListPO::new)).stream().toList();
+        List<SC_ZD_YinSiGZSZOutDto> scZdYinSiGZSZOutDtos = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(yinSiGZSZAndYinSiPZListPOS)) {
+            for (YinSiGZSZAndYinSiPZListPO po : yinSiGZSZAndYinSiPZListPOS) {
+                SC_ZD_YinSiGZSZOutDto yinSiGZSZOutDto = new SC_ZD_YinSiGZSZOutDto();
+                yinSiGZSZOutDto.setId(po.getYinSiGZSZModel().getId());
+                yinSiGZSZOutDto.setShuJuYMC(po.getYinSiGZSZModel().getShuJuYMC());
+                yinSiGZSZOutDto.setShuJuYLM(po.getYinSiGZSZModel().getShuJuYLM());
+                yinSiGZSZOutDto.setTuoMinFSDM(po.getYinSiGZSZModel().getTuoMinFSDM());
+                yinSiGZSZOutDto.setTuoMinFSMC(po.getYinSiGZSZModel().getTuoMinFSMC());
+                yinSiGZSZOutDto.setTuoMinGZ(po.getYinSiGZSZModel().getTuoMinGZ());
+                yinSiGZSZOutDto.setTuoMinSM(po.getYinSiGZSZModel().getTuoMinSM());
+                yinSiGZSZOutDto.setShunXuHao(po.getYinSiGZSZModel().getShunXuHao());
+                yinSiGZSZOutDto.setShiFouXZ(!CollectionUtils.isEmpty(po.getYinSiPZModels()) && StringUtil.hasText(po.getYinSiPZModels().get(0).getId()));//是否选中
+                scZdYinSiGZSZOutDtos.add(yinSiGZSZOutDto);
+            }
+            return scZdYinSiGZSZOutDtos.stream().sorted(Comparator.comparing(SC_ZD_YinSiGZSZOutDto::getShunXuHao))
+                    .filter(ExpressionUtils.distinctByKeys(SC_ZD_YinSiGZSZOutDto::getShunXuHao)).toList();
+        }
+        return null;
     }
 
     /**

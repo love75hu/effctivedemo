@@ -36,7 +36,7 @@ public class ZhuSuoYQZPZServiceImpl implements ZhuSuoYQZPZService {
      */
     @Override
     public Boolean addQuanZhongFL(AddQuanZhongFLDto dto) throws TongYongYWException {
-        if(!brZdHeBingQZPZRepository.existsByMoJiBZAndFuLeiMC(0,dto.getFuLeiMC())){
+        if(brZdHeBingQZPZRepository.existsByMoJiBZAndFuLeiMC(0,dto.getFuLeiMC())){
             return  false;
         }
         var addModel = new BR_ZD_HeBingQZPZModel();

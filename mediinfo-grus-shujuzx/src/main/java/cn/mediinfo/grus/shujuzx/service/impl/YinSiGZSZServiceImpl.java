@@ -92,10 +92,10 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
         if (dto.getAddList().size() > 0) {
             zhanShiPZRepository.saveAll(MapUtils.copyListProperties(dto.getAddList(), SC_ZD_ZhanShiPZModel::new, (zhanShiPZDto, model) -> {
                 model.setId(null);
-                model.setZuZhiJGID(zhanShiPZDto.getZuZhiJGID());
-                model.setZuZhiJGMC(zhanShiPZDto.getZuZhiJGMC());
-                model.setChaXunMSDM(zhanShiPZDto.getChaXunMSDM());
-                model.setChaXunMSMC(zhanShiPZDto.getChaXunMSMC());
+                model.setZuZhiJGID(dto.getZuZhiJGID());
+                model.setZuZhiJGMC(dto.getZuZhiJGMC());
+                model.setChaXunMSDM(dto.getChaXunMSDM());
+                model.setChaXunMSMC(dto.getChaXunMSMC());
             }));
         }
         if (dto.getUpdateList().size() > 0) {
@@ -185,7 +185,9 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
         //机构数据
         var jiGouSJList = yinSiPZList.stream().filter(x -> Objects.equals(x.getZuZhiJGID(), zuZhiJGID)).toList();
         //取差集
-        List<SC_ZD_ZhanShiPZModel> chaJiList = tongYongSJList.stream().filter(t -> !jiGouSJList.contains(t)).toList();
+        List<SC_ZD_ZhanShiPZModel> chaJiList = tongYongSJList.stream()
+                .filter(t->!jiGouSJList.stream().map(SC_ZD_ZhanShiPZModel::getGongNengID).toList().contains(t.getGongNengID())).toList();
+                //.filter(t -> !jiGouSJList.contains(t)).toList();
         chaJiList.forEach(zhanShiPZModel -> {
             zhanShiPZModel.setId(null);
             zhanShiPZModel.setZuZhiJGID(zuZhiJGID);

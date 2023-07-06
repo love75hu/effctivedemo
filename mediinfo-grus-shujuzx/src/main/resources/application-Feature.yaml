@@ -48,7 +48,7 @@ spring:
 mediinfo:
   remote:
     urls:
-      mediinfo-grus-huanzhe-query: "http://mediinfo-grus-huanzhe-query/mediinfo-grus-huanzhe-query"
+      mediinfo-grus-huanzhe-query: "http://mediinfo-grus-huanzhe-query"
 logging:
   level:
     root: info

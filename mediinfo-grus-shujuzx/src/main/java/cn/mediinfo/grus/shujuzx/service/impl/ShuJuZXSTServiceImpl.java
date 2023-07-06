@@ -43,12 +43,17 @@ public class ShuJuZXSTServiceImpl implements ShuJuZXSTService {
      */
     @Override
     public Integer getBingRenYLSJCount(String bingRenID, String zhengJianHM, String xingMing, Date jianDangKSRQ, Date jianDangJSRQ) throws TongYongYWException, ParseException {
-        var jianDangJSRQLast = DateUtil.getLastDian(jianDangJSRQ);
+        Date jianDangJSRQLast;
+        if(jianDangJSRQ!=null){
+            jianDangJSRQLast = DateUtil.getLastDian(jianDangJSRQ);
+        } else {
+            jianDangJSRQLast = null;
+        }
         var result = scLcBingRenYLSJRepository.asQuerydsl()
                 .whereIf(StringUtils.hasText(bingRenID),o->o.bingRenID.contains(bingRenID))
                 .whereIf(StringUtils.hasText(zhengJianHM),o->o.zhengJianHM.contains(zhengJianHM))
                 .whereIf(jianDangKSRQ!=null,o->o.jianDangSJ.goe(jianDangKSRQ))
-                .whereIf(jianDangJSRQ!=null,o->o.jianDangSJ.loe(jianDangJSRQLast))
+                .whereIf(jianDangJSRQLast!=null,o->o.jianDangSJ.loe(jianDangJSRQLast))
                 .whereIf(StringUtils.hasText(xingMing),o->
                         o.xingMing.contains(xingMing).or(
                                 Objects.equals(lyraIdentityService.getShuRuMLX(), "1") ?

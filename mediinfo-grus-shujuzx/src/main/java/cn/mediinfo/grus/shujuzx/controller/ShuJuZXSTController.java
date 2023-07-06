@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.text.ParseException;
@@ -35,7 +36,7 @@ public class ShuJuZXSTController {
      */
     @Operation(summary = "获取主索引操作日志列表")
     @GetMapping("GetBingRenYLSJCount")
-    public MsfResponse<Integer> getBingRenYLSJCount(String bingRenID, String zhengJianHM, String xingMing, Date jianDangKSRQ, Date jianDangJSRQ) throws TongYongYWException, ParseException {
+    public MsfResponse<Integer> getBingRenYLSJCount(String bingRenID, String zhengJianHM, String xingMing, @RequestParam(required = false) Date jianDangKSRQ, @RequestParam(required = false) Date jianDangJSRQ) throws TongYongYWException, ParseException {
         var data = shuJuZXSTService.getBingRenYLSJCount(bingRenID,zhengJianHM,xingMing,jianDangKSRQ,jianDangJSRQ);
         return MsfResponse.success(data);
     }

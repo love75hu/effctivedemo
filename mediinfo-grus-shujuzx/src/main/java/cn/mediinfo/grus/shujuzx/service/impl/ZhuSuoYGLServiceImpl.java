@@ -193,6 +193,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
                 .whereIf(StringUtils.hasText(shenFenZH),o->o.zhengJianHM.contains(shenFenZH))
                 .leftJoin(brDaHeBingJLRepository.asQuerydsl(),(c,d)->c.id.eq(d.bingRenID), JiBenXXPO::new)
                 .where(o->o.getHeBingJLModel().heBingZTDM.ne(ZhuSuoYHBZTConstant.HEBINGZTDM_WHB).or(o.getHeBingJLModel().heBingZTDM.isNull()))
+                .whereIf(xiangSiDu!=null && xiangSiDu>0,o->o.getHeBingJLModel().zuiDaXSD.goe(xiangSiDu))
                 .select(o->o.getJiBenXXModel().count())
                 .fetchOne();
         if (count != null) {

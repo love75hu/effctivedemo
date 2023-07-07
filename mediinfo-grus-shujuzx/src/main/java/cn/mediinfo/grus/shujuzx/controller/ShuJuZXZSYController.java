@@ -225,6 +225,18 @@ public class ShuJuZXZSYController {
     }
 
     /**
+     * 获取主索引操作日志数量
+     * @return
+     * @throws TongYongYWException 通用异常
+     */
+    @Operation(summary = "获取主索引操作日志数量")
+    @GetMapping("GetZhuSuoYCZRZCount")
+    public MsfResponse<Long> getZhuSuoYCZRZCount(String caoZuoKSRQ,String caoZuoJSRQ,String caoZuoLXDM,String likeQuery) throws TongYongYWException, ParseException {
+        var data = zhuSuoYCZRZService.getZhuSuoYCZRZCount(caoZuoKSRQ,caoZuoJSRQ,caoZuoLXDM,likeQuery);
+        return MsfResponse.success(data);
+    }
+
+    /**
      * 获取主索引操作日志列表
      * @return
      * @throws TongYongYWException 通用异常

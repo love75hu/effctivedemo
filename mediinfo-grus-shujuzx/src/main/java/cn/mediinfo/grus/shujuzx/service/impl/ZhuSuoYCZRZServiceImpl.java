@@ -9,6 +9,7 @@ import cn.mediinfo.grus.shujuzx.service.ZhuSuoYCZRZService;
 import cn.mediinfo.starter.base.exception.TongYongYWException;
 import cn.mediinfo.starter.base.lyra.service.LyraIdentityService;
 import cn.mediinfo.starter.base.util.*;
+import com.querydsl.core.types.dsl.SimpleExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -52,6 +53,24 @@ public class ZhuSuoYCZRZServiceImpl implements ZhuSuoYCZRZService {
                 .select(o->o)
                 .fetchPage(PageRequestUtil.of(page, pageSize));
         return MapUtils.copyListProperties(zhuSuoYCZRZModels, BR_DA_ZhuSuoYCZRZDto::new);
+    }
+
+    /**
+     * 获取主索引操作日志数量
+     * @return
+     * @throws TongYongYWException 通用异常
+     */
+    @Override
+    public long getZhuSuoYCZRZCount(String caoZuoKSRQ, String caoZuoJSRQ, String caoZuoLXDM, String likeQuery) throws TongYongYWException, ParseException {
+        Date finalCaoZuoKSRQ = DateUtil.getDateYYMMDDHHMMSS2(caoZuoKSRQ);
+        Date finalcaoZuoJSRQ = DateUtil.getDateYYMMDDHHMMSS2(caoZuoJSRQ);
+        return brDaZhuSuoYCZRZRepository.asQuerydsl()
+                .whereIf(finalCaoZuoKSRQ!=null,o->o.caoZuoSJ.goe(finalCaoZuoKSRQ))
+                .whereIf(finalcaoZuoJSRQ!=null, o->o.caoZuoSJ.loe(finalcaoZuoJSRQ))
+                .whereIf(StringUtils.hasText(caoZuoLXDM),o->o.caoZuoLXDM.eq(caoZuoLXDM))
+                .whereIf(StringUtils.hasText(likeQuery),o->o.bingRenID.contains(likeQuery).or(o.xingMing.contains(likeQuery)).or(o.caoZuoRXM.contains(likeQuery)))
+                .select(SimpleExpression::count)
+                .fetchOne();
     }
 
     @Override

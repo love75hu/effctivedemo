@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping({"api/v1.0/HuanZhe360", "api/v1/HuanZhe360"})
+@RequestMapping({"api/v1.0/HuanZhe", "api/v1/HuanZhe"})
 @Slf4j
 @Validated
 public class HuanZhe360Controller {

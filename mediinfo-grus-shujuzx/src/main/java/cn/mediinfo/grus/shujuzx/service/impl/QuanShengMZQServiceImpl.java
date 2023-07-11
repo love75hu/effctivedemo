@@ -28,12 +28,18 @@ import java.util.Objects;
 public class QuanShengMZQServiceImpl implements QuanShengMZQService {
     private final EntityManager entityManager;
     private final LyraIdentityService lyraIdentityService;
+    private final SC_ZD_YinSiPZRepository sc_zd_yinSiPZRepository;
+    private final SC_ZD_ZhanShiPZRepository sc_zd_zhanShiPZRepository;
 
     public QuanShengMZQServiceImpl(
             EntityManager entityManager,
-            LyraIdentityService lyraIdentityService) {
+            LyraIdentityService lyraIdentityService,
+            SC_ZD_YinSiPZRepository sc_zd_yinSiPZRepository,
+            SC_ZD_ZhanShiPZRepository sc_zd_zhanShiPZRepository) {
         this.entityManager = entityManager;
         this.lyraIdentityService = lyraIdentityService;
+        this.sc_zd_yinSiPZRepository = sc_zd_yinSiPZRepository;
+        this.sc_zd_zhanShiPZRepository = sc_zd_zhanShiPZRepository;
     }
 
     /**
@@ -46,7 +52,7 @@ public class QuanShengMZQServiceImpl implements QuanShengMZQService {
     public PeiZhiXXDtos getPeiZhiXXByCXMSDM(String chaXunMSDM) {
         var result = new PeiZhiXXDtos();
         QSC_ZD_YinSiPZModel yinSiPZ = QSC_ZD_YinSiPZModel.sC_ZD_YinSiPZModel;
-        var yinSiGZList = new JPAQueryFactory(entityManager)
+        var yinSiGZList = new JPAQueryFactory(sc_zd_yinSiPZRepository.getEntityManager())
                 .select(yinSiPZ)
                 .from(yinSiPZ)
                 .where(yinSiPZ.zuZhiJGID.eq(lyraIdentityService.getJiGouID())
@@ -86,7 +92,7 @@ public class QuanShengMZQServiceImpl implements QuanShengMZQService {
         //region 展示配置
         //功能模块
         QSC_ZD_ZhanShiPZModel zhanShiPZ = QSC_ZD_ZhanShiPZModel.sC_ZD_ZhanShiPZModel;
-        var zhanShiPZList = new JPAQueryFactory(entityManager)
+        var zhanShiPZList = new JPAQueryFactory(sc_zd_zhanShiPZRepository.getEntityManager())
                 .select(zhanShiPZ)
                 .from(zhanShiPZ)
                 .where(zhanShiPZ.zuZhiJGID.eq(lyraIdentityService.getJiGouID()).or(zhanShiPZ.zuZhiJGID.eq(ShuJuZXConstant.TONGYONG_JGID)))

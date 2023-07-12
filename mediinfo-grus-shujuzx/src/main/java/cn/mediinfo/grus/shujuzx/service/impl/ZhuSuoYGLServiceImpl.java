@@ -817,8 +817,12 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
                     x.setHeBingZTMC("未合并");
                     BR_DA_XiangSiSYModel xiangSiSY = allXaingSiSYList.stream()
                             .filter(m -> m.getBingRenID1().equals(x.getBingRenID()))
+                            .filter(m->m.getXiangSiDu()!=null)
                             .max(Comparator.comparing(BR_DA_XiangSiSYModel::getXiangSiDu)).orElse(null);
-                    x.setZuiDaXSD( xiangSiSY==null?0:xiangSiSY.getXiangSiDu().intValue());
+                    if (xiangSiSY!=null)
+                    {
+                        x.setZuiDaXSD( xiangSiSY.getXiangSiDu()==null?0:xiangSiSY.getXiangSiDu().intValue());
+                    }
                 }
                 x.setXiangSiShu((int)allXaingSiSYList.stream().filter(m->m.getBingRenID1().equals(x.getBingRenID())).count());
             });
@@ -853,11 +857,12 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
                     var cls= item.getClass();
                     Field fieldM = null;
                     try {
-                        fieldM = cls.getDeclaredField(ziDuan.getDaiMa());
+                        fieldM = cls.getDeclaredField(StringUtils.uncapitalize(ziDuan.getDaiMa()) );
                     } catch (NoSuchFieldException e) {
                         throw new RuntimeException(e);
                     }
                     try {
+                        fieldM.setAccessible(true);
                             var fieldValue= fieldM.get(item);
                             if(fieldValue!=null&&fieldValue.equals(value))
                                 return true;
@@ -896,7 +901,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
                         xiangSiSY1.setZuZhiJGMC("通用");
                         addXiangSiSYList.add(xiangSiSY1);
                     }else{
-                        if (!(xiangSiSY1.getGuiZeID().equals(guiZe.getGuiZeID())&&xiangSiSY1.getXiangSiDu().equals(guiZe.getXiangSiDu())))
+                        if (!(xiangSiSY1.getGuiZeID().equals(guiZe.getGuiZeID())&& BigDecimalUtil.isGreaterOrEqual(xiangSiSY1.getXiangSiDu()==null?new BigDecimal(0):xiangSiSY1.getXiangSiDu(),guiZe.getXiangSiDu()) ))
                         {
                             xiangSiSY1=new BR_DA_XiangSiSYModel();
                             xiangSiSY1.setBingRenID1(bingRenXX.getId());
@@ -931,7 +936,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
                         xiangSiSY2.setZuZhiJGMC("通用");
                         addXiangSiSYList.add(xiangSiSY2);
                     }else{
-                       if (!(xiangSiSY2.getGuiZeID().equals(guiZe.getGuiZeID())&&xiangSiSY2.getXiangSiDu().equals(guiZe.getXiangSiDu())))
+                       if (!(xiangSiSY2.getGuiZeID().equals(guiZe.getGuiZeID())&&BigDecimalUtil.isGreaterOrEqual(xiangSiSY2.getXiangSiDu()==null?new BigDecimal(0):xiangSiSY2.getXiangSiDu(),guiZe.getXiangSiDu())))
                        {
                             xiangSiSY2=new BR_DA_XiangSiSYModel();
                             xiangSiSY2.setBingRenID1(dangQianXSHZ.getId());

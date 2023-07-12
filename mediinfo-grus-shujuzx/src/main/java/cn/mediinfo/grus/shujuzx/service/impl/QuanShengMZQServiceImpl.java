@@ -100,8 +100,7 @@ public class QuanShengMZQServiceImpl implements QuanShengMZQService {
                         .and(zhanShiPZ.chaXunMSDM.eq(chaXunMSDM)
                                 .or(zhanShiPZ.chaXunMSDM.eq(ChaXunMSEnum.TONG_YONG_MO_SHI.getValue()))))
                 .orderBy(zhanShiPZ.shunXuHao.asc())
-                .stream()
-                .toList();
+                .fetch();
         //1功能模块，2门诊记录，3住院记录
         var zhanShiPZLXDMs = Arrays.asList("1", "2", "3");
         List<ZhanShiPZItem> gongNengMKList = new ArrayList<>();

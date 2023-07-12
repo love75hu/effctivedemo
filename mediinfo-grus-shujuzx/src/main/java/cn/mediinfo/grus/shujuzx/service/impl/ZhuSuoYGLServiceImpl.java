@@ -268,7 +268,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
         var xiangSiBRs = new JPAQueryFactory(brDaXiangSiSYRepository.getEntityManager()).select(Projections.bean(BR_DA_XiangSiSYModel.class,qXSBRModel.bingRenID2,qXSBRModel.xiangSiDu))
                             .from(qXSBRModel)
                 .where(qXSBRModel.bingRenID1.eq(bingRenID).and(qXSBRModel.heBingBZ.eq(0)).and(qXSBRModel.huLueBZ.eq(0)))
-                .where(QueryDSLUtils.whereIf(xiangSiDu>0,qXSBRModel.xiangSiDu.goe(xiangSiDu)))
+                .where(QueryDSLUtils.whereIf(xiangSiDu!=null && xiangSiDu>0,qXSBRModel.xiangSiDu.goe(xiangSiDu)))
                 .fetch();
         var xiangSiBRIDs = xiangSiBRs.stream().map(BR_DA_XiangSiSYModel::getBingRenID2).toList();
         //获取相似索引病人信息

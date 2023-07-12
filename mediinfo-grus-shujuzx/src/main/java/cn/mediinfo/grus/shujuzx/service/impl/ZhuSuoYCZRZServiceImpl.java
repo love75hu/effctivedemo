@@ -38,7 +38,7 @@ public class ZhuSuoYCZRZServiceImpl implements ZhuSuoYCZRZService {
     }
 
     @Override
-    public List<BR_DA_ZhuSuoYCZRZDto> getZhuSuoYCZRZList(Integer page, Integer pageSize, String caoZuoKSRQ, String caoZuoJSRQ, String caoZuoLXDM, String likeQuery) throws TongYongYWException, ParseException {
+    public List<BR_DA_ZhuSuoYCZRZDto> getZhuSuoYCZRZList(Integer pageIndex, Integer pageSize, String caoZuoKSRQ, String caoZuoJSRQ, String caoZuoLXDM, String likeQuery) throws TongYongYWException, ParseException {
         Date finalCaoZuoKSRQ = DateUtil.getDateYYMMDDHHMMSS2(caoZuoKSRQ);
         Date finalcaoZuoJSRQ = DateUtil.getDateYYMMDDHHMMSS2(caoZuoJSRQ);
         if(pageSize == null ||pageSize==0){
@@ -51,7 +51,7 @@ public class ZhuSuoYCZRZServiceImpl implements ZhuSuoYCZRZService {
                 .whereIf(StringUtils.hasText(likeQuery),o->o.bingRenID.contains(likeQuery).or(o.xingMing.contains(likeQuery)).or(o.caoZuoRXM.contains(likeQuery)))
                 .orderBy(o->o.caoZuoSJ.desc())
                 .select(o->o)
-                .fetchPage(PageRequestUtil.of(page, pageSize));
+                .fetchPage(PageRequestUtil.of(pageIndex, pageSize));
         return MapUtils.copyListProperties(zhuSuoYCZRZModels, BR_DA_ZhuSuoYCZRZDto::new);
     }
 

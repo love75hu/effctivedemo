@@ -23,6 +23,7 @@ import cn.mediinfo.grus.shujuzx.constant.ChaXunMSEnum;
 import cn.mediinfo.grus.shujuzx.dto.YinSiGZSZs.SC_ZD_YinSiPZOutDto;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -273,7 +274,11 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
 
     @Override
     public List<SC_ZD_YinSiPZOutDto> getYinSiGZPZList(String chaXunMSDM, String zuZhiJGID) throws TongYongYWException {
-        var canXunMSDMList = List.of(chaXunMSDM, ChaXunMSEnum.TONG_YONG_MO_SHI.getValue());
+        List<String> canXunMSDMList = new ArrayList<>();
+        canXunMSDMList.add(ChaXunMSEnum.TONG_YONG_MO_SHI.getValue());
+        if(StringUtils.hasText(chaXunMSDM)){
+            canXunMSDMList.add(chaXunMSDM);
+        }
         var list = yinSiPZRepository.findByZuZhiJGIDAndChaXunMSDMInAndQiYongBZ(zuZhiJGID, canXunMSDMList, 1);
         var result = list.stream().filter(o -> Objects.equals(o.getChaXunMSDM(), chaXunMSDM)).map(o -> MapUtils.copyProperties(o, SC_ZD_YinSiPZOutDto::new)).toList();
         if (CollectionUtils.isEmpty(result)) {

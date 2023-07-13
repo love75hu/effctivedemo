@@ -11,5 +11,5 @@ public interface SC_SC_ShouCangJMXRepository extends MsfJpaRepository<QSC_SC_Sho
     List<SC_SC_ShouCangJMXModel> findByShouCangJID(String shouCangJID);
 
     List<SC_SC_ShouCangJMXModel> findByShouCangJIDAndZuZhiJGID(String shouCangJID, String jiGouID);
-
+    List<SC_SC_ShouCangJMXModel> findByShouCangRIDAndBingRenIDIn(String shouCangRID,List<String> bingRenIDs);
 }

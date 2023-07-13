@@ -103,7 +103,7 @@ public class ShuJuZXSTServiceImpl implements ShuJuZXSTService {
                 .fetchPage(pageIndex,pageSize);
         var result = MapUtils.copyListProperties(models,SC_ST_SanLiuLSTOutDto::new);
         //收藏夹明细
-        var shouChangJMXDtos = MapUtils.copyListProperties(scScShouCangJMXRepository.findByShouCangJID(lyraIdentityService.getYongHuId()), SC_SC_ShouCangJMXListDto::new);
+        var shouChangJMXDtos = MapUtils.copyListProperties(scScShouCangJMXRepository.findByShouCangRIDAndBingRenIDIn(lyraIdentityService.getYongHuId(),result.stream().map(SC_ST_SanLiuLSTOutDto::getBingRenID).toList()), SC_SC_ShouCangJMXListDto::new);
         for (var brjbxx :result){
             brjbxx.setShouCangJiaList(shouChangJMXDtos.stream().filter(x-> Objects.equals(x.getBingRenID(), brjbxx.getBingRenID())).toList());
         }

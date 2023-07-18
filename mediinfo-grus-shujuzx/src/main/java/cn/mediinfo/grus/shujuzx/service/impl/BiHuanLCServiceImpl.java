@@ -84,7 +84,7 @@ public class BiHuanLCServiceImpl implements BiHuanLCService {
                 .map(t -> {
                     t.setShunXuHao(Objects.isNull(t.getShunXuHao()) ? 0 : t.getShunXuHao());
                     return t;
-                }).findFirst().orElseGet(null);
+                }).findFirst().orElseGet(()->null);
         return MapUtils.copyProperties(scZdBiHuanLCModel, SC_ZD_BiHuanLCOutDto::new, (model, dto) -> {
             dto.setBiHuanJDLCList(MapUtils.copyListProperties(allbhlcjd.stream().filter(x -> Objects.equals(x.getLiuChengID(), model.getLiuChengID())).sorted(Comparator.comparing(SC_ZD_BiHuanLCJDModel::getShunXuHao)).toList(), SC_ZD_BiHuanLCJDDto::new));
         });

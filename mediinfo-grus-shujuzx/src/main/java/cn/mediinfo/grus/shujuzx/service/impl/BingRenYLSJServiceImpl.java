@@ -15,14 +15,13 @@ import cn.mediinfo.starter.base.exception.TongYongYWException;
 import cn.mediinfo.starter.base.exception.YuanChengException;
 import cn.mediinfo.starter.base.lyra.service.LyraIdentityService;
 import cn.mediinfo.starter.base.response.MsfResponse;
+import cn.mediinfo.starter.base.util.CollectionUtil;
 import cn.mediinfo.starter.base.util.MapUtils;
 import jakarta.transaction.Transactional;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 public class BingRenYLSJServiceImpl implements BingRenYLSJService {
@@ -131,9 +130,8 @@ public class BingRenYLSJServiceImpl implements BingRenYLSJService {
         SC_LC_BingRenYLSJModel bingRenYLSJXX = sc_lc_bingRenYLSJRepository.findFirstByBingRenID(bingRenXX.getBingRenID());
         if (ObjectUtils.isEmpty(bingRenYLSJXX)) {
             var jiuZhenSLXX = new JZ_LC_JiuZhenSLRso();
-            MsfResponse<List<JZ_LC_JiuZhenSLRso>> jiuZhenResult = jiuZhenRemoteService.GetJiuZhenCSByBRIDs(new ArrayList<String>() {{
-                add(bingRenXX.getBingRenID());
-            }});
+
+            MsfResponse<List<JZ_LC_JiuZhenSLRso>> jiuZhenResult = jiuZhenRemoteService.GetJiuZhenCSByBRIDs(Collections.singletonList(bingRenXX.getBingRenID()));
             if (jiuZhenResult.getCode() >= 0) {
                 jiuZhenSLXX = jiuZhenResult.getData().get(0);
             }

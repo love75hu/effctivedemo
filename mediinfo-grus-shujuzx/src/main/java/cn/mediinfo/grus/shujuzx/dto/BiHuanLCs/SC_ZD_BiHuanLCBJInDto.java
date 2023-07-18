@@ -1,5 +1,7 @@
 package cn.mediinfo.grus.shujuzx.dto.BiHuanLCs;
 import java.util.*;
+
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import java.math.BigDecimal;
 
@@ -28,6 +30,7 @@ public class SC_ZD_BiHuanLCBJInDto {
     /**
    *闭环类型名称
     */
+    @NotEmpty(message = "流程名称不能为空")
    @Schema(description = "闭环类型名称")
    private String biHuanLXMC;
 

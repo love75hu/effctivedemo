@@ -351,9 +351,6 @@ public class ShuJuZXZDController {
     @PutMapping("UpdateBiHuanLC")
     @Operation(summary = "编辑一条闭环流程")
     public MsfResponse<Integer> updateBiHuanLC(@RequestBody SC_ZD_BiHuanLCBJInDto biHuanLCBJInDto) throws MsfException{
-        if (Objects.isNull(biHuanLCBJInDto) && !StringUtil.hasText(biHuanLCBJInDto.getLiuChengMC())){
-            return MsfResponse.fail("流程名称不能为空！");
-        }
         return MsfResponse.success(biHuanLCService.updateBiHuanLC(biHuanLCBJInDto));
     }
     /**

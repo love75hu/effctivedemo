@@ -123,7 +123,7 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
      */
     @Override
     public Integer updateYinSiGZ(SC_ZD_YinSiGZSZInDto yinSiGZSZInDto) throws MsfException {
-        SC_ZD_YinSiGZSZModel updateModel = yinSiGZSZRepository.findById(yinSiGZSZInDto.getId()).orElseGet(null);
+        SC_ZD_YinSiGZSZModel updateModel = yinSiGZSZRepository.findById(yinSiGZSZInDto.getId()).orElseGet(()->null);
         if (Objects.isNull(updateModel)) {
             throw new TongYongYWException("未找到相关可修改的信息!");
         }
@@ -161,7 +161,7 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
     @Override
     @Transactional(rollbackOn = Exception.class)
     public Boolean qiYongYinSiSZ(String id, Integer qiYongBZ) {
-        SC_ZD_YinSiPZModel yinSiPZXX = yinSiPZRepository.findById(id).orElseGet(null);
+        SC_ZD_YinSiPZModel yinSiPZXX = yinSiPZRepository.findById(id).orElseGet(()->null);
         if (yinSiPZXX == null) return false;
         yinSiPZXX.setQiYongBZ(qiYongBZ);
         yinSiPZRepository.save(yinSiPZXX);
@@ -292,7 +292,7 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
      */
     @Override
     public SC_ZD_YinSiGZSZOutDto getYinSiGZByID(String id) {
-        return MapUtils.copyProperties(yinSiGZSZRepository.findById(id).orElseGet(null), SC_ZD_YinSiGZSZOutDto::new);
+        return MapUtils.copyProperties(yinSiGZSZRepository.findById(id).orElseGet(()->null), SC_ZD_YinSiGZSZOutDto::new);
     }
 
     /**

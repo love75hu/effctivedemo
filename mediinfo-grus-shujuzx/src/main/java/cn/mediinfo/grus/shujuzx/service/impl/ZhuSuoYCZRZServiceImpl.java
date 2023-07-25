@@ -38,15 +38,25 @@ public class ZhuSuoYCZRZServiceImpl implements ZhuSuoYCZRZService {
     }
 
     @Override
-    public List<BR_DA_ZhuSuoYCZRZDto> getZhuSuoYCZRZList(Integer pageIndex, Integer pageSize, String caoZuoKSRQ, String caoZuoJSRQ, String caoZuoLXDM, String likeQuery) throws TongYongYWException, ParseException {
-        Date finalCaoZuoKSRQ = DateUtil.getDateYYMMDDHHMMSS2(caoZuoKSRQ);
-        Date finalcaoZuoJSRQ = DateUtil.getDateYYMMDDHHMMSS2(caoZuoJSRQ);
+    public List<BR_DA_ZhuSuoYCZRZDto> getZhuSuoYCZRZList(Integer pageIndex, Integer pageSize, Date caoZuoKSRQ, Date caoZuoJSRQ, String caoZuoLXDM, String likeQuery) throws TongYongYWException, ParseException {
         if(pageSize == null ||pageSize==0){
             pageSize = 10;
         }
         var zhuSuoYCZRZModels = brDaZhuSuoYCZRZRepository.asQuerydsl()
-                .whereIf(finalCaoZuoKSRQ!=null,o->o.caoZuoSJ.goe(finalCaoZuoKSRQ))
-                .whereIf(finalcaoZuoJSRQ!=null, o->o.caoZuoSJ.loe(finalcaoZuoJSRQ))
+                .whereIf(caoZuoKSRQ!=null,o-> {
+                    try {
+                        return o.caoZuoSJ.goe(DateUtil.get0Dian(caoZuoKSRQ));
+                    } catch (ParseException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .whereIf(caoZuoJSRQ!=null, o-> {
+                    try {
+                        return o.caoZuoSJ.loe(DateUtil.getLastDian(caoZuoJSRQ));
+                    } catch (ParseException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
                 .whereIf(StringUtils.hasText(caoZuoLXDM),o->o.caoZuoLXDM.eq(caoZuoLXDM))
                 .whereIf(StringUtils.hasText(likeQuery),o->o.bingRenID.contains(likeQuery).or(o.xingMing.contains(likeQuery)).or(o.caoZuoRXM.contains(likeQuery)))
                 .orderBy(o->o.caoZuoSJ.desc())

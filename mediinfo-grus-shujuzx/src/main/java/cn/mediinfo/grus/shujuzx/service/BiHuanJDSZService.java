@@ -1,9 +1,9 @@
 package cn.mediinfo.grus.shujuzx.service;
 
-import cn.mediinfo.grus.shujuzx.dto.BiHuanJDSZs.SC_ZD_BiHuanJDCreateDto;
-import cn.mediinfo.grus.shujuzx.dto.BiHuanJDSZs.SC_ZD_BiHuanJDDto;
-import cn.mediinfo.grus.shujuzx.dto.BiHuanJDSZs.SC_ZD_BiHuanJDListDto;
-import cn.mediinfo.grus.shujuzx.dto.BiHuanJDSZs.SC_ZD_BiHuanJDUpdateDto;
+import cn.mediinfo.grus.shujuzx.dto.bihuanjdszs.SC_ZD_BiHuanJDCreateDto;
+import cn.mediinfo.grus.shujuzx.dto.bihuanjdszs.SC_ZD_BiHuanJDDto;
+import cn.mediinfo.grus.shujuzx.dto.bihuanjdszs.SC_ZD_BiHuanJDListDto;
+import cn.mediinfo.grus.shujuzx.dto.bihuanjdszs.SC_ZD_BiHuanJDUpdateDto;
 import cn.mediinfo.starter.base.exception.TongYongYWException;
 import cn.mediinfo.starter.base.exception.WeiZhaoDSJException;
 

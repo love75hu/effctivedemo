@@ -1,7 +1,7 @@
 package cn.mediinfo.grus.shujuzx.service;
 
-import cn.mediinfo.grus.shujuzx.dto.ShuJuZXFWRZ.AddFangWenRZDto;
-import cn.mediinfo.grus.shujuzx.dto.ShuJuZXFWRZ.ShuJuZXFWRZDto;
+import cn.mediinfo.grus.shujuzx.dto.shujuzxfwrz.AddFangWenRZDto;
+import cn.mediinfo.grus.shujuzx.dto.shujuzxfwrz.ShuJuZXFWRZDto;
 
 import java.util.Date;
 import java.util.List;

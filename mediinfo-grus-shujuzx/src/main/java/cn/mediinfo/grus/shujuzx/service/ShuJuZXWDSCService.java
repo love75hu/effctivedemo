@@ -1,9 +1,9 @@
 package cn.mediinfo.grus.shujuzx.service;
 
-import cn.mediinfo.grus.shujuzx.dto.ShuJuZXSCs.SC_SC_ShouCangJMXInDto;
-import cn.mediinfo.grus.shujuzx.dto.ShuJuZXSCs.SC_SC_ShouCangJMXOutDto;
-import cn.mediinfo.grus.shujuzx.dto.ShuJuZXSCs.SC_SC_ShouCangJXXInDto;
-import cn.mediinfo.grus.shujuzx.dto.ShuJuZXSCs.SC_SC_ShouCangJXXOutDto;
+import cn.mediinfo.grus.shujuzx.dto.shujuzxscs.SC_SC_ShouCangJMXInDto;
+import cn.mediinfo.grus.shujuzx.dto.shujuzxscs.SC_SC_ShouCangJMXOutDto;
+import cn.mediinfo.grus.shujuzx.dto.shujuzxscs.SC_SC_ShouCangJXXInDto;
+import cn.mediinfo.grus.shujuzx.dto.shujuzxscs.SC_SC_ShouCangJXXOutDto;
 import cn.mediinfo.starter.base.exception.TongYongYWException;
 
 import java.util.List;

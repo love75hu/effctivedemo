@@ -1,8 +1,8 @@
 package cn.mediinfo.grus.shujuzx.service;
 
-import cn.mediinfo.grus.shujuzx.dto.ShuJuYLBs.SC_ZD_ShuJuYLBCreateDto;
-import cn.mediinfo.grus.shujuzx.dto.ShuJuYLBs.SC_ZD_ShuJuYLBDto;
-import cn.mediinfo.grus.shujuzx.dto.ShuJuYLBs.SC_ZD_ShuJuYLBUpdateDto;
+import cn.mediinfo.grus.shujuzx.dto.shujuylbs.SC_ZD_ShuJuYLBCreateDto;
+import cn.mediinfo.grus.shujuzx.dto.shujuylbs.SC_ZD_ShuJuYLBDto;
+import cn.mediinfo.grus.shujuzx.dto.shujuylbs.SC_ZD_ShuJuYLBUpdateDto;
 import cn.mediinfo.starter.base.exception.TongYongYWException;
 import cn.mediinfo.starter.base.exception.WeiZhaoDSJException;
 

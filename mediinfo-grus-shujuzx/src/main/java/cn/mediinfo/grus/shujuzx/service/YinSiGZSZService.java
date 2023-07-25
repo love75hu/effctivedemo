@@ -1,6 +1,6 @@
 package cn.mediinfo.grus.shujuzx.service;
 
-import cn.mediinfo.grus.shujuzx.dto.YinSiGZSZs.*;
+import cn.mediinfo.grus.shujuzx.dto.yinsigzszs.*;
 import cn.mediinfo.starter.base.exception.MsfException;
 import cn.mediinfo.starter.base.exception.TongYongYWException;
 

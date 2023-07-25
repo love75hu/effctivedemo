@@ -1,9 +1,9 @@
 package cn.mediinfo.grus.shujuzx.service.impl;
 
 import cn.mediinfo.grus.shujuzx.constant.ShuJuZXConstant;
-import cn.mediinfo.grus.shujuzx.dto.ShuJuYLBs.SC_ZD_ShuJuYLBCreateDto;
-import cn.mediinfo.grus.shujuzx.dto.ShuJuYLBs.SC_ZD_ShuJuYLBDto;
-import cn.mediinfo.grus.shujuzx.dto.ShuJuYLBs.SC_ZD_ShuJuYLBUpdateDto;
+import cn.mediinfo.grus.shujuzx.dto.shujuylbs.SC_ZD_ShuJuYLBCreateDto;
+import cn.mediinfo.grus.shujuzx.dto.shujuylbs.SC_ZD_ShuJuYLBDto;
+import cn.mediinfo.grus.shujuzx.dto.shujuylbs.SC_ZD_ShuJuYLBUpdateDto;
 import cn.mediinfo.grus.shujuzx.model.QSC_ZD_ShuJuYLBModel;
 import cn.mediinfo.grus.shujuzx.model.QSC_ZD_ShuJuYZYModel;
 import cn.mediinfo.grus.shujuzx.model.SC_ZD_ShuJuYLBModel;

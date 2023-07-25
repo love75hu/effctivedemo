@@ -1,22 +1,19 @@
 package cn.mediinfo.grus.shujuzx.service.impl;
 
 import cn.mediinfo.grus.shujuzx.constant.ZhuSuoYCZLXEnum;
-import cn.mediinfo.grus.shujuzx.dto.ShuJuZXZSYs.BR_DA_ZhuSuoYCZRZDto;
+import cn.mediinfo.grus.shujuzx.dto.shujuzxzsys.BR_DA_ZhuSuoYCZRZDto;
 import cn.mediinfo.grus.shujuzx.model.BR_DA_ZhuSuoYCZRZModel;
-import cn.mediinfo.grus.shujuzx.model.QBR_DA_ZhuSuoYCZRZModel;
 import cn.mediinfo.grus.shujuzx.repository.BR_DA_ZhuSuoYCZRZRepository;
 import cn.mediinfo.grus.shujuzx.service.ZhuSuoYCZRZService;
 import cn.mediinfo.starter.base.exception.TongYongYWException;
 import cn.mediinfo.starter.base.lyra.service.LyraIdentityService;
 import cn.mediinfo.starter.base.util.*;
 import com.querydsl.core.types.dsl.SimpleExpression;
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import javax.print.DocFlavor;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;

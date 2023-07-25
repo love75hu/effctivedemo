@@ -1,12 +1,10 @@
 package cn.mediinfo.grus.shujuzx.controller;
 
-import cn.mediinfo.grus.shujuzx.dto.ShuJuZXSTs.SC_ST_SanLiuLSTOutDto;
-import cn.mediinfo.grus.shujuzx.dto.ShuJuZXZSYs.BR_DA_ZhuSuoYCZRZDto;
+import cn.mediinfo.grus.shujuzx.dto.shujuzxsts.SC_ST_SanLiuLSTOutDto;
 import cn.mediinfo.grus.shujuzx.service.ShuJuZXSTService;
 import cn.mediinfo.starter.base.exception.TongYongYWException;
 import cn.mediinfo.starter.base.response.MsfResponse;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;

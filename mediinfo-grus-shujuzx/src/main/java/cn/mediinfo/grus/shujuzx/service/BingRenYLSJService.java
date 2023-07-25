@@ -1,7 +1,7 @@
 package cn.mediinfo.grus.shujuzx.service;
 
 import cn.mediinfo.grus.shujuzx.Events.BaseEventDto;
-import cn.mediinfo.grus.shujuzx.dto.BingRenYLSJs.SC_LC_BingRenYLSJInDto;
+import cn.mediinfo.grus.shujuzx.dto.bingrenylsjs.SC_LC_BingRenYLSJInDto;
 import cn.mediinfo.starter.base.exception.TongYongYWException;
 import cn.mediinfo.starter.base.exception.YuanChengException;
 

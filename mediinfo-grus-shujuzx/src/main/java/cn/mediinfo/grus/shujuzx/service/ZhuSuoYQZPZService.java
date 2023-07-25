@@ -1,6 +1,6 @@
 package cn.mediinfo.grus.shujuzx.service;
 
-import cn.mediinfo.grus.shujuzx.dto.ShuJuZXZSYs.*;
+import cn.mediinfo.grus.shujuzx.dto.shujuzxzsys.*;
 import cn.mediinfo.starter.base.exception.TongYongYWException;
 
 import java.util.List;

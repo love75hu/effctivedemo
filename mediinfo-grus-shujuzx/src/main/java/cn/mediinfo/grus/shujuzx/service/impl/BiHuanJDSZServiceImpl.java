@@ -1,10 +1,10 @@
 package cn.mediinfo.grus.shujuzx.service.impl;
 
 import cn.mediinfo.grus.shujuzx.constant.ShuJuZXConstant;
-import cn.mediinfo.grus.shujuzx.dto.BiHuanJDSZs.SC_ZD_BiHuanJDCreateDto;
-import cn.mediinfo.grus.shujuzx.dto.BiHuanJDSZs.SC_ZD_BiHuanJDDto;
-import cn.mediinfo.grus.shujuzx.dto.BiHuanJDSZs.SC_ZD_BiHuanJDListDto;
-import cn.mediinfo.grus.shujuzx.dto.BiHuanJDSZs.SC_ZD_BiHuanJDUpdateDto;
+import cn.mediinfo.grus.shujuzx.dto.bihuanjdszs.SC_ZD_BiHuanJDCreateDto;
+import cn.mediinfo.grus.shujuzx.dto.bihuanjdszs.SC_ZD_BiHuanJDDto;
+import cn.mediinfo.grus.shujuzx.dto.bihuanjdszs.SC_ZD_BiHuanJDListDto;
+import cn.mediinfo.grus.shujuzx.dto.bihuanjdszs.SC_ZD_BiHuanJDUpdateDto;
 import cn.mediinfo.grus.shujuzx.model.QSC_ZD_BiHuanJDModel;
 import cn.mediinfo.grus.shujuzx.model.SC_ZD_BiHuanJDModel;
 import cn.mediinfo.grus.shujuzx.repository.SC_ZD_BiHuanJDRepository;

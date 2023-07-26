@@ -1,10 +1,9 @@
 package cn.mediinfo.grus.shujuzx.service.impl;
 
 import cn.mediinfo.grus.shujuzx.constant.ShuJuZXConstant;
-import cn.mediinfo.grus.shujuzx.dto.YinSiGZSZs.*;
+import cn.mediinfo.grus.shujuzx.dto.yinsigzszs.*;
 import cn.mediinfo.grus.shujuzx.model.*;
 import cn.mediinfo.grus.shujuzx.po.yinsigzsz.YinSiGZSZAndYinSiPZListPO;
-import cn.mediinfo.grus.shujuzx.po.yinsigzsz.YinSiGZSZSJYpPO;
 import cn.mediinfo.grus.shujuzx.repository.SC_ZD_YinSiGZSZRepository;
 import cn.mediinfo.grus.shujuzx.repository.SC_ZD_YinSiPZRepository;
 import cn.mediinfo.grus.shujuzx.repository.SC_ZD_ZhanShiPZRepository;
@@ -13,14 +12,11 @@ import cn.mediinfo.grus.shujuzx.utils.ExpressionUtils;
 import cn.mediinfo.starter.base.exception.MsfException;
 import cn.mediinfo.starter.base.exception.TongYongYWException;
 import cn.mediinfo.starter.base.util.*;
-import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import cn.mediinfo.grus.shujuzx.constant.ChaXunMSEnum;
-import cn.mediinfo.grus.shujuzx.dto.YinSiGZSZs.SC_ZD_YinSiPZOutDto;
+import cn.mediinfo.grus.shujuzx.dto.yinsigzszs.SC_ZD_YinSiPZOutDto;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;

@@ -2,9 +2,9 @@ package cn.mediinfo.grus.shujuzx.service.impl;
 
 import cn.mediinfo.grus.shujuzx.constant.ChaXunMSEnum;
 import cn.mediinfo.grus.shujuzx.constant.ShuJuZXConstant;
-import cn.mediinfo.grus.shujuzx.dto.QuanShengMZQs.PeiZhiXXDtos;
-import cn.mediinfo.grus.shujuzx.dto.QuanShengMZQs.YinSiPZItem;
-import cn.mediinfo.grus.shujuzx.dto.QuanShengMZQs.ZhanShiPZItem;
+import cn.mediinfo.grus.shujuzx.dto.quanshengmzqs.PeiZhiXXDtos;
+import cn.mediinfo.grus.shujuzx.dto.quanshengmzqs.YinSiPZItem;
+import cn.mediinfo.grus.shujuzx.dto.quanshengmzqs.ZhanShiPZItem;
 import cn.mediinfo.grus.shujuzx.model.QSC_ZD_YinSiPZModel;
 import cn.mediinfo.grus.shujuzx.model.QSC_ZD_ZhanShiPZModel;
 import cn.mediinfo.grus.shujuzx.repository.SC_ZD_YinSiPZRepository;

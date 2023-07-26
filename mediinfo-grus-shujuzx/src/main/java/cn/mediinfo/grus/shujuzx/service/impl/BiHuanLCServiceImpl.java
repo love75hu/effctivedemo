@@ -1,6 +1,6 @@
 package cn.mediinfo.grus.shujuzx.service.impl;
 
-import cn.mediinfo.grus.shujuzx.dto.BiHuanLCs.*;
+import cn.mediinfo.grus.shujuzx.dto.bihuanlcs.*;
 import cn.mediinfo.grus.shujuzx.model.QSC_ZD_BiHuanLCJDModel;
 import cn.mediinfo.grus.shujuzx.model.QSC_ZD_BiHuanLCModel;
 import cn.mediinfo.grus.shujuzx.model.SC_ZD_BiHuanLCJDModel;

@@ -1,10 +1,7 @@
 package cn.mediinfo.grus.shujuzx.service;
 
-import cn.mediinfo.grus.shujuzx.dto.ShuJuZXZSYs.*;
+import cn.mediinfo.grus.shujuzx.dto.shujuzxzsys.*;
 import cn.mediinfo.starter.base.exception.TongYongYWException;
-import cn.mediinfo.starter.base.response.MsfResponse;
-import io.swagger.v3.oas.annotations.Operation;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import java.text.ParseException;
 import java.util.Date;

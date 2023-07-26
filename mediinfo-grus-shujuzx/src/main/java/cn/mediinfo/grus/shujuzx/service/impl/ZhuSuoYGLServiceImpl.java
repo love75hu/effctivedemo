@@ -4,13 +4,12 @@ import cn.mediinfo.grus.shujuzx.constant.ShuJuZXConstant;
 import cn.mediinfo.grus.shujuzx.constant.ZhuSuoYCZLXEnum;
 import cn.mediinfo.grus.shujuzx.constant.ZhuSuoYHBZTConstant;
 import cn.mediinfo.grus.shujuzx.constant.ZhuSuoYHBZTConstants;
-import cn.mediinfo.grus.shujuzx.dto.ShuJuZXZSYs.*;
-import cn.mediinfo.grus.shujuzx.dto.YinSiGZSZs.SC_ZD_YinSiPZOutDto;
+import cn.mediinfo.grus.shujuzx.dto.shujuzxzsys.*;
+import cn.mediinfo.grus.shujuzx.dto.yinsigzszs.SC_ZD_YinSiPZOutDto;
 import cn.mediinfo.grus.shujuzx.model.*;
 import cn.mediinfo.grus.shujuzx.po.JiBenXXPO;
 import cn.mediinfo.grus.shujuzx.po.RecordJiBenXXAndHeBingJL;
 import cn.mediinfo.grus.shujuzx.po.RecordJiBenXXAndHeBingJLModel;
-import cn.mediinfo.grus.shujuzx.po.bihuanlc.BiHUanPO;
 import cn.mediinfo.grus.shujuzx.repository.*;
 import cn.mediinfo.grus.shujuzx.service.YinSiGZSZService;
 import cn.mediinfo.grus.shujuzx.service.ZhuSuoYCZRZService;
@@ -23,24 +22,18 @@ import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import org.aspectj.weaver.ast.Var;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
-import javax.print.DocFlavor;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.*;
-import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * 主索引管理

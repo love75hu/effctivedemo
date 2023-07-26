@@ -1,7 +1,7 @@
 package cn.mediinfo.grus.shujuzx.service.impl;
 
 import cn.mediinfo.grus.shujuzx.constant.ShuJuZXConstant;
-import cn.mediinfo.grus.shujuzx.dto.ShuJuZXZSYs.*;
+import cn.mediinfo.grus.shujuzx.dto.shujuzxzsys.*;
 import cn.mediinfo.grus.shujuzx.model.BR_ZD_HeBingGZMXModel;
 import cn.mediinfo.grus.shujuzx.model.BR_ZD_HeBingGZModel;
 import cn.mediinfo.grus.shujuzx.model.QBR_ZD_HeBingGZMXModel;

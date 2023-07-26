@@ -1,7 +1,7 @@
 package cn.mediinfo.grus.shujuzx.service.impl;
 
 import cn.mediinfo.grus.shujuzx.constant.ShuJuZXConstant;
-import cn.mediinfo.grus.shujuzx.dto.ShuJuZXZSYs.*;
+import cn.mediinfo.grus.shujuzx.dto.shujuzxzsys.*;
 import cn.mediinfo.grus.shujuzx.model.BR_ZD_HeBingQZPZModel;
 import cn.mediinfo.grus.shujuzx.model.QBR_ZD_HeBingQZPZModel;
 import cn.mediinfo.grus.shujuzx.repository.BR_ZD_HeBingQZPZRepository;
@@ -11,8 +11,6 @@ import cn.mediinfo.starter.base.stringgenerator.StringGenerator;
 import cn.mediinfo.starter.base.util.MapUtils;
 import cn.mediinfo.starter.base.util.QueryDSLUtils;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;

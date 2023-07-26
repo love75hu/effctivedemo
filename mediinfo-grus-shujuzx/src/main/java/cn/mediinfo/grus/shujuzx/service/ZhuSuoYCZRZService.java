@@ -1,11 +1,10 @@
 package cn.mediinfo.grus.shujuzx.service;
 
 import cn.mediinfo.grus.shujuzx.constant.ZhuSuoYCZLXEnum;
-import cn.mediinfo.grus.shujuzx.dto.ShuJuZXZSYs.BR_DA_ZhuSuoYCZRZDto;
+import cn.mediinfo.grus.shujuzx.dto.shujuzxzsys.BR_DA_ZhuSuoYCZRZDto;
 import cn.mediinfo.starter.base.exception.TongYongYWException;
 
 import java.text.ParseException;
-import java.util.Date;
 import java.util.List;
 
 public interface ZhuSuoYCZRZService {

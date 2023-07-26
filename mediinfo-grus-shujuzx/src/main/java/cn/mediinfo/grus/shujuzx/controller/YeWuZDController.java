@@ -1,12 +1,12 @@
 package cn.mediinfo.grus.shujuzx.controller;
 
-import cn.mediinfo.grus.shujuzx.dto.ShuJuYLBs.SC_ZD_ShuJuYLBCreateDto;
-import cn.mediinfo.grus.shujuzx.dto.ShuJuYLBs.SC_ZD_ShuJuYLBDto;
-import cn.mediinfo.grus.shujuzx.dto.ShuJuYLBs.SC_ZD_ShuJuYLBUpdateDto;
-import cn.mediinfo.grus.shujuzx.dto.ShuJuYZYs.SC_ZD_ShuJuYZYCreateDto;
-import cn.mediinfo.grus.shujuzx.dto.ShuJuYZYs.SC_ZD_ShuJuYZYDto;
-import cn.mediinfo.grus.shujuzx.dto.ShuJuYZYs.SC_ZD_ShuJuYZYListDto;
-import cn.mediinfo.grus.shujuzx.dto.ShuJuYZYs.SC_ZD_ShuJuYZYUpdateDto;
+import cn.mediinfo.grus.shujuzx.dto.shujuylbs.SC_ZD_ShuJuYLBCreateDto;
+import cn.mediinfo.grus.shujuzx.dto.shujuylbs.SC_ZD_ShuJuYLBDto;
+import cn.mediinfo.grus.shujuzx.dto.shujuylbs.SC_ZD_ShuJuYLBUpdateDto;
+import cn.mediinfo.grus.shujuzx.dto.shujuyzys.SC_ZD_ShuJuYZYCreateDto;
+import cn.mediinfo.grus.shujuzx.dto.shujuyzys.SC_ZD_ShuJuYZYDto;
+import cn.mediinfo.grus.shujuzx.dto.shujuyzys.SC_ZD_ShuJuYZYListDto;
+import cn.mediinfo.grus.shujuzx.dto.shujuyzys.SC_ZD_ShuJuYZYUpdateDto;
 import cn.mediinfo.grus.shujuzx.service.ShuJuYLBService;
 import cn.mediinfo.grus.shujuzx.service.ShuJuYZYService;
 import cn.mediinfo.starter.base.exception.CanShuException;
@@ -14,13 +14,9 @@ import cn.mediinfo.starter.base.exception.MsfResponseException;
 import cn.mediinfo.starter.base.exception.TongYongYWException;
 import cn.mediinfo.starter.base.exception.WeiZhaoDSJException;
 import cn.mediinfo.starter.base.response.MsfResponse;
-import cn.mediinfo.starter.base.response.XiTongResponseCode;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.extern.slf4j.Slf4j;
-import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 

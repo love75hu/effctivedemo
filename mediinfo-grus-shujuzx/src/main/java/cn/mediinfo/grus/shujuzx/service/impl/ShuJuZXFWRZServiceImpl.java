@@ -1,7 +1,7 @@
 package cn.mediinfo.grus.shujuzx.service.impl;
 
-import cn.mediinfo.grus.shujuzx.dto.ShuJuZXFWRZ.AddFangWenRZDto;
-import cn.mediinfo.grus.shujuzx.dto.ShuJuZXFWRZ.ShuJuZXFWRZDto;
+import cn.mediinfo.grus.shujuzx.dto.shujuzxfwrz.AddFangWenRZDto;
+import cn.mediinfo.grus.shujuzx.dto.shujuzxfwrz.ShuJuZXFWRZDto;
 import cn.mediinfo.grus.shujuzx.model.QSC_RZ_FangWenLCSJModel;
 import cn.mediinfo.grus.shujuzx.model.SC_RZ_FangWenLCSJModel;
 import cn.mediinfo.grus.shujuzx.repository.SC_RZ_FangWenLCSJRepository;

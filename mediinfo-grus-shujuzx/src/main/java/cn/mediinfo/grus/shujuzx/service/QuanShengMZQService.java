@@ -1,6 +1,6 @@
 package cn.mediinfo.grus.shujuzx.service;
 
-import cn.mediinfo.grus.shujuzx.dto.QuanShengMZQs.PeiZhiXXDtos;
+import cn.mediinfo.grus.shujuzx.dto.quanshengmzqs.PeiZhiXXDtos;
 
 public interface QuanShengMZQService {
     /**

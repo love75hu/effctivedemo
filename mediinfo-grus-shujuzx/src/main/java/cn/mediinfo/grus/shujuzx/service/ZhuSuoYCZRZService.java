@@ -14,7 +14,7 @@ public interface ZhuSuoYCZRZService {
      * @return
      * @throws TongYongYWException 通用异常
      */
-    List<BR_DA_ZhuSuoYCZRZDto> getZhuSuoYCZRZList(Integer page,Integer pageSize,String caoZuoKSRQ, String caoZuoJSRQ, String caoZuoLXDM, String likeQuery) throws TongYongYWException, ParseException;
+    List<BR_DA_ZhuSuoYCZRZDto> getZhuSuoYCZRZList(Integer page,Integer pageSize,Date caoZuoKSRQ, Date caoZuoJSRQ, String caoZuoLXDM, String likeQuery) throws TongYongYWException, ParseException;
     /**
      * 获取主索引操作日志数量
      * @return

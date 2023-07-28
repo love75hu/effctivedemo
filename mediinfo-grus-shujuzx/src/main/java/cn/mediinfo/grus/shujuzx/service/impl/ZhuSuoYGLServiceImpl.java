@@ -180,15 +180,15 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
         var count = brDaJiBenXXRepository.asQuerydsl()
                 .whereIf(!ObjectUtils.isEmpty(kaiShiSJ),o->o.jianDangSJ.goe(kaiShiSJ))
                 .whereIf(!ObjectUtils.isEmpty(jieShuSJ),o->o.jianDangSJ.loe(jieShuSJ))
-                .whereIf(StringUtils.hasText(MPI),o->o.id.contains(MPI))
-                .whereIf(StringUtils.hasText(xingMing),o->o.xingMing.contains(xingMing))
-                .whereIf(StringUtils.hasText(lianXiDH),o->o.lianXiDH.contains(lianXiDH))
-                .whereIf(StringUtils.hasText(shenFenZH),o->o.zhengJianHM.contains(shenFenZH))
-                .leftJoin(brDaHeBingJLRepository.asQuerydsl(),(c,d)->c.id.eq(d.bingRenID), JiBenXXPO::new)
-                .where(o->o.getHeBingJLModel().heBingZTDM.ne(ZhuSuoYHBZTConstant.HEBINGZTDM_WHB).or(o.getHeBingJLModel().heBingZTDM.isNull()))
-                .whereIf(xiangSiDu!=null && xiangSiDu>0,o->o.getHeBingJLModel().zuiDaXSD.goe(xiangSiDu))
-                .select(o->o.getJiBenXXModel().count())
-                .fetchOne();
+                .whereIf(StringUtils.hasText(MPI), o->o.id.contains(MPI))
+                .whereIf(StringUtils.hasText(xingMing), o->o.xingMing.contains(xingMing))
+                .whereIf(StringUtils.hasText(lianXiDH), o->o.lianXiDH.contains(lianXiDH))
+                .whereIf(StringUtils.hasText(shenFenZH), o->o.zhengJianHM.contains(shenFenZH))
+                .leftJoin(brDaHeBingJLRepository.asQuerydsl(),(c,d)->c.id.eq(d.bingRenID), RecordJiBenXXAndHeBingJL::new)
+                .where(o->o.heBingJL().heBingZTDM.ne(ZhuSuoYHBZTConstant.HEBINGZTDM_BHB).or(o.heBingJL().heBingZTDM.isNull()))
+                .whereIf(xiangSiDu!=null && xiangSiDu>0,o->o.heBingJL().zuiDaXSD.goe(xiangSiDu))
+                .select(o->o.jiBenXX().count())
+                .findFirst();
         if (count != null) {
             return count.intValue();
         }

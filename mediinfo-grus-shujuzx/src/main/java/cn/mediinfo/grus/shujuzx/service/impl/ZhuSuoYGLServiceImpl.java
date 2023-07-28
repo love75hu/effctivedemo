@@ -213,7 +213,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
                 .leftJoin(brDaHeBingJLRepository.asQuerydsl(),(c,d)->c.id.eq(d.bingRenID), RecordJiBenXXAndHeBingJL::new)
                 .where(o->o.heBingJL().heBingZTDM.ne(ZhuSuoYHBZTConstant.HEBINGZTDM_BHB).or(o.heBingJL().heBingZTDM.isNull()))
                 .whereIf(xiangSiDu!=null && xiangSiDu>0,o->o.heBingJL().zuiDaXSD.goe(xiangSiDu))
-                .orderBy(o->o.jiBenXX().jianDangSJ.asc().nullsLast())
+                .orderBy(o->o.jiBenXX().jianDangSJ.desc().nullsLast())
                 .select(c -> new Expression<?>[]{
                         c.jiBenXX(),
                         c.heBingJL()

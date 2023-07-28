@@ -257,11 +257,10 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
             throw new TongYongYWException("未找到相关病人信息");
         }
         //获取相似索引病人Id
-        var qXSBRModel = QBR_DA_XiangSiSYModel.bR_DA_XiangSiSYModel;
-        var xiangSiBRs = new JPAQueryFactory(brDaXiangSiSYRepository.getEntityManager()).select(Projections.bean(BR_DA_XiangSiSYModel.class,qXSBRModel.bingRenID2,qXSBRModel.xiangSiDu))
-                            .from(qXSBRModel)
-                .where(qXSBRModel.bingRenID1.eq(bingRenID).and(qXSBRModel.heBingBZ.eq(0)).and(qXSBRModel.huLueBZ.eq(0)))
-                .where(QueryDSLUtils.whereIf(xiangSiDu!=null && xiangSiDu>0,qXSBRModel.xiangSiDu.goe(xiangSiDu)))
+        var xiangSiBRs = brDaXiangSiSYRepository.asQuerydsl()
+                .where(o->o.bingRenID1.eq(bingRenID).and(o.heBingBZ.eq(0)).and(o.huLueBZ.eq(0)))
+                .whereIf(Objects.nonNull(xiangSiDu) && xiangSiDu > 0,o->o.xiangSiDu.goe(xiangSiDu))
+                .select(o->new Expression<?>[]{ o.bingRenID2,o.xiangSiDu},BR_DA_XiangSiSYModel.class)
                 .fetch();
         var xiangSiBRIDs = xiangSiBRs.stream().map(BR_DA_XiangSiSYModel::getBingRenID2).toList();
         //获取相似索引病人信息

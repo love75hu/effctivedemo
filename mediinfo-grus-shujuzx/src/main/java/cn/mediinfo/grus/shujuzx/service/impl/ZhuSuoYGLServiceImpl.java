@@ -224,18 +224,28 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
             var dto = MapUtils.copyProperties(item.jiBenXX(),BR_DA_JiBenXXByZSYGLDto::new);
             if (item.heBingJL()==null || item.heBingJL().getHeBingZTDM() == null) {
                 dto.setHeBingZTDM(ZhuSuoYHBZTConstant.HEBINGZTDM_WHB);
+            }else{
+                dto.setHeBingZTDM(item.heBingJL().getHeBingZTDM());
             }
             if (item.heBingJL()==null || item.heBingJL().getHeBingZTMC() == null) {
-                dto.setHeBingZTMC(ZhuSuoYHBZTConstant.HEBINGZTMC_WHB);
+                dto.setHeBingZTMC("无合并");
+            }else{
+                dto.setHeBingZTMC(item.heBingJL().getHeBingZTMC());
             }
             if (item.heBingJL()==null || item.heBingJL().getZuiDaXSD() == null) {
                 dto.setZuiDaXSD(0);
+            }else{
+                dto.setZuiDaXSD(item.heBingJL().getZuiDaXSD());
             }
             if (item.heBingJL()==null || item.heBingJL().getHeBingShu() == null) {
                 dto.setHeBingShu(0);
+            }else{
+                dto.setHeBingShu(item.heBingJL().getHeBingShu());
             }
             if (item.heBingJL()==null || item.heBingJL().getXiangSiShu() == null) {
                 dto.setXiangSiShu(0);
+            }else{
+                dto.setXiangSiShu(item.heBingJL().getXiangSiShu());
             }
             dto.setNianLing(getNianLing(dto.getChuShengRQ()));
             dto.setXianZhuZXX(StringUtil.concat(dto.getXianZhuZXX(), dto.getXianZhuZXZMC(), dto.getXianZhuZCJMC(), dto.getXianZhuZQTXX()));

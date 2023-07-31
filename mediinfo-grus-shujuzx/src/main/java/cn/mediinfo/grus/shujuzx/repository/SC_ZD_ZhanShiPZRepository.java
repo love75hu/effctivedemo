@@ -38,5 +38,5 @@ public interface SC_ZD_ZhanShiPZRepository extends MsfJpaRepository<QSC_ZD_ZhanS
      * @param chaXunMSDM 查询模式代码
      * @return 展示配置信息集合
      */
-    public List<SC_ZD_ZhanShiPZModel> findByZuZhiJGIDAndChaXunMSDM(String zuZhiJGID,String chaXunMSDM);
+    public List<SC_ZD_ZhanShiPZModel> findByZuZhiJGIDAndChaXunMSDMAAndPeiZhiLXDM(String zuZhiJGID,String chaXunMSDM,String peiZhiLXDM);
 }

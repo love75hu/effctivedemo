@@ -98,7 +98,7 @@ public class YeWuZDController {
      */
     @Operation(summary = "获取数据源类别列表")
     @GetMapping("GetShuJuYLBList")
-    public MsfResponse<List<SC_ZD_ShuJuYLBDto>> getShuJuYLBList(@RequestParam String zuZhiJGID,
+    public MsfResponse<List<SC_ZD_ShuJuYLBDto>> getShuJuYLBList(@RequestParam(required = false) String zuZhiJGID,
                                                                 @RequestParam(required = false) String likeQuery) {
         return MsfResponse.success(shuJuYLBService.getShuJuYLBList(zuZhiJGID, likeQuery, 1, 10));
     }
@@ -112,7 +112,7 @@ public class YeWuZDController {
      */
     @Operation(summary = "查询数据源类别数量")
     @GetMapping("GetShuJuYLBCount")
-    public MsfResponse<Long> getShuJuYLBCount(@RequestParam String zuZhiJGID,
+    public MsfResponse<Long> getShuJuYLBCount(@RequestParam(required = false) String zuZhiJGID,
                                               @RequestParam(required = false) String likeQuery) {
         return MsfResponse.success(shuJuYLBService.getShuJuYLBCount(zuZhiJGID, likeQuery));
     }
@@ -221,7 +221,7 @@ public class YeWuZDController {
      */
     @Operation(summary = "获取数据源值域总行数")
     @GetMapping("GetShuJuYZYCount")
-    public MsfResponse<Long> getShuJuYZYCount(@RequestParam String zuZhiJGID,
+    public MsfResponse<Long> getShuJuYZYCount(@RequestParam (required = false) String zuZhiJGID,
                                               @RequestParam String shuJuYLBID,
                                               @RequestParam(required = false) String likeQuery) throws WeiZhaoDSJException {
         return MsfResponse.success(shuJuYZYService.getShuJuYZYCount(zuZhiJGID, shuJuYLBID, likeQuery, 1, 10));

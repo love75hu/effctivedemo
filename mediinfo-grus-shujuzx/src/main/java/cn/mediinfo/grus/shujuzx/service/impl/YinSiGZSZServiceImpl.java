@@ -68,12 +68,12 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
     @Override
     @Transactional(rollbackOn = Exception.class)
     public Boolean saveYinSiSZList(SC_ZD_YinSiPZCreateDto dto) {
-        if (dto.getAddList().size() > 0) {
+        if (!dto.getAddList().isEmpty()) {
             List<SC_ZD_YinSiPZModel> tongYongYSPZs = yinSiPZRepository.findByZuZhiJGIDAndChaXunMSDM("0", dto.getAddList().get(0).getChaXunMSDM());
-            List<SC_ZD_YinSiPZDto> scZdYinSiPZDtos = dto.getAddList().stream().filter(s -> tongYongYSPZs.stream().map(SC_ZD_YinSiPZModel::getShuJuYLM).toList().contains(s.getShuJuYLM())).toList();
+            List<SC_ZD_YinSiPZDto> scZdYinSiPZDtos = dto.getAddList().stream().filter(s -> !tongYongYSPZs.stream().map(SC_ZD_YinSiPZModel::getShuJuYLM).toList().contains(s.getShuJuYLM())).toList();
             yinSiPZRepository.saveAll(MapUtils.copyListProperties(scZdYinSiPZDtos, SC_ZD_YinSiPZModel::new));
         }
-        if (dto.getZuoFeiIds().size() > 0) {
+        if (!dto.getZuoFeiIds().isEmpty()) {
             yinSiPZRepository.softDelete(dto.getZuoFeiIds());
         }
         return true;

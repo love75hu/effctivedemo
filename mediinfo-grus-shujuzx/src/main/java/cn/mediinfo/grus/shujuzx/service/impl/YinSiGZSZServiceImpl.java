@@ -257,7 +257,7 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
         //通用数据
         var tongYongSJList = zhanShiPZRepository.findByZuZhiJGIDAndChaXunMSDMAndPeiZhiLXDM(ShuJuZXConstant.TONGYONG_JGID, chaXunMSDM, peiZhiLXDM);
         //删除机构之前的数据
-        zhanShiPZRepository.softDelete(zhanShiPZRepository.findByZuZhiJGIDAndChaXunMSDMAAndPeiZhiLXDM(zuZhiJGID, chaXunMSDM, peiZhiLXDM));
+        zhanShiPZRepository.softDelete(zhanShiPZRepository.findByZuZhiJGIDAndChaXunMSDMAndPeiZhiLXDM(zuZhiJGID, chaXunMSDM, peiZhiLXDM));
         //初始化数据
         tongYongSJList.forEach(item -> {
             item.setId(null);

@@ -489,7 +489,6 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
     public Boolean quXiaoHB(HuLueHBDto dto) throws TongYongYWException {
 
         //region  交叉索引变更(闭包表)
-        //todo xiugai
         List<String> guanLianBRIds = brDaJiaoChaSYRepository.asQuerydsl()
                 .where(x -> x.zhuBingRID.eq(dto.getXiangSiSYBRID()))
                 .select(x -> x.guanLianBRID).fetch();
@@ -501,17 +500,16 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
                 .where(brDaJiaoChaSYModel.guanLianBRID.in(guanLianBRIds).and(brDaJiaoChaSYModel.zhuBingRID.eq(dto.getZhuSuoYBRID())))
                 .fetch();
         brDaJiaoChaSYRepository.softDelete(deteleJiaoChaSYList);
-        //brDaJiaoChaSYRepository.softDelete(brDaJiaoChaSYModel.guanLianBRID.in(guanLianBRIds).and(brDaJiaoChaSYModel.zhuBingRID.eq(dto.getZhuSuoYBRID())));
         //endregion
         //region 修改病人基本信息
         //修改病人基本信息
-        BR_DA_JiBenXXModel zhuBingRenXX = brDaJiBenXXRepository.findById(dto.getZhuSuoYBRID()).stream().findFirst().orElse(null);//todo
+        BR_DA_JiBenXXModel zhuBingRenXX = brDaJiBenXXRepository.findById(dto.getZhuSuoYBRID()).stream().findFirst().orElse(null);
         if (zhuBingRenXX==null)
         {
             throw new TongYongYWException("未找到主病人信息");
         }
 
-        BR_DA_HeBingJLModel zhuSuoYHBJL = brDaHeBingJLRepository.findFirstByBingRenID(dto.getZhuSuoYBRID());//todo
+        BR_DA_HeBingJLModel zhuSuoYHBJL = brDaHeBingJLRepository.findFirstByBingRenID(dto.getZhuSuoYBRID());
         zhuSuoYHBJL.setHeBingShu( zhuSuoYHBJL.getHeBingShu()-deteleJiaoChaSYList.size());
         if (brDaJiaoChaSYRepository.existsByZhuBingRIDAndGuanLianBRIDNot(dto.getZhuSuoYBRID(),dto.getXiangSiSYBRID()))
         {
@@ -529,6 +527,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
         {
             xiangSiHBJL.setHeBingZTDM("1");//todo
             xiangSiHBJL.setHeBingZTMC("合并后主数据");
+
         }else {
             List<BR_DA_JiaoChaSYModel> xiangSiJCList = brDaJiaoChaSYRepository.findByGuanLianBRIDAndZhuBingRIDNot(dto.getXiangSiSYBRID(), dto.getZhuSuoYBRID());
             if (!CollectionUtils.isEmpty(xiangSiJCList))
@@ -562,12 +561,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
           x.setHeBingBZ(0);
           x.setHuLueBZ(1);
         });
-                QBR_DA_XiangSiSYModel brDaXiangSiSYModel = QBR_DA_XiangSiSYModel.bR_DA_XiangSiSYModel;
-                Map<Path<?>,Object> updateMap = new HashMap<>();
-                updateMap.put(brDaXiangSiSYModel.heBingBZ,0);
-                updateMap.put(brDaXiangSiSYModel.huLueBZ,1);
-        brDaXiangSiSYRepository.update(updateMap,brDaXiangSiSYModel.id.in(xiangSiSYList.stream().map(BR_DA_XiangSiSYModel::getId).toList()));
-      //  brDaXiangSiSYRepository.saveAll(xiangSiSYList);
+        brDaXiangSiSYRepository.saveAll(xiangSiSYList);
         //endregion
 
         //添加操作日志
@@ -577,6 +571,8 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
                 StringUtil.concat("主索引MPI",dto.getZhuSuoYBRID(),",取消合并MPI：",dto.getXiangSiSYBRID(),"，取消合并理由：",dto.getQuXiaoHBLY()),
                 false);
 
+        brDaHeBingJLRepository.save(zhuSuoYHBJL);
+        brDaHeBingJLRepository.save(xiangSiHBJL);
         //region 似索引重新计算
         ArrayList<BR_DA_JiBenXXModel> huanZheList = new ArrayList<>(){};
         huanZheList.add(zhuBingRenXX);

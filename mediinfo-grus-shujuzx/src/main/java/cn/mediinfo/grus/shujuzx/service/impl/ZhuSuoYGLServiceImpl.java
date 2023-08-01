@@ -553,15 +553,18 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
         }
         //endregion
         //region 修改相似索引为忽略
-        List<BR_DA_XiangSiSYModel> xiangSiSYList = brDaXiangSiSYRepository.asQuerydsl().where(x -> (x.bingRenID1.eq(dto.getZhuSuoYBRID())
+//        List<BR_DA_XiangSiSYModel> xiangSiSYList = brDaXiangSiSYRepository.asQuerydsl().where(x -> (x.bingRenID1.eq(dto.getZhuSuoYBRID())
+//                .and(x.bingRenID2.eq(dto.getXiangSiSYBRID())))
+//                .or(x.bingRenID2.eq(dto.getZhuSuoYBRID()).and(x.bingRenID1.eq(dto.getXiangSiSYBRID())))).fetch();
+//
+//        xiangSiSYList.forEach(x->{
+//          x.setHeBingBZ(0);
+//          x.setHuLueBZ(1);
+//        });
+        brDaXiangSiSYRepository.asUpdateDsl().where(x -> (x.bingRenID1.eq(dto.getZhuSuoYBRID())
                 .and(x.bingRenID2.eq(dto.getXiangSiSYBRID())))
-                .or(x.bingRenID2.eq(dto.getZhuSuoYBRID()).and(x.bingRenID1.eq(dto.getXiangSiSYBRID())))).fetch();
-
-        xiangSiSYList.forEach(x->{
-          x.setHeBingBZ(0);
-          x.setHuLueBZ(1);
-        });
-        brDaXiangSiSYRepository.saveAll(xiangSiSYList);
+                .or(x.bingRenID2.eq(dto.getZhuSuoYBRID()).and(x.bingRenID1.eq(dto.getXiangSiSYBRID())))).set(s->s.heBingBZ,0).set(s->s.huLueBZ,1).update();
+//        brDaXiangSiSYRepository.saveAll(xiangSiSYList);
         //endregion
 
         //添加操作日志

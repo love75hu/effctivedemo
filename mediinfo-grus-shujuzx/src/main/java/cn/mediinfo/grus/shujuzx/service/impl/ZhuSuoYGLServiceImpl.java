@@ -796,7 +796,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
         private void jiSuanHBXSS(List<String> bingRenIDs)
         {
             List<BR_DA_HeBingJLModel> allHeBingJL = brDaHeBingJLRepository.findByBingRenIDIn(bingRenIDs);
-            List<BR_DA_XiangSiSYModel> allXaingSiSYList = brDaXiangSiSYRepository.findByBingRenID1InAndHuLueBZAndHeBingBZ(bingRenIDs, 0, 0);
+            List<BR_DA_XiangSiSYModel> allXaingSiSYList =brDaXiangSiSYRepository.asQuerydsl().where(x->x.bingRenID1.in(bingRenIDs).and(x.huLueBZ.eq(0)).and(x.heBingBZ.eq(0))).fetch();
             List<BR_DA_JiaoChaSYModel> allJiaoChaSYList = brDaJiaoChaSYRepository.findByZhuBingRIDInOrGuanLianBRIDIn(bingRenIDs, bingRenIDs);
             allHeBingJL.forEach(x->{
                 long isZhuSuoYin = allJiaoChaSYList.stream().filter(m -> m.getZhuBingRID().equals(x.getBingRenID())).count();
@@ -894,6 +894,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
                         xiangSiSY1.setBingRenID2(dangQianXSHZ.getId());
                         xiangSiSY1.setXingMing1(bingRenXX.getXingMing());
                         xiangSiSY1.setXingMing2(dangQianXSHZ.getXingMing());
+                        xiangSiSY1.setXiangSiDu(guiZe.getXiangSiDu());
                         xiangSiSY1.setHeBingBZ(ziDongHBBZ?1:0);
                         xiangSiSY1.setHuLueBZ(0);
                         xiangSiSY1.setGuiZeID(guiZe.getGuiZeID());
@@ -909,6 +910,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
                             xiangSiSY1.setBingRenID2(dangQianXSHZ.getId());
                             xiangSiSY1.setXingMing1(bingRenXX.getXingMing());
                             xiangSiSY1.setXingMing2(dangQianXSHZ.getXingMing());
+                            xiangSiSY1.setXiangSiDu(guiZe.getXiangSiDu());
                             xiangSiSY1.setHeBingBZ(ziDongHBBZ?1:0);
                             xiangSiSY1.setHuLueBZ(0);
                             xiangSiSY1.setGuiZeID(guiZe.getGuiZeID());
@@ -929,6 +931,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
                         xiangSiSY2.setBingRenID2(bingRenXX.getId());
                         xiangSiSY2.setXingMing1(dangQianXSHZ.getXingMing());
                         xiangSiSY2.setXingMing2(bingRenXX.getXingMing());
+                        xiangSiSY2.setXiangSiDu(guiZe.getXiangSiDu());
                         xiangSiSY2.setHeBingBZ(ziDongHBBZ?1:0);
                         xiangSiSY2.setHuLueBZ(0);
                         xiangSiSY2.setGuiZeID(guiZe.getGuiZeID());
@@ -944,6 +947,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
                             xiangSiSY2.setBingRenID2(bingRenXX.getId());
                             xiangSiSY2.setXingMing1(dangQianXSHZ.getXingMing());
                             xiangSiSY2.setXingMing2(bingRenXX.getXingMing());
+                            xiangSiSY2.setXiangSiDu(guiZe.getXiangSiDu());
                             xiangSiSY2.setHeBingBZ(ziDongHBBZ?1:0);
                             xiangSiSY2.setHuLueBZ(0);
                             xiangSiSY2.setGuiZeID(guiZe.getGuiZeID());
@@ -994,11 +998,6 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
         }
         xiangSiBRIDs.addAll(yuanJiaoChaSYList.stream().filter(x->x.getZhuBingRID().equals(bingRenXX.getId())).map(BR_DA_JiaoChaSYModel::getGuanLianBRID).toList());
     }
-
-//    private Exception<Function<T,Tkey>> whereDataNotNull<T,Tkey>(String propertyName)
-//    {
-//
-//    }
 
     private Object getHuanZheValue(BR_DA_JiBenXXModel huanZhe, String daiMa)
     {

@@ -230,7 +230,8 @@ public class ShuJuYZYServiceImpl implements ShuJuYZYService {
         query.orderBy(shuJuYZY.shunXuHao.asc());
 
         //分页处理
-        var shuJuYZYList = query.offset(PageRequestUtil.of(pageIndex, pageSize).getOffset()).limit(pageIndex).fetch();
+        var shuJuYZYList=query.limit(pageSize).offset((long) (pageIndex - 1) *pageSize).fetch();
+        // var shuJuYZYList = query.offset(PageRequestUtil.of(pageIndex, pageSize).getOffset()).limit(pageIndex).fetch();
         return MapUtils.copyListProperties(shuJuYZYList, SC_ZD_ShuJuYZYDto::new);
     }
 

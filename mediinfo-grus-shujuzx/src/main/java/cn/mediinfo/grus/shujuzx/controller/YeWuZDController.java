@@ -99,8 +99,10 @@ public class YeWuZDController {
     @Operation(summary = "获取数据源类别列表")
     @GetMapping("GetShuJuYLBList")
     public MsfResponse<List<SC_ZD_ShuJuYLBDto>> getShuJuYLBList(@RequestParam(required = false) String zuZhiJGID,
-                                                                @RequestParam(required = false) String likeQuery) {
-        return MsfResponse.success(shuJuYLBService.getShuJuYLBList(zuZhiJGID, likeQuery, 1, 10));
+                                                                @RequestParam(required = false) String likeQuery,
+                                                                @RequestParam(required = false) Integer PageIndex,
+                                                                @RequestParam(required = false) Integer PageSize) {
+        return MsfResponse.success(shuJuYLBService.getShuJuYLBList(zuZhiJGID, likeQuery, PageIndex, PageSize));
     }
 
     /**
@@ -207,8 +209,10 @@ public class YeWuZDController {
     @GetMapping("GetShuJuYZYList")
     public MsfResponse<List<SC_ZD_ShuJuYZYDto>> getShuJuYZYList(@RequestParam(required = false) String zuZhiJGID,
                                                                 @RequestParam String shuJuYLBID,
-                                                                @RequestParam(required = false) String likeQuery) throws WeiZhaoDSJException {
-        return MsfResponse.success(shuJuYZYService.getShuJuYZYList(zuZhiJGID, shuJuYLBID, likeQuery, 1, 10));
+                                                                @RequestParam(required = false) String likeQuery,
+                                                                @RequestParam(required = false) Integer PageIndex,
+                                                                @RequestParam(required = false) Integer PageSize) throws WeiZhaoDSJException {
+        return MsfResponse.success(shuJuYZYService.getShuJuYZYList(zuZhiJGID, shuJuYLBID, likeQuery, PageIndex, PageSize));
     }
 
     /**

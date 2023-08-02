@@ -7,19 +7,18 @@ import cn.mediinfo.grus.shujuzx.constant.ZhuSuoYHBZTConstants;
 import cn.mediinfo.grus.shujuzx.dto.shujuzxzsys.*;
 import cn.mediinfo.grus.shujuzx.dto.yinsigzszs.SC_ZD_YinSiPZOutDto;
 import cn.mediinfo.grus.shujuzx.model.*;
-import cn.mediinfo.grus.shujuzx.po.JiBenXXPO;
 import cn.mediinfo.grus.shujuzx.po.RecordJiBenXXAndHeBingJL;
 import cn.mediinfo.grus.shujuzx.po.RecordJiBenXXAndHeBingJLModel;
 import cn.mediinfo.grus.shujuzx.repository.*;
 import cn.mediinfo.grus.shujuzx.service.YinSiGZSZService;
 import cn.mediinfo.grus.shujuzx.service.ZhuSuoYCZRZService;
 import cn.mediinfo.grus.shujuzx.service.ZhuSuoYGLService;
+import cn.mediinfo.grus.shujuzx.utils.ExpressionUtils;
 import cn.mediinfo.starter.base.exception.TongYongYWException;
 import cn.mediinfo.starter.base.lyra.service.LyraIdentityService;
 import cn.mediinfo.starter.base.multitenancy.entity.StringMTEntity;
 import cn.mediinfo.starter.base.util.*;
 import com.querydsl.core.types.Expression;
-import com.querydsl.core.types.Path;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Service;
@@ -32,8 +31,8 @@ import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.*;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
 
 /**
  * 主索引管理
@@ -157,7 +156,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
             }
             item.setNianLing(getNianLing(item.getChuShengRQ()));
             if (!CollectionUtils.isEmpty(yinSiGZPZ)) {
-                MapUtils.mergeProperties(getYinShiSJ(item, yinSiGZPZ), item, true);
+                MapUtils.mergeProperties(ExpressionUtils.getYinShiSJ(item, yinSiGZPZ), item, true);
             }
         }
         for (var jieZhi : jieZhiXXList) {
@@ -1046,67 +1045,5 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
         }
         var nianLing = new NianLing(chuShengRQ, new Date()).getAge();
         return nianLing.replaceAll("[\u4e00-\u9fa5]", " $0 ").trim();
-    }
-
-    private <T> T getYinShiSJ(T tModel, List<SC_ZD_YinSiPZOutDto> tuoMinPZList) throws NoSuchFieldException, IllegalAccessException {
-        if (tModel == null || CollectionUtils.isEmpty(tuoMinPZList)) {
-            return tModel;
-        }
-        Class<?> type = tModel.getClass(); // 获取类型
-        for (var tuoMinPZ : tuoMinPZList) {
-            try {
-                Field propertyInfo = type.getDeclaredField(tuoMinPZ.getShuJuYLM()); // 获取属性
-                propertyInfo.setAccessible(true);
-                String t = propertyInfo.getType().getName();
-                if (t.equals("java.lang.String")) {
-                    Object value = propertyInfo.get(tModel);
-                    if (ObjectUtils.isEmpty(value) || !StringUtil.hasText(value.toString())) {
-                        continue;
-                    }
-                    if (Objects.equals(tuoMinPZ.getTuoMinFSDM(), "1")) {
-                        //1-全部替换为所需字符，如 *
-                        propertyInfo.set(tModel, (tuoMinPZ.getTuoMinGZ() != null ? tuoMinPZ.getTuoMinGZ() : "*").repeat(value.toString().length())); //给对应属性赋值
-                    } else if (Objects.equals(tuoMinPZ.getTuoMinFSDM(), "2")) {
-                        //2-部分替换为设置字符：如：000***000，0为占位符
-                        char[] charArray = value.toString().toCharArray();
-                        int index = 1;
-                        int j = 1;
-                        String fuHao2 = "";
-                        if (StringUtil.hasText(tuoMinPZ.getTuoMinGZ())) {
-                            String[] tuoMinGZs = tuoMinPZ.getTuoMinGZ().split(",");
-                            if (tuoMinGZs.length > 0) {
-                                index = tuoMinGZs[0].isEmpty() ? 0 : Integer.parseInt(tuoMinGZs[0]);
-                            }
-                            if (tuoMinGZs.length > 1) {
-                                j = tuoMinGZs[1].isEmpty() ? 0 : Integer.parseInt(tuoMinGZs[1]);
-                            }
-                            if (tuoMinGZs.length > 2) {
-                                fuHao2 = tuoMinGZs[2].isEmpty() ? "*" : tuoMinGZs[2];
-                            }
-                        }
-                        for (int i = index; i < index + j; i++) {
-                            if (charArray.length - 1 < i) {
-                                break;
-                            }
-                            charArray[i] = fuHao2.charAt(0);
-                        }
-                        propertyInfo.set(tModel, new String(charArray));//给对应属性赋值
-                    } else if (Objects.equals(tuoMinPZ.getTuoMinFSDM(), "3")) {
-                        //3-正则替换
-                        if (StringUtil.hasText(tuoMinPZ.getTuoMinGZ()) && tuoMinPZ.getTuoMinGZ().split(",").length > 1) {
-                            Pattern pattern = Pattern.compile(tuoMinPZ.getTuoMinGZ().split(",")[0]);
-                            String replaceWord = tuoMinPZ.getTuoMinGZ().split(",")[1];
-                            value = pattern.matcher(value.toString()).replaceAll(replaceWord);
-                        }
-                        propertyInfo.set(tModel, value);//给对应属性赋值
-                    }
-                } else {
-                    propertyInfo.set(tModel, null);
-                }
-            }catch (NoSuchFieldException ex){
-                //do something
-            }
-        }
-        return tModel;
     }
 }

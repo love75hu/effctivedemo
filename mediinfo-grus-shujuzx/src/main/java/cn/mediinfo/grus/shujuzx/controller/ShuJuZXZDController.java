@@ -73,8 +73,12 @@ public class ShuJuZXZDController {
         return MsfResponse.success(yinSiGZSZService.updateYinSiGZ(yinSiGZSZInDto));
     }
 
+    @GetMapping("UpdateYinSiGZ")
+    @Operation(summary = "修改隐私规则")
+    public MsfResponse<Boolean> getupdateYinSiGZ(String chaXunMSDM,String zuZhiJGID,String zuZhiJGMC) throws MsfException {
 
-
+        return MsfResponse.success(yinSiGZSZService.updateYinSiGZ(chaXunMSDM,zuZhiJGID,zuZhiJGMC));
+    }
 
     /**
      * 作废隐私规则

@@ -129,6 +129,34 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
     }
 
     /**
+     * 更新隐私规则
+     */
+    @Override
+    public Boolean updateYinSiGZ(String chaXunMSDM, String zuZhiJGID, String zuZhiJGMC) throws MsfException {
+        var yinSiPZList=yinSiPZRepository.asQuerydsl()
+                .where(x->x.zuZhiJGID.eq("0").or(x.zuZhiJGID.eq(zuZhiJGID)))
+                .where(x->x.chaXunMSDM.eq(chaXunMSDM)).fetch();
+        //通用数据
+        var tongYongSJList= yinSiPZList.stream().filter(x->x.getZuZhiJGID().equals("0")).toList();
+        //机构数据
+        var jiGouSJList =yinSiPZList.stream().filter(x->x.getZuZhiJGID().equals(zuZhiJGID)).toList();
+
+        var chaJiList=tongYongSJList.stream()
+                .filter(itm1->
+                        jiGouSJList.stream().noneMatch(item2->itm1.getShuJuYLM().equals(item2.getShuJuYLM())))
+                .toList();
+
+        for (var item:chaJiList)
+        {
+            item.setId(null);
+            item.setZuZhiJGID(zuZhiJGID);
+            item.setZuZhiJGMC(zuZhiJGMC);
+        }
+        yinSiPZRepository.saveAll(chaJiList);
+        return true;
+    }
+
+    /**
      * 作废隐私规则
      */
     @Override

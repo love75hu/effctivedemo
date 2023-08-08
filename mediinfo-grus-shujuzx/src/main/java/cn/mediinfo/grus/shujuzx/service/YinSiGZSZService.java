@@ -23,6 +23,8 @@ public interface YinSiGZSZService {
      * 修改隐私规则
      */
     public Integer updateYinSiGZ(SC_ZD_YinSiGZSZInDto yinSiGZSZInDto) throws MsfException;
+
+    public Boolean updateYinSiGZ(String chaXunMSDM,String zuZhiJGID,String zuZhiJGMC) throws MsfException;
     /**
      * 作废隐私规则
      */

@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: 'mediinfo-grus-shujuzx'
   mvc:
     # 前端参数格式化
     format:
@@ -50,11 +52,4 @@ spring:
   lifecycle:
     timeout-per-shutdown-phase: 30s
 
-mediinfo:
-  remote:
-    urls:
-      mediinfo-grus-huanzhe-query: "http://mediinfo-grus-huanzhe-query"
-logging:
-  level:
-    root: info
 

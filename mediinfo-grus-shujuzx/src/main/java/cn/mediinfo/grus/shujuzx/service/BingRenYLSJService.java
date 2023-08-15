@@ -1,9 +1,8 @@
 package cn.mediinfo.grus.shujuzx.service;
 
+import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
 import cn.mediinfo.grus.shujuzx.Events.BaseEventDto;
 import cn.mediinfo.grus.shujuzx.dto.bingrenylsjs.SC_LC_BingRenYLSJInDto;
-import cn.mediinfo.starter.base.exception.TongYongYWException;
-import cn.mediinfo.starter.base.exception.YuanChengException;
 
 public interface BingRenYLSJService {
     /**

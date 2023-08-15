@@ -1,9 +1,6 @@
 package cn.mediinfo.grus.shujuzx.model;
-import java.util.*;
-
-import cn.mediinfo.starter.base.multitenancy.entity.StringMTEntity;
+import cn.mediinfo.cyan.msf.tenant.orm.entity.StringMTEntity;
 import lombok.Data;
-import java.math.BigDecimal;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

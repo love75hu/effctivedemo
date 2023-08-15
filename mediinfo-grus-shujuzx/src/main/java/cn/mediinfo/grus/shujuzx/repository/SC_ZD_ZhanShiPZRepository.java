@@ -1,9 +1,9 @@
 package cn.mediinfo.grus.shujuzx.repository;
 
+import cn.mediinfo.cyan.msf.orm.datasource.MsfDataSource;
 import cn.mediinfo.grus.shujuzx.model.QSC_ZD_ZhanShiPZModel;
 import cn.mediinfo.grus.shujuzx.model.SC_ZD_ZhanShiPZModel;
-import cn.mediinfo.starter.base.orm.MsfJpaRepository;
-import cn.mediinfo.starter.base.orm.jpa.MsfDataSource;
+import cn.mediinfo.cyan.msf.orm.MsfJpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;

@@ -1,7 +1,7 @@
 package cn.mediinfo.grus.shujuzx.service;
 
 import cn.mediinfo.grus.shujuzx.dto.shujuzxzsys.*;
-import cn.mediinfo.starter.base.exception.TongYongYWException;
+import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 
 import java.text.ParseException;
 import java.util.Date;

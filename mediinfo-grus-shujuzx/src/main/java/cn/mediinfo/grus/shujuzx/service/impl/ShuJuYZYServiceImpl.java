@@ -1,5 +1,6 @@
 package cn.mediinfo.grus.shujuzx.service.impl;
 
+import cn.mediinfo.cyan.msf.core.util.MapUtils;
 import cn.mediinfo.grus.shujuzx.constant.ShuJuZXConstant;
 import cn.mediinfo.grus.shujuzx.dto.shujuyzys.*;
 import cn.mediinfo.grus.shujuzx.model.QSC_ZD_ShuJuYLBModel;
@@ -8,12 +9,12 @@ import cn.mediinfo.grus.shujuzx.model.SC_ZD_ShuJuYZYModel;
 import cn.mediinfo.grus.shujuzx.repository.SC_ZD_ShuJuYLBRepository;
 import cn.mediinfo.grus.shujuzx.repository.SC_ZD_ShuJuYZYRepository;
 import cn.mediinfo.grus.shujuzx.service.ShuJuYZYService;
-import cn.mediinfo.starter.base.exception.CanShuException;
-import cn.mediinfo.starter.base.exception.TongYongYWException;
-import cn.mediinfo.starter.base.exception.WeiZhaoDSJException;
-import cn.mediinfo.starter.base.lyra.service.LyraIdentityService;
-import cn.mediinfo.starter.base.util.MapUtils;
-import cn.mediinfo.starter.base.util.PageRequestUtil;
+import cn.mediinfo.cyan.msf.core.exception.CanShuException;
+import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
+import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
+import cn.mediinfo.lyra.extension.service.LyraIdentityService;
+import cn.mediinfo.cyan.msf.core.util.BeanUtil;
+import cn.mediinfo.cyan.msf.core.util.PageRequestUtil;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -115,7 +116,7 @@ public class ShuJuYZYServiceImpl implements ShuJuYZYService {
             throw new TongYongYWException("该数据源值域不存在!");
         }
         //删除数据源值域
-        sc_zd_shuJuYZYRepository.softDelete(entity);
+        sc_zd_shuJuYZYRepository.delete(entity);
         return true;
     }
 

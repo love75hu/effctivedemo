@@ -1,5 +1,6 @@
 package cn.mediinfo.grus.shujuzx.service.impl;
 
+import cn.mediinfo.cyan.msf.core.util.MapUtils;
 import cn.mediinfo.grus.shujuzx.dto.shujuzxscs.SC_SC_ShouCangJMXInDto;
 import cn.mediinfo.grus.shujuzx.dto.shujuzxscs.SC_SC_ShouCangJMXOutDto;
 import cn.mediinfo.grus.shujuzx.dto.shujuzxscs.SC_SC_ShouCangJXXInDto;
@@ -9,12 +10,12 @@ import cn.mediinfo.grus.shujuzx.repository.SC_LC_BingRenYLSJRepository;
 import cn.mediinfo.grus.shujuzx.repository.SC_SC_ShouCangJMXRepository;
 import cn.mediinfo.grus.shujuzx.repository.SC_SC_ShouCangJXXRepository;
 import cn.mediinfo.grus.shujuzx.service.ShuJuZXWDSCService;
-import cn.mediinfo.starter.base.exception.TongYongYWException;
-import cn.mediinfo.starter.base.lyra.service.LyraIdentityService;
-import cn.mediinfo.starter.base.util.MapUtils;
-import cn.mediinfo.starter.base.util.PageRequestUtil;
-import cn.mediinfo.starter.base.util.QueryDSLUtils;
-import cn.mediinfo.starter.base.util.StringUtil;
+import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
+import cn.mediinfo.lyra.extension.service.LyraIdentityService;
+import cn.mediinfo.cyan.msf.core.util.BeanUtil;
+import cn.mediinfo.cyan.msf.core.util.PageRequestUtil;
+import cn.mediinfo.cyan.msf.orm.util.QueryDSLUtils;
+import cn.mediinfo.cyan.msf.core.util.StringUtil;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import org.springframework.transaction.annotation.Transactional;
@@ -96,7 +97,7 @@ public class ShuJuZXWDSCServiceImpl implements ShuJuZXWDSCService {
 
     @Override
     public Integer yiChuShouCangJMX(String id){
-        sc_sc_shouCangJMXRepository.softDelete(id);
+        sc_sc_shouCangJMXRepository.deleteById( id);
         return 1;
     }
 
@@ -107,8 +108,8 @@ public class ShuJuZXWDSCServiceImpl implements ShuJuZXWDSCService {
             throw new TongYongYWException("未找到相关可作废的信息!");
         }
         QSC_SC_ShouCangJMXModel JMXModel = QSC_SC_ShouCangJMXModel.sC_SC_ShouCangJMXModel;
-        sc_sc_shouCangJXXRepository.softDelete(id);
-        sc_sc_shouCangJMXRepository.softDelete(JMXModel.shouCangJID.eq(id));
+        sc_sc_shouCangJXXRepository.deleteById(id);
+        sc_sc_shouCangJMXRepository.delete(JMXModel.shouCangJID.eq(id));
         return 1;
     }
 

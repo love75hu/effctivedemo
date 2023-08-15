@@ -4,7 +4,7 @@ import cn.mediinfo.grus.shujuzx.dto.shujuzxscs.SC_SC_ShouCangJMXInDto;
 import cn.mediinfo.grus.shujuzx.dto.shujuzxscs.SC_SC_ShouCangJMXOutDto;
 import cn.mediinfo.grus.shujuzx.dto.shujuzxscs.SC_SC_ShouCangJXXInDto;
 import cn.mediinfo.grus.shujuzx.dto.shujuzxscs.SC_SC_ShouCangJXXOutDto;
-import cn.mediinfo.starter.base.exception.TongYongYWException;
+import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 
 import java.util.List;
 

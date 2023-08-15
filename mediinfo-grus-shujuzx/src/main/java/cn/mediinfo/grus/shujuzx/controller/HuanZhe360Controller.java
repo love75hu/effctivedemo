@@ -1,8 +1,8 @@
 package cn.mediinfo.grus.shujuzx.controller;
 
+import cn.mediinfo.cyan.msf.core.response.MsfResponse;
 import cn.mediinfo.grus.shujuzx.dto.quanshengmzqs.PeiZhiXXDtos;
 import cn.mediinfo.grus.shujuzx.service.QuanShengMZQService;
-import cn.mediinfo.starter.base.response.MsfResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;

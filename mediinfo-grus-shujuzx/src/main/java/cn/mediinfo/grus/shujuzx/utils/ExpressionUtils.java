@@ -1,7 +1,7 @@
 package cn.mediinfo.grus.shujuzx.utils;
 
 import cn.mediinfo.grus.shujuzx.dto.yinsigzszs.SC_ZD_YinSiPZOutDto;
-import cn.mediinfo.starter.base.util.StringUtil;
+import cn.mediinfo.cyan.msf.core.util.StringUtil;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 

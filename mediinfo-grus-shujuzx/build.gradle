@@ -8,7 +8,7 @@ group = 'cn.mediinfo'
 sourceCompatibility = '17'
 dependencyManagement {
     imports {
-        mavenBom 'cn.mediinfo:mediinfo-bom-dependencies:0.0.144'
+        mavenBom 'cn.mediinfo:mediinfo-bom-dependencies:1.0.0'
     }
 }
 repositories {
@@ -20,7 +20,11 @@ repositories {
 }
 
 dependencies {
-    implementation 'cn.mediinfo:mediinfo-spring-boot-starter'
+    implementation 'cn.mediinfo:mediinfo-cyan-msf-service-starter'
+    implementation 'cn.mediinfo:mediinfo-lyra-extension-starter'
+    implementation 'cn.mediinfo:mediinfo-cyan-msf-eventbus-starter'
+    implementation 'cn.mediinfo:mediinfo-cyan-msf-util-starter'
+
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     annotationProcessor 'com.querydsl:querydsl-apt:5.0.0:jakarta'

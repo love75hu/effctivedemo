@@ -1,6 +1,5 @@
 package cn.mediinfo.grus.shujuzx.Events;
-
-import cn.mediinfo.starter.base.eventbus.event.IntegrationEvent;
+import cn.mediinfo.cyan.msf.eventbus.event.IntegrationEvent;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

@@ -1,5 +1,6 @@
 package cn.mediinfo.grus.shujuzx.service.impl;
 
+import cn.mediinfo.cyan.msf.core.util.MapUtils;
 import cn.mediinfo.grus.shujuzx.dto.bihuanlcs.*;
 import cn.mediinfo.grus.shujuzx.model.QSC_ZD_BiHuanLCJDModel;
 import cn.mediinfo.grus.shujuzx.model.QSC_ZD_BiHuanLCModel;
@@ -11,12 +12,12 @@ import cn.mediinfo.grus.shujuzx.repository.SC_ZD_BiHuanLCJDRepository;
 import cn.mediinfo.grus.shujuzx.repository.SC_ZD_BiHuanLCRepository;
 import cn.mediinfo.grus.shujuzx.service.BiHuanLCService;
 import cn.mediinfo.grus.shujuzx.utils.ExpressionUtils;
-import cn.mediinfo.starter.base.exception.MsfException;
-import cn.mediinfo.starter.base.exception.TongYongYWException;
-import cn.mediinfo.starter.base.lyra.service.SequenceService;
-import cn.mediinfo.starter.base.util.MapUtils;
-import cn.mediinfo.starter.base.util.QueryDSLUtils;
-import cn.mediinfo.starter.base.util.StringUtil;
+import cn.mediinfo.cyan.msf.core.exception.MsfException;
+import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
+import cn.mediinfo.lyra.extension.service.SequenceService;
+import cn.mediinfo.cyan.msf.core.util.BeanUtil;
+import cn.mediinfo.cyan.msf.orm.util.QueryDSLUtils;
+import cn.mediinfo.cyan.msf.core.util.StringUtil;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Path;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -158,13 +159,9 @@ public class BiHuanLCServiceImpl implements BiHuanLCService {
         if (biHuanLCModelCount > 0) {
             throw new TongYongYWException("相同使用范围内已有其他闭环流程被启用,请重新确认！");
         }
-        // biHuanLCXX.setQiYongBZ(1);
-        QSC_ZD_BiHuanLCModel model = QSC_ZD_BiHuanLCModel.sC_ZD_BiHuanLCModel;
-        Map<Path<?>, Integer> map = new HashMap<>();
-        map.put(model.qiYongBZ, 1);
-        //todo update
-        biHuanLCRepository.update(map, model.id.eq(id));
-        // biHuanLCRepository.save(biHuanLCXX);
+
+        biHuanLCRepository.asUpdateDsl().set(s->s.qiYongBZ,"1").where(x->x.id.eq(id)).update();
+
         return 1;
     }
 
@@ -177,12 +174,7 @@ public class BiHuanLCServiceImpl implements BiHuanLCService {
         if (Objects.isNull(biHuanLCXX)) {
             throw new TongYongYWException("未找到相关信息,请重新确认！");
         }
-        // biHuanLCXX.setQiYongBZ(0);
-        QSC_ZD_BiHuanLCModel model = QSC_ZD_BiHuanLCModel.sC_ZD_BiHuanLCModel;
-        Map<Path<?>, Integer> map = new HashMap<>();
-        map.put(model.qiYongBZ, 0);
-        //todo update
-        biHuanLCRepository.update(map, model.id.eq(id));
+        biHuanLCRepository.asUpdateDsl().set(s->s.qiYongBZ,"0").where(x->x.id.eq(id)).update();
         return 1;
     }
 
@@ -225,7 +217,7 @@ public class BiHuanLCServiceImpl implements BiHuanLCService {
         }
         if (!CollectionUtils.isEmpty(biHuanLCBJInDto.getDeleteIds())) {
             QSC_ZD_BiHuanLCJDModel biHuanLCJDModel = QSC_ZD_BiHuanLCJDModel.sC_ZD_BiHuanLCJDModel;
-            biHuanLCJDRepository.softDelete(biHuanLCJDModel.id.in(biHuanLCBJInDto.getDeleteIds()));
+            biHuanLCJDRepository.delete(biHuanLCJDModel.id.in(biHuanLCBJInDto.getDeleteIds()));
         }
         return 0;
     }
@@ -288,9 +280,9 @@ public class BiHuanLCServiceImpl implements BiHuanLCService {
         if (Objects.isNull(biHuanLCXX)) {
             throw new TongYongYWException("未找到该流程信息，请确认！");
         }
-        biHuanLCRepository.softDelete(id);
+        biHuanLCRepository.deleteById(id);
         QSC_ZD_BiHuanLCModel biHuanLCModel = QSC_ZD_BiHuanLCModel.sC_ZD_BiHuanLCModel;
-        biHuanLCJDRepository.softDelete(biHuanLCModel.zuZhiJGID.eq(biHuanLCXX.getZuZhiJGID()).and(biHuanLCModel.liuChengID.eq(biHuanLCXX.getLiuChengID())));
+        biHuanLCJDRepository.delete(biHuanLCModel.zuZhiJGID.eq(biHuanLCXX.getZuZhiJGID()).and(biHuanLCModel.liuChengID.eq(biHuanLCXX.getLiuChengID())));
         return 1;
     }
 }

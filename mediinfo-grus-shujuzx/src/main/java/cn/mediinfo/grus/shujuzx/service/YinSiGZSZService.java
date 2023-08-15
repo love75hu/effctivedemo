@@ -1,8 +1,8 @@
 package cn.mediinfo.grus.shujuzx.service;
 
 import cn.mediinfo.grus.shujuzx.dto.yinsigzszs.*;
-import cn.mediinfo.starter.base.exception.MsfException;
-import cn.mediinfo.starter.base.exception.TongYongYWException;
+import cn.mediinfo.cyan.msf.core.exception.MsfException;
+import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 
 import java.util.List;
 

@@ -3,8 +3,8 @@ package cn.mediinfo.grus.shujuzx.service.impl;
 import cn.mediinfo.grus.shujuzx.Events.BaseEventDto;
 import cn.mediinfo.grus.shujuzx.service.BingRenYLSJService;
 import cn.mediinfo.grus.shujuzx.service.XiaoFeiXXService;
-import cn.mediinfo.starter.base.exception.TongYongYWException;
-import cn.mediinfo.starter.base.orm.MsfJpaRepository;
+import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
+import cn.mediinfo.cyan.msf.orm.MsfJpaRepository;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
 

@@ -1,15 +1,16 @@
 package cn.mediinfo.grus.shujuzx.service.impl;
 
+import cn.mediinfo.cyan.msf.core.util.MapUtils;
 import cn.mediinfo.grus.shujuzx.constant.ShuJuZXConstant;
 import cn.mediinfo.grus.shujuzx.dto.shujuzxzsys.*;
 import cn.mediinfo.grus.shujuzx.model.BR_ZD_HeBingQZPZModel;
 import cn.mediinfo.grus.shujuzx.model.QBR_ZD_HeBingQZPZModel;
 import cn.mediinfo.grus.shujuzx.repository.BR_ZD_HeBingQZPZRepository;
 import cn.mediinfo.grus.shujuzx.service.ZhuSuoYQZPZService;
-import cn.mediinfo.starter.base.exception.TongYongYWException;
-import cn.mediinfo.starter.base.stringgenerator.StringGenerator;
-import cn.mediinfo.starter.base.util.MapUtils;
-import cn.mediinfo.starter.base.util.QueryDSLUtils;
+import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
+import cn.mediinfo.cyan.msf.stringgenerator.StringGenerator;
+import cn.mediinfo.cyan.msf.core.util.BeanUtil;
+import cn.mediinfo.cyan.msf.orm.util.QueryDSLUtils;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -78,7 +79,7 @@ public class ZhuSuoYQZPZServiceImpl implements ZhuSuoYQZPZService {
         if(deleteModel == null){
             throw new TongYongYWException("未找到相关的权重分类");
         }
-        brZdHeBingQZPZRepository.softDelete(deleteModel);
+        brZdHeBingQZPZRepository.delete(deleteModel);
         return true;
     }
 
@@ -112,7 +113,7 @@ public class ZhuSuoYQZPZServiceImpl implements ZhuSuoYQZPZService {
         }
         //作废
         if(!CollectionUtils.isEmpty(dto.getZuoFeiIds())){
-            brZdHeBingQZPZRepository.softDelete(dto.getZuoFeiIds());
+            brZdHeBingQZPZRepository.deleteAllById(dto.getZuoFeiIds());
         }
         return true;
     }

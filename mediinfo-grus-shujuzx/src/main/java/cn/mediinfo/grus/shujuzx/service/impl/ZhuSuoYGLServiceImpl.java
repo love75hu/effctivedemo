@@ -1,5 +1,7 @@
 package cn.mediinfo.grus.shujuzx.service.impl;
 
+import cn.mediinfo.cyan.msf.util.BigDecimalUtil;
+import cn.mediinfo.cyan.msf.util.NianLing;
 import cn.mediinfo.grus.shujuzx.constant.ShuJuZXConstant;
 import cn.mediinfo.grus.shujuzx.constant.ZhuSuoYCZLXEnum;
 import cn.mediinfo.grus.shujuzx.constant.ZhuSuoYHBZTConstant;
@@ -14,10 +16,10 @@ import cn.mediinfo.grus.shujuzx.service.YinSiGZSZService;
 import cn.mediinfo.grus.shujuzx.service.ZhuSuoYCZRZService;
 import cn.mediinfo.grus.shujuzx.service.ZhuSuoYGLService;
 import cn.mediinfo.grus.shujuzx.utils.ExpressionUtils;
-import cn.mediinfo.starter.base.exception.TongYongYWException;
-import cn.mediinfo.starter.base.lyra.service.LyraIdentityService;
-import cn.mediinfo.starter.base.multitenancy.entity.StringMTEntity;
-import cn.mediinfo.starter.base.util.*;
+import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
+import cn.mediinfo.lyra.extension.service.LyraIdentityService;
+import cn.mediinfo.cyan.msf.tenant.orm.entity.StringMTEntity;
+import cn.mediinfo.cyan.msf.core.util.*;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -38,7 +40,6 @@ import java.util.stream.Collectors;
  * 主索引管理
  */
 @Service
-@SuppressWarnings("all")
 public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
     public final BR_DA_XiangSiSYRepository brDaXiangSiSYRepository;
     public final BR_DA_JiaoChaSYRepository brDaJiaoChaSYRepository;
@@ -398,7 +399,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
         //删除被合并患者的相似索引信息
         var deleteXiangSiSYList = brDaXiangSiSYRepository.getDeleteXiangSiSYList(dto.getZhuSuoYBRXX().getID(), dto.getXiangSiBRIDList());
         var deleteIDs = deleteXiangSiSYList.stream().map(BR_DA_XiangSiSYModel::getId).toList();
-        brDaXiangSiSYRepository.softDelete(deleteIDs);
+        brDaXiangSiSYRepository.deleteAllById(deleteIDs);
         //修改被删除相似索引患者的相似数
         var xiangSiHZHBJLList = brDaHeBingJLRepository.findByBingRenIDNotAndBingRenIDIn(dto.getZhuSuoYBRXX().getID(), deleteIDs);
         for (var item : xiangSiHZHBJLList) {
@@ -499,7 +500,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
                 .from(brDaJiaoChaSYModel)
                 .where(brDaJiaoChaSYModel.guanLianBRID.in(guanLianBRIds).and(brDaJiaoChaSYModel.zhuBingRID.eq(dto.getZhuSuoYBRID())))
                 .fetch();
-        brDaJiaoChaSYRepository.softDelete(deteleJiaoChaSYList);
+        brDaJiaoChaSYRepository.deleteAllInBatch(deteleJiaoChaSYList);
         //endregion
         //region 修改病人基本信息
         //修改病人基本信息
@@ -533,10 +534,10 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
             if (!CollectionUtils.isEmpty(xiangSiJCList))
             {
                 //被合并患者被其他患者合并时，移除与其他患者的交叉索引和相似索引
-                brDaJiaoChaSYRepository.softDelete(xiangSiJCList);
+                brDaJiaoChaSYRepository.deleteAllInBatch(xiangSiJCList);
                 QBR_DA_XiangSiSYModel brDaXiangSiSYModel = QBR_DA_XiangSiSYModel.bR_DA_XiangSiSYModel;
                 //删除相似索引
-                brDaXiangSiSYRepository.softDelete((brDaXiangSiSYModel.bingRenID1.eq(dto.getXiangSiSYBRID())
+                brDaXiangSiSYRepository.delete((brDaXiangSiSYModel.bingRenID1.eq(dto.getXiangSiSYBRID())
                         .and(brDaXiangSiSYModel.bingRenID2.in(xiangSiJCList.stream()
                                 .map(BR_DA_JiaoChaSYModel::getZhuBingRID).toList())))
                         .or(brDaXiangSiSYModel.bingRenID2.eq(dto.getXiangSiSYBRID())
@@ -609,9 +610,9 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
 
 //        if (hasGengXinSJ)
 //        {
-//            gengXinSJ = _cacheHelper.Get<DateTime>("ZhuSuoYGL", "GengXinSJ");
+//            gengXinSJ = _cacheHelper.Get<DateTime>("ZhuSuoYGL", "GengXinSJ"); hasGengXinSJ? gengXinSJ:
 //        }
-        var kaiShiSJ=hasGengXinSJ? gengXinSJ:brDaJiaoChaSYRepository.findFirstByZiDongHBBZOrderByChuangJianSJDesc(1).getChuangJianSJ();
+        var kaiShiSJ=brDaJiaoChaSYRepository.findFirstByZiDongHBBZOrderByChuangJianSJDesc(1).getChuangJianSJ();
         var result = "";
         //region 取更新的患者列表
         record RecordJiBenXXHeBingJL(QBR_DA_JiBenXXModel jiBenXX,QBR_DA_HeBingJLModel heBingJL) {
@@ -626,7 +627,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
         try {
             if (!CollectionUtils.isEmpty(huanZheList))
             {
-                var updateXiuGaiSJ=huanZheList.stream().findFirst().orElse(null).getXiuGaiSJ();
+                //var updateXiuGaiSJ=huanZheList.stream().findFirst().orElse(null).getXiuGaiSJ();
                 if (huanZheList.size()==1001) {
                     //当患者列表的修改时间都一样时，重新取修改时间为这个时间的患者
                     if (huanZheList.get(0).getXiuGaiSJ().equals(huanZheList.get(1000).getXiuGaiSJ()))
@@ -731,7 +732,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
 
             if (!CollectionUtils.isEmpty(deleteXiangSiSYIDs))
             {
-                brDaXiangSiSYRepository.softDelete(deleteXiangSiSYIDs);
+                brDaXiangSiSYRepository.deleteAllById(deleteXiangSiSYIDs);
             }
         }
         if (!CollectionUtils.isEmpty(addJiaoChaSYList))
@@ -776,7 +777,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
                                 .map(BR_DA_JiaoChaSYModel::getGuanLianBRID).toList()
                                 .contains(x.getBingRenID1()) || addJiaoChaSYList.stream()
                                 .map(BR_DA_JiaoChaSYModel::getGuanLianBRID).toList().contains(x.getBingRenID2())).toList();
-                brDaXiangSiSYRepository.softDelete(deleteXiangSiSYList);
+                brDaXiangSiSYRepository.deleteAllInBatch(deleteXiangSiSYList);
                 List<String> bingRenIDs = deleteXiangSiSYList.stream().map(BR_DA_XiangSiSYModel::getBingRenID1).toList();
                 addHeBingJLList.stream().filter(x -> bingRenIDs.contains(x.getBingRenID())).forEach(x -> {
                     long count = deleteXiangSiSYList.stream().filter(o -> o.getBingRenID1().equals(x.getBingRenID())).count();
@@ -963,16 +964,15 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
                     if (ziDongHBBZ)
                     {
                         //插入本次交叉索引
-                        var jiaoChaSY=new BR_DA_JiaoChaSYModel(){{
-                            setHeBingRID("0");
-                            setHeBingRXM("系统");
-                            setHeBingSJ(new Date());
-                            setGuanLianBRID(dangQianXSHZ.getId());
-                            setZhuBingRID(bingRenXX.getId());
-                            setZiDongHBBZ(1);
-                            setZuZhiJGID("0");
-                            setZuZhiJGMC("通用");
-                        }};
+                        var jiaoChaSY=new BR_DA_JiaoChaSYModel();
+                        jiaoChaSY.setHeBingRID("0");
+                        jiaoChaSY.setHeBingRXM("系统");
+                        jiaoChaSY.setHeBingSJ(new Date());
+                        jiaoChaSY.setGuanLianBRID(dangQianXSHZ.getId());
+                        jiaoChaSY.setZhuBingRID(bingRenXX.getId());
+                        jiaoChaSY.setZiDongHBBZ(1);
+                        jiaoChaSY.setZuZhiJGID("0");
+                        jiaoChaSY.setZuZhiJGMC("通用");
                         addJiaoChaSYList.add(jiaoChaSY);
                         //插入被关联患者的原交叉索引
                         List<BR_DA_JiaoChaSYModel> xiangSiHZJCSYList = yuanJiaoChaSYList.stream().filter(x -> x.getZhuBingRID().equals(dangQianXSHZ.getId()))

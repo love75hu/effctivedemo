@@ -1,9 +1,9 @@
 package cn.mediinfo.grus.shujuzx.repository;
 
+import cn.mediinfo.cyan.msf.orm.MsfJpaRepository;
+import cn.mediinfo.cyan.msf.orm.datasource.MsfDataSource;
 import cn.mediinfo.grus.shujuzx.model.BR_DA_JiaoChaSYModel;
 import cn.mediinfo.grus.shujuzx.model.QBR_DA_JiaoChaSYModel;
-import cn.mediinfo.starter.base.orm.MsfJpaRepository;
-import cn.mediinfo.starter.base.orm.jpa.MsfDataSource;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;

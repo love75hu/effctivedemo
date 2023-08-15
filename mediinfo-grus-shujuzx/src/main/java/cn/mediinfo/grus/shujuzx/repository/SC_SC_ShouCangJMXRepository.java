@@ -1,9 +1,9 @@
 package cn.mediinfo.grus.shujuzx.repository;
 
+import cn.mediinfo.cyan.msf.orm.datasource.MsfDataSource;
 import cn.mediinfo.grus.shujuzx.model.QSC_SC_ShouCangJMXModel;
 import cn.mediinfo.grus.shujuzx.model.SC_SC_ShouCangJMXModel;
-import cn.mediinfo.starter.base.orm.MsfJpaRepository;
-import cn.mediinfo.starter.base.orm.jpa.MsfDataSource;
+import cn.mediinfo.cyan.msf.orm.MsfJpaRepository;
 
 import java.util.List;
 @MsfDataSource("datasourcesjzx")

@@ -1,5 +1,6 @@
 package cn.mediinfo.grus.shujuzx.service.impl;
 
+import cn.mediinfo.cyan.msf.orm.util.QueryDSLUtils;
 import cn.mediinfo.grus.shujuzx.constant.ShuJuZXConstant;
 import cn.mediinfo.grus.shujuzx.dto.yinsigzszs.*;
 import cn.mediinfo.grus.shujuzx.model.*;
@@ -9,9 +10,9 @@ import cn.mediinfo.grus.shujuzx.repository.SC_ZD_YinSiPZRepository;
 import cn.mediinfo.grus.shujuzx.repository.SC_ZD_ZhanShiPZRepository;
 import cn.mediinfo.grus.shujuzx.service.YinSiGZSZService;
 import cn.mediinfo.grus.shujuzx.utils.ExpressionUtils;
-import cn.mediinfo.starter.base.exception.MsfException;
-import cn.mediinfo.starter.base.exception.TongYongYWException;
-import cn.mediinfo.starter.base.util.*;
+import cn.mediinfo.cyan.msf.core.exception.MsfException;
+import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
+import cn.mediinfo.cyan.msf.core.util.*;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.transaction.Transactional;
@@ -74,7 +75,7 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
             yinSiPZRepository.saveAll(MapUtils.copyListProperties(scZdYinSiPZDtos, SC_ZD_YinSiPZModel::new));
         }
         if (!dto.getZuoFeiIds().isEmpty()) {
-            yinSiPZRepository.softDelete(dto.getZuoFeiIds());
+            yinSiPZRepository.deleteAllById(dto.getZuoFeiIds());
         }
         return true;
     }
@@ -109,7 +110,7 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
         }
         if (dto.getZuoFeiIds().size() > 0) {
             QSC_ZD_ZhanShiPZModel zhanShiPZModel = QSC_ZD_ZhanShiPZModel.sC_ZD_ZhanShiPZModel;
-            zhanShiPZRepository.softDelete(zhanShiPZModel.id.in(dto.getZuoFeiIds()));
+            zhanShiPZRepository.delete(zhanShiPZModel.id.in(dto.getZuoFeiIds()));
         }
         return true;
     }
@@ -165,7 +166,7 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
         if (!yinSiGZSZRepository.existsById(id)) {
             throw new TongYongYWException("未找到相关可作废的信息!");
         }
-        yinSiGZSZRepository.softDelete(id);
+        yinSiGZSZRepository.deleteById(id);
         return 1;
     }
 
@@ -175,7 +176,7 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
     @Override
     @Transactional(rollbackOn = Exception.class)
     public Boolean zuoFeiYinSiSZ(String id) {
-        yinSiPZRepository.softDelete(id);
+        yinSiPZRepository.deleteById(id);
         return true;
     }
 
@@ -236,7 +237,7 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
         //通用数据t zuzhijg zaiqian
         List<SC_ZD_YinSiPZModel> tongYongSJList = yinSiPZRepository.findByZuZhiJGIDAndChaXunMSDM("0",chaXunMSDM);
         //删除机构之前的数据
-        yinSiPZRepository.softDelete(yinSiPZRepository.findByZuZhiJGIDAndChaXunMSDM(zuZhiJGID,chaXunMSDM));
+        yinSiPZRepository.deleteAllInBatch(yinSiPZRepository.findByZuZhiJGIDAndChaXunMSDM(zuZhiJGID,chaXunMSDM));
         //初始化数据
         tongYongSJList.forEach(item -> {
             item.setZuZhiJGID(zuZhiJGID);
@@ -260,7 +261,7 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
         //通用数据 todo  zuzhijg zaiqian
         List<SC_ZD_YinSiPZModel> tongYongSJList = yinSiPZRepository.findByZuZhiJGIDAndChaXunMSDM("0",chaXunMSDM);
         //删除机构之前的数据
-        yinSiPZRepository.softDelete(yinSiPZRepository.findByZuZhiJGIDAndChaXunMSDM(zuZhiJGID,chaXunMSDM));
+        yinSiPZRepository.deleteAllInBatch(yinSiPZRepository.findByZuZhiJGIDAndChaXunMSDM(zuZhiJGID,chaXunMSDM));
         //初始化数据
         tongYongSJList.forEach(item -> {
             item.setZuZhiJGID(zuZhiJGID);
@@ -285,7 +286,7 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
         //通用数据
         var tongYongSJList = zhanShiPZRepository.findByZuZhiJGIDAndChaXunMSDMAndPeiZhiLXDM(ShuJuZXConstant.TONGYONG_JGID, chaXunMSDM, peiZhiLXDM);
         //删除机构之前的数据
-        zhanShiPZRepository.softDelete(zhanShiPZRepository.findByZuZhiJGIDAndChaXunMSDMAndPeiZhiLXDM(zuZhiJGID, chaXunMSDM, peiZhiLXDM));
+        zhanShiPZRepository.deleteAllInBatch(zhanShiPZRepository.findByZuZhiJGIDAndChaXunMSDMAndPeiZhiLXDM(zuZhiJGID, chaXunMSDM, peiZhiLXDM));
         //初始化数据
         tongYongSJList.forEach(item -> {
             item.setId(null);

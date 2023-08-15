@@ -1,10 +1,9 @@
 package cn.mediinfo.grus.shujuzx.repository;
 
+import cn.mediinfo.cyan.msf.orm.MsfJpaRepository;
+import cn.mediinfo.cyan.msf.orm.datasource.MsfDataSource;
 import cn.mediinfo.grus.shujuzx.model.BR_ZD_HeBingQZPZModel;
 import cn.mediinfo.grus.shujuzx.model.QBR_ZD_HeBingQZPZModel;
-import cn.mediinfo.starter.base.orm.MsfJpaRepository;
-import cn.mediinfo.starter.base.orm.jpa.MsfDataSource;
-
 import java.util.List;
 @MsfDataSource("datasourcebr")
 public interface BR_ZD_HeBingQZPZRepository extends MsfJpaRepository<QBR_ZD_HeBingQZPZModel,BR_ZD_HeBingQZPZModel, String> {

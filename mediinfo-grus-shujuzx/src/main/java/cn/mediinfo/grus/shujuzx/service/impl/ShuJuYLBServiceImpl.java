@@ -1,5 +1,6 @@
 package cn.mediinfo.grus.shujuzx.service.impl;
 
+import cn.mediinfo.cyan.msf.core.util.MapUtils;
 import cn.mediinfo.grus.shujuzx.constant.ShuJuZXConstant;
 import cn.mediinfo.grus.shujuzx.dto.shujuylbs.SC_ZD_ShuJuYLBCreateDto;
 import cn.mediinfo.grus.shujuzx.dto.shujuylbs.SC_ZD_ShuJuYLBDto;
@@ -10,11 +11,11 @@ import cn.mediinfo.grus.shujuzx.model.SC_ZD_ShuJuYLBModel;
 import cn.mediinfo.grus.shujuzx.repository.SC_ZD_ShuJuYLBRepository;
 import cn.mediinfo.grus.shujuzx.repository.SC_ZD_ShuJuYZYRepository;
 import cn.mediinfo.grus.shujuzx.service.ShuJuYLBService;
-import cn.mediinfo.starter.base.exception.TongYongYWException;
-import cn.mediinfo.starter.base.exception.WeiZhaoDSJException;
-import cn.mediinfo.starter.base.lyra.service.LyraIdentityService;
-import cn.mediinfo.starter.base.util.MapUtils;
-import cn.mediinfo.starter.base.util.PageRequestUtil;
+import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
+import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
+import cn.mediinfo.lyra.extension.service.LyraIdentityService;
+import cn.mediinfo.cyan.msf.core.util.BeanUtil;
+import cn.mediinfo.cyan.msf.core.util.PageRequestUtil;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -138,10 +139,10 @@ public class ShuJuYLBServiceImpl implements ShuJuYLBService {
             throw new WeiZhaoDSJException("该数据源类别不存在!");
         }
         //删除数据源类别
-        sc_zd_shuJuYLBRepository.softDelete(id);
+        sc_zd_shuJuYLBRepository.deleteById(id);
         //删除数据源值域
         QSC_ZD_ShuJuYZYModel shuJuYZY = QSC_ZD_ShuJuYZYModel.sC_ZD_ShuJuYZYModel;
-        sc_zd_shuJuYZYRepository.softDelete(shuJuYZY.zuZhiJGID.eq(entity.getZuZhiJGID()).and(shuJuYZY.shuJuYLBID.eq(entity.getShuJuYLBID())));
+        sc_zd_shuJuYZYRepository.delete(shuJuYZY.zuZhiJGID.eq(entity.getZuZhiJGID()).and(shuJuYZY.shuJuYLBID.eq(entity.getShuJuYLBID())));
         return true;
     }
 

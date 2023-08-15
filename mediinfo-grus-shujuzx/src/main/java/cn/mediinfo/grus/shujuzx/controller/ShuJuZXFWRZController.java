@@ -1,10 +1,10 @@
 package cn.mediinfo.grus.shujuzx.controller;
 
+import cn.mediinfo.cyan.msf.core.response.MsfResponse;
 import cn.mediinfo.grus.shujuzx.dto.shujuzxfwrz.AddFangWenRZDto;
 import cn.mediinfo.grus.shujuzx.dto.shujuzxfwrz.ShuJuZXFWRZDto;
 import cn.mediinfo.grus.shujuzx.service.ShuJuZXFWRZService;
 import cn.mediinfo.grus.shujuzx.service.ZhuSuoYCZRZService;
-import cn.mediinfo.starter.base.response.MsfResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;

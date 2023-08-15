@@ -1,5 +1,11 @@
 package cn.mediinfo.grus.shujuzx.service.impl;
 
+import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
+import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
+import cn.mediinfo.cyan.msf.core.util.MapUtils;
+import cn.mediinfo.cyan.msf.core.util.PageRequestUtil;
+import cn.mediinfo.cyan.msf.core.util.StringUtil;
+import cn.mediinfo.cyan.msf.orm.util.QueryDSLUtils;
 import cn.mediinfo.grus.shujuzx.constant.ShuJuZXConstant;
 import cn.mediinfo.grus.shujuzx.dto.bihuanjdszs.SC_ZD_BiHuanJDCreateDto;
 import cn.mediinfo.grus.shujuzx.dto.bihuanjdszs.SC_ZD_BiHuanJDDto;
@@ -9,14 +15,8 @@ import cn.mediinfo.grus.shujuzx.model.QSC_ZD_BiHuanJDModel;
 import cn.mediinfo.grus.shujuzx.model.SC_ZD_BiHuanJDModel;
 import cn.mediinfo.grus.shujuzx.repository.SC_ZD_BiHuanJDRepository;
 import cn.mediinfo.grus.shujuzx.service.BiHuanJDSZService;
-import cn.mediinfo.starter.base.exception.TongYongYWException;
-import cn.mediinfo.starter.base.exception.WeiZhaoDSJException;
-import cn.mediinfo.starter.base.lyra.service.LyraIdentityService;
-import cn.mediinfo.starter.base.lyra.service.SequenceService;
-import cn.mediinfo.starter.base.util.MapUtils;
-import cn.mediinfo.starter.base.util.PageRequestUtil;
-import cn.mediinfo.starter.base.util.QueryDSLUtils;
-import cn.mediinfo.starter.base.util.StringUtil;
+import cn.mediinfo.lyra.extension.service.LyraIdentityService;
+import cn.mediinfo.lyra.extension.service.SequenceService;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Service;
 
@@ -160,7 +160,7 @@ public class BiHuanJDSZServiceImpl implements BiHuanJDSZService {
         if (entity == null) {
             throw new WeiZhaoDSJException("闭环节点不存在！");
         }
-        sc_zd_biHuanJDRepository.softDelete(entity);
+        sc_zd_biHuanJDRepository.deleteById(id);
         return true;
     }
 

@@ -160,7 +160,7 @@ public class BiHuanLCServiceImpl implements BiHuanLCService {
             throw new TongYongYWException("相同使用范围内已有其他闭环流程被启用,请重新确认！");
         }
 
-        biHuanLCRepository.asUpdateDsl().set(s->s.qiYongBZ,"1").where(x->x.id.eq(id)).update();
+        biHuanLCRepository.asUpdateDsl().set(s->s.qiYongBZ,"1").where(x->x.id.eq(id)).execute();
 
         return 1;
     }
@@ -174,7 +174,7 @@ public class BiHuanLCServiceImpl implements BiHuanLCService {
         if (Objects.isNull(biHuanLCXX)) {
             throw new TongYongYWException("未找到相关信息,请重新确认！");
         }
-        biHuanLCRepository.asUpdateDsl().set(s->s.qiYongBZ,"0").where(x->x.id.eq(id)).update();
+        biHuanLCRepository.asUpdateDsl().set(s->s.qiYongBZ,"0").where(x->x.id.eq(id)).execute();
         return 1;
     }
 

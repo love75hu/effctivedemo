@@ -53,7 +53,7 @@ public class ShuJuZXWDSCServiceImpl implements ShuJuZXWDSCService {
     }
     @Override
     public Integer addShouCangJia(SC_SC_ShouCangJXXInDto shouCangJInDto) throws TongYongYWException {
-        if (sc_sc_shouCangJXXRepository.existsByShouCangJMC(shouCangJInDto.getShouCangJMC())) {
+        if (sc_sc_shouCangJXXRepository.existsByShouCangJMCAndYongHuID(shouCangJInDto.getShouCangJMC(),lyraIdentityService.getYongHuId())) {
             throw new TongYongYWException("收藏夹名称已存在,请重新确认!");
         }
         SC_SC_ShouCangJXXModel addModel = new SC_SC_ShouCangJXXModel();

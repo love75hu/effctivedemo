@@ -7,6 +7,6 @@ import cn.mediinfo.cyan.msf.orm.MsfJpaRepository;
 
 @MsfDataSource("datasourcesjzx")
 public interface SC_SC_ShouCangJXXRepository extends MsfJpaRepository<QSC_SC_ShouCangJXXModel,SC_SC_ShouCangJXXModel, String> {
-    Boolean existsByShouCangJMC(String shouCangJMC);
+    Boolean existsByShouCangJMCAndYongHuID(String shouCangJMC,String yongHuID);
 
 }

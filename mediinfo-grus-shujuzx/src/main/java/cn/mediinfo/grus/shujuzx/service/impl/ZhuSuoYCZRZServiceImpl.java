@@ -35,7 +35,11 @@ public class ZhuSuoYCZRZServiceImpl implements ZhuSuoYCZRZService {
     }
 
     @Override
-    public List<BR_DA_ZhuSuoYCZRZDto> getZhuSuoYCZRZList(Integer pageIndex, Integer pageSize, Date caoZuoKSRQ, Date caoZuoJSRQ, String caoZuoLXDM, String likeQuery) throws TongYongYWException, ParseException {
+    public List<BR_DA_ZhuSuoYCZRZDto> getZhuSuoYCZRZList(Integer pageIndex,
+                                                         Integer pageSize,
+                                                         Date caoZuoKSRQ,
+                                                         Date caoZuoJSRQ,
+                                                         String caoZuoLXDM, String likeQuery) throws TongYongYWException, ParseException {
         if(pageSize == null ||pageSize==0){
             pageSize = 10;
         }
@@ -58,7 +62,7 @@ public class ZhuSuoYCZRZServiceImpl implements ZhuSuoYCZRZService {
                 .whereIf(StringUtils.hasText(likeQuery),o->o.bingRenID.contains(likeQuery).or(o.xingMing.contains(likeQuery)).or(o.caoZuoRXM.contains(likeQuery)))
                 .orderBy(o->o.caoZuoSJ.desc())
                 .select(o->o)
-                .fetchPage(PageRequestUtil.of(pageIndex, pageSize));
+                .fetchPage(PageRequestUtil.of(pageIndex, pageSize));//.stream().toList()
         return MapUtils.copyListProperties(zhuSuoYCZRZModels, BR_DA_ZhuSuoYCZRZDto::new);
     }
 
@@ -68,16 +72,28 @@ public class ZhuSuoYCZRZServiceImpl implements ZhuSuoYCZRZService {
      * @throws TongYongYWException 通用异常
      */
     @Override
-    public long getZhuSuoYCZRZCount(String caoZuoKSRQ, String caoZuoJSRQ, String caoZuoLXDM, String likeQuery) throws TongYongYWException, ParseException {
-        Date finalCaoZuoKSRQ = DateUtil.getDateYYMMDDHHMMSS2(caoZuoKSRQ);
-        Date finalcaoZuoJSRQ = DateUtil.getDateYYMMDDHHMMSS2(caoZuoJSRQ);
-        return brDaZhuSuoYCZRZRepository.asQuerydsl()
-                .whereIf(finalCaoZuoKSRQ!=null,o->o.caoZuoSJ.goe(finalCaoZuoKSRQ))
-                .whereIf(finalcaoZuoJSRQ!=null, o->o.caoZuoSJ.loe(finalcaoZuoJSRQ))
+    public long getZhuSuoYCZRZCount(Date caoZuoKSRQ, Date caoZuoJSRQ, String caoZuoLXDM, String likeQuery) throws TongYongYWException, ParseException {
+       var data= brDaZhuSuoYCZRZRepository.asQuerydsl()
+                .whereIf(caoZuoKSRQ!=null,o-> {
+                    try {
+                        return o.caoZuoSJ.goe(DateUtil.get0Dian(caoZuoKSRQ));
+                    } catch (ParseException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .whereIf(caoZuoJSRQ!=null, o-> {
+                    try {
+                        return o.caoZuoSJ.loe(DateUtil.getLastDian(caoZuoJSRQ));
+                    } catch (ParseException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
                 .whereIf(StringUtils.hasText(caoZuoLXDM),o->o.caoZuoLXDM.eq(caoZuoLXDM))
-                .whereIf(StringUtils.hasText(likeQuery),o->o.bingRenID.contains(likeQuery).or(o.xingMing.contains(likeQuery)).or(o.caoZuoRXM.contains(likeQuery)))
-                .select(SimpleExpression::count)
-                .fetchOne();
+                .whereIf(StringUtils.hasText(likeQuery),
+                        o->o.bingRenID.contains(likeQuery).or(o.xingMing.contains(likeQuery)).or(o.caoZuoRXM.contains(likeQuery)))
+                .orderBy(o->o.caoZuoSJ.desc())
+               .fetch();
+       return data.size();
     }
 
     @Override

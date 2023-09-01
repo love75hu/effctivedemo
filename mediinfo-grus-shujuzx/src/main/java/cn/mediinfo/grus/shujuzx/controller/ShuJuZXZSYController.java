@@ -229,7 +229,7 @@ public class ShuJuZXZSYController {
      */
     @Operation(summary = "获取主索引操作日志数量")
     @GetMapping("GetZhuSuoYCZRZCount")
-    public MsfResponse<Long> getZhuSuoYCZRZCount(String caoZuoKSRQ,String caoZuoJSRQ,String caoZuoLXDM,String likeQuery) throws TongYongYWException, ParseException {
+    public MsfResponse<Long> getZhuSuoYCZRZCount(@RequestParam(required = false) Date caoZuoKSRQ,@RequestParam(required = false) Date caoZuoJSRQ,String caoZuoLXDM,String likeQuery) throws TongYongYWException, ParseException {
         var data = zhuSuoYCZRZService.getZhuSuoYCZRZCount(caoZuoKSRQ,caoZuoJSRQ,caoZuoLXDM,likeQuery);
         return MsfResponse.success(data);
     }

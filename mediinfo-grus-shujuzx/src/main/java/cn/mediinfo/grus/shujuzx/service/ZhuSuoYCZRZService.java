@@ -20,7 +20,7 @@ public interface ZhuSuoYCZRZService {
      * @return
      * @throws TongYongYWException 通用异常
      */
-    long getZhuSuoYCZRZCount(String caoZuoKSRQ,String caoZuoJSRQ,String caoZuoLXDM,String likeQuery) throws TongYongYWException, ParseException;
+    long getZhuSuoYCZRZCount(Date caoZuoKSRQ,Date caoZuoJSRQ,String caoZuoLXDM,String likeQuery) throws TongYongYWException, ParseException;
     /**
      * 操作日志
      * @return

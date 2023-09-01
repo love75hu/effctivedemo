@@ -75,11 +75,14 @@ public class ZhuSuoYQZPZServiceImpl implements ZhuSuoYQZPZService {
      */
     @Override
     public Boolean zuoFeiQuanZhongFL(String id) throws TongYongYWException {
+
         var deleteModel =brZdHeBingQZPZRepository.findById(id).orElse(null);
         if(deleteModel == null){
             throw new TongYongYWException("未找到相关的权重分类");
         }
         brZdHeBingQZPZRepository.delete(deleteModel);
+        //删除下面的数据
+        brZdHeBingQZPZRepository.asDeleteDsl().where(x->x.fuLeiID.eq(id)).execute();
         return true;
     }
 

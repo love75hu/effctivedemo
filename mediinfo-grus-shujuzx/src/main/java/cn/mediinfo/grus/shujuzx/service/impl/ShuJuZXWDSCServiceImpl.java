@@ -1,6 +1,7 @@
 package cn.mediinfo.grus.shujuzx.service.impl;
 
 import cn.mediinfo.cyan.msf.core.util.MapUtils;
+import cn.mediinfo.cyan.msf.sequence.core.Sequence;
 import cn.mediinfo.grus.shujuzx.dto.shujuzxscs.SC_SC_ShouCangJMXInDto;
 import cn.mediinfo.grus.shujuzx.dto.shujuzxscs.SC_SC_ShouCangJMXOutDto;
 import cn.mediinfo.grus.shujuzx.dto.shujuzxscs.SC_SC_ShouCangJXXInDto;
@@ -12,7 +13,6 @@ import cn.mediinfo.grus.shujuzx.repository.SC_SC_ShouCangJXXRepository;
 import cn.mediinfo.grus.shujuzx.service.ShuJuZXWDSCService;
 import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 import cn.mediinfo.lyra.extension.service.LyraIdentityService;
-import cn.mediinfo.cyan.msf.core.util.BeanUtil;
 import cn.mediinfo.cyan.msf.core.util.PageRequestUtil;
 import cn.mediinfo.cyan.msf.orm.util.QueryDSLUtils;
 import cn.mediinfo.cyan.msf.core.util.StringUtil;
@@ -39,6 +39,8 @@ public class ShuJuZXWDSCServiceImpl implements ShuJuZXWDSCService {
     private final SC_LC_BingRenYLSJRepository sc_lc_bingRenYLSJRepository;
     private final EntityManager entityManager;
 
+
+
     private record XMModelAndXXModelPO(String id,String shouCangJMC,String beiZhu,Integer shunXuHao,SC_SC_ShouCangJMXModel mxModel) {}
     private record GroupXMModelAndXXModelPO(String id,String shouCangJMC,String beiZhu,Integer shunXuHao) {}
 
@@ -52,12 +54,16 @@ public class ShuJuZXWDSCServiceImpl implements ShuJuZXWDSCService {
         this.entityManager = entityManager;
     }
     @Override
-    public Integer addShouCangJia(SC_SC_ShouCangJXXInDto shouCangJInDto) throws TongYongYWException {
+    public Integer  addShouCangJia(SC_SC_ShouCangJXXInDto shouCangJInDto) throws TongYongYWException {
         if (sc_sc_shouCangJXXRepository.existsByShouCangJMCAndYongHuID(shouCangJInDto.getShouCangJMC(),lyraIdentityService.getYongHuId())) {
             throw new TongYongYWException("收藏夹名称已存在,请重新确认!");
         }
+
         SC_SC_ShouCangJXXModel addModel = new SC_SC_ShouCangJXXModel();
         MapUtils.mergeProperties(shouCangJInDto, addModel,false);
+        if (Objects.isNull(addModel.getShunXuHao())){
+            addModel.setShunXuHao(sc_sc_shouCangJXXRepository.getMaxShunXuHao(lyraIdentityService.getYongHuId()) + 1);
+        }
         addModel.setZuZhiJGID(lyraIdentityService.getJiGouID());
         addModel.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
         addModel.setYongHuID(lyraIdentityService.getYongHuId());
@@ -226,5 +232,4 @@ public class ShuJuZXWDSCServiceImpl implements ShuJuZXWDSCService {
         }
         return shouCangMXList;
     }
-
 }

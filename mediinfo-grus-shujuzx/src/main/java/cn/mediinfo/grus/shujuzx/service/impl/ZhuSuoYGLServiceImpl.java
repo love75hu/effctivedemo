@@ -55,6 +55,8 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
     public final ZhuSuoYCZRZService zhuSuoYCZRZService;
     private final LyraIdentityService lyraIdentityService;
 
+
+
     public ZhuSuoYGLServiceImpl(BR_DA_XiangSiSYRepository brDaXiangSiSYRepository, BR_DA_JiaoChaSYRepository brDaJiaoChaSYRepository, BR_DA_JiBenXXRepository brDaJiBenXXRepository, BR_DA_HeBingJLRepository brDaHeBingJLRepository, BR_DA_JieZhiXXRepository brDaJieZhiXXRepository, BR_DA_KuoZhanXXRepository brDaKuoZhanXXRepository, BR_ZD_HeBingGZRepository brZdHeBingGZRepository, BR_ZD_HeBingGZMXRepository brZdHeBingGZMXRepository, YinSiGZSZService yinSiGZSZService, ZhuSuoYCZRZService zhuSuoYCZRZService, LyraIdentityService lyraIdentityService,BR_DA_ZhuSuoYCZRZRepository zhuSuoYCZRZRepository) {
         this.brDaXiangSiSYRepository = brDaXiangSiSYRepository;
         this.brDaJiaoChaSYRepository = brDaJiaoChaSYRepository;
@@ -592,21 +594,12 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
      */
     @Override
     public String zengLiangPPXSHZ() {
-
         var jiGouID = "0";
         var jiGouMC = "通用";
         //获取筛选开始时间
         // var hasGengXinSJ = _cacheHelper.Exists("ZhuSuoYGL", "GengXinSJ");
         var hasGengXinSJ = false;
-        Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH) + 1; // 注意：Java 中月份从 0 开始计数，因此需要加上 1。
-        int dayOfMonth = 1; // Java 中日期默认为当月的第一天，因此这里指定为 1 日。
-
-         // 将日期调整为当月最后一天
-        calendar.set(year, month, dayOfMonth);
-        calendar.add(Calendar.DAY_OF_MONTH, -1);
-        Date gengXinSJ = calendar.getTime();
+        Date gengXinSJ =DateUtil.offsetHour(DateUtil.offsetDay(DateUtil.beginOfDay(DateUtil.date()),-1),1);
 
 //        if (hasGengXinSJ)
 //        {
@@ -647,6 +640,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
                     zengLiangPPXSHZ_Start(huanZheList,true);
                     //   _cacheHelper.Set("ZhuSuoYGL", "GengXinSJ", updateXiuGaiSJ);
                 }
+                zengLiangPPXSHZ_Start(huanZheList,true);
             }
             result= StringUtil.concat("开始时间：",DateUtil.getYYMMDDHHmmss(kaiShiSJ),",本次处理修改的患者：",huanZheList.size(),"人");
 

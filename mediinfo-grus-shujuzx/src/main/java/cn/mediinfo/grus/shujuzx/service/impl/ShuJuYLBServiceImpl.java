@@ -157,31 +157,16 @@ public class ShuJuYLBServiceImpl implements ShuJuYLBService {
      */
     @Override
     public List<SC_ZD_ShuJuYLBDto> getShuJuYLBList(String zuZhiJGID, String likeQuery, Integer pageIndex, Integer pageSize) {
-        //获取输入码类型
-        var shuRuMLX = lyraIdentityService.getShuRuMLX();
-        QSC_ZD_ShuJuYLBModel shuJuYLB = QSC_ZD_ShuJuYLBModel.sC_ZD_ShuJuYLBModel;
-        var factory = new JPAQueryFactory(sc_zd_shuJuYLBRepository.getEntityManager());
-        var query = factory.select(shuJuYLB).from(shuJuYLB);
 
-        //组织机构过滤
-        if (StringUtils.hasText(zuZhiJGID)) {
-            query.where(shuJuYLB.zuZhiJGID.eq(zuZhiJGID));
-        }
-        //输入码过滤
-        if (StringUtils.hasText(likeQuery)) {
-            query.where(shuJuYLB.shuJuYLBID.like("%" + likeQuery + "%")
-                    .or(shuJuYLB.shuJuYLBMC.like("%" + likeQuery + "%")));
-            if ("1".equals(shuRuMLX)) {
-                query.where(shuJuYLB.shuRuMa1.toLowerCase().like("%" + likeQuery.toLowerCase() + "%"));
-            } else if ("2".equals(shuRuMLX)) {
-                query.where(shuJuYLB.shuRuMa2.toLowerCase().like("%" + likeQuery.toLowerCase() + "%"));
-            } else {
-                query.where(shuJuYLB.shuRuMa3.toLowerCase().like("%" + likeQuery.toLowerCase() + "%"));
-            }
-        }
+        List<SC_ZD_ShuJuYLBModel> entityList = sc_zd_shuJuYLBRepository.asQuerydsl()
+                .whereIf(StringUtils.hasText(zuZhiJGID), x -> x.zuZhiJGID.eq(zuZhiJGID))
+                .whereIf(StringUtils.hasText(likeQuery),
+                        x -> x.shuJuYLBMC.contains(likeQuery)
+                                .or(x.shuJuYLBID.contains(likeQuery))
+                                .or(x.shuRuMa1.toLowerCase().contains(likeQuery.toLowerCase()))
+                                .or(x.shuRuMa2.toLowerCase().contains(likeQuery.toLowerCase()))
+                                .or(x.shuRuMa3.toLowerCase().contains(likeQuery.toLowerCase()))).orderBy(x -> x.shuJuYLBID.asc()).fetchPage(pageIndex,pageSize);
 
-        //分页处理
-        var entityList = query.offset(PageRequestUtil.of(pageIndex, pageSize).getOffset()).limit(pageSize).fetch();
         return MapUtils.copyListProperties(entityList, SC_ZD_ShuJuYLBDto::new);
     }
 

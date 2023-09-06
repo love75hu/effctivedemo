@@ -17,6 +17,7 @@ import cn.mediinfo.grus.shujuzx.service.ZhuSuoYCZRZService;
 import cn.mediinfo.grus.shujuzx.service.ZhuSuoYGLService;
 import cn.mediinfo.grus.shujuzx.utils.ExpressionUtils;
 import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
+import cn.mediinfo.grus.shujuzx.utils.SpringCache;
 import cn.mediinfo.lyra.extension.service.LyraIdentityService;
 import cn.mediinfo.cyan.msf.tenant.orm.entity.StringMTEntity;
 import cn.mediinfo.cyan.msf.core.util.*;
@@ -55,9 +56,11 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
     public final ZhuSuoYCZRZService zhuSuoYCZRZService;
     private final LyraIdentityService lyraIdentityService;
 
+    private final SpringCache springCache;
 
 
-    public ZhuSuoYGLServiceImpl(BR_DA_XiangSiSYRepository brDaXiangSiSYRepository, BR_DA_JiaoChaSYRepository brDaJiaoChaSYRepository, BR_DA_JiBenXXRepository brDaJiBenXXRepository, BR_DA_HeBingJLRepository brDaHeBingJLRepository, BR_DA_JieZhiXXRepository brDaJieZhiXXRepository, BR_DA_KuoZhanXXRepository brDaKuoZhanXXRepository, BR_ZD_HeBingGZRepository brZdHeBingGZRepository, BR_ZD_HeBingGZMXRepository brZdHeBingGZMXRepository, YinSiGZSZService yinSiGZSZService, ZhuSuoYCZRZService zhuSuoYCZRZService, LyraIdentityService lyraIdentityService,BR_DA_ZhuSuoYCZRZRepository zhuSuoYCZRZRepository) {
+
+    public ZhuSuoYGLServiceImpl(BR_DA_XiangSiSYRepository brDaXiangSiSYRepository, BR_DA_JiaoChaSYRepository brDaJiaoChaSYRepository, BR_DA_JiBenXXRepository brDaJiBenXXRepository, BR_DA_HeBingJLRepository brDaHeBingJLRepository, BR_DA_JieZhiXXRepository brDaJieZhiXXRepository, BR_DA_KuoZhanXXRepository brDaKuoZhanXXRepository, BR_ZD_HeBingGZRepository brZdHeBingGZRepository, BR_ZD_HeBingGZMXRepository brZdHeBingGZMXRepository, YinSiGZSZService yinSiGZSZService, ZhuSuoYCZRZService zhuSuoYCZRZService, LyraIdentityService lyraIdentityService, BR_DA_ZhuSuoYCZRZRepository zhuSuoYCZRZRepository, SpringCache springCache) {
         this.brDaXiangSiSYRepository = brDaXiangSiSYRepository;
         this.brDaJiaoChaSYRepository = brDaJiaoChaSYRepository;
         this.brDaJiBenXXRepository = brDaJiBenXXRepository;
@@ -70,6 +73,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
         this.zhuSuoYCZRZService = zhuSuoYCZRZService;
         this.lyraIdentityService = lyraIdentityService;
         this.zhuSuoYCZRZRepository = zhuSuoYCZRZRepository;
+        this.springCache = springCache;
     }
 
     /**
@@ -597,15 +601,16 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
         var jiGouID = "0";
         var jiGouMC = "通用";
         //获取筛选开始时间
-        // var hasGengXinSJ = _cacheHelper.Exists("ZhuSuoYGL", "GengXinSJ");
-        var hasGengXinSJ = false;
+        var hasGengXinSJ =  springCache.get("GengXinSJ");
+
         Date gengXinSJ =DateUtil.offsetHour(DateUtil.offsetDay(DateUtil.beginOfDay(DateUtil.date()),-1),1);
 
-//        if (hasGengXinSJ)
-//        {
-//            gengXinSJ = _cacheHelper.Get<DateTime>("ZhuSuoYGL", "GengXinSJ"); hasGengXinSJ? gengXinSJ:
-//        }
-        var kaiShiSJ=brDaJiaoChaSYRepository.findFirstByZiDongHBBZOrderByChuangJianSJDesc(1).getChuangJianSJ();
+        if (StringUtil.hasText(hasGengXinSJ))
+        {
+            gengXinSJ = DateUtil.parse(hasGengXinSJ);
+        }
+
+        var kaiShiSJ=StringUtil.hasText(hasGengXinSJ)?gengXinSJ: brDaJiaoChaSYRepository.findFirstByZiDongHBBZOrderByChuangJianSJDesc(1).getChuangJianSJ();
         var result = "";
         //region 取更新的患者列表
         record RecordJiBenXXHeBingJL(QBR_DA_JiBenXXModel jiBenXX,QBR_DA_HeBingJLModel heBingJL) {
@@ -620,7 +625,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
         try {
             if (!CollectionUtils.isEmpty(huanZheList))
             {
-                //var updateXiuGaiSJ=huanZheList.stream().findFirst().orElse(null).getXiuGaiSJ();
+                var updateXiuGaiSJ=huanZheList.stream().findFirst().orElse(new BR_DA_JiBenXXModel()).getXiuGaiSJ();
                 if (huanZheList.size()==1001) {
                     //当患者列表的修改时间都一样时，重新取修改时间为这个时间的患者
                     if (huanZheList.get(0).getXiuGaiSJ().equals(huanZheList.get(1000).getXiuGaiSJ()))
@@ -635,18 +640,16 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
                         //防止下一个患者的修改时间和取出的患者列表最后的修改时间一样
                         List<BR_DA_JiBenXXModel> finalHuanZheList = huanZheList;
                         huanZheList = huanZheList.stream().filter(x-> !x.getXiuGaiSJ().equals(finalHuanZheList.get(1000).getXiuGaiSJ())).toList();
-
                     }
-                    zengLiangPPXSHZ_Start(huanZheList,true);
-                    //   _cacheHelper.Set("ZhuSuoYGL", "GengXinSJ", updateXiuGaiSJ);
                 }
                 zengLiangPPXSHZ_Start(huanZheList,true);
+                springCache.put("GengXinSJ",DateUtil.getYYMMDDHHMMSS(updateXiuGaiSJ));
             }
             result= StringUtil.concat("开始时间：",DateUtil.getYYMMDDHHmmss(kaiShiSJ),",本次处理修改的患者：",huanZheList.size(),"人");
 
         }catch (Exception e)
         {
-//            _cacheHelper.Set("ZhuSuoYGL", "GengXinSJ", kaiShiSJ);
+           springCache.put("GengXinSJ",DateUtil.getYYMMDDHHMMSS(kaiShiSJ));
 //            throw;
         }
         return result;

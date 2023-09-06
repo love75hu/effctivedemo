@@ -12,6 +12,8 @@ server:
     # 请求URL中允许未编码的特殊字符
     relaxed-path-chars: <,>,[,\,],^,`,{,|,}
 spring:
+  cache:
+    type: redis  # 配置缓存类型为Redis
   security:
     oauth2:
       resourceserver:

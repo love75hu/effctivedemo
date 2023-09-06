@@ -24,6 +24,7 @@ dependencies {
     implementation 'cn.mediinfo:mediinfo-lyra-extension-starter'
     implementation 'cn.mediinfo:mediinfo-cyan-msf-eventbus-starter'
     implementation 'cn.mediinfo:mediinfo-cyan-msf-util-starter'
+    implementation 'cn.mediinfo:mediinfo-cyan-msf-cache-redis-starter'
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'

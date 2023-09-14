@@ -360,7 +360,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
                 if (xiangSiBRHBJL.getHeBingShu() == null) {
                     xiangSiBRHBJL.setHeBingShu(1);
                 } else {
-                    xiangSiBRHBJL.setHeBingShu(xiangSiBRHBJL.getHeBingShu() - 1);
+                    xiangSiBRHBJL.setHeBingShu(xiangSiBRHBJL.getHeBingShu() + 1);
                 }
                 if (xiangSiBRHBJL.getXiangSiShu() != null) {
                     xiangSiBRHBJL.setXiangSiShu(xiangSiBRHBJL.getXiangSiShu() - 1);
@@ -407,13 +407,13 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
         var deleteIDs = deleteXiangSiSYList.stream().map(BR_DA_XiangSiSYModel::getId).toList();
         brDaXiangSiSYRepository.deleteAllById(deleteIDs);
         //修改被删除相似索引患者的相似数
-        var xiangSiHZHBJLList = brDaHeBingJLRepository.findByBingRenIDNotAndBingRenIDIn(dto.getZhuSuoYBRXX().getID(), deleteIDs);
+        var xiangSiHZHBJLList = brDaHeBingJLRepository.findByBingRenIDNotAndBingRenIDIn(dto.getZhuSuoYBRXX().getID(), deleteXiangSiSYList.stream().map(BR_DA_XiangSiSYModel::getBingRenID1).toList());
         for (var item : xiangSiHZHBJLList) {
             var count = deleteXiangSiSYList.stream()
                     .filter(o -> Objects.equals(o.getBingRenID1(), item.getBingRenID()))
                     .map(BR_DA_XiangSiSYModel::getBingRenID2)
                     .distinct().count();
-            item.setXiangSiShu((item.getXiangSiShu() != null ? item.getXiangSiShu() : 0) - (int) count);
+                item.setXiangSiShu((item.getXiangSiShu() != null ? item.getXiangSiShu() : 0) - (int) count);
         }
         brDaHeBingJLRepository.saveAll(xiangSiHZHBJLList);
         return true;
@@ -785,6 +785,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
             {
                 brDaHeBingJLRepository.saveAll(addHeBingJLList);
             }
+
             jiSuanHBXSS(xiangSiHZList.stream().map(StringMTEntity::getId).toList());
         }
         /**
@@ -816,11 +817,13 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
                     x.setHeBingZTMC("未合并");
                     BR_DA_XiangSiSYModel xiangSiSY = allXaingSiSYList.stream()
                             .filter(m -> m.getBingRenID1().equals(x.getBingRenID()))
-                            .filter(m->m.getXiangSiDu()!=null)
+                           // .filter(m->m.getXiangSiDu()!=null)
                             .max(Comparator.comparing(BR_DA_XiangSiSYModel::getXiangSiDu)).orElse(null);
                     if (xiangSiSY!=null)
                     {
                         x.setZuiDaXSD( xiangSiSY.getXiangSiDu()==null?0:xiangSiSY.getXiangSiDu().intValue());
+                    }else{
+                        x.setZuiDaXSD(0);
                     }
                 }
                 x.setXiangSiShu((int)allXaingSiSYList.stream().filter(m->m.getBingRenID1().equals(x.getBingRenID())).count());

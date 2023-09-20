@@ -1,6 +1,8 @@
 package cn.mediinfo.grus.shujuzx.dto.shujuzxzsys;
-import java.util.*;
+
 import lombok.Data;
+
+import java.util.List;
 
 /**
 *主索引详情

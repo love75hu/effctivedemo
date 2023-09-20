@@ -12,7 +12,6 @@ import cn.mediinfo.grus.shujuzx.repository.SC_ZD_YinSiPZRepository;
 import cn.mediinfo.grus.shujuzx.repository.SC_ZD_ZhanShiPZRepository;
 import cn.mediinfo.grus.shujuzx.service.QuanShengMZQService;
 import cn.mediinfo.lyra.extension.service.LyraIdentityService;
-import cn.mediinfo.cyan.msf.core.util.BeanUtil;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import org.springframework.stereotype.Service;

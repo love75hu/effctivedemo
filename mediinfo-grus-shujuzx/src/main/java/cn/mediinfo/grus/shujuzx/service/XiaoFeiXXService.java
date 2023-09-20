@@ -1,8 +1,8 @@
 package cn.mediinfo.grus.shujuzx.service;
 
-import cn.mediinfo.grus.shujuzx.Events.BaseEventDto;
 import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 import cn.mediinfo.cyan.msf.orm.MsfJpaRepository;
+import cn.mediinfo.grus.shujuzx.events.BaseEventDto;
 
 public interface XiaoFeiXXService {
     /**

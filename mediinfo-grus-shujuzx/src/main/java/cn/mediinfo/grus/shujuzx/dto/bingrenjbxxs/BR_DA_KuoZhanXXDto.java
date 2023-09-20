@@ -1,7 +1,7 @@
 package cn.mediinfo.grus.shujuzx.dto.bingrenjbxxs;
-import lombok.Data;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
 /**
 *病人扩展信息
 */

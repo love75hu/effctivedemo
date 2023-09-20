@@ -1,9 +1,9 @@
 package cn.mediinfo.grus.shujuzx.remotedto.JiuZhenXXs;
-import java.util.*;
-import lombok.Data;
-import java.math.BigDecimal;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+
+import java.util.Date;
 @Data
 public class BinRenJZCSTJDto {
 

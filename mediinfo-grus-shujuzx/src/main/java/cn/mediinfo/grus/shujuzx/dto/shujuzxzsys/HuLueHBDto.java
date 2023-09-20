@@ -1,7 +1,7 @@
 package cn.mediinfo.grus.shujuzx.dto.shujuzxzsys;
-import lombok.Data;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
 /**
 *保存合并提交信息
 */

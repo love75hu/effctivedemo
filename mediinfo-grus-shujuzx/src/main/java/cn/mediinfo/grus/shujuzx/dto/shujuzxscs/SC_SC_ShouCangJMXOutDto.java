@@ -1,8 +1,9 @@
 package cn.mediinfo.grus.shujuzx.dto.shujuzxscs;
-import java.util.*;
-import lombok.Data;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+
+import java.util.Date;
 /**
 *数据中心 - 收藏明细dto
 */

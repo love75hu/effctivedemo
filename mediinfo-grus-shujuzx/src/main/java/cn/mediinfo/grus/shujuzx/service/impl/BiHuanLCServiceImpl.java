@@ -1,6 +1,10 @@
 package cn.mediinfo.grus.shujuzx.service.impl;
 
+import cn.mediinfo.cyan.msf.core.exception.MsfException;
+import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 import cn.mediinfo.cyan.msf.core.util.MapUtils;
+import cn.mediinfo.cyan.msf.core.util.StringUtil;
+import cn.mediinfo.cyan.msf.orm.util.QueryDSLUtils;
 import cn.mediinfo.grus.shujuzx.dto.bihuanlcs.*;
 import cn.mediinfo.grus.shujuzx.model.QSC_ZD_BiHuanLCJDModel;
 import cn.mediinfo.grus.shujuzx.model.QSC_ZD_BiHuanLCModel;
@@ -12,20 +16,17 @@ import cn.mediinfo.grus.shujuzx.repository.SC_ZD_BiHuanLCJDRepository;
 import cn.mediinfo.grus.shujuzx.repository.SC_ZD_BiHuanLCRepository;
 import cn.mediinfo.grus.shujuzx.service.BiHuanLCService;
 import cn.mediinfo.grus.shujuzx.utils.ExpressionUtils;
-import cn.mediinfo.cyan.msf.core.exception.MsfException;
-import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 import cn.mediinfo.lyra.extension.service.SequenceService;
-import cn.mediinfo.cyan.msf.core.util.BeanUtil;
-import cn.mediinfo.cyan.msf.orm.util.QueryDSLUtils;
-import cn.mediinfo.cyan.msf.core.util.StringUtil;
 import com.querydsl.core.types.Expression;
-import com.querydsl.core.types.Path;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
 
 @Service
 public class BiHuanLCServiceImpl implements BiHuanLCService {

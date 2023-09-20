@@ -1,10 +1,10 @@
 package cn.mediinfo.grus.shujuzx.dto.bihuanlcs;
-import java.util.*;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.List;
 @Data
 public class SC_ZD_BiHuanLCBJInDto {
 

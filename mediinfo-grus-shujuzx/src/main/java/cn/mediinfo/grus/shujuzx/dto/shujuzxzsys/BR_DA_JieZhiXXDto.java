@@ -1,8 +1,9 @@
 package cn.mediinfo.grus.shujuzx.dto.shujuzxzsys;
-import java.util.*;
-import lombok.Data;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+
+import java.util.Date;
 /**
 *病人介质信息
 */

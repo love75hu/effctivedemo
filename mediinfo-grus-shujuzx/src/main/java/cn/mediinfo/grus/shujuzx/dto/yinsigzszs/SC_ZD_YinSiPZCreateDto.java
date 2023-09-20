@@ -1,8 +1,10 @@
 package cn.mediinfo.grus.shujuzx.dto.yinsigzszs;
-import java.util.*;
-import lombok.Data;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+
+import java.util.ArrayList;
+import java.util.List;
 /**
 *新增隐私配置
 */

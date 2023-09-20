@@ -1,8 +1,9 @@
 package cn.mediinfo.grus.shujuzx.dto.shujuzxzsys;
-import lombok.Data;
-import java.math.BigDecimal;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+
+import java.math.BigDecimal;
 /**
 *权重配置列表
 */

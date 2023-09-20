@@ -1,8 +1,7 @@
 package cn.mediinfo.grus.shujuzx.dto.shujuyzys;
 
-import lombok.Data;
-
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
 
 /**
  * 临床数据中心数据源值域

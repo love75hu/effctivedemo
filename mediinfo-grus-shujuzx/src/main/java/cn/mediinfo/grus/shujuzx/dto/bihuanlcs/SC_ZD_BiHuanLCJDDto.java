@@ -1,7 +1,7 @@
 package cn.mediinfo.grus.shujuzx.dto.bihuanlcs;
-import lombok.Data;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
 @Data
 public class SC_ZD_BiHuanLCJDDto {
 

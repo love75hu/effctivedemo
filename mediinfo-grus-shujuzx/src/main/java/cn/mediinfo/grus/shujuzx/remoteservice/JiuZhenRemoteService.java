@@ -1,8 +1,8 @@
 package cn.mediinfo.grus.shujuzx.remoteservice;
 
+import cn.mediinfo.cyan.msf.core.response.MsfResponse;
 import cn.mediinfo.grus.shujuzx.remotedto.JiuZhenXXs.BinRenJZCSTJDto;
 import cn.mediinfo.grus.shujuzx.remotedto.JiuZhenXXs.JZ_LC_JiuZhenSLRso;
-import cn.mediinfo.cyan.msf.core.response.MsfResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.web.bind.annotation.PostMapping;

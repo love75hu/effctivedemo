@@ -1,9 +1,10 @@
 package cn.mediinfo.grus.shujuzx.dto.shujuzxzsys;
-import java.util.*;
-import lombok.Data;
-import java.math.BigDecimal;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+
+import java.math.BigDecimal;
+import java.util.Date;
 /**
 *病人基本信息
 */

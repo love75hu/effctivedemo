@@ -1,8 +1,9 @@
 package cn.mediinfo.grus.shujuzx.dto.bingrenjbxxs;
-import java.util.*;
-import lombok.Data;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+
+import java.util.Date;
 @Data
 public class BR_DA_BingRenXXJZCSDto {
 

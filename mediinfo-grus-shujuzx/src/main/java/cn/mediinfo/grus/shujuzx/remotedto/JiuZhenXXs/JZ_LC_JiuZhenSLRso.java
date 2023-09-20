@@ -1,9 +1,7 @@
 package cn.mediinfo.grus.shujuzx.remotedto.JiuZhenXXs;
-import java.util.*;
-import lombok.Data;
-import java.math.BigDecimal;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
 @Data
 public class JZ_LC_JiuZhenSLRso {
 

@@ -1,10 +1,10 @@
 package cn.mediinfo.grus.shujuzx.model;
-import cn.mediinfo.cyan.msf.tenant.orm.entity.StringMTEntity;
-import lombok.Data;
 
+import cn.mediinfo.cyan.msf.tenant.orm.entity.StringMTEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import lombok.Data;
 
 @Data
 @Entity

@@ -1,4 +1,4 @@
-package cn.mediinfo.grus.shujuzx.Events;
+package cn.mediinfo.grus.shujuzx.events;
 
 import lombok.Data;
 /**

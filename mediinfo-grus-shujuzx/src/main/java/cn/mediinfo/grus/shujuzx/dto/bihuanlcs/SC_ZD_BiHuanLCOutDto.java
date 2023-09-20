@@ -1,8 +1,10 @@
 package cn.mediinfo.grus.shujuzx.dto.bihuanlcs;
-import java.util.*;
-import lombok.Data;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+
+import java.util.ArrayList;
+import java.util.List;
 @Data
 public class SC_ZD_BiHuanLCOutDto {
 

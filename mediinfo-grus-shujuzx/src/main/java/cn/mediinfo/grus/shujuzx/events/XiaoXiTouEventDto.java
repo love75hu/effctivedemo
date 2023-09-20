@@ -1,4 +1,4 @@
-package cn.mediinfo.grus.shujuzx.Events;
+package cn.mediinfo.grus.shujuzx.events;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;

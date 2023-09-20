@@ -1,6 +1,8 @@
 package cn.mediinfo.grus.shujuzx.dto.shujuzxzsys;
-import java.util.*;
+
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 public class SaveQuanZhongPZDto {

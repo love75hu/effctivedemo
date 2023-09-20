@@ -1,10 +1,9 @@
 package cn.mediinfo.grus.shujuzx.dto.quanshengmzqs;
 
-import java.util.*;
-
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.List;
 
 @Data
 public class PeiZhiXXDtos {

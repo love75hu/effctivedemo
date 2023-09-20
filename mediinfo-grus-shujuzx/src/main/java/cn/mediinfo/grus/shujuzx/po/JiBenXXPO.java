@@ -2,8 +2,6 @@ package cn.mediinfo.grus.shujuzx.po;
 
 import cn.mediinfo.grus.shujuzx.model.QBR_DA_HeBingJLModel;
 import cn.mediinfo.grus.shujuzx.model.QBR_DA_JiBenXXModel;
-import cn.mediinfo.grus.shujuzx.model.QSC_ZD_BiHuanLCJDModel;
-import cn.mediinfo.grus.shujuzx.model.QSC_ZD_BiHuanLCModel;
 import lombok.Data;
 
 @Data

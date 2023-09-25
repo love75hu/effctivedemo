@@ -56,7 +56,7 @@ public class YeWuZDController {
      * @throws WeiZhaoDSJException
      */
     @Operation(summary = "更新数据源类别")
-    @PostMapping("UpdateShuJuYLB")
+    @PutMapping("UpdateShuJuYLB")
     public MsfResponse<String> updateShuJuYLB(@RequestBody SC_ZD_ShuJuYLBUpdateDto updateDto) throws TongYongYWException, WeiZhaoDSJException {
         return MsfResponse.success(shuJuYLBService.updateShuJuYLB(updateDto));
     }

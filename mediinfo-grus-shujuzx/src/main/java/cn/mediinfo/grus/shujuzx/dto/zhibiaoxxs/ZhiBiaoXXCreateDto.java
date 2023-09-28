@@ -1,7 +1,9 @@
 package cn.mediinfo.grus.shujuzx.dto.zhibiaoxxs;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
 
+@Data
 public class ZhiBiaoXXCreateDto {
     @Schema(description = "指标类型代码【SC0009】")
     private String zhiBiaoLXDM;

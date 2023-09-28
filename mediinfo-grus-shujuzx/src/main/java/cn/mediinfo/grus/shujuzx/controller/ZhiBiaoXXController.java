@@ -1,6 +1,5 @@
 package cn.mediinfo.grus.shujuzx.controller;
 
-import cn.mediinfo.cyan.msf.core.exception.MsfException;
 import cn.mediinfo.cyan.msf.core.response.MsfResponse;
 import cn.mediinfo.grus.shujuzx.dto.zhibiaoxxs.ZhiBiaoXXCreateDto;
 import cn.mediinfo.grus.shujuzx.dto.zhibiaoxxs.ZhiBiaoXXListDto;
@@ -39,7 +38,7 @@ public class ZhiBiaoXXController {
      */
     @DeleteMapping("ZuoFeiZhiBiaoByID")
     @Operation(summary = "根据id移除单个指标")
-    public MsfResponse<Boolean> zuoFeiZhiBiaoByID(@NotEmpty(message = "id不能为空") String id){
+    public MsfResponse<Boolean> zuoFeiZhiBiaoByID(@NotEmpty(message = "id不能为空") @RequestParam String id){
         return MsfResponse.success(zhiBiaoXXService.zuoFeiZhiBiaoByID(id));
     }
     /**
@@ -47,8 +46,8 @@ public class ZhiBiaoXXController {
      */
     @DeleteMapping("ZuoFeiZhiBiaoFL")
     @Operation(summary = "根据指标类型代码和指标分类id移除该分类所有指标")
-    public MsfResponse<Boolean> zuoFeiZhiBiaoFL(@NotEmpty(message = "指标类型代码不能为空") String zhiBiaoLXDM,
-                                                @NotEmpty(message = "指标分类ID不能为空") String zhiBiaoFLID){
+    public MsfResponse<Boolean> zuoFeiZhiBiaoFL(@NotEmpty(message = "指标类型代码不能为空") @RequestParam String zhiBiaoLXDM,
+                                                @NotEmpty(message = "指标分类ID不能为空") @RequestParam String zhiBiaoFLID){
         return MsfResponse.success(zhiBiaoXXService.zuoFeiZhiBiaoFL(zhiBiaoLXDM,zhiBiaoFLID));
     }
     /**

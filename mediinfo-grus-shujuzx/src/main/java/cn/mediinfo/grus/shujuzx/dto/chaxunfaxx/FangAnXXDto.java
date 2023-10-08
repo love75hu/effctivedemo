@@ -19,4 +19,6 @@ public class FangAnXXDto {
     private String guanJianZi;
     @Schema(description = "查询条件描述")
     private String chaXunTJMS;
+    @Schema(description = "标题名称")
+    private String biaoTiMC;
 }

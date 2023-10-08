@@ -6,6 +6,7 @@ import cn.mediinfo.grus.shujuzx.dto.shujuzxfwrz.ShuJuZXFWRZDto;
 import cn.mediinfo.grus.shujuzx.service.ShuJuZXFWRZService;
 import cn.mediinfo.grus.shujuzx.service.ZhuSuoYCZRZService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
+@Tag(name = "ShuJuZXFWRZController", description = "360访问日志")
 @RequestMapping({"api/v1.0/ShuJuZXFWRZ", "api/v1/ShuJuZXFWRZ"})
 @Slf4j
 @Validated

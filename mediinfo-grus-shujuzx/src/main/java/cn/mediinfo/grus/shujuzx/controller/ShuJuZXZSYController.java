@@ -7,6 +7,7 @@ import cn.mediinfo.grus.shujuzx.constant.ZhuSuoYCZLXEnum;
 import cn.mediinfo.grus.shujuzx.dto.shujuzxzsys.*;
 import cn.mediinfo.grus.shujuzx.service.*;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
@@ -20,6 +21,7 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
+@Tag(name = "ShuJuZXZSYController", description = "数据中心-主索引")
 @RequestMapping({"api/v1.0/ShuJuZXZSY", "api/v1/ShuJuZXZSY"})
 @Slf4j
 @Validated

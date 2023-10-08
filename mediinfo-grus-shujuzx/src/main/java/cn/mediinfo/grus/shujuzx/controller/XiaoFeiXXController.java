@@ -5,6 +5,7 @@ import cn.mediinfo.cyan.msf.orm.MsfJpaRepository;
 import cn.mediinfo.grus.shujuzx.events.BaseEventDto;
 import cn.mediinfo.grus.shujuzx.service.XiaoFeiXXService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@Tag(name = "XiaoFeiXXController", description = "消费信息")
 @RequestMapping({"api/v1.0/XiaoFeiXX", "api/v1/XiaoFeiXX"})
 @Slf4j
 @Validated

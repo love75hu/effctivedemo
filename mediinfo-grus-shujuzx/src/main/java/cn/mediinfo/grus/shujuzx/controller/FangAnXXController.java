@@ -3,6 +3,7 @@ package cn.mediinfo.grus.shujuzx.controller;
 import cn.mediinfo.cyan.msf.core.response.MsfResponse;
 import cn.mediinfo.grus.shujuzx.dto.fangan.FangAnQueryDTO;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import cn.mediinfo.grus.shujuzx.request.fangan.FangAnXXSaveRequest;
 
 @RestController
+@Tag(name = "FangAnXXController", description = "方案信息")
 @RequestMapping({"api/v1.0/fanganxx", "api/v1/fanganxx"})
 @Slf4j
 public class FangAnXXController {

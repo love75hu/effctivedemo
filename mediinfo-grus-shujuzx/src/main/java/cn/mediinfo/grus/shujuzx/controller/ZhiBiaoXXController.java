@@ -6,6 +6,7 @@ import cn.mediinfo.grus.shujuzx.dto.zhibiaoxxs.ZhiBiaoXXListDto;
 import cn.mediinfo.grus.shujuzx.dto.zhibiaoxxs.ZhiBiaoXXUpdateDto;
 import cn.mediinfo.grus.shujuzx.service.ZhiBiaoXXService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 @RestController
+@Tag(name = "ZhiBiaoXXController", description = "指标信息")
 @RequestMapping({"api/v1.0/zhibiaoxx", "api/v1/zhibiaoxx"})
 @Slf4j
 @Validated

@@ -5,11 +5,13 @@ import cn.mediinfo.cyan.msf.core.response.MsfResponse;
 import cn.mediinfo.grus.shujuzx.dto.bingrenylsjs.SC_LC_BingRenYLSJInDto;
 import cn.mediinfo.grus.shujuzx.service.BingRenYLSJService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@Tag(name = "BingRenYLSJController", description = "病人医疗事件")
 @RequestMapping({"api/v1.0/BingRenYLSJ", "api/v1/BingRenYLSJ"})
 @Slf4j
 @Validated
@@ -38,7 +40,6 @@ public class BingRenYLSJController {
      * @param shouCiZX
      * @param zhiXingSJ
      * @return
-     * @throws TongYongYWException
      */
     @Operation(summary = "批量更新病人医疗事件")
     @PostMapping("UpdateBingRenYLSJ")

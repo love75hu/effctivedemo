@@ -1,4 +1,4 @@
-package cn.mediinfo.grus.shujuzx.request.fangan.condition;
+package cn.mediinfo.grus.shujuzx.common.fangan.condition;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
@@ -16,4 +16,10 @@ public class RelatedFangAnQueryCondition {
 
     @Schema(description = "方案输出id")
     private String fangAnSCId;
+
+    @Schema(description = "方案sql", hidden = true)
+    private String sql;
+
+    @Schema(description = "输出字段", hidden = true)
+    private String ziDuanBM;
 }

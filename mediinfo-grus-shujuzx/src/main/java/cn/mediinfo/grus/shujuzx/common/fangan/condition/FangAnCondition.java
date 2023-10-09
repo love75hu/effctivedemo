@@ -1,4 +1,4 @@
-package cn.mediinfo.grus.shujuzx.request.fangan.condition;
+package cn.mediinfo.grus.shujuzx.common.fangan.condition;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
@@ -13,14 +13,11 @@ import java.util.List;
 @Schema(description = "方案条件")
 public class FangAnCondition {
 
-    @Schema(description = "字段id")
-    private String ziDuanId;
+    @Schema(description = "视图明细id")
+    private String shiTuMXID;
 
     @Schema(description = "字段名称")
-    private String ziDuanMc;
-
-    @Schema(description = "数据集id")
-    private String shuJuJiId;
+    private String ziDuanMC;
 
     @Schema(description = "操作符")
     private String operator;
@@ -33,5 +30,5 @@ public class FangAnCondition {
 
 
     @Schema(description = "关联子字段条件")
-    private List<RelatedSubFieldCondition> relatedSubFieldConditions;
+    private List<RelatedFieldCondition> relatedFieldConditions;
 }

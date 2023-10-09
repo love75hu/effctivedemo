@@ -1,11 +1,14 @@
 package cn.mediinfo.grus.shujuzx.sql.ast;
 
+import cn.hutool.core.util.StrUtil;
 import cn.mediinfo.grus.shujuzx.sql.enums.SQLBinaryOperator;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
+@ToString
 public class SQLQueryObject {
 
     /**
@@ -28,10 +31,25 @@ public class SQLQueryObject {
      */
     private String text;
 
+    /**
+     * 子sql
+     */
+    private String subSql;
+
+    public SQLQueryObject() {
+    }
+
     public SQLQueryObject(SQLBinaryOperator operator) {
         this.fieldName = null;
         this.operator = operator;
         this.val = null;
+    }
+
+    public SQLQueryObject(String text) {
+        this.fieldName = null;
+        this.operator = null;
+        this.val = null;
+        this.text = text;
     }
 
     public SQLQueryObject(String fieldName, SQLBinaryOperator operator, String val) {
@@ -41,15 +59,18 @@ public class SQLQueryObject {
     }
 
     public String getText() {
+        if (this.operator == null) {
+            return this.text;
+        }
         if (!this.operator.isRelational()) {
             return this.operator.getSymbol();
         }
         if (this.operator == SQLBinaryOperator.IN || this.operator == SQLBinaryOperator.NOTIN) {
-            return this.fieldName + " " + this.operator.getSymbol() + " (" + this.val + " )";
+            return StrUtil.nullToDefault(this.subSql, "") + this.fieldName + " " + this.operator.getSymbol() + " (" + this.val + " )";
         } else if (this.operator == SQLBinaryOperator.LIKE || this.operator == SQLBinaryOperator.NOTLIKE) {
-            return this.fieldName + " " + this.operator.getSymbol() + " %" + this.val + " %";
+            return StrUtil.nullToDefault(this.subSql, "") + this.fieldName + " " + this.operator.getSymbol() + " '%" + this.val + "%'";
         } else {
-            return this.fieldName + " " + this.operator.getSymbol() + " " + this.val + " ";
+            return StrUtil.nullToDefault(this.subSql, "") + this.fieldName + " " + this.operator.getSymbol() + " " + this.val + " ";
         }
     }
 

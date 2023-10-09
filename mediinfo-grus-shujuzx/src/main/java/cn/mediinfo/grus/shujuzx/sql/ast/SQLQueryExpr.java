@@ -15,6 +15,12 @@ public class SQLQueryExpr {
 
     private SQLQueryNode root;
 
+    public SQLQueryExpr(){}
+
+    public SQLQueryExpr(SQLQueryNode root){
+        this.root = root;
+    }
+
     /**
      * 构建sql
      * @param node SQLQueryNode
@@ -24,8 +30,9 @@ public class SQLQueryExpr {
         if (node == null) {
             return "";
         }
-        String left = buildSQL(node.getLeft());
         String right = buildSQL(node.getRight());
+        String left = buildSQL(node.getLeft());
+
         return switch (node.getValue().getText()) {
             case "SELECT", "FROM", "WHERE" -> node.getValue().getText() + " " + left + (right.isEmpty() ? "" : " " + right) + " ";
             case "AND", "OR" ->

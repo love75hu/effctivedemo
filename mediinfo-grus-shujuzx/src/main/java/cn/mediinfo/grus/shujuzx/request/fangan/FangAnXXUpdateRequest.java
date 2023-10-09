@@ -16,20 +16,12 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-@Schema(description = "方案保存")
-public class FangAnXXSaveRequest {
+@Schema(description = "方案更新")
+public class FangAnXXUpdateRequest {
 
-    @Schema(description = "方案类型代码;0-全部1-门诊2-急诊3-住院4-公卫")
-    @NotBlank(message = "方案类型代码不能为空")
-    private String fangAnLXDM;
-
-    @Schema(description = "方案类型名称;0-全部1-门诊2-急诊3-住院4-公卫")
-    @NotBlank(message = "方案类型名称不能为空")
-    private String fangAnLXMC;
-
-    @Schema(description = "方案名称")
-    @NotBlank(message = "方案名称不能为空")
-    private String fangAnMC;
+    @Schema(description = "方案id")
+    @NotBlank(message = "方案ID不能为空")
+    private String id;
 
     @Schema(description = "方案条件树根节点")
     private FangAnTreeNode root;

@@ -1,6 +1,7 @@
-package cn.mediinfo.grus.shujuzx.dto.fangan;
+package cn.mediinfo.grus.shujuzx.dto.fangancxls;
 
 import cn.mediinfo.grus.shujuzx.common.fangan.condition.FangAnTreeNode;
+import cn.mediinfo.grus.shujuzx.dto.fangan.FangAnSCDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,11 +12,14 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-@Schema(description = "方案输出字段信息")
-public class FangAnQueryDTO {
+@Schema(description = "通过方案查询历史id查询方案")
+public class FangAnCXLSDTO {
 
-    @Schema(description = "id")
+    @Schema(description = "方案查询历史id")
     private String id;
+
+    @Schema(description = "方案id")
+    private String fangAnId;
 
     @Schema(description = "方案类型代码;0-全部1-门诊2-急诊3-住院4-公卫")
     private String fangAnLXDM;

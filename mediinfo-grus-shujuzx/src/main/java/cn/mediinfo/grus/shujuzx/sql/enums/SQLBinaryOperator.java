@@ -52,4 +52,13 @@ public enum SQLBinaryOperator {
             default -> false;
         };
     }
+
+    public static SQLBinaryOperator getSQLBinaryOperator(String symbol) {
+        for (SQLBinaryOperator e : values()) {
+            if (e.getSymbol().equals(symbol)) {
+                return e;
+            }
+        }
+        return null;
+    }
 }

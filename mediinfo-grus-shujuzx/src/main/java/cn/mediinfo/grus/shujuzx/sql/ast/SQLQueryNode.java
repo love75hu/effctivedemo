@@ -23,8 +23,10 @@ public class SQLQueryNode {
      */
     private SQLQueryNode right;
 
-    public SQLQueryNode(SQLQueryObject value) {
-        this.value = value;
+    public SQLQueryNode(){}
+
+    public SQLQueryNode(SQLQueryObject a) {
+        this.value = a;
         this.left = null;
         this.right = null;
     }

@@ -1,13 +1,13 @@
 package cn.mediinfo.grus.shujuzx.sql.ast;
 
 
-public class SQLQueryNode {
+public class SQLQueryNodeExample {
 
    private String value;
-   private SQLQueryNode left;
-   private SQLQueryNode right;
+   private SQLQueryNodeExample left;
+   private SQLQueryNodeExample right;
 
-    public SQLQueryNode(String value) {
+    public SQLQueryNodeExample(String value) {
         this.value = value;
         this.left = null;
         this.right = null;
@@ -21,19 +21,19 @@ public class SQLQueryNode {
         this.value = value;
     }
 
-    public SQLQueryNode getLeft() {
+    public SQLQueryNodeExample getLeft() {
         return left;
     }
 
-    public void setLeft(SQLQueryNode left) {
+    public void setLeft(SQLQueryNodeExample left) {
         this.left = left;
     }
 
-    public SQLQueryNode getRight() {
+    public SQLQueryNodeExample getRight() {
         return right;
     }
 
-    public void setRight(SQLQueryNode right) {
+    public void setRight(SQLQueryNodeExample right) {
         this.right = right;
     }
 

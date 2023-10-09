@@ -18,7 +18,6 @@ public interface SC_CX_FangAnXXRepository extends MsfJpaRepository<QSC_CX_FangAn
                  .whereIf(StringUtil.hasText(likeQuery),p->p.fangAnMC.contains(likeQuery).or(p.guanJianZi.contains(likeQuery)))
                  .whereIf(StringUtil.hasText(fangAnLXDM),p->p.fangAnLXDM.eq(fangAnLXDM))
                  .orderBy(p->p.chuangJianSJ.desc())
-                 //.select(FangAnXXDto.class)
                  .select(p -> Projections.bean(
                          FangAnXXDto.class,
                          p.id.as("id"),

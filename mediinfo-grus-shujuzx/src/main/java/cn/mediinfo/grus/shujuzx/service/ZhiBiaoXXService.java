@@ -1,5 +1,6 @@
 package cn.mediinfo.grus.shujuzx.service;
 
+import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 import cn.mediinfo.grus.shujuzx.dto.zhibiaoxxs.ZhiBiaoXXCreateDto;
 import cn.mediinfo.grus.shujuzx.dto.zhibiaoxxs.ZhiBiaoXXListDto;
 import cn.mediinfo.grus.shujuzx.dto.zhibiaoxxs.ZhiBiaoXXUpdateDto;
@@ -22,13 +23,13 @@ public interface ZhiBiaoXXService {
     /**
      * 添加指标集合
      */
-    Boolean addZhiBiaoList(List<ZhiBiaoXXCreateDto> createDtos);
+    Boolean addZhiBiaoList(List<ZhiBiaoXXCreateDto> createDtos) throws TongYongYWException;
     /**
      * 新增指标信息
      */
-    Boolean addZhiBiaoXX(ZhiBiaoXXCreateDto createDto);
+    Boolean addZhiBiaoXX(ZhiBiaoXXCreateDto createDto) throws TongYongYWException;
     /**
      * 修改指标信息
      */
-    Boolean updateZhiBiaoXX(ZhiBiaoXXUpdateDto updateDto);
+    Boolean updateZhiBiaoXX(ZhiBiaoXXUpdateDto updateDto) throws TongYongYWException;
 }

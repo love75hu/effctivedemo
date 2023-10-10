@@ -1,5 +1,6 @@
 package cn.mediinfo.grus.shujuzx.controller;
 
+import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 import cn.mediinfo.cyan.msf.core.response.MsfResponse;
 import cn.mediinfo.grus.shujuzx.dto.zhibiaoxxs.ZhiBiaoXXCreateDto;
 import cn.mediinfo.grus.shujuzx.dto.zhibiaoxxs.ZhiBiaoXXListDto;
@@ -57,7 +58,7 @@ public class ZhiBiaoXXController {
      */
     @PostMapping("AddZhiBiaoList")
     @Operation(summary = "添加指标集合")
-    public MsfResponse<Boolean> addZhiBiaoList(@RequestBody List<ZhiBiaoXXCreateDto> createDtos){
+    public MsfResponse<Boolean> addZhiBiaoList(@RequestBody List<ZhiBiaoXXCreateDto> createDtos) throws TongYongYWException {
         return MsfResponse.success(zhiBiaoXXService.addZhiBiaoList(createDtos));
     }
     /**
@@ -65,7 +66,7 @@ public class ZhiBiaoXXController {
      */
     @PostMapping("AddZhiBiaoXX")
     @Operation(summary = "新增指标信息")
-    public MsfResponse<Boolean> addZhiBiaoXX(@RequestBody ZhiBiaoXXCreateDto createDto){
+    public MsfResponse<Boolean> addZhiBiaoXX(@RequestBody ZhiBiaoXXCreateDto createDto) throws TongYongYWException {
         return MsfResponse.success(zhiBiaoXXService.addZhiBiaoXX(createDto));
     }
     /**
@@ -73,7 +74,7 @@ public class ZhiBiaoXXController {
      */
     @PutMapping("UpdateZhiBiaoXX")
     @Operation(summary = "修改指标信息")
-    public MsfResponse<Boolean> updateZhiBiaoXX(@RequestBody ZhiBiaoXXUpdateDto updateDto){
+    public MsfResponse<Boolean> updateZhiBiaoXX(@RequestBody ZhiBiaoXXUpdateDto updateDto) throws TongYongYWException {
         return MsfResponse.success(zhiBiaoXXService.updateZhiBiaoXX(updateDto));
     }
 }

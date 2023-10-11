@@ -13,6 +13,7 @@ public interface SC_CX_ZhiBiaoXXRepository extends MsfJpaRepository<QSC_CX_ZhiBi
 
     boolean existsByZhiBiaoLXDMAndZhiBiaoFLMC(String zhiBiaoLXDM,String zhiBiaoFLMC);
     List<SC_CX_ZhiBiaoXXModel> findByZhiBiaoLXDMAndZhiBiaoIDIn(String zhiBiaoLXDM,List<String> zhiBiaoIDs);
+    List<SC_CX_ZhiBiaoXXModel> findByZhiBiaoLXDMAndZhiBiaoFLIDInAndZhiBiaoIDNotNull(String zhiBiaoLXDM,List<String> zhiBiaoFLID);
     default boolean existsZhiBiaoFL(String zhiBiaoLXDM,String zhiBiaoFLID,String zhiBiaoFLMC){
         return this.asQuerydsl()
                 .where(p -> p.zhiBiaoLXDM.eq(zhiBiaoLXDM))

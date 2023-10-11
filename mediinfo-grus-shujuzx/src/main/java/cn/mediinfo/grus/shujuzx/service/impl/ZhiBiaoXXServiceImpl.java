@@ -52,7 +52,8 @@ public class ZhiBiaoXXServiceImpl implements ZhiBiaoXXService {
                 dto.setZhiBiaoFLID(item.getZhiBiaoFLID());
                 dto.setZhiBiaoFLMC(item.getZhiBiaoFLMC());
                 dto.setShunXuHao(item.getShunXuHao());
-                dto.setZhiBiaoMXList(BeanUtil.copyListProperties(zhiBiaoXXList.stream().filter(p -> StringUtil.hasText(p.getZhiBiaoID()))
+                dto.setZhiBiaoMXList(BeanUtil.copyListProperties(zhiBiaoXXList.stream().filter(p -> StringUtil.hasText(p.getZhiBiaoID())
+                                && p.getZhiBiaoFLID().equals(item.getZhiBiaoFLID()))
                         .sorted(Comparator.comparing(SC_CX_ZhiBiaoXXModel::getShunXuHao, Comparator.nullsLast(Integer::compareTo)))
                         .toList(), ZhiBiaoMXListDto::new));
                 result.add(dto);

@@ -3,6 +3,7 @@ package cn.mediinfo.grus.shujuzx.repository;
 import cn.mediinfo.cyan.msf.core.util.StringUtil;
 import cn.mediinfo.cyan.msf.orm.MsfJpaRepository;
 import cn.mediinfo.cyan.msf.orm.datasource.MsfDataSource;
+import cn.mediinfo.grus.shujuzx.enums.ZhiBiaoLXDMEnum;
 import cn.mediinfo.grus.shujuzx.model.SC_CX_ZhiBiaoXXModel;
 import cn.mediinfo.grus.shujuzx.model.QSC_CX_ZhiBiaoXXModel;
 
@@ -13,7 +14,7 @@ public interface SC_CX_ZhiBiaoXXRepository extends MsfJpaRepository<QSC_CX_ZhiBi
 
     boolean existsByZhiBiaoLXDMAndZhiBiaoFLMC(String zhiBiaoLXDM,String zhiBiaoFLMC);
     List<SC_CX_ZhiBiaoXXModel> findByZhiBiaoLXDMAndZhiBiaoIDIn(String zhiBiaoLXDM,List<String> zhiBiaoIDs);
-    List<SC_CX_ZhiBiaoXXModel> findByZhiBiaoLXDMAndZhiBiaoFLIDInAndZhiBiaoIDNotNull(String zhiBiaoLXDM,List<String> zhiBiaoFLID);
+    List<SC_CX_ZhiBiaoXXModel> findByZhiBiaoLXDMAndZhiBiaoFLIDInAndZhiBiaoIDIsNull(String zhiBiaoLXDM,List<String> zhiBiaoFLID);
     default boolean existsZhiBiaoFL(String zhiBiaoLXDM,String zhiBiaoFLID,String zhiBiaoFLMC){
         return this.asQuerydsl()
                 .where(p -> p.zhiBiaoLXDM.eq(zhiBiaoLXDM))
@@ -22,7 +23,10 @@ public interface SC_CX_ZhiBiaoXXRepository extends MsfJpaRepository<QSC_CX_ZhiBi
     }
     default List<SC_CX_ZhiBiaoXXModel> getZhiBiaoXXByZBLXDM(String zhiBiaoLXDM, String likeQuery){
         return this.asQuerydsl().where(p -> p.zhiBiaoLXDM.eq(zhiBiaoLXDM))
-                .whereIf(StringUtil.hasText(likeQuery),p -> p.zhiBiaoMC.contains(likeQuery))
+                .whereIf(StringUtil.hasText(likeQuery) && !ZhiBiaoLXDMEnum.DRUG.getZhiBiaoLXDM().equals(zhiBiaoLXDM),
+                        p -> p.zhiBiaoMC.contains(likeQuery))
+                .whereIf(StringUtil.hasText(likeQuery) && ZhiBiaoLXDMEnum.DRUG.getZhiBiaoLXDM().equals(zhiBiaoLXDM),
+                        p -> p.zhiBiaoMC.contains(likeQuery).or(p.zhiBiaoFLMC.contains(likeQuery)))
                 .fetch();
     }
 }

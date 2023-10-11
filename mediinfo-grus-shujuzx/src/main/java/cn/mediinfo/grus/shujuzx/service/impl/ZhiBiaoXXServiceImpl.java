@@ -43,7 +43,7 @@ public class ZhiBiaoXXServiceImpl implements ZhiBiaoXXService {
                     sorted(Comparator.comparing(SC_CX_ZhiBiaoXXModel::getShunXuHao)).collect(Collectors.toList());
             if (CollectionUtils.isEmpty(fenLeiList)) {
                 List<String> zhiBiaoFLIDs = zhiBiaoXXList.stream().map(SC_CX_ZhiBiaoXXModel::getZhiBiaoFLID).distinct().toList();
-                List<SC_CX_ZhiBiaoXXModel> zhiBiaoFLList= zhiBiaoXXRepository.findByZhiBiaoLXDMAndZhiBiaoFLIDInAndZhiBiaoIDNotNull(zhiBiaoLXDM,zhiBiaoFLIDs);
+                List<SC_CX_ZhiBiaoXXModel> zhiBiaoFLList= zhiBiaoXXRepository.findByZhiBiaoLXDMAndZhiBiaoFLIDInAndZhiBiaoIDIsNull(zhiBiaoLXDM,zhiBiaoFLIDs);
                 fenLeiList.addAll(zhiBiaoFLList);
             }
             for (var item : fenLeiList) {

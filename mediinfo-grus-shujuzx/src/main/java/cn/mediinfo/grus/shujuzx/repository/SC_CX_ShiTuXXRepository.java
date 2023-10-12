@@ -4,6 +4,7 @@ import cn.mediinfo.cyan.msf.core.util.StringUtil;
 import cn.mediinfo.cyan.msf.orm.MsfJpaRepository;
 import cn.mediinfo.cyan.msf.orm.datasource.MsfDataSource;
 import cn.mediinfo.cyan.msf.orm.util.QueryDSLUtils;
+import cn.mediinfo.grus.shujuzx.dto.shitumx.SC_CX_ShiTuXXByShiTuIDDto;
 import cn.mediinfo.grus.shujuzx.dto.zonghecx.SC_CX_ShiTuXXDto;
 import cn.mediinfo.grus.shujuzx.dto.zonghecx.ShiTuFLDto;
 import cn.mediinfo.grus.shujuzx.model.QSC_CX_ShiTuXXModel;
@@ -11,7 +12,9 @@ import cn.mediinfo.grus.shujuzx.model.SC_CX_ShiTuXXModel;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 @MsfDataSource("datasourcesjzx")
 public interface SC_CX_ShiTuXXRepository extends MsfJpaRepository<QSC_CX_ShiTuXXModel, SC_CX_ShiTuXXModel, String>, JpaSpecificationExecutor<SC_CX_ShiTuXXModel>
@@ -63,4 +66,9 @@ public interface SC_CX_ShiTuXXRepository extends MsfJpaRepository<QSC_CX_ShiTuXX
                 .select(SC_CX_ShiTuXXDto.class)
                 .fetchFirst();
     }
+    default List<SC_CX_ShiTuXXByShiTuIDDto> findByShiTuIDIn(Set<String> shiTuIDs)
+    {
+        return this.asQuerydsl().where(s -> s.shiTuID.in(shiTuIDs)).select(SC_CX_ShiTuXXByShiTuIDDto.class).fetch();
+    }
+
 }

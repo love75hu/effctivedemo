@@ -1,5 +1,6 @@
 package cn.mediinfo.grus.shujuzx.controller;
 
+import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
 import cn.mediinfo.cyan.msf.core.response.MsfResponse;
 import cn.mediinfo.grus.shujuzx.dto.chaxunfaxx.FangAnCXLSDto;
 import cn.mediinfo.grus.shujuzx.dto.chaxunfaxx.FangAnXXDto;
@@ -33,7 +34,7 @@ public class FangAnXXController {
 
     @Operation(summary = "保存方案")
     @PostMapping("/save")
-    public MsfResponse<String> saveFangAnXX(@Validated @RequestBody FangAnXXSaveRequest request) {
+    public MsfResponse<String> saveFangAnXX(@Validated @RequestBody FangAnXXSaveRequest request) throws YuanChengException {
         return MsfResponse.success(fangAnService.saveFangAn(request));
     }
 

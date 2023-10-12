@@ -84,6 +84,7 @@ mediinfo:
   remote:
     urls:
       mediinfo-grus-huanzhe-query: "http://mediinfo-grus-huanzhe-query/mediinfo-grus-huanzhe-query"
+      mediinfo-lyra-gongyong: "http://mediinfo-lyra-gongyong"
   sequence:
     provider: redis
   string-generator:

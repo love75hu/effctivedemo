@@ -51,9 +51,17 @@ public class linChuangJSPZController {
      */
     @Operation(summary = "新增视图分类")
     @PostMapping("addShiTuFL")
-    public MsfResponse<Boolean> addShiTuFL(@RequestBody @Validated  ShiTuFLDto dto) throws TongYongYWException, WeiZhaoDSJException {
+    public MsfResponse<String> addShiTuFL(@RequestBody @Validated  ShiTuFLDto dto) throws TongYongYWException, WeiZhaoDSJException {
         return MsfResponse.success(shiTuXXService.addShiTuFL(dto));
 
+    }
+    /**
+     * 编辑视图分类
+     */
+    @Operation(summary = "编辑视图分类")
+    @PutMapping("updateShiTuFL")
+    public MsfResponse<Boolean> updateShiTuFL(@RequestBody @Validated ShiTuFLDto dto) throws TongYongYWException {
+        return MsfResponse.success(shiTuXXService.updateShiTuFL(dto));
     }
     /**
      * 获取视图分类列表
@@ -79,7 +87,7 @@ public class linChuangJSPZController {
      */
     @Operation(summary = "新增临床检索视图信息")
     @PostMapping("addShiTuXX")
-    public MsfResponse<Boolean> addShiTuXX(@RequestBody @Validated ShiTuXXDto dto)
+    public MsfResponse<String> addShiTuXX(@RequestBody @Validated ShiTuXXDto dto)
     {
         return MsfResponse.success(shiTuXXService.addShiTuXX(dto));
     }

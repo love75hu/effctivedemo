@@ -3,9 +3,11 @@ package cn.mediinfo.grus.shujuzx.service;
 import cn.mediinfo.cyan.msf.core.exception.MsfResponseException;
 import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
+import cn.mediinfo.grus.shujuzx.dto.shitumx.SC_CX_ShiTuXXByShiTuIDDto;
 import cn.mediinfo.grus.shujuzx.dto.zonghecx.*;
 
 import java.util.List;
+import java.util.Set;
 
 public interface ShiTuXXService {
     /**
@@ -23,7 +25,7 @@ public interface ShiTuXXService {
     /**
      * 新增视图分类
      */
-    Boolean addShiTuFL(ShiTuFLDto dto) throws WeiZhaoDSJException, TongYongYWException;
+    String addShiTuFL(ShiTuFLDto dto) throws WeiZhaoDSJException, TongYongYWException;
 
     /**
      * 获取视图分类列表
@@ -33,7 +35,7 @@ public interface ShiTuXXService {
     /**
      * 新增临床检索视图信息
      */
-    Boolean addShiTuXX(ShiTuXXDto dto);
+    String addShiTuXX(ShiTuXXDto dto);
 
     /**
      * 编辑视图信息
@@ -66,7 +68,7 @@ public interface ShiTuXXService {
      */
     Boolean updateShiTuMX(UpdateShiTuMXDto updateShiTuMXDto) throws WeiZhaoDSJException;
 
-
+    List<SC_CX_ShiTuXXByShiTuIDDto> getShiTuXXByIds(Set<String> ids);
 
 
 

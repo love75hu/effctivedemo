@@ -2,6 +2,7 @@ package cn.mediinfo.grus.shujuzx.service;
 
 import cn.mediinfo.cyan.msf.core.exception.MsfResponseException;
 import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
+import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
 import cn.mediinfo.grus.shujuzx.dto.shitumx.DatabaseDTO;
 import cn.mediinfo.grus.shujuzx.dto.shitumx.FieldDTO;
 import cn.mediinfo.grus.shujuzx.dto.shitumx.TableDTO;
@@ -20,7 +21,7 @@ public interface ShiTuMXService {
      * @param shiTuMXIds 视图明细id
      * @return 字段信息
      */
-     List<FieldDTO> listFields(Set<String> shiTuMXIds);
+     List<FieldDTO> listFields(Set<String> shiTuMXIds) throws YuanChengException;
 
     /**
      * 获取视图配置的表信息

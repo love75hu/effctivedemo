@@ -6,10 +6,12 @@ import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
 import cn.mediinfo.cyan.msf.core.util.AssertUtil;
 import cn.mediinfo.cyan.msf.core.util.BeanUtil;
 import cn.mediinfo.cyan.msf.stringgenerator.StringGenerator;
+import cn.mediinfo.grus.shujuzx.dto.shitumx.SC_CX_ShiTuXXByShiTuIDDto;
 import cn.mediinfo.grus.shujuzx.dto.zonghecx.*;
 import cn.mediinfo.grus.shujuzx.model.SC_CX_ShiTuXXModel;
 import cn.mediinfo.grus.shujuzx.repository.SC_CX_ShiTuMXRepository;
 import cn.mediinfo.grus.shujuzx.repository.SC_CX_ShiTuXXRepository;
+import cn.mediinfo.grus.shujuzx.service.ShiTuMXService;
 import cn.mediinfo.grus.shujuzx.service.ShiTuXXService;
 import cn.mediinfo.lyra.extension.service.LyraIdentityService;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 临床检索视图信息服务
@@ -25,10 +28,13 @@ import java.util.List;
 class ShiTuXXServiceImpl implements ShiTuXXService {
     private final StringGenerator stringGenerator;
     private final SC_CX_ShiTuXXRepository shiTuXXRepository;
-    private final ShiTuMXServiceImpl shiTuMXService;
+    private final ShiTuMXService shiTuMXService;
     private final LyraIdentityService lyraIdentityService;
 
-    public ShiTuXXServiceImpl(StringGenerator stringGenerator, SC_CX_ShiTuXXRepository shiTuXXRepository, ShiTuMXServiceImpl shiTuMXService, LyraIdentityService lyraIdentityService) {
+    public ShiTuXXServiceImpl(StringGenerator stringGenerator,
+                              SC_CX_ShiTuXXRepository shiTuXXRepository,
+                              ShiTuMXService shiTuMXService,
+                              LyraIdentityService lyraIdentityService) {
         this.stringGenerator = stringGenerator;
         this.shiTuXXRepository = shiTuXXRepository;
         this.shiTuMXService = shiTuMXService;
@@ -67,8 +73,13 @@ class ShiTuXXServiceImpl implements ShiTuXXService {
         for(LinChuangJSSTDtoTree linChuangJSSTDtoTree :linChuangJSSTDtoTrees.stream().filter(s->s.getFuLeiID().equals(fuLeiID)).toList())
         {
             linChuangJSSTDtoTree.setChildren(
-                    linChuangJSSTDtoTrees.stream().filter(s->s.getFuLeiID().equals(linChuangJSSTDtoTree.getShiTuID())).toList()
-            );
+                    BeanUtil.copyListProperties(
+                    linChuangJSSTDtoTrees.stream().filter(s->
+                            s.getFuLeiID().equals(linChuangJSSTDtoTree.getShiTuID())).toList(),LinChuangJSSTDtoTree::new,(a,b)->{
+                        b.setFuLeiID(a.getShiTuID());
+                        b.setFuLeiMC(a.getShiTuMC());
+                    }
+            ));
             linChuangJSSTDtoTreeList.add(linChuangJSSTDtoTree);
         }
         return linChuangJSSTDtoTreeList;
@@ -78,7 +89,7 @@ class ShiTuXXServiceImpl implements ShiTuXXService {
      * 新增视图分类
      */
     @Override
-    public Boolean addShiTuFL(ShiTuFLDto dto) throws TongYongYWException {
+    public String addShiTuFL(ShiTuFLDto dto) throws TongYongYWException {
         AssertUtil.checkTongYongYW(!shiTuXXRepository.existsByFuLeiMC(dto.getShiTuFLMC()), "已经存在相同名称");
         SC_CX_ShiTuXXModel shiTuXXModel =new SC_CX_ShiTuXXModel();
         shiTuXXModel.setFuLeiID("0");
@@ -88,8 +99,8 @@ class ShiTuXXServiceImpl implements ShiTuXXService {
         var shunXuHao=shiTuXXRepository.getMaxShunXuHao();
         shiTuXXModel.setShunXuHao(shunXuHao==null?0:shunXuHao+1);
 
-        shiTuXXRepository.save(shiTuXXModel);
-        return true;
+        SC_CX_ShiTuXXModel save = shiTuXXRepository.save(shiTuXXModel);
+        return save.getId();
     }
 
     /**
@@ -118,15 +129,15 @@ class ShiTuXXServiceImpl implements ShiTuXXService {
      * 新增临床检索视图信息
      */
     @Override
-    public Boolean addShiTuXX(ShiTuXXDto dto) {
+    public String addShiTuXX(ShiTuXXDto dto) {
         dto.setShiTuID(stringGenerator.Create());
     var shiTuXXModel= BeanUtil.copyProperties(dto,SC_CX_ShiTuXXModel::new);
         shiTuXXModel.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
         shiTuXXModel.setZuZhiJGID(lyraIdentityService.getJiGouID());
         shiTuXXModel.setMoJiBZ(1);
         shiTuXXModel.setShunXuHao(dto.getShunXuHao()==null?shiTuXXRepository.getMaxShunXuHaoByFuLeiID(dto.getFuLeiID())+1:dto.getShunXuHao());
-        shiTuXXRepository.save(shiTuXXModel);
-        return true;
+        SC_CX_ShiTuXXModel save = shiTuXXRepository.save(shiTuXXModel);
+        return save.getId();
     }
 
     /**
@@ -194,5 +205,10 @@ class ShiTuXXServiceImpl implements ShiTuXXService {
         shiTuXXRepository.save(scCxShiTuXXModel);
         shiTuMXService.updateShiTuMX(scCxShiTuXXModel.getShiTuID(),scCxShiTuXXModel.getShiTuMC(),updateShiTuMXDto.getGuanLianZDList());
         return true;
+    }
+
+    @Override
+    public List<SC_CX_ShiTuXXByShiTuIDDto> getShiTuXXByIds(Set<String> ids) {
+        return shiTuXXRepository.findByShiTuIDIn(ids);
     }
 }

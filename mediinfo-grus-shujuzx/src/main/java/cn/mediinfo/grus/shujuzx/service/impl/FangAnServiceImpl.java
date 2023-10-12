@@ -5,6 +5,7 @@ import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.StopWatch;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
 import cn.mediinfo.cyan.msf.core.util.JacksonUtil;
 import cn.mediinfo.cyan.msf.tenant.security.TenantIdentityService;
 import cn.mediinfo.grus.shujuzx.bo.RelatedFangAnBO;
@@ -62,7 +63,7 @@ public class FangAnServiceImpl implements FangAnService {
 
 
     @Override
-    public String saveFangAn(FangAnXXSaveRequest request) {
+    public String saveFangAn(FangAnXXSaveRequest request) throws YuanChengException {
         StopWatch watch = new StopWatch();
         watch.start("AST树转换成sql");
         String sql = getSql(request.getRoot(), request.getFangAnSCList());
@@ -73,7 +74,7 @@ public class FangAnServiceImpl implements FangAnService {
     }
 
     @Override
-    public String getSql(FangAnTreeNode root, List<FangAnSC> fangAnSCList) {
+    public String getSql(FangAnTreeNode root, List<FangAnSC> fangAnSCList) throws YuanChengException {
 
         List<FangAnCondition> conditionList = ListUtil.toList();
         FangAnTreeUtils.getConditionList(root, conditionList);

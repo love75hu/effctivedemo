@@ -1,5 +1,6 @@
 package cn.mediinfo.grus.shujuzx.service;
 
+import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
 import cn.mediinfo.grus.shujuzx.common.fangan.condition.FangAnTreeNode;
 import cn.mediinfo.grus.shujuzx.request.fangan.FangAnSC;
 import cn.mediinfo.grus.shujuzx.request.fangan.FangAnXXSaveRequest;
@@ -13,7 +14,7 @@ public interface FangAnService {
      * @param request FangAnXXSaveRequest
      * @return String 方案id
      */
-    String saveFangAn(FangAnXXSaveRequest request);
+    String saveFangAn(FangAnXXSaveRequest request) throws YuanChengException;
 
     /**
      * 获取方案sql
@@ -21,7 +22,7 @@ public interface FangAnService {
      * @param fangAnSCList 方案输出项
      * @return sql
      */
-    String getSql(FangAnTreeNode root, List<FangAnSC> fangAnSCList);
+    String getSql(FangAnTreeNode root, List<FangAnSC> fangAnSCList) throws YuanChengException;
 
 
 }

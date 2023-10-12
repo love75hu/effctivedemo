@@ -2,17 +2,15 @@ package cn.mediinfo.grus.shujuzx.service.impl;
 
 import cn.mediinfo.cyan.msf.core.exception.MsfResponseException;
 import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
+import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
 import cn.mediinfo.cyan.msf.core.util.AssertUtil;
 import cn.mediinfo.cyan.msf.core.util.BeanUtil;
-import cn.mediinfo.grus.shujuzx.dto.shitumx.DatabaseDTO;
-import cn.mediinfo.grus.shujuzx.dto.shitumx.FieldDTO;
-import cn.mediinfo.grus.shujuzx.dto.shitumx.TableDTO;
-import cn.mediinfo.grus.shujuzx.dto.zonghecx.GuanLianTJZD;
-import cn.mediinfo.grus.shujuzx.dto.zonghecx.SC_CX_ShiTuMXDto;
-import cn.mediinfo.grus.shujuzx.dto.zonghecx.AddShiTuMXDto;
-import cn.mediinfo.grus.shujuzx.dto.zonghecx.ShiTuMXListDto;
+import cn.mediinfo.grus.shujuzx.dto.shitumx.*;
+import cn.mediinfo.grus.shujuzx.dto.zonghecx.*;
 import cn.mediinfo.grus.shujuzx.model.SC_CX_ShiTuMXModel;
+import cn.mediinfo.grus.shujuzx.remoteservice.GongYongRemoteService;
 import cn.mediinfo.grus.shujuzx.repository.SC_CX_ShiTuMXRepository;
+import cn.mediinfo.grus.shujuzx.repository.SC_CX_ShiTuXXRepository;
 import cn.mediinfo.grus.shujuzx.service.ShiTuMXGXService;
 import cn.mediinfo.grus.shujuzx.service.ShiTuMXService;
 import cn.mediinfo.grus.shujuzx.service.ShiTuXXService;
@@ -22,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 临床检索视图明细服务
@@ -29,11 +28,19 @@ import java.util.Set;
 @Service
 public class ShiTuMXServiceImpl implements ShiTuMXService {
     private final SC_CX_ShiTuMXRepository shiTuMXRepository;
+    private final SC_CX_ShiTuXXRepository shiTuXXRepository;
+    private final GongYongRemoteService gongYongRemoteService;
 
     private final ShiTuMXGXService shiTuMXGXService;
 
-    public ShiTuMXServiceImpl(SC_CX_ShiTuMXRepository shiTuMXRepository, ShiTuMXGXService shiTuMXGXService) {
+
+    public ShiTuMXServiceImpl(SC_CX_ShiTuMXRepository shiTuMXRepository,
+                              SC_CX_ShiTuXXRepository shiTuXXRepository,
+                              GongYongRemoteService gongYongRemoteService,
+                              ShiTuMXGXService shiTuMXGXService) {
         this.shiTuMXRepository = shiTuMXRepository;
+        this.shiTuXXRepository = shiTuXXRepository;
+        this.gongYongRemoteService = gongYongRemoteService;
         this.shiTuMXGXService = shiTuMXGXService;
     }
 
@@ -47,8 +54,23 @@ public class ShiTuMXServiceImpl implements ShiTuMXService {
     }
 
     @Override
-    public List<FieldDTO> listFields(Set<String> shiTuMXIds) {
-        return null;
+    public List<FieldDTO> listFields(Set<String> shiTuMXIds) throws YuanChengException {
+        //查询视图明细
+        List<SC_CX_ShiTuMXByIdDto>  shiTuMXModels = shiTuMXRepository.findByIdIs(shiTuMXIds);
+        //获取视图id集合
+        Set<String> shiTuIds = shiTuMXModels.stream().map(SC_CX_ShiTuMXByIdDto::getShiTuID).collect(java.util.stream.Collectors.toSet());
+        //查询视图信息
+        List<SC_CX_ShiTuXXByShiTuIDDto> shiTuXXList =  shiTuXXRepository.findByShiTuIDIn(shiTuIds);
+        List<SC_CX_ShiTuXXZDDto> shiTuXXZDList = new ArrayList<>();
+        for (SC_CX_ShiTuXXByShiTuIDDto shiTuXXByShiTuIDDto :shiTuXXList)
+        {
+           SC_CX_ShiTuXXZDDto shiTuXXZDDto=new SC_CX_ShiTuXXZDDto();
+            BeanUtil.copyProperties(shiTuXXByShiTuIDDto,shiTuXXZDDto);
+            List<SC_CX_ShiTuMXByIdDto> ziDuanMX = shiTuMXModels.stream().filter(n -> n.getShiTuID().equals(shiTuXXByShiTuIDDto.getShiTuID())).collect(Collectors.toList());
+            shiTuXXZDDto.setShiTuMXDto(ziDuanMX);
+            shiTuXXZDList.add(shiTuXXZDDto);
+        }
+       return gongYongRemoteService.getShiTuZDXXList(shiTuXXZDList).getData("获取功能服务字段信息失败");
     }
 
     @Override

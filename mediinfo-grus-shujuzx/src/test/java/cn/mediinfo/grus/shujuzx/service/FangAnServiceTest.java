@@ -1,6 +1,7 @@
 package cn.mediinfo.grus.shujuzx.service;
 
 import cn.hutool.core.collection.ListUtil;
+import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
 import cn.mediinfo.cyan.msf.tenant.security.BasicTenantInfo;
 import cn.mediinfo.cyan.msf.tenant.security.TenantIdentityService;
 import cn.mediinfo.grus.shujuzx.common.fangan.condition.FangAnCondition;
@@ -45,7 +46,7 @@ class FangAnServiceTest {
     private FangAnService fangAnService = new FangAnServiceImpl();
 
     @Test
-    void saveFangAn() {
+    void saveFangAn() throws YuanChengException {
         when(shiTuMXService.listTable(anySet())).thenReturn(mockTable());
         when(shiTuMXService.listFields(anySet())).thenReturn(mockFields());
         when(fangAnSCService.getAllFangAnSC(anyList())).thenReturn(mockFangAnSC());

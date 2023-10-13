@@ -23,9 +23,9 @@ public interface SC_CX_ZhiBiaoXXRepository extends MsfJpaRepository<QSC_CX_ZhiBi
     }
     default List<SC_CX_ZhiBiaoXXModel> getZhiBiaoXXByZBLXDM(String zhiBiaoLXDM, String likeQuery){
         return this.asQuerydsl().where(p -> p.zhiBiaoLXDM.eq(zhiBiaoLXDM))
-                .whereIf(StringUtil.hasText(likeQuery) && !ZhiBiaoLXDMEnum.DRUG.getZhiBiaoLXDM().equals(zhiBiaoLXDM),
+                .whereIf(StringUtil.hasText(likeQuery) && !ZhiBiaoLXDMEnum.YAO_PIN.getZhiBiaoLXDM().equals(zhiBiaoLXDM),
                         p -> p.zhiBiaoMC.contains(likeQuery))
-                .whereIf(StringUtil.hasText(likeQuery) && ZhiBiaoLXDMEnum.DRUG.getZhiBiaoLXDM().equals(zhiBiaoLXDM),
+                .whereIf(StringUtil.hasText(likeQuery) && ZhiBiaoLXDMEnum.YAO_PIN.getZhiBiaoLXDM().equals(zhiBiaoLXDM),
                         p -> p.zhiBiaoMC.contains(likeQuery).or(p.zhiBiaoFLMC.contains(likeQuery)))
                 .fetch();
     }

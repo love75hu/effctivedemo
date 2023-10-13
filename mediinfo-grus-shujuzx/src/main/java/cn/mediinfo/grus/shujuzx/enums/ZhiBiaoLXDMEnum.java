@@ -13,13 +13,13 @@ public enum ZhiBiaoLXDMEnum {
     /**
      * 指标类型代码;1-数据元，2-检验，3-检查，4-药品
      */
-    DATA_ELEMENT("1", "数据元"),
+    SHU_JU_YUAN("1", "数据元"),
 
-    LAB("2", "检验"),
+    JIAN_YAN("2", "检验"),
 
-    INSPECT("3", "检查"),
+    JIAN_CHA("3", "检查"),
 
-    DRUG("4", "药品");
+    YAO_PIN("4", "药品");
 
     private final String zhiBiaoLXDM;
 

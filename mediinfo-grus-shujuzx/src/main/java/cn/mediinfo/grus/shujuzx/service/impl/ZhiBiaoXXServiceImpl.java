@@ -2,7 +2,6 @@ package cn.mediinfo.grus.shujuzx.service.impl;
 
 import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 import cn.mediinfo.cyan.msf.core.util.BeanUtil;
-import cn.mediinfo.cyan.msf.core.util.CollectorUtil;
 import cn.mediinfo.cyan.msf.core.util.StringUtil;
 import cn.mediinfo.grus.shujuzx.constant.ShuJuZXConstant;
 import cn.mediinfo.grus.shujuzx.dto.zhibiaoxxs.ZhiBiaoMXListDto;
@@ -11,6 +10,7 @@ import cn.mediinfo.grus.shujuzx.dto.zhibiaoxxs.ZhiBiaoXXListDto;
 import cn.mediinfo.grus.shujuzx.dto.zhibiaoxxs.ZhiBiaoXXUpdateDto;
 import cn.mediinfo.grus.shujuzx.enums.ZhiBiaoLXDMEnum;
 import cn.mediinfo.grus.shujuzx.model.SC_CX_ZhiBiaoXXModel;
+import cn.mediinfo.grus.shujuzx.po.zhibiaoxx.ZhiBiaoFLPo;
 import cn.mediinfo.grus.shujuzx.repository.SC_CX_ZhiBiaoXXRepository;
 import cn.mediinfo.grus.shujuzx.service.ZhiBiaoXXService;
 import cn.mediinfo.lyra.extension.service.SequenceService;
@@ -38,7 +38,7 @@ public class ZhiBiaoXXServiceImpl implements ZhiBiaoXXService {
     public List<ZhiBiaoXXListDto> getZhiBiaoXXListByZBLXDM(String zhiBiaoLXDM, String likeQuery) {
         List<ZhiBiaoXXListDto> result = new ArrayList<>();
         List<SC_CX_ZhiBiaoXXModel> zhiBiaoXXList = zhiBiaoXXRepository.getZhiBiaoXXByZBLXDM(zhiBiaoLXDM, likeQuery);
-        if (zhiBiaoLXDM.equals(ZhiBiaoLXDMEnum.DRUG.getZhiBiaoLXDM())) {
+        if (zhiBiaoLXDM.equals(ZhiBiaoLXDMEnum.YAO_PIN.getZhiBiaoLXDM())) {
             List<SC_CX_ZhiBiaoXXModel> fenLeiList = zhiBiaoXXList.stream().filter(p -> StringUtil.notHasText(p.getZhiBiaoID())).
                     sorted(Comparator.comparing(SC_CX_ZhiBiaoXXModel::getShunXuHao)).collect(Collectors.toList());
             if (CollectionUtils.isEmpty(fenLeiList)) {
@@ -60,12 +60,12 @@ public class ZhiBiaoXXServiceImpl implements ZhiBiaoXXService {
             }
         } else {
             result = zhiBiaoXXList.stream().
-                    collect(Collectors.groupingBy(p -> new AbstractMap.SimpleEntry<>(p.getZhiBiaoFLID(), p.getZhiBiaoFLMC())))
+                    collect(Collectors.groupingBy(p -> new ZhiBiaoFLPo(p.getZhiBiaoFLID(), p.getZhiBiaoFLMC())))
                     .entrySet().stream()
                     .map(p -> {
                         ZhiBiaoXXListDto dto = new ZhiBiaoXXListDto();
-                        dto.setZhiBiaoFLID(p.getKey().getKey());
-                        dto.setZhiBiaoFLMC(p.getKey().getValue());
+                        dto.setZhiBiaoFLID(p.getKey().zhiBiaoFLID());
+                        dto.setZhiBiaoFLMC(p.getKey().zhiBiaoFLMC());
                         dto.setZhiBiaoMXList(BeanUtil.copyListProperties(p.getValue().stream()
                                         .filter(value -> StringUtil.hasText(value.getZhiBiaoID())).toList(), ZhiBiaoMXListDto::new)
                                 .stream().sorted(Comparator.comparing(ZhiBiaoMXListDto::getShunXuHao, Comparator.nullsLast(Integer::compareTo))).toList());
@@ -98,10 +98,10 @@ public class ZhiBiaoXXServiceImpl implements ZhiBiaoXXService {
      */
     @Override
     public Boolean addZhiBiaoList(List<ZhiBiaoXXCreateDto> createDtos) throws TongYongYWException {
-        var feiLeiList = createDtos.stream()
+        var zhiBiaoLXDMList = createDtos.stream()
                 .collect(Collectors.groupingBy(ZhiBiaoXXCreateDto::getZhiBiaoLXDM))
                 .entrySet();
-        for (var item : feiLeiList) {
+        for (var item : zhiBiaoLXDMList) {
             checkZhiBiaoID(item.getKey(), item.getValue().stream().map(ZhiBiaoXXCreateDto::getZhiBiaoID).toList());
         }
         List<SC_CX_ZhiBiaoXXModel> addList = BeanUtil.copyListProperties(createDtos, SC_CX_ZhiBiaoXXModel::new, (dto, model) -> {
@@ -118,7 +118,7 @@ public class ZhiBiaoXXServiceImpl implements ZhiBiaoXXService {
     @Override
     public Boolean addZhiBiaoXX(ZhiBiaoXXCreateDto createDto) throws TongYongYWException {
         String zhiBiaoFLID;
-        if (StringUtil.notHasText(createDto.getZhiBiaoID()) && createDto.getZhiBiaoLXDM().equals(ZhiBiaoLXDMEnum.DRUG.getZhiBiaoLXDM())) {
+        if (StringUtil.notHasText(createDto.getZhiBiaoID()) && createDto.getZhiBiaoLXDM().equals(ZhiBiaoLXDMEnum.YAO_PIN.getZhiBiaoLXDM())) {
             zhiBiaoFLID = sequenceService.getXuHao("SC_CX_ZhiBiaoXX_ZhiBiaoFLID", 7);
             boolean existZhiBiaoMC = zhiBiaoXXRepository.existsZhiBiaoFL(createDto.getZhiBiaoLXDM(), zhiBiaoFLID, createDto.getZhiBiaoFLMC());
             if (existZhiBiaoMC) {
@@ -143,7 +143,7 @@ public class ZhiBiaoXXServiceImpl implements ZhiBiaoXXService {
      */
     @Override
     public Boolean updateZhiBiaoXX(ZhiBiaoXXUpdateDto updateDto) throws TongYongYWException {
-        boolean existZhiBiaoMC = zhiBiaoXXRepository.existsByZhiBiaoLXDMAndZhiBiaoFLMC(ZhiBiaoLXDMEnum.DRUG.getZhiBiaoLXDM(), updateDto.getZhiBiaoFLMC());
+        boolean existZhiBiaoMC = zhiBiaoXXRepository.existsByZhiBiaoLXDMAndZhiBiaoFLMC(ZhiBiaoLXDMEnum.YAO_PIN.getZhiBiaoLXDM(), updateDto.getZhiBiaoFLMC());
         if (existZhiBiaoMC) {
             throw new TongYongYWException("指标分类名称已存在，请重新确认! ");
         }
@@ -154,6 +154,9 @@ public class ZhiBiaoXXServiceImpl implements ZhiBiaoXXService {
         return true;
     }
 
+    /**
+     * 指标校验
+     */
     private void checkZhiBiaoID(String zhiBiaoLXDM, List<String> zhiBiaoIDs) throws TongYongYWException {
         List<SC_CX_ZhiBiaoXXModel> zhiBiaoXXList = zhiBiaoXXRepository.findByZhiBiaoLXDMAndZhiBiaoIDIn(zhiBiaoLXDM, zhiBiaoIDs);
         if (!CollectionUtils.isEmpty(zhiBiaoXXList)) {

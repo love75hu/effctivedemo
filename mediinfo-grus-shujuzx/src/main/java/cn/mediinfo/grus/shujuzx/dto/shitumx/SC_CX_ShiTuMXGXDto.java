@@ -3,10 +3,8 @@ package cn.mediinfo.grus.shujuzx.dto.shitumx;
 import jakarta.persistence.Column;
 import lombok.Data;
 
-import java.util.List;
-
 @Data
-public class SC_CX_ShiTuMXByIdDto {
+public class SC_CX_ShiTuMXGXDto {
     /**
      * 视图ID
      */
@@ -27,8 +25,4 @@ public class SC_CX_ShiTuMXByIdDto {
      */
     @Column(columnDefinition = "字段名称")
     private String ziDuanMC;
-    @Column(columnDefinition = "关联字段信息")
-    private List<SC_CX_ShiTuMXGXDto> shiTuMXGXDto;
-
-
 }

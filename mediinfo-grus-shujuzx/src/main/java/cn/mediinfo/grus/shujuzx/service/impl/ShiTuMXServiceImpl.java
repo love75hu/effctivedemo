@@ -7,6 +7,7 @@ import cn.mediinfo.cyan.msf.core.util.AssertUtil;
 import cn.mediinfo.cyan.msf.core.util.BeanUtil;
 import cn.mediinfo.grus.shujuzx.dto.shitumx.*;
 import cn.mediinfo.grus.shujuzx.dto.zonghecx.*;
+import cn.mediinfo.grus.shujuzx.dto.zonghecx.SC_CX_ShiTuMXGXDto;
 import cn.mediinfo.grus.shujuzx.model.SC_CX_ShiTuMXModel;
 import cn.mediinfo.grus.shujuzx.remoteservice.GongYongRemoteService;
 import cn.mediinfo.grus.shujuzx.repository.SC_CX_ShiTuMXRepository;
@@ -61,14 +62,27 @@ public class ShiTuMXServiceImpl implements ShiTuMXService {
         Set<String> shiTuIds = shiTuMXModels.stream().map(SC_CX_ShiTuMXByIdDto::getShiTuID).collect(java.util.stream.Collectors.toSet());
         //查询视图信息
         List<SC_CX_ShiTuXXByShiTuIDDto> shiTuXXList =  shiTuXXRepository.findByShiTuIDIn(shiTuIds);
+
+        List<cn.mediinfo.grus.shujuzx.dto.shitumx.SC_CX_ShiTuMXGXDto> shiTuMXGX = shiTuMXGXService.getShiTuMXGXByShiTuID(shiTuIds);
+
         List<SC_CX_ShiTuXXZDDto> shiTuXXZDList = new ArrayList<>();
         for (SC_CX_ShiTuXXByShiTuIDDto shiTuXXByShiTuIDDto :shiTuXXList)
         {
            SC_CX_ShiTuXXZDDto shiTuXXZDDto=new SC_CX_ShiTuXXZDDto();
             BeanUtil.copyProperties(shiTuXXByShiTuIDDto,shiTuXXZDDto);
-            List<SC_CX_ShiTuMXByIdDto> ziDuanMX = shiTuMXModels.stream().filter(n -> n.getShiTuID().equals(shiTuXXByShiTuIDDto.getShiTuID())).collect(Collectors.toList());
+            List<SC_CX_ShiTuMXByIdDto> ziDuanMX = shiTuMXModels.stream()
+                    .filter(n -> n.getShiTuID().equals(shiTuXXByShiTuIDDto.getShiTuID())).collect(Collectors.toList());
+            for (SC_CX_ShiTuMXByIdDto z:ziDuanMX)
+            {
+                List<cn.mediinfo.grus.shujuzx.dto.shitumx.SC_CX_ShiTuMXGXDto> shiTuMXGXDto =
+                        shiTuMXGX.stream().filter(n -> n.getZiDuanBM().equals(z.getZiDuanBM())).collect(Collectors.toList());
+               z.setShiTuMXGXDto(shiTuMXGXDto);
+            }
+
             shiTuXXZDDto.setShiTuMXDto(ziDuanMX);
+
             shiTuXXZDList.add(shiTuXXZDDto);
+
         }
        return gongYongRemoteService.getShiTuZDXXList(shiTuXXZDList).getData("获取功能服务字段信息失败");
     }

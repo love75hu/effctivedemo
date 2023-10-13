@@ -5,7 +5,10 @@ import lombok.Data;
 
 @Data
 public class ShiTuMXListDto {
+
     private String id;
+    @Schema(description = "视图名称")
+    private String shiTuMC;
     @Schema(description = "字段编码")
     private String ziDuanBM;
     @Schema(description = "字段名称")

@@ -7,6 +7,9 @@ import cn.mediinfo.grus.shujuzx.repository.SC_CX_ShiTuMXGXRepository;
 import cn.mediinfo.grus.shujuzx.service.ShiTuMXGXService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Set;
+
 /**
  * 视图字段关系服务
  */
@@ -33,5 +36,13 @@ class ShiTuMXGXServiceImpl implements ShiTuMXGXService {
        shiTuMXGXRepository.asDeleteDsl().where(s -> s.shiTuID.eq(shiTuID)).execute();
         return true;
     }
+    //根据视图ID获取视图字段关系
+    @Override
+    public List<cn.mediinfo.grus.shujuzx.dto.shitumx.SC_CX_ShiTuMXGXDto> getShiTuMXGXByShiTuID(Set<String> shiTuID)
+    {
+        return shiTuMXGXRepository.asQuerydsl().where(s->s.shiTuID.in(shiTuID)).select(cn.mediinfo.grus.shujuzx.dto.shitumx.SC_CX_ShiTuMXGXDto.class).fetch();
+    }
+
+
 
 }

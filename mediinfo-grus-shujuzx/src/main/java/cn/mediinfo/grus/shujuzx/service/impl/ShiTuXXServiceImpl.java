@@ -75,7 +75,7 @@ class ShiTuXXServiceImpl implements ShiTuXXService {
             linChuangJSSTDtoTree.setChildren(
                     BeanUtil.copyListProperties(
                     linChuangJSSTDtoTrees.stream().filter(s->
-                            s.getFuLeiID().equals(linChuangJSSTDtoTree.getShiTuID())).toList(),LinChuangJSSTDtoTree::new,(a,b)->{
+                            s.getFuLeiID().equals(linChuangJSSTDtoTree.getId())).toList(),LinChuangJSSTDtoTree::new,(a,b)->{
                         b.setFuLeiID(a.getShiTuID());
                         b.setFuLeiMC(a.getShiTuMC());
                     }
@@ -97,7 +97,8 @@ class ShiTuXXServiceImpl implements ShiTuXXService {
         shiTuXXModel.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
         shiTuXXModel.setFuLeiMC(dto.getShiTuFLMC());
         var shunXuHao=shiTuXXRepository.getMaxShunXuHao();
-        shiTuXXModel.setShunXuHao(shunXuHao==null?0:shunXuHao+1);
+
+        shiTuXXModel.setShunXuHao(dto.getShunXuHao()!=null?dto.getShunXuHao():shunXuHao+1);
 
         SC_CX_ShiTuXXModel save = shiTuXXRepository.save(shiTuXXModel);
         return save.getId();

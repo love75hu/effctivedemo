@@ -19,6 +19,8 @@ public interface ShiTuMXService {
      */
     SC_CX_ShiTuMXDto getShiTuMXByID(String id) throws WeiZhaoDSJException;
 
+    ShiTuMXDto getShiTuMXGXByID(String id) throws WeiZhaoDSJException;
+
     /**
      * 获取视图配置的字段信息
      * @param shiTuMXIds 视图明细id
@@ -80,6 +82,8 @@ public interface ShiTuMXService {
     Boolean updateShiTuMX(String shiTuSTID,String shiTuMC, List<GuanLianTJZD> guanLianTJZDS);
 
     Boolean zuoFeiShiTMX(String id) throws WeiZhaoDSJException;
+
+    public Boolean updateShiTuMX(UpdateShiTuMXDto updateShiTuMXDto) throws WeiZhaoDSJException;
 
 
 }

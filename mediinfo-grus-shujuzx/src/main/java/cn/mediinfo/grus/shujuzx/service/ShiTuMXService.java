@@ -53,14 +53,14 @@ public interface ShiTuMXService {
      *
      * @return
      */
-    List<ShiTuMXListDto> getShiTuMXList(String shiTuID, String likeQuery  ,Integer chaXunLX ,Integer pageIndex  ,Integer pageSize);
+    List<ShiTuMXListDto> getShiTuMXList(String shiTuID,String fuLeiID, String likeQuery  ,Integer chaXunLX ,Integer pageIndex  ,Integer pageSize);
 
     /**
      * 获取视图字段列表数量
      *
      * @return
      */
-    Integer getShiTuMXCount(String shiTuID, String likeQuery  ,Integer chaXunLX);
+    Integer getShiTuMXCount(String shiTuID,String fuLeiID, String likeQuery  ,Integer chaXunLX);
 
     /**
      * 获取关联条件字段

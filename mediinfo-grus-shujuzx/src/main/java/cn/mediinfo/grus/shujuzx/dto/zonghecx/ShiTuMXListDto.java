@@ -17,7 +17,5 @@ public class ShiTuMXListDto {
     private Integer tiaoJianBZ;
     @Schema(description = "输出标志")
     private Integer shuChuBZ;
-    @Schema(description = "顺序号")
-    private Integer shuXuHao;
 
 }

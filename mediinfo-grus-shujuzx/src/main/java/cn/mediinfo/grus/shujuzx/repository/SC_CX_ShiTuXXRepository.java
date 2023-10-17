@@ -48,6 +48,10 @@ public interface SC_CX_ShiTuXXRepository extends MsfJpaRepository<QSC_CX_ShiTuXX
         return this.asQuerydsl().whereIf(StringUtil.hasText(likeQuery), s -> s.fuLeiMC.like("%" + likeQuery + "%").or(s.shiTuMC.like("%" + likeQuery + "%")))
                 .orderBy(s -> s.shunXuHao.asc()).fetch();
     };
+    default List<String> getShiTuXXIDList(String fuLeiID)
+    {
+        return this.asQuerydsl().where(s->s.fuLeiID.eq(fuLeiID)).select(s->s.shiTuID).fetch();
+    }
 
     default List<ShiTuFLDto> getShiTuFLList(String fuLeiID, String likeQuery)
     {

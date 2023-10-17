@@ -29,17 +29,37 @@ public interface SC_CX_ShiTuMXRepository extends MsfJpaRepository<QSC_CX_ShiTuMX
                 .where(e->e.shiTuID.eq(shiTuID))
                 .whereIf(StringUtil.hasText(likeQuery), e -> e.ziDuanMC.contains(likeQuery))
                 .whereIf(chaXunLX.equals(1), e -> e.tiaoJianBZ.eq(1))
-                .whereIf(chaXunLX.equals(2),e->e.shuChuBXBZ.eq(1))
+                .whereIf(chaXunLX.equals(2),e->e.shuChuBZ.eq(1))
                 .select(ShiTuMXListDto.class)
-                .fetch();
+                .fetchPage(pageIndex,pageSize);
     }
+    default List<ShiTuMXListDto> getShiTuMXLists(List<String> shiTuID,String likeQuery,Integer chaXunLX, Integer pageIndex, Integer pageSize)
+    {
+        return this.asQuerydsl()
+                .where(e->e.shiTuID.in(shiTuID))
+                .whereIf(StringUtil.hasText(likeQuery), e -> e.ziDuanMC.contains(likeQuery))
+                .whereIf(chaXunLX.equals(1), e -> e.tiaoJianBZ.eq(1))
+                .whereIf(chaXunLX.equals(2),e->e.shuChuBZ.eq(1))
+                .select(ShiTuMXListDto.class)
+                .fetchPage(pageIndex,pageSize);
+    }
+
+
 
     default Integer getShiTuMXCount(String shiTuID, String likeQuery,Integer chaXunLX)
     {
         return this.asQuerydsl().where(e->e.shiTuID.eq(shiTuID))
                 .whereIf(StringUtil.hasText(likeQuery), e -> e.ziDuanMC.contains(likeQuery))
                 .whereIf(chaXunLX.equals(1), e -> e.tiaoJianBZ.eq(1))
-                .whereIf(chaXunLX.equals(2),e->e.shuChuBXBZ.eq(1))
+                .whereIf(chaXunLX.equals(2),e->e.shuChuBZ.eq(1))
+                .select(ShiTuMXListDto.class).fetch().size();
+    }
+    default Integer getShiTuMXCounts(List<String> shiTuID, String likeQuery,Integer chaXunLX)
+    {
+        return this.asQuerydsl().where(e->e.shiTuID.in(shiTuID))
+                .whereIf(StringUtil.hasText(likeQuery), e -> e.ziDuanMC.contains(likeQuery))
+                .whereIf(chaXunLX.equals(1), e -> e.tiaoJianBZ.eq(1))
+                .whereIf(chaXunLX.equals(2),e->e.shuChuBZ.eq(1))
                 .select(ShiTuMXListDto.class).fetch().size();
     }
     default List<GuanLianTJZD> getGuanLianTJZD(String shiTuSTID)

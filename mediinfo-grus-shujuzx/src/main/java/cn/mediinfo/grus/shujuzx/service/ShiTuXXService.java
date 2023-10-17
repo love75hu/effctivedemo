@@ -58,10 +58,7 @@ public interface ShiTuXXService {
      */
     Boolean zuoFeiShiTuFL(String id) throws WeiZhaoDSJException;
 
-    /**
-     * 根据主键编辑视图字段
-     */
-    ShiTuMXDto getShiTuMXByID(String id) throws WeiZhaoDSJException;
+
 
     /**
      * 编辑视图字段

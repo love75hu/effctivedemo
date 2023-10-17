@@ -7,14 +7,13 @@ import cn.mediinfo.cyan.msf.core.util.AssertUtil;
 import cn.mediinfo.cyan.msf.core.util.BeanUtil;
 import cn.mediinfo.grus.shujuzx.dto.shitumx.*;
 import cn.mediinfo.grus.shujuzx.dto.zonghecx.*;
-import cn.mediinfo.grus.shujuzx.dto.zonghecx.SC_CX_ShiTuMXGXDto;
 import cn.mediinfo.grus.shujuzx.model.SC_CX_ShiTuMXModel;
 import cn.mediinfo.grus.shujuzx.remoteservice.GongYongRemoteService;
 import cn.mediinfo.grus.shujuzx.repository.SC_CX_ShiTuMXRepository;
 import cn.mediinfo.grus.shujuzx.repository.SC_CX_ShiTuXXRepository;
 import cn.mediinfo.grus.shujuzx.service.ShiTuMXGXService;
 import cn.mediinfo.grus.shujuzx.service.ShiTuMXService;
-import cn.mediinfo.grus.shujuzx.service.ShiTuXXService;
+import cn.mediinfo.lyra.extension.service.impl.LyraIdentityServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,16 +31,19 @@ public class ShiTuMXServiceImpl implements ShiTuMXService {
     private final SC_CX_ShiTuXXRepository shiTuXXRepository;
     private final GongYongRemoteService gongYongRemoteService;
 
+    private final LyraIdentityServiceImpl lyraIdentityService;
+
     private final ShiTuMXGXService shiTuMXGXService;
 
 
     public ShiTuMXServiceImpl(SC_CX_ShiTuMXRepository shiTuMXRepository,
                               SC_CX_ShiTuXXRepository shiTuXXRepository,
                               GongYongRemoteService gongYongRemoteService,
-                              ShiTuMXGXService shiTuMXGXService) {
+                              LyraIdentityServiceImpl lyraIdentityService, ShiTuMXGXService shiTuMXGXService) {
         this.shiTuMXRepository = shiTuMXRepository;
         this.shiTuXXRepository = shiTuXXRepository;
         this.gongYongRemoteService = gongYongRemoteService;
+        this.lyraIdentityService = lyraIdentityService;
         this.shiTuMXGXService = shiTuMXGXService;
     }
 
@@ -108,6 +110,8 @@ public class ShiTuMXServiceImpl implements ShiTuMXService {
             SC_CX_ShiTuMXModel shiTuMXModel=new SC_CX_ShiTuMXModel();
             shiTuMXModel.setShiTuID(addShiTuMXDto.getShiTuID());
             shiTuMXModel.setShiTuMC(addShiTuMXDto.getShiTuMC());
+            shiTuMXModel.setZuZhiJGID(lyraIdentityService.getJiGouID());
+            shiTuMXModel.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
             BeanUtil.copyProperties(s,shiTuMXModel);
             shiTuMXModels.add(shiTuMXModel);
         });
@@ -120,8 +124,8 @@ public class ShiTuMXServiceImpl implements ShiTuMXService {
      *
      */
     @Override
-    public List<ShiTuMXListDto> getShiTuMXList(String shiTuSTID, String likeQuery, Integer chaXunLX, Integer pageIndex, Integer pageSize) {
-        return shiTuMXRepository.getShiTuMXList(shiTuSTID,likeQuery,chaXunLX,pageIndex,pageSize);
+    public List<ShiTuMXListDto> getShiTuMXList(String shiTuID, String likeQuery, Integer chaXunLX, Integer pageIndex, Integer pageSize) {
+        return shiTuMXRepository.getShiTuMXList(shiTuID,likeQuery,chaXunLX,pageIndex,pageSize);
     }
 
     /**
@@ -129,8 +133,8 @@ public class ShiTuMXServiceImpl implements ShiTuMXService {
      *
      */
     @Override
-    public Integer getShiTuMXCount(String shiTuSTID, String likeQuery, Integer chaXunLX) {
-        return shiTuMXRepository.getShiTuMXCount(shiTuSTID,likeQuery,chaXunLX);
+    public Integer getShiTuMXCount(String shiTuID, String likeQuery, Integer chaXunLX) {
+        return shiTuMXRepository.getShiTuMXCount(shiTuID,likeQuery,chaXunLX);
     }
 
     /**

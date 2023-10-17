@@ -5,6 +5,7 @@ import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
 import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
 import cn.mediinfo.cyan.msf.core.util.AssertUtil;
 import cn.mediinfo.cyan.msf.core.util.BeanUtil;
+import cn.mediinfo.cyan.msf.core.util.StringUtil;
 import cn.mediinfo.grus.shujuzx.dto.shitumx.*;
 import cn.mediinfo.grus.shujuzx.dto.zonghecx.*;
 import cn.mediinfo.grus.shujuzx.model.SC_CX_ShiTuMXModel;
@@ -132,7 +133,12 @@ public class ShiTuMXServiceImpl implements ShiTuMXService {
      *
      */
     @Override
-    public List<ShiTuMXListDto> getShiTuMXList(String shiTuID, String likeQuery, Integer chaXunLX, Integer pageIndex, Integer pageSize) {
+    public List<ShiTuMXListDto> getShiTuMXList(String shiTuID,String fuLeiID, String likeQuery, Integer chaXunLX, Integer pageIndex, Integer pageSize) {
+        if (!StringUtil.hasText(shiTuID))
+        {
+            List<String> shiTuXXIDList = shiTuXXRepository.getShiTuXXIDList(fuLeiID);
+          return   shiTuMXRepository.getShiTuMXLists(shiTuXXIDList,likeQuery,chaXunLX,pageIndex,pageSize);
+        }
         return shiTuMXRepository.getShiTuMXList(shiTuID,likeQuery,chaXunLX,pageIndex,pageSize);
     }
 
@@ -141,7 +147,12 @@ public class ShiTuMXServiceImpl implements ShiTuMXService {
      *
      */
     @Override
-    public Integer getShiTuMXCount(String shiTuID, String likeQuery, Integer chaXunLX) {
+    public Integer getShiTuMXCount(String shiTuID,String fuLeiID, String likeQuery, Integer chaXunLX) {
+        if (!StringUtil.hasText(shiTuID))
+        {
+            List<String> shiTuXXIDList = shiTuXXRepository.getShiTuXXIDList(fuLeiID);
+            return shiTuMXRepository.getShiTuMXCounts(shiTuXXIDList,likeQuery,chaXunLX);
+        }
         return shiTuMXRepository.getShiTuMXCount(shiTuID,likeQuery,chaXunLX);
     }
 

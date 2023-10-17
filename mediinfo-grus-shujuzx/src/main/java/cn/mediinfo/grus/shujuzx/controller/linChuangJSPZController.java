@@ -119,15 +119,16 @@ public class linChuangJSPZController {
 
     @Operation(summary = "根据视图id获取视图字段信息列表")
     @GetMapping("getShiTuMXList")
-    public MsfResponse<List<ShiTuMXListDto>>  getShiTuMXList(@NotEmpty(message = "视图id不能为空")String shiTuID, String likeQuery, Integer chaXunLX, Integer pageIndex, Integer pageSize)
+    public MsfResponse<List<ShiTuMXListDto>>  getShiTuMXList(String shiTuID,  String fuLeiID,
+                                                             String likeQuery, Integer chaXunLX, Integer pageIndex, Integer pageSize)
     {
-        return MsfResponse.success(shiTuMXService.getShiTuMXList(shiTuID,likeQuery,chaXunLX,pageIndex,pageSize));
+        return MsfResponse.success(shiTuMXService.getShiTuMXList(shiTuID,fuLeiID,likeQuery,chaXunLX,pageIndex,pageSize));
     }
     @Operation(summary = "根据视图id获取视图字段信息列表数量")
     @GetMapping("getShiTuMXCount")
-    public MsfResponse<Integer> getShiTuMXCount(@NotEmpty(message = "视图id不能为空")String shiTuID, String likeQuery, Integer chaXunLX)
+    public MsfResponse<Integer> getShiTuMXCount(String shiTuID,String fuLeiID, String likeQuery, Integer chaXunLX)
     {
-        return MsfResponse.success(shiTuMXService.getShiTuMXCount(shiTuID,likeQuery,chaXunLX));
+        return MsfResponse.success(shiTuMXService.getShiTuMXCount(shiTuID,fuLeiID,likeQuery,chaXunLX));
     }
 
     @Operation(summary = "获取关联条件字段")

@@ -6,15 +6,18 @@ import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
 import cn.mediinfo.grus.shujuzx.dto.shitumx.DatabaseDTO;
 import cn.mediinfo.grus.shujuzx.dto.shitumx.FieldDTO;
 import cn.mediinfo.grus.shujuzx.dto.shitumx.TableDTO;
-import cn.mediinfo.grus.shujuzx.dto.zonghecx.AddShiTuMXDto;
-import cn.mediinfo.grus.shujuzx.dto.zonghecx.GuanLianTJZD;
-import cn.mediinfo.grus.shujuzx.dto.zonghecx.ShiTuMXListDto;
+import cn.mediinfo.grus.shujuzx.dto.zonghecx.*;
 import cn.mediinfo.grus.shujuzx.model.SC_CX_ShiTuMXModel;
 
 import java.util.List;
 import java.util.Set;
 
 public interface ShiTuMXService {
+
+    /**
+     * 根据主键编辑视图字段
+     */
+    SC_CX_ShiTuMXDto getShiTuMXByID(String id) throws WeiZhaoDSJException;
 
     /**
      * 获取视图配置的字段信息

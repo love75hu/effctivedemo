@@ -178,19 +178,7 @@ class ShiTuXXServiceImpl implements ShiTuXXService {
         return true;
     }
 
-    /**
-     * 根据主键编辑视图字段
-     */
-    @Override
-    public ShiTuMXDto getShiTuMXByID(String id) throws WeiZhaoDSJException {
-        SC_CX_ShiTuXXDto shiTuXXByID = getShiTuXXByID(id);
-        var shiTuMxDto=new ShiTuMXDto();
-        BeanUtil.copyProperties(shiTuXXByID,new ShiTuMXDto());
-        //获取关联条件
-        shiTuMxDto.setGuanLianZDList(shiTuMXService.getGuanLianTJList(shiTuXXByID.getShiTuID()));
-        return shiTuMxDto;
 
-    }
 
     /**
      * 编辑视图字段

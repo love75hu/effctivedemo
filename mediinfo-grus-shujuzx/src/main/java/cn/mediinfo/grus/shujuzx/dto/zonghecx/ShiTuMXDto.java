@@ -7,19 +7,18 @@ import java.util.List;
 
 @Data
 public class ShiTuMXDto {
-
     @Schema(description = "字段编码")
     private String ziDuanBM;
     @Schema(description = "字段名称")
     private String ziDuanMC;
     @Schema(description = "条件标志")
-    private String tianJianBZ;
+    private Integer tianJianBZ;
     @Schema(description = "输出标志")
-    private String shuChuBZ;
+    private Integer shuChuBZ;
     @Schema(description = "输出必选标志")
-    private String shuChuBXBZ;
+    private Integer shuChuBXBZ;
     @Schema(description = "顺序号")
-    private String shuXuHao;
+    private Integer shuXuHao;
     @Schema(description = "关联关系")
     private List<GuanLianTJZD> guanLianZDList;
 }

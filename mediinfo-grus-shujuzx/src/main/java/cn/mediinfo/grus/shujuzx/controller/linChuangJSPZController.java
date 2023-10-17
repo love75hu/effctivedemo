@@ -139,13 +139,15 @@ public class linChuangJSPZController {
 
     @Operation(summary = "根据主键编辑视图字段")
     @GetMapping("getShiTuMXByID")
-    public MsfResponse<SC_CX_ShiTuMXDto> getShiTuMXByID(@NotEmpty(message = "视图id不能为空") String id) throws WeiZhaoDSJException {
-        return MsfResponse.success(shiTuMXService.getShiTuMXByID(id));
+    public MsfResponse<ShiTuMXDto> getShiTuMXByID(@NotEmpty(message = "视图id不能为空") String id) throws WeiZhaoDSJException {
+        return MsfResponse.success(shiTuMXService.getShiTuMXGXByID(id));
     }
+
+
     @Operation(summary = "编辑视图字段")
     @PutMapping("updateShiTuMX")
     public MsfResponse<Boolean> updateShiTuMX(@RequestBody @Validated UpdateShiTuMXDto dto) throws WeiZhaoDSJException {
-        return MsfResponse.success(shiTuXXService.updateShiTuMX(dto));
+        return MsfResponse.success(shiTuMXService.updateShiTuMX(dto));
     }
 
     @Operation(summary = "作废视图分类")

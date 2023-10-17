@@ -186,12 +186,8 @@ class ShiTuXXServiceImpl implements ShiTuXXService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Boolean updateShiTuMX(UpdateShiTuMXDto updateShiTuMXDto) throws WeiZhaoDSJException {
-        SC_CX_ShiTuXXModel scCxShiTuXXModel = shiTuXXRepository.findById(updateShiTuMXDto.getId()).orElse(null);
-        if (scCxShiTuXXModel==null) {
-            throw new WeiZhaoDSJException("未获取到数据");
-        }
+        var scCxShiTuXXModel = shiTuMXService.getShiTuMXByID(updateShiTuMXDto.getId());
         BeanUtil.copyProperties(updateShiTuMXDto,scCxShiTuXXModel);
-        shiTuXXRepository.save(scCxShiTuXXModel);
         shiTuMXService.updateShiTuMX(scCxShiTuXXModel.getShiTuID(),scCxShiTuXXModel.getShiTuMC(),updateShiTuMXDto.getGuanLianZDList());
         return true;
     }

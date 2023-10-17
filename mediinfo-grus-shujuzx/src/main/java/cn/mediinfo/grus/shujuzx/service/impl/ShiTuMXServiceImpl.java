@@ -57,6 +57,14 @@ public class ShiTuMXServiceImpl implements ShiTuMXService {
     }
 
     @Override
+    public ShiTuMXDto getShiTuMXGXByID(String id) throws WeiZhaoDSJException {
+        SC_CX_ShiTuMXDto shiTuMXByID = getShiTuMXByID(id);
+        ShiTuMXDto shiTuMXDto = BeanUtil.copyProperties(shiTuMXByID, ShiTuMXDto::new);
+        shiTuMXDto.setGuanLianZDList(shiTuMXGXService.getShiTuMXGXList(shiTuMXByID.getShiTuID(),shiTuMXByID.getZiDuanBM(),shiTuMXByID.getZiDuanMC()));
+        return shiTuMXDto;
+    }
+
+    @Override
     public List<FieldDTO> listFields(Set<String> shiTuMXIds) throws YuanChengException {
         //查询视图明细
         List<SC_CX_ShiTuMXByIdDto>  shiTuMXModels = shiTuMXRepository.findByIdIs(shiTuMXIds);
@@ -178,6 +186,18 @@ public class ShiTuMXServiceImpl implements ShiTuMXService {
         shiTuMXRepository.asDeleteDsl().where(n->n.id.eq(id)).execute();
         return true;
 
+    }
+
+    @Override
+    public Boolean updateShiTuMX(UpdateShiTuMXDto updateShiTuMXDto) throws WeiZhaoDSJException {
+        SC_CX_ShiTuMXDto shiTuMXByID = getShiTuMXByID(updateShiTuMXDto.getId());
+        shiTuMXByID.setZiDuanMC(updateShiTuMXDto.getZiDuanMC());
+        shiTuMXByID.setTiaoJianBZ(updateShiTuMXDto.getTianJianBZ());
+        shiTuMXByID.setShuChuBZ(updateShiTuMXDto.getShuChuBZ());
+        shiTuMXByID.setShuChuBXBZ(updateShiTuMXDto.getShuChuBXBZ());
+        shiTuMXRepository.save(BeanUtil.copyProperties(shiTuMXByID,SC_CX_ShiTuMXModel::new));
+        shiTuMXGXService.addShiTuMXGX(shiTuMXByID.getShiTuID(),shiTuMXByID.getZiDuanBM(),shiTuMXByID.getZiDuanMC(),updateShiTuMXDto.getGuanLianZDList());
+        return true;
     }
 
 

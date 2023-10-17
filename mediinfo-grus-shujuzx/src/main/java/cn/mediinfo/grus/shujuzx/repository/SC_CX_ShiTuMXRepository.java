@@ -23,20 +23,21 @@ public interface SC_CX_ShiTuMXRepository extends MsfJpaRepository<QSC_CX_ShiTuMX
                 .select(SC_CX_ShiTuMXByIdDto.class)
                 .fetch();
     }
-    default List<ShiTuMXListDto> getShiTuMXList(String shiTuSTID, String likeQuery,Integer chaXunLX, Integer pageIndex, Integer pageSize)
+    default List<ShiTuMXListDto> getShiTuMXList(String shiTuID, String likeQuery,Integer chaXunLX, Integer pageIndex, Integer pageSize)
     {
-        return this.asQuerydsl().where(e->e.shiTuID.eq(shiTuSTID))
-                .whereIf(StringUtil.hasText(likeQuery), e -> e.ziDuanMC.like("%" + likeQuery + "%"))
+        return this.asQuerydsl()
+                .where(e->e.shiTuID.eq(shiTuID))
+                .whereIf(StringUtil.hasText(likeQuery), e -> e.ziDuanMC.contains(likeQuery))
                 .whereIf(chaXunLX.equals(1), e -> e.tiaoJianBZ.eq(1))
                 .whereIf(chaXunLX.equals(2),e->e.shuChuBXBZ.eq(1))
                 .select(ShiTuMXListDto.class)
-                .fetchPage(pageIndex,pageSize);
+                .fetch();
     }
 
-    default Integer getShiTuMXCount(String shiTuSTID, String likeQuery,Integer chaXunLX)
+    default Integer getShiTuMXCount(String shiTuID, String likeQuery,Integer chaXunLX)
     {
-        return this.asQuerydsl().where(e->e.shiTuID.eq(shiTuSTID))
-                .whereIf(StringUtil.hasText(likeQuery), e -> e.ziDuanMC.like("%" + likeQuery + "%"))
+        return this.asQuerydsl().where(e->e.shiTuID.eq(shiTuID))
+                .whereIf(StringUtil.hasText(likeQuery), e -> e.ziDuanMC.contains(likeQuery))
                 .whereIf(chaXunLX.equals(1), e -> e.tiaoJianBZ.eq(1))
                 .whereIf(chaXunLX.equals(2),e->e.shuChuBXBZ.eq(1))
                 .select(ShiTuMXListDto.class).fetch().size();

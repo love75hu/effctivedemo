@@ -119,15 +119,15 @@ public class linChuangJSPZController {
 
     @Operation(summary = "根据视图id获取视图字段信息列表")
     @GetMapping("getShiTuMXList")
-    public MsfResponse<List<ShiTuMXListDto>>  getShiTuMXList(@NotEmpty(message = "视图id不能为空")String shiTuSTID, String likeQuery, Integer chaXunLX, Integer pageIndex, Integer pageSize)
+    public MsfResponse<List<ShiTuMXListDto>>  getShiTuMXList(@NotEmpty(message = "视图id不能为空")String shiTuID, String likeQuery, Integer chaXunLX, Integer pageIndex, Integer pageSize)
     {
-        return MsfResponse.success(shiTuMXService.getShiTuMXList(shiTuSTID,likeQuery,chaXunLX,pageIndex,pageSize));
+        return MsfResponse.success(shiTuMXService.getShiTuMXList(shiTuID,likeQuery,chaXunLX,pageIndex,pageSize));
     }
     @Operation(summary = "根据视图id获取视图字段信息列表数量")
     @GetMapping("getShiTuMXCount")
-    public MsfResponse<Integer> getShiTuMXCount(@NotEmpty(message = "视图id不能为空")String shiTuSTID, String likeQuery, Integer chaXunLX)
+    public MsfResponse<Integer> getShiTuMXCount(@NotEmpty(message = "视图id不能为空")String shiTuID, String likeQuery, Integer chaXunLX)
     {
-        return MsfResponse.success(shiTuMXService.getShiTuMXCount(shiTuSTID,likeQuery,chaXunLX));
+        return MsfResponse.success(shiTuMXService.getShiTuMXCount(shiTuID,likeQuery,chaXunLX));
     }
 
     @Operation(summary = "获取关联条件字段")
@@ -144,19 +144,19 @@ public class linChuangJSPZController {
     }
     @Operation(summary = "编辑视图字段")
     @PutMapping("updateShiTuMX")
-    public MsfResponse<Boolean> updateShiTuMX(@RequestBody UpdateShiTuMXDto dto) throws WeiZhaoDSJException {
+    public MsfResponse<Boolean> updateShiTuMX(@RequestBody @Validated UpdateShiTuMXDto dto) throws WeiZhaoDSJException {
         return MsfResponse.success(shiTuXXService.updateShiTuMX(dto));
     }
 
     @Operation(summary = "作废视图分类")
     @PutMapping("zuoFeiShiTFL")
-    public  MsfResponse<Boolean> zuoFeiShiTFL( @NotEmpty(message = "id不能为空") String id) throws WeiZhaoDSJException {
+    public  MsfResponse<Boolean> zuoFeiShiTFL(@RequestParam @NotEmpty(message = "id不能为空") String id) throws WeiZhaoDSJException {
         return MsfResponse.success(shiTuXXService.zuoFeiShiTuFL(id));
     }
 
     @Operation(summary = "作废视图明细")
     @PutMapping("zuoFeiShiTMX")
-    public MsfResponse<Boolean> zuoFeiShiTMX(@NotEmpty(message = "id不能为空")  String id) throws WeiZhaoDSJException {
+    public MsfResponse<Boolean> zuoFeiShiTMX(@RequestParam @NotEmpty(message = "id不能为空")  String id) throws WeiZhaoDSJException {
         return MsfResponse.success(shiTuMXService.zuoFeiShiTMX(id));
     }
 }

@@ -14,10 +14,10 @@ public class ShiTuMXListDto {
     @Schema(description = "字段名称")
     private String ziDuanMC;
     @Schema(description = "条件标志")
-    private String tianJianBZ;
+    private Integer tiaoJianBZ;
     @Schema(description = "输出标志")
-    private String shuChuBZ;
+    private Integer shuChuBZ;
     @Schema(description = "顺序号")
-    private String shuXuHao;
+    private Integer shuXuHao;
 
 }

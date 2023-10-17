@@ -23,7 +23,7 @@ public class LinChuangJSSTDtoTree {
     @Schema(description = "顺序号")
     private String shunXuHao  ;
     @Schema(description = "末级标志")
-    private String moJiBZ ;
+    private Integer moJiBZ ;
     private List<LinChuangJSSTDtoTree> children ;
 
 }

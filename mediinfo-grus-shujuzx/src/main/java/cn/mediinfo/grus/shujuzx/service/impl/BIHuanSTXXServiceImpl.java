@@ -3,6 +3,7 @@ package cn.mediinfo.grus.shujuzx.service.impl;
 import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
 import cn.mediinfo.cyan.msf.core.util.AssertUtil;
 import cn.mediinfo.cyan.msf.core.util.BeanUtil;
+import cn.mediinfo.cyan.msf.stringgenerator.StringGenerator;
 import cn.mediinfo.grus.shujuzx.dto.JieDianGL.BiHuanSTXXDto;
 import cn.mediinfo.grus.shujuzx.dto.JieDianGL.BiHuanSTXXTree;
 import cn.mediinfo.grus.shujuzx.dto.bihuangl.SC_BH_ShiTuXXDto;
@@ -11,6 +12,7 @@ import cn.mediinfo.grus.shujuzx.repository.SC_BH_ShiTuXXRepository;
 import cn.mediinfo.grus.shujuzx.service.BIHuanSTXXService;
 import cn.mediinfo.lyra.extension.service.LyraIdentityService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,12 +23,16 @@ import java.util.stream.Collectors;
  */
 @Service
 public class BIHuanSTXXServiceImpl implements BIHuanSTXXService {
+    private final StringGenerator stringGenerator;
     private final SC_BH_ShiTuXXRepository shiTuXXRepository;
     private final LyraIdentityService lyraIdentityService;
+    private final  BiHuanSTMXServiceImpl biHuanSTMXService;
 
-    public BIHuanSTXXServiceImpl(SC_BH_ShiTuXXRepository shiTuXXRepository, LyraIdentityService lyraIdentityService) {
+    public BIHuanSTXXServiceImpl(StringGenerator stringGenerator, SC_BH_ShiTuXXRepository shiTuXXRepository, LyraIdentityService lyraIdentityService, BiHuanSTMXServiceImpl biHuanSTMXService) {
+        this.stringGenerator = stringGenerator;
         this.shiTuXXRepository = shiTuXXRepository;
         this.lyraIdentityService = lyraIdentityService;
+        this.biHuanSTMXService = biHuanSTMXService;
     }
 
     /**
@@ -66,8 +72,17 @@ public class BIHuanSTXXServiceImpl implements BIHuanSTXXService {
         SC_BH_ShiTuXXModel scBhShiTuXXModel = BeanUtil.copyProperties(dto, SC_BH_ShiTuXXModel::new);
         scBhShiTuXXModel.setZuZhiJGID(lyraIdentityService.getJiGouID());
         scBhShiTuXXModel.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
+        scBhShiTuXXModel.setShiTuID(stringGenerator.Create());
        scBhShiTuXXModel.setShunXuHao(dto.getShunXuHAO()==null?shiTuXXRepository.getMaxShunXuHao():dto.getShunXuHAO());
         shiTuXXRepository.save(scBhShiTuXXModel);
+        return true;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Boolean zuoFeiBHSTXX(String shiTuID) {
+        shiTuXXRepository.asDeleteDsl().where(n->n.shiTuID.eq(shiTuID)).execute();
+        biHuanSTMXService.delectBiHuanSTZDByShiTuID(shiTuID);
         return true;
     }
 

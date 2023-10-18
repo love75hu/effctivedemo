@@ -4,6 +4,7 @@ import cn.mediinfo.cyan.msf.core.util.StringUtil;
 import cn.mediinfo.cyan.msf.orm.MsfJpaRepository;
 import cn.mediinfo.cyan.msf.orm.datasource.MsfDataSource;
 import cn.mediinfo.grus.shujuzx.dto.JieDianGL.BiHuanSTXXTree;
+import cn.mediinfo.grus.shujuzx.dto.JieDianGL.BiHuanSTZDDto;
 import cn.mediinfo.grus.shujuzx.dto.bihuangl.SC_BH_ShiTuXXDto;
 import cn.mediinfo.grus.shujuzx.model.QSC_BH_ShiTuXXModel;
 import cn.mediinfo.grus.shujuzx.model.SC_BH_ShiTuXXModel;
@@ -20,5 +21,7 @@ public interface SC_BH_ShiTuXXRepository extends MsfJpaRepository<QSC_BH_ShiTuXX
     }
     @Query("select max(s.shunXuHao) from SC_BH_ShiTuXXModel s")
     Integer getMaxShunXuHao();
+
+
 
 }

@@ -2,13 +2,15 @@ package cn.mediinfo.grus.shujuzx.controller;
 
 import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
 import cn.mediinfo.cyan.msf.core.response.MsfResponse;
-import cn.mediinfo.grus.shujuzx.dto.JieDianGL.BiHuanSTXXDto;
-import cn.mediinfo.grus.shujuzx.dto.JieDianGL.BiHuanSTXXTree;
-import cn.mediinfo.grus.shujuzx.dto.JieDianGL.BiHuanSTZDDto;
+import cn.mediinfo.grus.shujuzx.dto.JieDianGL.*;
 import cn.mediinfo.grus.shujuzx.dto.bihuangl.SC_BH_ShiTuXXDto;
 import cn.mediinfo.grus.shujuzx.service.impl.BIHuanSTXXServiceImpl;
+import cn.mediinfo.grus.shujuzx.service.impl.BiHuanSTJDGXServiceImpl;
+import cn.mediinfo.grus.shujuzx.service.impl.BiHuanSTJDXXServiceImpl;
+import cn.mediinfo.grus.shujuzx.service.impl.BiHuanSTMXServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -26,8 +28,15 @@ import java.util.List;
 public class JieDianGLController {
 
     private final BIHuanSTXXServiceImpl biHuanSTXXService;
-   public JieDianGLController(BIHuanSTXXServiceImpl biHuanSTXXService) {
+    private final BiHuanSTMXServiceImpl biHuanSTMXService;
+    private final BiHuanSTJDXXServiceImpl biHuanSTJDXXService;
+    private final BiHuanSTJDGXServiceImpl biHuanSTJDGXService;
+
+   public JieDianGLController(BIHuanSTXXServiceImpl biHuanSTXXService, BiHuanSTMXServiceImpl biHuanSTMXService, BiHuanSTJDXXServiceImpl biHuanSTJDXXService, BiHuanSTJDGXServiceImpl biHuanSTJDGXService) {
        this.biHuanSTXXService = biHuanSTXXService;
+       this.biHuanSTMXService = biHuanSTMXService;
+       this.biHuanSTJDXXService = biHuanSTJDXXService;
+       this.biHuanSTJDGXService = biHuanSTJDGXService;
    }
 
     /**
@@ -42,22 +51,22 @@ public class JieDianGLController {
 
     @Operation(summary = "获取闭环节点基本信息")
     @GetMapping("getBiHuanSTXXByShiTuID")
-    public MsfResponse<SC_BH_ShiTuXXDto> getBiHuanSTXXByID (String id) throws WeiZhaoDSJException {
+    public MsfResponse<SC_BH_ShiTuXXDto> getBiHuanSTXXByID (@NotEmpty(message = "id不能为空") String id) throws WeiZhaoDSJException {
         return MsfResponse.success(biHuanSTXXService.getShiTuXXByID(id));
     }
 
     @Operation(summary = "获取闭环视图字段")
     @GetMapping("getBiHuanSTZD")
-    public MsfResponse<List<BiHuanSTZDDto>> getBiHuanSTZD(String ziDuanMC,String biHuanLXDM,String shuiTuID,String chaXunLXDM,String chaXunZhi)
+    public MsfResponse<List<BiHuanSTZDDto>> getBiHuanSTZD(String ziDuanMC, @NotEmpty(message = "闭环类型代码不能为空") String biHuanLXDM, Integer chaXunLXDM, Integer pageIndex, Integer pageSize)
     {
-      return null;
+      return MsfResponse.success(biHuanSTMXService.getBiHuanSTZD(ziDuanMC,biHuanLXDM,chaXunLXDM,pageIndex,pageSize));
     }
 
     @Operation(summary = "获取闭环视图字段数量")
     @GetMapping("getBiHuanSTZDCount")
-    public MsfResponse<Integer> getBiHuanSTZDCount(String ziDuanMC,String biHuanLXDM,String shuiTuID,String chaXunLXDM,String chaXunZhi)
+    public MsfResponse<Integer> getBiHuanSTZDCount( String ziDuanMC,@NotEmpty(message = "闭环类型代码不能为空")  String biHuanLXDM,Integer chaXunLXDM)
     {
-        return null;
+        return MsfResponse.success(biHuanSTMXService.getBiHuanSTZDCount(ziDuanMC,biHuanLXDM,chaXunLXDM));
     }
 
     @Operation(summary = "保存闭环视图信息")
@@ -65,6 +74,87 @@ public class JieDianGLController {
     public MsfResponse<Boolean> addBiHuanSTXX(@RequestBody @Validated BiHuanSTXXDto dto) throws WeiZhaoDSJException {
         return MsfResponse.success(biHuanSTXXService.addBiHuanSTXX(dto));
     }
+    @Operation(summary = "作废闭环视图信息")
+    @DeleteMapping("zuoFeiBHSTXX")
+    public MsfResponse<Boolean> zuoFeiBHSTXX(@NotEmpty(message = "id不能为空") @RequestParam String shiTuID){
+        return MsfResponse.success(biHuanSTXXService.zuoFeiBHSTXX(shiTuID));
+    }
+    @Operation(summary = "添加闭环视图节点字段")
+    @PostMapping("addBiHuanSTJDMX")
+    public MsfResponse<Boolean> addBiHuanSTJDMX(@RequestBody @Validated List<AddBiHuanSTJDMXDto> dto) throws WeiZhaoDSJException {
+        return MsfResponse.success(biHuanSTMXService.addBiHuanSTJDMX(dto));
+    }
+    @Operation(summary = "移除闭环视图节点字段")
+    @DeleteMapping("zuoFeiBHSTJDMX")
+    public MsfResponse<Boolean> zuoFeiBHSTJDMX(@NotEmpty(message = "id不能为空") @RequestParam String id){
+        return MsfResponse.success(biHuanSTMXService.delectBiHuanSTZDByID(id));
+    }
+    @Operation(summary = "编辑保存闭环视图节点字段")
+    @PostMapping("saveBiHuanSTJDMX")
+    public MsfResponse<Boolean> saveBiHuanSTJDMX(@RequestBody @Validated SaveBiHuanSTJDMXDto dto) throws WeiZhaoDSJException {
+        return MsfResponse.success(biHuanSTMXService.saveBiHuanSTJDMX(dto));
+    }
+
+    @Operation(summary = "根据id 获取闭环视图节点")
+    @GetMapping("getBiHuanSTJDByID")
+    public MsfResponse<BiHuanSTJDDto> getBiHuanSTJDByID(@NotEmpty(message = "id不能为空") String id) throws WeiZhaoDSJException {
+        return MsfResponse.success(biHuanSTJDXXService.getBiHuanSTJDByID(id));
+    }
+    @Operation(summary = "获取事件信息接口")
+    @GetMapping("getShiJianXX")
+    public MsfResponse<String> getShiJianXX(@NotEmpty(message = "id不能为空")  String ziDuanBM)
+    {
+        return MsfResponse.success();
+    }
+    @Operation(summary = "获取关系节点")
+    @GetMapping("getGuanLianJDXX")
+    public MsfResponse<List<GuanLianJDDto>> getGuanLianJDXX(@NotEmpty(message = "视图id")  String shiTuID)
+    {
+        return MsfResponse.success(biHuanSTJDGXService.getGuanLianJDXX(shiTuID));
+    }
+    @Operation(summary = "获取视图字段接口")
+    @GetMapping("getShiTUZDXX")
+    public MsfResponse<List<KeXuanZDDto>> getShiTUZDXX(@NotEmpty(message = "视图id")  String shiTuID)
+    {
+        return MsfResponse.success(biHuanSTMXService.getShiTUZDXX(shiTuID));
+    }
+
+    @Operation(summary = "新增闭环视图节点")
+    @PostMapping("addBiHuanSTJD")
+    public MsfResponse<Boolean> addBiHuanSTJD(@RequestBody @Validated BiHuanSTJDDto dto) throws WeiZhaoDSJException {
+
+        return MsfResponse.success(biHuanSTJDXXService.addBiHuanSTJD(dto));
+    }
+    @Operation(summary = "获取节点列表")
+    @GetMapping("getBiHuanJDXXList")
+    public MsfResponse<List<BiHuanJDXXListDto>> getBiHuanJDXXList(@NotEmpty(message = "视图id") String shiTuID,
+                                                                  String jieDianMC,
+                                                                  Integer qiYongBZ,
+                                                                  Integer pageIndex,
+                                                                  Integer pageSize)
+    {
+        return MsfResponse.success(biHuanSTJDXXService.getBiHuanJDXXList(shiTuID,jieDianMC,qiYongBZ,pageIndex,pageSize));
+    }
+
+    @Operation(summary = "获取节点列表数量")
+    @GetMapping("getBiHuanJDXXCount")
+    public MsfResponse<Integer> getBiHuanJDXXCount(@NotEmpty(message = "视图id") String shiTuID,
+                                                   String jieDianMC,
+                                                   Integer qiYongBZ)
+    {
+        return MsfResponse.success(biHuanSTJDXXService.getBiHuanJDXXCount(shiTuID,jieDianMC,qiYongBZ));
+    }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

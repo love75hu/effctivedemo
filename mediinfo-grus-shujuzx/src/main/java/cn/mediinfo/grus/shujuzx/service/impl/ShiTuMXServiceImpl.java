@@ -56,7 +56,9 @@ public class ShiTuMXServiceImpl implements ShiTuMXService {
         AssertUtil.checkWeiZhaoDSJ(result != null, "未获取到数据");
         return result;
     }
-
+    /**
+     * 根据ID获取临床检索视图明细     *     * @param id     * @return
+     */
     @Override
     public ShiTuMXDto getShiTuMXGXByID(String id) throws WeiZhaoDSJException {
         SC_CX_ShiTuMXDto shiTuMXByID = getShiTuMXByID(id);
@@ -64,7 +66,11 @@ public class ShiTuMXServiceImpl implements ShiTuMXService {
         shiTuMXDto.setGuanLianZDList(shiTuMXGXService.getShiTuMXGXList(shiTuMXByID.getShiTuID(),shiTuMXByID.getZiDuanBM(),shiTuMXByID.getZiDuanMC()));
         return shiTuMXDto;
     }
-
+    /**
+     * 获取临床检索视图字段
+     *
+     * @return
+     */
     @Override
     public List<FieldDTO> listFields(Set<String> shiTuMXIds) throws YuanChengException {
         //查询视图明细
@@ -164,12 +170,18 @@ public class ShiTuMXServiceImpl implements ShiTuMXService {
     public List<GuanLianTJZD> getGuanLianTJZD(String shiTuSTID) {
         return shiTuMXRepository.getGuanLianTJZD(shiTuSTID);
     }
-
+    /**
+     * 获取关联条件字段
+     *
+     */
     @Override
     public  List<GuanLianTJZD> getGuanLianTJList(String shiTuSTID) {
         return shiTuMXRepository.getGuanLianTJList(shiTuSTID);
     }
-
+    /**
+     * 更新视图字段
+     *
+     */
     @Override
     public Boolean updateShiTuMX(String shiTuSTID,String shiTuMC, List<GuanLianTJZD> guanLianTJZDS) {
         shiTuMXRepository.asDeleteDsl().where(n->n.shiTuID.eq(shiTuSTID)).execute();

@@ -23,5 +23,9 @@ public interface BiHuanSTMXService {
 
     List<KeXuanZDDto> getShiTUZDXX(String shiTUID);
 
+    List<KeXuanZDDto> getRuChanZDXX(String biHuanLXDM);
+
+
+
 }
 

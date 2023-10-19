@@ -48,6 +48,12 @@ public class BiHuanSTJDXXServiceImpl implements BiHuanSTJDXXService {
         return biHuanSTJDDto;
     }
 
+    /**
+     * 新增闭环视图节点
+     * @param dto 闭环视图节点
+     * @return 成功失败
+     * @throws WeiZhaoDSJException 未找到异常
+     */
     @Override
     public Boolean addBiHuanSTJD(BiHuanSTJDDto dto) throws WeiZhaoDSJException {
         SC_BH_ShiTuJDXXModel scBhShiTuJDXXModel = shiTuJDXXRepository.findById(dto.getId()).orElse(null);
@@ -66,6 +72,15 @@ public class BiHuanSTJDXXServiceImpl implements BiHuanSTJDXXService {
 
         return true;
     }
+
+    /**
+     * 获取节点列表
+     * @param shiTuID 视图id
+     * @param jieDianMC 节点名称
+     * @param qiYongBZ 启用标志
+     * @param pageIndex 分页
+     * @param pageSize 条数
+     */
     @Override
     public List<BiHuanJDXXListDto> getBiHuanJDXXList(String shiTuID,
                                                      String jieDianMC,
@@ -88,6 +103,12 @@ public class BiHuanSTJDXXServiceImpl implements BiHuanSTJDXXService {
         }
         return biHuanJDXXList;
     }
+    /**
+     * 获取节点列表数量
+     * @param shiTuID 视图id
+     * @param jieDianMC 节点名称
+     * @param qiYongBZ 启用标志
+     */
     @Override
     public Integer  getBiHuanJDXXCount(String shiTuID,
                                        String jieDianMC,

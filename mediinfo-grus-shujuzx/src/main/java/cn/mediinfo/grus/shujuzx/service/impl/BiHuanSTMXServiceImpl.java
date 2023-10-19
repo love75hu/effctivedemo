@@ -56,19 +56,36 @@ public class BiHuanSTMXServiceImpl implements BiHuanSTMXService {
     public Integer getBiHuanSTZDCount(String ziDuanMC, String biHuanLXDM, Integer chaXunLXDM) {
         return shiTuMXRepository.getBiHuanSTZDCount(ziDuanMC,biHuanLXDM,chaXunLXDM);
     }
+    /**
+     * 删除闭环视图字段
+     *
+     * @param id 字段id
+     * @return
+     */
     @Override
     public Boolean delectBiHuanSTZDByID(String id)
     {
         shiTuMXRepository.deleteById(id);
         return true;
     }
+    /**
+     * 删除视图下得字段
+     *
+     * @param shiTuID 视图id
+     * @return
+     */
     @Override
     public Boolean delectBiHuanSTZDByShiTuID(String shiTuID)
     {
         shiTuMXRepository.asDeleteDsl().where(n->n.shiTuID.eq(shiTuID)).execute();
         return true;
     }
-
+    /**
+     * 添加闭环视图字段
+     *
+     * @param dto
+     * @return
+     */
     @Override
     public Boolean addBiHuanSTJDMX(List<AddBiHuanSTJDMXDto> dto) {
         List<SC_BH_ShiTuMXModel> shiTuMXList = shiTuMXRepository.asQuerydsl().where(n -> n.shiTuID.eq(dto.get(0).getShiTuID())).fetch();
@@ -81,6 +98,12 @@ public class BiHuanSTMXServiceImpl implements BiHuanSTMXService {
         shiTuMXRepository.saveAll(scBhShiTuMXModels);
         return true;
     }
+    /**
+     * 保存闭环视图字段
+     *
+     * @param dto
+     * @return
+     */
 
     @Override
     public Boolean saveBiHuanSTJDMX(SaveBiHuanSTJDMXDto dto) throws WeiZhaoDSJException {
@@ -90,9 +113,26 @@ public class BiHuanSTMXServiceImpl implements BiHuanSTMXService {
         shiTuMXRepository.save(scBhShiTuMXModel);
         return true;
     }
-
+    /**
+     * 视图下得字段信息
+     *
+     * @param shiTUID 视图id
+     * @return 字段集合
+     */
     @Override
     public List<KeXuanZDDto> getShiTUZDXX(String shiTUID) {
         return shiTuMXRepository.getShiTUZDXX(shiTUID);
+    }
+
+    /**
+     * 获取入参字段信息
+     *
+     * @param biHuanLXDM 闭环类型代码
+     * @return 字段集合
+     */
+    @Override
+    public List<KeXuanZDDto> getRuChanZDXX(String biHuanLXDM) {
+
+        return shiTuMXRepository.getRuChanZDXX(biHuanLXDM);
     }
 }

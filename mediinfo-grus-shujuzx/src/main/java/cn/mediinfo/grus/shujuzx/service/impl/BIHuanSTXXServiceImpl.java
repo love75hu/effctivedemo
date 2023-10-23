@@ -90,7 +90,7 @@ public class BIHuanSTXXServiceImpl implements BIHuanSTXXService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Boolean zuoFeiBHSTXX(String id) throws WeiZhaoDSJException {
-        shiTuXXRepository.asDeleteDsl().where(n->n.shiTuID.eq(id)).execute();
+        shiTuXXRepository.asDeleteDsl().where(n->n.id.eq(id)).execute();
         var  shiTuxx = shiTuXXRepository.findById(id).orElse(null);
         if (shiTuxx==null)
         {

@@ -13,8 +13,8 @@ import java.util.List;
 
 public interface BiHuanSTMXService {
     SC_BH_ShiTuMXDto getShiTuMXById(String id) throws WeiZhaoDSJException;
-    List<BiHuanSTZDDto> getBiHuanSTZD(String ziDuanMC, String biHuanLXDM, Integer chaXunLXDM, Integer pageIndex, Integer pageSize);
-    Integer getBiHuanSTZDCount(String ziDuanMC, String biHuanLXDM, Integer chaXunLXDM);
+    List<BiHuanSTZDDto> getBiHuanSTZD(  String shiTuID,String ziDuanMC, String biHuanLXDM, Integer chaXunLXDM, Integer pageIndex, Integer pageSize);
+    Integer getBiHuanSTZDCount( String shiTuID, String ziDuanMC, String biHuanLXDM, Integer chaXunLXDM);
     Boolean delectBiHuanSTZDByID(String id);
     Boolean delectBiHuanSTZDByShiTuID(String shiTuID);
     Boolean addBiHuanSTJDMX(List<AddBiHuanSTJDMXDto> dto);

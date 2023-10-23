@@ -43,9 +43,9 @@ public class BiHuanSTMXServiceImpl implements BiHuanSTMXService {
      * @return
      */
     @Override
-    public List<BiHuanSTZDDto> getBiHuanSTZD(String ziDuanMC, String biHuanLXDM, Integer chaXunLXDM, Integer pageIndex, Integer pageSize) {
+    public List<BiHuanSTZDDto> getBiHuanSTZD( String shiTuID, String ziDuanMC, String biHuanLXDM, Integer chaXunLXDM, Integer pageIndex, Integer pageSize) {
 
-        return shiTuMXRepository.getBiHuanSTZD(ziDuanMC,biHuanLXDM,chaXunLXDM,pageIndex,pageSize);
+        return shiTuMXRepository.getBiHuanSTZD(shiTuID,ziDuanMC,biHuanLXDM,chaXunLXDM,pageIndex,pageSize);
     }
     /**
      * 获取闭环视图字段数量
@@ -53,8 +53,8 @@ public class BiHuanSTMXServiceImpl implements BiHuanSTMXService {
      * @return
      */
     @Override
-    public Integer getBiHuanSTZDCount(String ziDuanMC, String biHuanLXDM, Integer chaXunLXDM) {
-        return shiTuMXRepository.getBiHuanSTZDCount(ziDuanMC,biHuanLXDM,chaXunLXDM);
+    public Integer getBiHuanSTZDCount( String shiTuID, String ziDuanMC, String biHuanLXDM, Integer chaXunLXDM) {
+        return shiTuMXRepository.getBiHuanSTZDCount(shiTuID,ziDuanMC,biHuanLXDM,chaXunLXDM);
     }
     /**
      * 删除闭环视图字段

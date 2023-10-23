@@ -50,28 +50,30 @@ public class JieDianGLController {
     }
 
     @Operation(summary = "获取闭环节点基本信息")
-    @GetMapping("getBiHuanSTXXByShiTuID")
+    @GetMapping("getBiHuanSTXXByID")
     public MsfResponse<SC_BH_ShiTuXXDto> getBiHuanSTXXByID (@NotEmpty(message = "id不能为空") String id) throws WeiZhaoDSJException {
         return MsfResponse.success(biHuanSTXXService.getShiTuXXByID(id));
     }
 
     @Operation(summary = "获取闭环视图字段")
     @GetMapping("getBiHuanSTZD")
-    public MsfResponse<List<BiHuanSTZDDto>> getBiHuanSTZD(String ziDuanMC, @NotEmpty(message = "闭环类型代码不能为空") String biHuanLXDM, Integer chaXunLXDM, Integer pageIndex, Integer pageSize)
+    public MsfResponse<List<BiHuanSTZDDto>> getBiHuanSTZD(@NotEmpty(message = "视图id") String shiTuID,String ziDuanMC,
+    String biHuanLXDM,
+                                                          Integer chaXunLXDM, Integer pageIndex, Integer pageSize)
     {
-      return MsfResponse.success(biHuanSTMXService.getBiHuanSTZD(ziDuanMC,biHuanLXDM,chaXunLXDM,pageIndex,pageSize));
+      return MsfResponse.success(biHuanSTMXService.getBiHuanSTZD(shiTuID,ziDuanMC,biHuanLXDM,chaXunLXDM,pageIndex,pageSize));
     }
 
     @Operation(summary = "获取闭环视图字段数量")
     @GetMapping("getBiHuanSTZDCount")
-    public MsfResponse<Integer> getBiHuanSTZDCount( String ziDuanMC,@NotEmpty(message = "闭环类型代码不能为空")  String biHuanLXDM,Integer chaXunLXDM)
+    public MsfResponse<Integer> getBiHuanSTZDCount(@NotEmpty(message = "视图id") String shiTuID, String ziDuanMC, String biHuanLXDM,Integer chaXunLXDM)
     {
-        return MsfResponse.success(biHuanSTMXService.getBiHuanSTZDCount(ziDuanMC,biHuanLXDM,chaXunLXDM));
+        return MsfResponse.success(biHuanSTMXService.getBiHuanSTZDCount(shiTuID,ziDuanMC,biHuanLXDM,chaXunLXDM));
     }
 
     @Operation(summary = "保存闭环视图信息")
     @PostMapping("addBiHuanSTXX")
-    public MsfResponse<Boolean> addBiHuanSTXX(@RequestBody @Validated BiHuanSTXXDto dto) throws WeiZhaoDSJException {
+    public MsfResponse<String> addBiHuanSTXX(@RequestBody @Validated BiHuanSTXXDto dto) throws WeiZhaoDSJException {
         return MsfResponse.success(biHuanSTXXService.addBiHuanSTXX(dto));
     }
     @Operation(summary = "作废闭环视图信息")
@@ -128,21 +130,23 @@ public class JieDianGLController {
     @Operation(summary = "获取节点列表")
     @GetMapping("getBiHuanJDXXList")
     public MsfResponse<List<BiHuanJDXXListDto>> getBiHuanJDXXList(@NotEmpty(message = "视图id") String shiTuID,
+                                                                  String biHuanLXDM,
                                                                   String jieDianMC,
                                                                   Integer qiYongBZ,
                                                                   Integer pageIndex,
                                                                   Integer pageSize)
     {
-        return MsfResponse.success(biHuanSTJDXXService.getBiHuanJDXXList(shiTuID,jieDianMC,qiYongBZ,pageIndex,pageSize));
+        return MsfResponse.success(biHuanSTJDXXService.getBiHuanJDXXList(shiTuID,biHuanLXDM,jieDianMC,qiYongBZ,pageIndex,pageSize));
     }
 
     @Operation(summary = "获取节点列表数量")
     @GetMapping("getBiHuanJDXXCount")
     public MsfResponse<Integer> getBiHuanJDXXCount(@NotEmpty(message = "视图id") String shiTuID,
+                                                   String biHuanLXDM,
                                                    String jieDianMC,
                                                    Integer qiYongBZ)
     {
-        return MsfResponse.success(biHuanSTJDXXService.getBiHuanJDXXCount(shiTuID,jieDianMC,qiYongBZ));
+        return MsfResponse.success(biHuanSTJDXXService.getBiHuanJDXXCount(shiTuID,biHuanLXDM,jieDianMC,qiYongBZ));
     }
 
 

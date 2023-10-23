@@ -15,21 +15,25 @@ import java.util.List;
 public interface SC_BH_ShiTuJDXXRepository extends MsfJpaRepository<QSC_BH_ShiTuJDXXModel, SC_BH_ShiTuJDXXModel, String>, JpaSpecificationExecutor<SC_BH_ShiTuJDXXModel> {
 
    default List<BiHuanJDXXListDto> getBiHuanJDXXList(String shiTuID,
+                                                     String biHuanLXDM,
                                                      String jieDianMC,
                                                      Integer qiYongBZ,
                                                      Integer pageIndex,
                                                      Integer pageSize)
    {
-      return this.asQuerydsl().where(n->n.shiTuID.eq(shiTuID))
+      return this.asQuerydsl().whereIf(StringUtil.hasText(shiTuID),n->n.shiTuID.eq(shiTuID))
+              .whereIf(StringUtil.hasText(biHuanLXDM),n->n.biHuanLXDM.eq(biHuanLXDM))
                .whereIf(StringUtil.hasText(jieDianMC),n->n.jieDianMC.contains(jieDianMC))
                .whereIf(qiYongBZ.equals(1),n->n.qiYongBZ.eq(qiYongBZ))
                .select(BiHuanJDXXListDto.class).fetchPage(pageIndex,pageSize);
    }
     default Integer getBiHuanJDXXCount(String shiTuID,
+                                                      String biHuanLXDM,
                                                       String jieDianMC,
                                                       Integer qiYongBZ)
     {
-        return this.asQuerydsl().where(n->n.shiTuID.eq(shiTuID))
+        return this.asQuerydsl().whereIf(StringUtil.hasText(shiTuID),n->n.shiTuID.eq(shiTuID))
+                .whereIf(StringUtil.hasText(biHuanLXDM),n->n.biHuanLXDM.eq(biHuanLXDM))
                 .whereIf(StringUtil.hasText(jieDianMC),n->n.jieDianMC.contains(jieDianMC))
                 .whereIf(qiYongBZ.equals(1),n->n.qiYongBZ.eq(qiYongBZ))
                 .select(BiHuanJDXXListDto.class).fetch().size();

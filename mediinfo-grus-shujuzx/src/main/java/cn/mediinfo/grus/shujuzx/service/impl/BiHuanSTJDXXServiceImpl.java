@@ -83,11 +83,12 @@ public class BiHuanSTJDXXServiceImpl implements BiHuanSTJDXXService {
      */
     @Override
     public List<BiHuanJDXXListDto> getBiHuanJDXXList(String shiTuID,
+                                                     String biHuanLXDM,
                                                      String jieDianMC,
                                                      Integer qiYongBZ,
                                                      Integer pageIndex,
                                                      Integer pageSize){
-        List<BiHuanJDXXListDto> biHuanJDXXList = shiTuJDXXRepository.getBiHuanJDXXList(shiTuID, jieDianMC, qiYongBZ, pageIndex, pageSize);
+        List<BiHuanJDXXListDto> biHuanJDXXList = shiTuJDXXRepository.getBiHuanJDXXList(shiTuID,biHuanLXDM, jieDianMC, qiYongBZ, pageIndex, pageSize);
         var jieDianIDs=biHuanJDXXList.stream().map(n->n.getJieDianID()).collect(Collectors.toList());
         //获取所有列表下的 节点内容
         var shiTuJDMX=biHuanSTJDMXService.getShiTuJDMXs(jieDianIDs);
@@ -111,10 +112,11 @@ public class BiHuanSTJDXXServiceImpl implements BiHuanSTJDXXService {
      */
     @Override
     public Integer  getBiHuanJDXXCount(String shiTuID,
+                                       String biHuanLXDM,
                                        String jieDianMC,
                                        Integer qiYongBZ)
     {
-        return shiTuJDXXRepository.getBiHuanJDXXCount(shiTuID, jieDianMC, qiYongBZ);
+        return shiTuJDXXRepository.getBiHuanJDXXCount(shiTuID, biHuanLXDM,jieDianMC, qiYongBZ);
     }
 
 

@@ -68,14 +68,14 @@ public class BIHuanSTXXServiceImpl implements BIHuanSTXXService {
      * 添加闭环视图信息
      */
     @Override
-    public Boolean addBiHuanSTXX(BiHuanSTXXDto dto) {
+    public String addBiHuanSTXX(BiHuanSTXXDto dto) {
         SC_BH_ShiTuXXModel scBhShiTuXXModel = BeanUtil.copyProperties(dto, SC_BH_ShiTuXXModel::new);
         scBhShiTuXXModel.setZuZhiJGID(lyraIdentityService.getJiGouID());
         scBhShiTuXXModel.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
         scBhShiTuXXModel.setShiTuID(stringGenerator.Create());
        scBhShiTuXXModel.setShunXuHao(dto.getShunXuHAO()==null?shiTuXXRepository.getMaxShunXuHao():dto.getShunXuHAO());
-        shiTuXXRepository.save(scBhShiTuXXModel);
-        return true;
+       var model= shiTuXXRepository.save(scBhShiTuXXModel);
+        return model.getId();
     }
 
     @Override

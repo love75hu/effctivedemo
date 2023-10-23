@@ -18,11 +18,13 @@ public interface BiHuanSTJDXXService {
     Boolean addBiHuanSTJD(BiHuanSTJDDto dto) throws WeiZhaoDSJException;
 
     List<BiHuanJDXXListDto> getBiHuanJDXXList(String shiTuID,
+                                              String biHuanLXDM,
                                               String jieDianMC,
                                               Integer qiYongBZ,
                                               Integer pageIndex,
                                               Integer pageSize);
     Integer  getBiHuanJDXXCount(String shiTuID,
+                                String biHuanLXDM,
                                 String jieDianMC,
                                 Integer qiYongBZ);
 }

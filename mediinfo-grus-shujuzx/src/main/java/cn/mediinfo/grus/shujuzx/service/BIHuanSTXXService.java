@@ -17,7 +17,7 @@ public interface BIHuanSTXXService {
 
     List<BiHuanSTXXTree> getBiHuanSTXXTree(String likeQuery);
 
-    Boolean addBiHuanSTXX(BiHuanSTXXDto dto);
+    String addBiHuanSTXX(BiHuanSTXXDto dto);
 
     Boolean zuoFeiBHSTXX(String shiTuID);
 }

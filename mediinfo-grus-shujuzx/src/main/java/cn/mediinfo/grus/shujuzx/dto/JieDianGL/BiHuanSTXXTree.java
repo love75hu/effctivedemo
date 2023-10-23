@@ -15,7 +15,7 @@ public class BiHuanSTXXTree {
     @Schema(description = "闭环类型名称")
     private String biHuanLXMC;
     @Schema(description = "视图信息id")
-    private String shiTuXXID;
+    private String shiTuID;
     @Schema(description = "视图名称")
     private String shiTuMC;
     @Schema(description = "视图类型代码")

@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -76,10 +77,18 @@ public class JieDianGLController {
     public MsfResponse<String> addBiHuanSTXX(@RequestBody @Validated BiHuanSTXXDto dto) throws WeiZhaoDSJException {
         return MsfResponse.success(biHuanSTXXService.addBiHuanSTXX(dto));
     }
+
+    @Operation(summary = "编辑闭环视图信息")
+    @PutMapping("updateBiHuanSTXX")
+    public MsfResponse<Boolean> updateBiHuanSTXX(@RequestBody @Validated BiHuanSTXXDto dto) throws WeiZhaoDSJException {
+        return MsfResponse.success(biHuanSTXXService.updateBiHuanSTXX(dto));
+    }
+
+
     @Operation(summary = "作废闭环视图信息")
     @DeleteMapping("zuoFeiBHSTXX")
-    public MsfResponse<Boolean> zuoFeiBHSTXX(@NotEmpty(message = "id不能为空") @RequestParam String shiTuID){
-        return MsfResponse.success(biHuanSTXXService.zuoFeiBHSTXX(shiTuID));
+    public MsfResponse<Boolean> zuoFeiBHSTXX(@NotEmpty(message = "id不能为空") @RequestParam String id) throws WeiZhaoDSJException {
+        return MsfResponse.success(biHuanSTXXService.zuoFeiBHSTXX(id));
     }
     @Operation(summary = "添加闭环视图节点字段")
     @PostMapping("addBiHuanSTJDMX")

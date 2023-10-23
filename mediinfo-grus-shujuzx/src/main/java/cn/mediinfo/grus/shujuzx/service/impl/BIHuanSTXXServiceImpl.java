@@ -8,6 +8,7 @@ import cn.mediinfo.grus.shujuzx.dto.JieDianGL.BiHuanSTXXDto;
 import cn.mediinfo.grus.shujuzx.dto.JieDianGL.BiHuanSTXXTree;
 import cn.mediinfo.grus.shujuzx.dto.bihuangl.SC_BH_ShiTuXXDto;
 import cn.mediinfo.grus.shujuzx.model.SC_BH_ShiTuXXModel;
+import cn.mediinfo.grus.shujuzx.model.SC_CX_ShiTuXXModel;
 import cn.mediinfo.grus.shujuzx.repository.SC_BH_ShiTuXXRepository;
 import cn.mediinfo.grus.shujuzx.service.BIHuanSTXXService;
 import cn.mediinfo.lyra.extension.service.LyraIdentityService;
@@ -79,10 +80,23 @@ public class BIHuanSTXXServiceImpl implements BIHuanSTXXService {
     }
 
     @Override
+    public Boolean updateBiHuanSTXX(BiHuanSTXXDto dto) throws WeiZhaoDSJException {
+        var scCxShiTuXXModel = shiTuXXRepository.findById(dto.getId()).orElse(null);
+        BeanUtil.copyProperties(dto,scCxShiTuXXModel);
+        shiTuXXRepository.save(scCxShiTuXXModel);
+        return true;
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
-    public Boolean zuoFeiBHSTXX(String shiTuID) {
-        shiTuXXRepository.asDeleteDsl().where(n->n.shiTuID.eq(shiTuID)).execute();
-        biHuanSTMXService.delectBiHuanSTZDByShiTuID(shiTuID);
+    public Boolean zuoFeiBHSTXX(String id) throws WeiZhaoDSJException {
+        shiTuXXRepository.asDeleteDsl().where(n->n.shiTuID.eq(id)).execute();
+        var  shiTuxx = shiTuXXRepository.findById(id).orElse(null);
+        if (shiTuxx==null)
+        {
+            throw new WeiZhaoDSJException("未获取到数据");
+        }
+        biHuanSTMXService.delectBiHuanSTZDByShiTuID(shiTuxx.getShiTuID());
         return true;
     }
 

@@ -57,7 +57,7 @@ public class JieDianGLController {
 
     @Operation(summary = "获取闭环视图字段")
     @GetMapping("getBiHuanSTZD")
-    public MsfResponse<List<BiHuanSTZDDto>> getBiHuanSTZD(@NotEmpty(message = "视图id") String shiTuID,String ziDuanMC,
+    public MsfResponse<List<BiHuanSTZDDto>> getBiHuanSTZD( String shiTuID,String ziDuanMC,
     String biHuanLXDM,
                                                           Integer chaXunLXDM, Integer pageIndex, Integer pageSize)
     {
@@ -66,7 +66,7 @@ public class JieDianGLController {
 
     @Operation(summary = "获取闭环视图字段数量")
     @GetMapping("getBiHuanSTZDCount")
-    public MsfResponse<Integer> getBiHuanSTZDCount(@NotEmpty(message = "视图id") String shiTuID, String ziDuanMC, String biHuanLXDM,Integer chaXunLXDM)
+    public MsfResponse<Integer> getBiHuanSTZDCount(String shiTuID, String ziDuanMC, String biHuanLXDM,Integer chaXunLXDM)
     {
         return MsfResponse.success(biHuanSTMXService.getBiHuanSTZDCount(shiTuID,ziDuanMC,biHuanLXDM,chaXunLXDM));
     }
@@ -129,7 +129,7 @@ public class JieDianGLController {
     }
     @Operation(summary = "获取节点列表")
     @GetMapping("getBiHuanJDXXList")
-    public MsfResponse<List<BiHuanJDXXListDto>> getBiHuanJDXXList(@NotEmpty(message = "视图id") String shiTuID,
+    public MsfResponse<List<BiHuanJDXXListDto>> getBiHuanJDXXList(String shiTuID,
                                                                   String biHuanLXDM,
                                                                   String jieDianMC,
                                                                   Integer qiYongBZ,
@@ -141,7 +141,7 @@ public class JieDianGLController {
 
     @Operation(summary = "获取节点列表数量")
     @GetMapping("getBiHuanJDXXCount")
-    public MsfResponse<Integer> getBiHuanJDXXCount(@NotEmpty(message = "视图id") String shiTuID,
+    public MsfResponse<Integer> getBiHuanJDXXCount( String shiTuID,
                                                    String biHuanLXDM,
                                                    String jieDianMC,
                                                    Integer qiYongBZ)

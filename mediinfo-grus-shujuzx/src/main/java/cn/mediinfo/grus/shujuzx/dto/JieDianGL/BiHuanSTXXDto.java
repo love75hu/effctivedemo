@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 public class BiHuanSTXXDto {
 
+private String id;
 @Schema(description = "闭环类型代码（[SC0013]）")
 private String biHuanLXDM;
 @Schema(description = "闭环类型名称")

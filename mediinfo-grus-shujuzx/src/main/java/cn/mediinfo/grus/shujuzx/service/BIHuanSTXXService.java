@@ -18,6 +18,7 @@ public interface BIHuanSTXXService {
     List<BiHuanSTXXTree> getBiHuanSTXXTree(String likeQuery);
 
     String addBiHuanSTXX(BiHuanSTXXDto dto);
+    Boolean updateBiHuanSTXX(BiHuanSTXXDto dto) throws WeiZhaoDSJException;
 
-    Boolean zuoFeiBHSTXX(String shiTuID);
+    Boolean zuoFeiBHSTXX(String shiTuID) throws WeiZhaoDSJException;
 }

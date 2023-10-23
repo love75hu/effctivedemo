@@ -1,7 +1,9 @@
 package cn.mediinfo.grus.shujuzx.dto.JieDianGL;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
 
+@Data
 public class BiHuanSTZDDto {
     private String id;
     /**

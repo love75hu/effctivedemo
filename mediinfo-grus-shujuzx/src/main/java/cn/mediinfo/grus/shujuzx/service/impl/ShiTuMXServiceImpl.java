@@ -121,6 +121,7 @@ public class ShiTuMXServiceImpl implements ShiTuMXService {
     @Override
     public Boolean addShiTuMX(AddShiTuMXDto addShiTuMXDto) throws WeiZhaoDSJException, MsfResponseException {
         List<SC_CX_ShiTuMXModel> shiTuMXModels=new ArrayList<>();
+        //赋值
         addShiTuMXDto.getZiDuanXXList().forEach(s->{
             SC_CX_ShiTuMXModel shiTuMXModel=new SC_CX_ShiTuMXModel();
             shiTuMXModel.setShiTuID(addShiTuMXDto.getShiTuID());
@@ -130,6 +131,7 @@ public class ShiTuMXServiceImpl implements ShiTuMXService {
             BeanUtil.copyProperties(s,shiTuMXModel);
             shiTuMXModels.add(shiTuMXModel);
         });
+        //更新视图明细
         shiTuMXRepository.saveAll(shiTuMXModels);
         return true;
     }

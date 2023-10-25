@@ -180,5 +180,26 @@ public class BiHuanSTJDXXServiceImpl implements BiHuanSTJDXXService {
         return true;
     }
 
+    @Override
+    public Boolean updateBiHuanSTJD(BiHuanSTJDDto dto) throws WeiZhaoDSJException {
+        SC_BH_ShiTuJDXXModel scBhShiTuJDXXModel = shiTuJDXXRepository.findById(dto.getId()).orElse(null);
+        if (scBhShiTuJDXXModel==null)
+        {
+            throw new WeiZhaoDSJException("未找到节点信息");
+        }
+        BeanUtil.copyProperties(dto,scBhShiTuJDXXModel);
+        shiTuJDXXRepository.save(scBhShiTuJDXXModel);
+        //添加关联节点
+        biHuanSTJDGXService.addGuanLianJDXX(dto.getGuanLianJD(),
+                scBhShiTuJDXXModel.getShiTuID(),
+                scBhShiTuJDXXModel.getShiTuMC(),scBhShiTuJDXXModel.getJieDianID(),scBhShiTuJDXXModel.getJieDianMC());
+        //添加节点内容
+        biHuanSTJDMXService.addShiTuJDMX(dto.getJieDianNR(),
+                scBhShiTuJDXXModel.getShiTuID(),
+                scBhShiTuJDXXModel.getShiTuMC(),scBhShiTuJDXXModel.getJieDianID(),scBhShiTuJDXXModel.getJieDianMC());
+        return true;
+
+    }
+
 
 }

@@ -11,7 +11,7 @@ public class BiHuanSTJDDto {
     @Schema(description = "节点id")
     private String jieDianID;
     @Schema(description = "节点名称")
-    private String JieDianMC;
+    private String jieDianMC;
     @Schema(description = "顺序号")
     private String shunXuHAO;
     @Schema(description = "事件字段编码")

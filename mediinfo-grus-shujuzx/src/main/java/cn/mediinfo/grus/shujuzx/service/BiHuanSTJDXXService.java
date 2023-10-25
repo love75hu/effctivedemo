@@ -6,6 +6,7 @@ import cn.mediinfo.grus.shujuzx.dto.JieDianGL.BiHuanJDXXListDto;
 import cn.mediinfo.grus.shujuzx.dto.JieDianGL.BiHuanSTJDDto;
 import cn.mediinfo.grus.shujuzx.dto.JieDianGL.GuanLianJDDto;
 import cn.mediinfo.grus.shujuzx.dto.bihuangl.SC_BH_ShiTuJDXXDto;
+import cn.mediinfo.grus.shujuzx.dto.bihuansz.KeXuanJDDto;
 import jakarta.validation.constraints.NotEmpty;
 
 import java.util.List;
@@ -17,6 +18,8 @@ public interface BiHuanSTJDXXService {
 
     Boolean addBiHuanSTJD(BiHuanSTJDDto dto) throws WeiZhaoDSJException;
 
+    List<GuanLianJDDto> getGuanLianJDXX(String shiTuID);
+
     List<BiHuanJDXXListDto> getBiHuanJDXXList(String shiTuID,
                                               String biHuanLXDM,
                                               String jieDianMC,
@@ -27,4 +30,6 @@ public interface BiHuanSTJDXXService {
                                 String biHuanLXDM,
                                 String jieDianMC,
                                 Integer qiYongBZ);
+
+    List<KeXuanJDDto> getKeXuanJDBybiHuanLXDM(String biHuanLXDM);
 }

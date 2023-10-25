@@ -4,6 +4,7 @@ import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
 import cn.mediinfo.cyan.msf.core.response.MsfResponse;
 import cn.mediinfo.grus.shujuzx.dto.JieDianGL.*;
 import cn.mediinfo.grus.shujuzx.dto.bihuangl.SC_BH_ShiTuXXDto;
+import cn.mediinfo.grus.shujuzx.dto.bihuansz.KeXuanJDDto;
 import cn.mediinfo.grus.shujuzx.service.impl.BIHuanSTXXServiceImpl;
 import cn.mediinfo.grus.shujuzx.service.impl.BiHuanSTJDGXServiceImpl;
 import cn.mediinfo.grus.shujuzx.service.impl.BiHuanSTJDXXServiceImpl;
@@ -121,7 +122,7 @@ public class JieDianGLController {
     @GetMapping("getGuanLianJDXX")
     public MsfResponse<List<GuanLianJDDto>> getGuanLianJDXX(@NotEmpty(message = "视图id")  String shiTuID)
     {
-        return MsfResponse.success(biHuanSTJDGXService.getGuanLianJDXX(shiTuID));
+        return MsfResponse.success(biHuanSTJDXXService.getGuanLianJDXX(shiTuID));
     }
     @Operation(summary = "获取视图字段接口")
     @GetMapping("getShiTUZDXX")
@@ -132,7 +133,7 @@ public class JieDianGLController {
 
     @Operation(summary = "新增闭环视图节点")
     @PostMapping("addBiHuanSTJD")
-    public MsfResponse<Boolean> addBiHuanSTJD(@RequestBody @Validated BiHuanSTJDDto dto) throws WeiZhaoDSJException {
+    public MsfResponse<Boolean> addBiHuanSTJD(@RequestBody  BiHuanSTJDDto dto) throws WeiZhaoDSJException {
 
         return MsfResponse.success(biHuanSTJDXXService.addBiHuanSTJD(dto));
     }
@@ -156,6 +157,14 @@ public class JieDianGLController {
                                                    Integer qiYongBZ)
     {
         return MsfResponse.success(biHuanSTJDXXService.getBiHuanJDXXCount(shiTuID,biHuanLXDM,jieDianMC,qiYongBZ));
+    }
+
+    @Operation(summary = "获取可选节点内容")
+    @GetMapping("getKeXuanJDBybiHuanLXDM")
+    public MsfResponse<List<KeXuanJDDto>> getKeXuanJDBybiHuanLXDM(@NotEmpty(message = "闭环类型代码")  String biHuanLXDM)
+    {
+        return MsfResponse.success(biHuanSTJDXXService.getKeXuanJDBybiHuanLXDM(biHuanLXDM));
+
     }
 
 

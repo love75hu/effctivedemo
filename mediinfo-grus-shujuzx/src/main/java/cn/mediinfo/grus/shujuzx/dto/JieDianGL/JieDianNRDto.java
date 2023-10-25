@@ -9,12 +9,12 @@ public class JieDianNRDto {
      * 节点ID
      */
     @Schema(description = "节点ID")
-    private String jieDianID;
+    private String ziDuanBM;
     /**
      * 节点名称
      */
     @Schema(description = "节点名称")
-    private String jieDianMC;
+    private String ziDuanMC;
 
     /**
      * 控制时间标志

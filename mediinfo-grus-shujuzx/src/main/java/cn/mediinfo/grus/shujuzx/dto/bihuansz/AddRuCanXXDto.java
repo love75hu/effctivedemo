@@ -1,11 +1,10 @@
-package cn.mediinfo.grus.shujuzx.dto.JieDianGL;
+package cn.mediinfo.grus.shujuzx.dto.bihuansz;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
-public class KeXuanZDDto {
-
+public class AddRuCanXXDto {
     /**
      * 视图ID
      */

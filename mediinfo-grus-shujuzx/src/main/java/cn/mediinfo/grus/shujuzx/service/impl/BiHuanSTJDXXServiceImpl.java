@@ -1,20 +1,26 @@
 package cn.mediinfo.grus.shujuzx.service.impl;
 
 import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
-import cn.mediinfo.cyan.msf.core.response.MsfResponse;
 import cn.mediinfo.cyan.msf.core.util.AssertUtil;
 import cn.mediinfo.cyan.msf.core.util.BeanUtil;
+import cn.mediinfo.cyan.msf.stringgenerator.StringGenerator;
 import cn.mediinfo.grus.shujuzx.dto.JieDianGL.BiHuanJDXXListDto;
 import cn.mediinfo.grus.shujuzx.dto.JieDianGL.BiHuanSTJDDto;
+import cn.mediinfo.grus.shujuzx.dto.JieDianGL.GuanLianJDDto;
 import cn.mediinfo.grus.shujuzx.dto.bihuangl.SC_BH_ShiTuJDGXDto;
 import cn.mediinfo.grus.shujuzx.dto.bihuangl.SC_BH_ShiTuJDMXDto;
 import cn.mediinfo.grus.shujuzx.dto.bihuangl.SC_BH_ShiTuJDXXDto;
+import cn.mediinfo.grus.shujuzx.dto.bihuansz.KeXuanJDDto;
+import cn.mediinfo.grus.shujuzx.dto.bihuansz.KeXuanJDXXDto;
 import cn.mediinfo.grus.shujuzx.model.SC_BH_ShiTuJDXXModel;
+import cn.mediinfo.grus.shujuzx.model.SC_BH_ShiTuXXModel;
 import cn.mediinfo.grus.shujuzx.repository.SC_BH_ShiTuJDXXRepository;
+import cn.mediinfo.grus.shujuzx.repository.SC_BH_ShiTuXXRepository;
 import cn.mediinfo.grus.shujuzx.service.BiHuanSTJDXXService;
-import jakarta.validation.constraints.NotEmpty;
+import cn.mediinfo.lyra.extension.service.LyraIdentityService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,13 +30,24 @@ import java.util.stream.Collectors;
 @Service
 public class BiHuanSTJDXXServiceImpl implements BiHuanSTJDXXService {
     private final SC_BH_ShiTuJDXXRepository shiTuJDXXRepository;
+
+    private final SC_BH_ShiTuXXRepository shiTuXXRepository;
     private final  BiHuanSTJDGXServiceImpl biHuanSTJDGXService;
     private final  BiHuanSTJDMXServiceImpl biHuanSTJDMXService;
 
-    public BiHuanSTJDXXServiceImpl(SC_BH_ShiTuJDXXRepository shiTuJDXXRepository, BiHuanSTJDGXServiceImpl biHuanSTJDGXService, BiHuanSTJDMXServiceImpl biHuanSTJDMXService) {
+    private final StringGenerator stringGenerator;
+
+
+
+    private final LyraIdentityService lyraIdentityService;
+
+    public BiHuanSTJDXXServiceImpl(SC_BH_ShiTuJDXXRepository shiTuJDXXRepository, SC_BH_ShiTuXXRepository shiTuXXRepository, BiHuanSTJDGXServiceImpl biHuanSTJDGXService, BiHuanSTJDMXServiceImpl biHuanSTJDMXService, StringGenerator stringGenerator, LyraIdentityService lyraIdentityService) {
         this.shiTuJDXXRepository = shiTuJDXXRepository;
+        this.shiTuXXRepository = shiTuXXRepository;
         this.biHuanSTJDGXService = biHuanSTJDGXService;
         this.biHuanSTJDMXService = biHuanSTJDMXService;
+        this.stringGenerator = stringGenerator;
+        this.lyraIdentityService = lyraIdentityService;
     }
     @Override
     public SC_BH_ShiTuJDXXDto  getShiTuJDXX(String id) throws WeiZhaoDSJException {
@@ -56,11 +73,27 @@ public class BiHuanSTJDXXServiceImpl implements BiHuanSTJDXXService {
      */
     @Override
     public Boolean addBiHuanSTJD(BiHuanSTJDDto dto) throws WeiZhaoDSJException {
-        SC_BH_ShiTuJDXXModel scBhShiTuJDXXModel = shiTuJDXXRepository.findById(dto.getId()).orElse(null);
-      if (scBhShiTuJDXXModel==null)
-      {
-          throw new WeiZhaoDSJException("未找到数据");
-      }
+
+        SC_BH_ShiTuXXModel shiTuXX = shiTuXXRepository.findById(dto.getId()).orElse(null);
+       if (shiTuXX==null)
+       {
+              throw new WeiZhaoDSJException("未找到视图信息");
+       }
+
+        SC_BH_ShiTuJDXXModel scBhShiTuJDXXModel = new SC_BH_ShiTuJDXXModel();
+
+        BeanUtil.copyProperties(dto,scBhShiTuJDXXModel);
+        scBhShiTuJDXXModel.setId(null);
+        scBhShiTuJDXXModel.setJieDianID(stringGenerator.Create());
+        scBhShiTuJDXXModel.setZuZhiJGID(lyraIdentityService.getJiGouID());
+        scBhShiTuJDXXModel.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
+        scBhShiTuJDXXModel.setShiTuID(shiTuXX.getShiTuID());
+        scBhShiTuJDXXModel.setShiTuMC(shiTuXX.getShiTuMC());
+        scBhShiTuJDXXModel.setBiHuanLXDM(shiTuXX.getBiHuanLXDM());
+        scBhShiTuJDXXModel.setBiHuanLXMC(shiTuXX.getBiHuanLXMC());
+
+
+        shiTuJDXXRepository.save(scBhShiTuJDXXModel);
         //添加关联节点
         biHuanSTJDGXService.addGuanLianJDXX(dto.getGuanLianJD(),
                 scBhShiTuJDXXModel.getShiTuID(),
@@ -71,6 +104,11 @@ public class BiHuanSTJDXXServiceImpl implements BiHuanSTJDXXService {
                 scBhShiTuJDXXModel.getShiTuMC(),scBhShiTuJDXXModel.getJieDianID(),scBhShiTuJDXXModel.getJieDianMC());
 
         return true;
+    }
+
+    @Override
+    public List<GuanLianJDDto> getGuanLianJDXX(String shiTuID) {
+        return shiTuJDXXRepository.asQuerydsl().where(n->n.shiTuID.eq(shiTuID)).select(GuanLianJDDto.class).fetch();
     }
 
     /**
@@ -117,6 +155,23 @@ public class BiHuanSTJDXXServiceImpl implements BiHuanSTJDXXService {
                                        Integer qiYongBZ)
     {
         return shiTuJDXXRepository.getBiHuanJDXXCount(shiTuID, biHuanLXDM,jieDianMC, qiYongBZ);
+    }
+
+    @Override
+    public List<KeXuanJDDto> getKeXuanJDBybiHuanLXDM(String biHuanLXDM) {
+        List<SC_BH_ShiTuJDXXDto> shiTuJDXXList = shiTuJDXXRepository.asQuerydsl().where(n -> n.biHuanLXDM.eq(biHuanLXDM)).select(SC_BH_ShiTuJDXXDto.class).fetch();
+        List<String> shiTuIDs = shiTuJDXXList.stream().map(SC_BH_ShiTuJDXXDto::getShiTuID).collect(Collectors.toList());
+        List<KeXuanJDDto> keXuanJDDtoList=new ArrayList<>();
+        for (var s :shiTuIDs)
+        {
+            KeXuanJDDto keXuanJDDto=new KeXuanJDDto();
+            SC_BH_ShiTuJDXXDto scBhShiTuJDXXDto = shiTuJDXXList.stream().filter(n -> n.getShiTuID().equals(s)).findFirst().orElse(new SC_BH_ShiTuJDXXDto());
+            keXuanJDDto.setShiTuID(scBhShiTuJDXXDto.getShiTuID());
+            keXuanJDDto.setShiTuMC(scBhShiTuJDXXDto.getShiTuMC());
+            keXuanJDDto.setKeXuanJDXXDtoList(BeanUtil.copyToList(shiTuJDXXList.stream().filter(n -> n.getShiTuID().equals(s)).collect(Collectors.toList()), KeXuanJDXXDto.class));
+            keXuanJDDtoList.add(keXuanJDDto);
+        }
+        return keXuanJDDtoList;
     }
 
 

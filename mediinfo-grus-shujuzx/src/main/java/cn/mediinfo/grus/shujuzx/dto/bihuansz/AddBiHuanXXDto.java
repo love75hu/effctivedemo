@@ -3,24 +3,11 @@ package cn.mediinfo.grus.shujuzx.dto.bihuansz;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import java.util.Date;
+import java.util.List;
 
-/**
- * 闭环信息Dto
- */
 @Data
-public class SC_BH_JIBENXXDto {
-    private String  id;
-    /**
-     * 组织机构ID
-     */
-    @Schema(description = "组织机构ID")
-    private String zuZhiJGID;
-    /**
-     * 组织机构名称
-     */
-    @Schema(description = "组织机构名称")
-    private String zuZhiJGMC;
+public class AddBiHuanXXDto {
+    private String id;
     /**
      * 闭环类型代码
      */
@@ -51,4 +38,8 @@ public class SC_BH_JIBENXXDto {
      */
     @Schema(description = "启用标志")
     private Integer qiYongBZ;
+
+    private List<AddRuCanXXDto> ruCanXXDtoList;
+
+
 }

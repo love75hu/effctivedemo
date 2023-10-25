@@ -10,6 +10,8 @@ public class BiHuanSTJDDto {
     private String id;
     @Schema(description = "节点id")
     private String jieDianID;
+    @Schema(description = "视图id")
+    private String shiTuID;
     @Schema(description = "节点名称")
     private String jieDianMC;
     @Schema(description = "顺序号")

@@ -74,7 +74,7 @@ public class BiHuanSTJDXXServiceImpl implements BiHuanSTJDXXService {
     @Override
     public Boolean addBiHuanSTJD(BiHuanSTJDDto dto) throws WeiZhaoDSJException {
 
-        SC_BH_ShiTuXXModel shiTuXX = shiTuXXRepository.findById(dto.getId()).orElse(null);
+        SC_BH_ShiTuXXModel shiTuXX = shiTuXXRepository.asQuerydsl().where(n->n.shiTuID.eq(dto.getShiTuID())).fetchFirst();
        if (shiTuXX==null)
        {
               throw new WeiZhaoDSJException("未找到视图信息");
@@ -172,6 +172,12 @@ public class BiHuanSTJDXXServiceImpl implements BiHuanSTJDXXService {
             keXuanJDDtoList.add(keXuanJDDto);
         }
         return keXuanJDDtoList;
+    }
+
+    @Override
+    public Boolean updateJieDianQYBZ(String id,Integer qiYongBZ) {
+        shiTuJDXXRepository.asUpdateDsl().set(n->n.qiYongBZ,qiYongBZ).where(n->n.id.eq(id)).execute();
+        return true;
     }
 
 

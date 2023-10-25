@@ -3,13 +3,13 @@ package cn.mediinfo.grus.shujuzx.service.impl;
 import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
 import cn.mediinfo.cyan.msf.core.util.AssertUtil;
 import cn.mediinfo.cyan.msf.core.util.BeanUtil;
-import cn.mediinfo.grus.shujuzx.dto.JieDianGL.AddBiHuanSTJDMXDto;
-import cn.mediinfo.grus.shujuzx.dto.JieDianGL.BiHuanSTZDDto;
-import cn.mediinfo.grus.shujuzx.dto.JieDianGL.KeXuanZDDto;
-import cn.mediinfo.grus.shujuzx.dto.JieDianGL.SaveBiHuanSTJDMXDto;
+import cn.mediinfo.grus.shujuzx.dto.JieDianGL.*;
 import cn.mediinfo.grus.shujuzx.dto.bihuangl.SC_BH_ShiTuMXDto;
+import cn.mediinfo.grus.shujuzx.dto.bihuangl.SC_BH_ShiTuXXDto;
 import cn.mediinfo.grus.shujuzx.model.SC_BH_ShiTuMXModel;
+import cn.mediinfo.grus.shujuzx.model.SC_BH_ShiTuXXModel;
 import cn.mediinfo.grus.shujuzx.repository.SC_BH_ShiTuMXRepository;
+import cn.mediinfo.grus.shujuzx.repository.SC_BH_ShiTuXXRepository;
 import cn.mediinfo.grus.shujuzx.service.BiHuanSTMXService;
 import cn.mediinfo.lyra.extension.service.LyraIdentityService;
 import org.springframework.stereotype.Service;
@@ -24,10 +24,13 @@ import java.util.stream.Collectors;
 public class BiHuanSTMXServiceImpl implements BiHuanSTMXService {
     private final SC_BH_ShiTuMXRepository shiTuMXRepository;
 
+        private final SC_BH_ShiTuXXRepository shiTuXXRepository;
+
     private final LyraIdentityService lyraIdentityService;
 
-    public BiHuanSTMXServiceImpl(SC_BH_ShiTuMXRepository shiTuMXRepository, LyraIdentityService lyraIdentityService) {
+    public BiHuanSTMXServiceImpl(SC_BH_ShiTuMXRepository shiTuMXRepository, SC_BH_ShiTuXXRepository shiTuXXRepository, LyraIdentityService lyraIdentityService) {
         this.shiTuMXRepository = shiTuMXRepository;
+        this.shiTuXXRepository = shiTuXXRepository;
         this.lyraIdentityService = lyraIdentityService;
     }
     @Override
@@ -134,5 +137,27 @@ public class BiHuanSTMXServiceImpl implements BiHuanSTMXService {
     public List<KeXuanZDDto> getRuChanZDXX(String biHuanLXDM) {
 
         return shiTuMXRepository.getRuChanZDXX(biHuanLXDM);
+    }
+
+    /**
+     * 获取事件信息
+     *
+     * @param shiTuID 视图id
+     * @return 字段集合
+     */
+    public List<List<ShiJianXXDto>> getShiJianXX(String shiTuID) throws WeiZhaoDSJException {
+        List<KeXuanZDDto> shiTUZDXX = shiTuMXRepository.getShiTUZDXX(shiTuID);
+        SC_BH_ShiTuXXDto scBhShiTuXXModel = shiTuXXRepository.asQuerydsl()
+                .where(n -> n.shiTuID.eq(shiTuID))
+                .select(SC_BH_ShiTuXXDto.class).fetchFirst();
+        if (scBhShiTuXXModel==null)
+        {
+            throw new WeiZhaoDSJException("未找到异常");
+        }
+//        //1.数据集2.数据视图
+//        if (scBhShiTuXXModel.getShuJuLYLXDM().equals(2))
+//        {
+//        }
+        return null;
     }
 }

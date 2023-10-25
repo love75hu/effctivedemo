@@ -114,7 +114,7 @@ public class JieDianGLController {
     }
     @Operation(summary = "获取事件信息接口")
     @GetMapping("getShiJianXX")
-    public MsfResponse<String> getShiJianXX(@NotEmpty(message = "id不能为空")  String ziDuanBM)
+    public MsfResponse<List<ShiJianXXDto>> getShiJianXX(@NotEmpty(message = "id不能为空")  String ziDuanBM)
     {
         return MsfResponse.success();
     }
@@ -136,6 +136,12 @@ public class JieDianGLController {
     public MsfResponse<Boolean> addBiHuanSTJD(@RequestBody  BiHuanSTJDDto dto) throws WeiZhaoDSJException {
 
         return MsfResponse.success(biHuanSTJDXXService.addBiHuanSTJD(dto));
+    }
+
+    @Operation(summary = "编辑闭环视图节点")
+    @PutMapping("updateBiHuanSTJD")
+    public MsfResponse<Boolean> updateBiHuanSTJD(@RequestBody  BiHuanSTJDDto dto) throws WeiZhaoDSJException {
+        return MsfResponse.success(biHuanSTJDXXService.updateBiHuanSTJD(dto));
     }
     @Operation(summary = "获取节点列表")
     @GetMapping("getBiHuanJDXXList")
@@ -168,7 +174,7 @@ public class JieDianGLController {
     }
     @Operation(summary = "节点启用标志")
     @PutMapping("updateJieDianQYBZ")
-    public MsfResponse<Boolean> updateJieDianQYBZ(@NotEmpty(message ="id") String id,Integer qiYongBZ)
+    public MsfResponse<Boolean> updateJieDianQYBZ( @RequestParam @NotEmpty(message ="id") String id,@RequestParam Integer qiYongBZ)
     {
         return MsfResponse.success(biHuanSTJDXXService.updateJieDianQYBZ(id,qiYongBZ));
     }

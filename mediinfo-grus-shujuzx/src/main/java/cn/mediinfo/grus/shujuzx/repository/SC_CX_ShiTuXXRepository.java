@@ -48,11 +48,17 @@ public interface SC_CX_ShiTuXXRepository extends MsfJpaRepository<QSC_CX_ShiTuXX
         return this.asQuerydsl().whereIf(StringUtil.hasText(likeQuery), s -> s.fuLeiMC.like("%" + likeQuery + "%").or(s.shiTuMC.like("%" + likeQuery + "%")))
                 .orderBy(s -> s.shunXuHao.asc()).fetch();
     };
+    /**
+     * 根据父类id 获取视图信息
+     */
     default List<String> getShiTuXXIDList(String fuLeiID)
     {
         return this.asQuerydsl().where(s->s.fuLeiID.eq(fuLeiID)).select(s->s.shiTuID).fetch();
     }
 
+    /**
+     * 获取临床检索视图数据
+     */
     default List<ShiTuFLDto> getShiTuFLList(String fuLeiID, String likeQuery)
     {
         return this.asQuerydsl()
@@ -63,13 +69,18 @@ public interface SC_CX_ShiTuXXRepository extends MsfJpaRepository<QSC_CX_ShiTuXX
                         e.id,
                         e.fuLeiMC.as("shiTuFLMC"))).fetch();
     }
+    /**
+     * 获取视图信息 根据视图id
+     */
     default SC_CX_ShiTuXXDto getShiTuXXByShiTuID(String shiTuID)
     {
         return this.asQuerydsl()
                 .where(s ->s.shiTuID.eq(shiTuID))
                 .select(SC_CX_ShiTuXXDto.class)
                 .fetchFirst();
-    }
+    }/**
+     * 获取视图信息 根据视图ids
+     */
     default List<SC_CX_ShiTuXXByShiTuIDDto> findByShiTuIDIn(Set<String> shiTuIDs)
     {
         return this.asQuerydsl().where(s -> s.shiTuID.in(shiTuIDs)).select(SC_CX_ShiTuXXByShiTuIDDto.class).fetch();

@@ -33,6 +33,11 @@ public interface SC_CX_ShiTuMXRepository extends MsfJpaRepository<QSC_CX_ShiTuMX
                 .select(ShiTuMXListDto.class)
                 .fetchPage(pageIndex,pageSize);
     }
+    /**
+     * 根据视图ID获取视图明细
+     * @param shiTuID 视图ID
+     * @return 视图明细
+     */
     default List<ShiTuMXListDto> getShiTuMXLists(List<String> shiTuID,String likeQuery,Integer chaXunLX, Integer pageIndex, Integer pageSize)
     {
         return this.asQuerydsl()

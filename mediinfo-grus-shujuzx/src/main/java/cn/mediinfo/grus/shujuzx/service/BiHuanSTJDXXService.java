@@ -34,4 +34,7 @@ public interface BiHuanSTJDXXService {
     List<KeXuanJDDto> getKeXuanJDBybiHuanLXDM(String biHuanLXDM);
 
     Boolean updateJieDianQYBZ(String id,Integer qiYongBZ);
+
+    Boolean updateBiHuanSTJD(BiHuanSTJDDto dto) throws WeiZhaoDSJException;
+
 }

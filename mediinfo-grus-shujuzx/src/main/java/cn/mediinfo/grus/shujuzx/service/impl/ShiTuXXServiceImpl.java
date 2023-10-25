@@ -46,6 +46,7 @@ class ShiTuXXServiceImpl implements ShiTuXXService {
      */
     @Override
     public SC_CX_ShiTuXXDto getShiTuXXByID(String id) throws WeiZhaoDSJException {
+        //获取视图信息
         var result = shiTuXXRepository.asQuerydsl().where(s -> s.id.eq(id)).select(SC_CX_ShiTuXXDto.class).fetchFirst();
         AssertUtil.checkWeiZhaoDSJ(result != null, "未获取到数据");
         return result;
@@ -66,10 +67,12 @@ class ShiTuXXServiceImpl implements ShiTuXXService {
      */
     @Override
     public List<LinChuangJSSTDtoTree> getLinChuangJSSTTree(String fuLeiID, String likeQuery) {
+        //获取视图信息
         List<SC_CX_ShiTuXXModel> shiTuXXList = shiTuXXRepository.shiTuXXList(likeQuery);
+        //转换为树结构
         List<LinChuangJSSTDtoTree> linChuangJSSTDtoTrees= BeanUtil.copyListProperties(shiTuXXList, LinChuangJSSTDtoTree::new);
-
         List<LinChuangJSSTDtoTree> linChuangJSSTDtoTreeList=new ArrayList<>();
+        //获取根节点
         for(LinChuangJSSTDtoTree linChuangJSSTDtoTree :linChuangJSSTDtoTrees.stream().filter(s->s.getFuLeiID().equals(fuLeiID)).toList())
         {
             linChuangJSSTDtoTree.setChildren(
@@ -90,16 +93,18 @@ class ShiTuXXServiceImpl implements ShiTuXXService {
      */
     @Override
     public String addShiTuFL(ShiTuFLDto dto) throws TongYongYWException {
+        //判断是否存在相同名称
         AssertUtil.checkTongYongYW(!shiTuXXRepository.existsByFuLeiMC(dto.getShiTuFLMC()), "已经存在相同名称");
+        //新增视图分类
         SC_CX_ShiTuXXModel shiTuXXModel =new SC_CX_ShiTuXXModel();
         shiTuXXModel.setFuLeiID("0");
         shiTuXXModel.setZuZhiJGID(lyraIdentityService.getJiGouID());
         shiTuXXModel.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
         shiTuXXModel.setFuLeiMC(dto.getShiTuFLMC());
         var shunXuHao=shiTuXXRepository.getMaxShunXuHao();
-
+        //设置顺序号
         shiTuXXModel.setShunXuHao(dto.getShunXuHao()!=null?dto.getShunXuHao():shunXuHao+1);
-
+        //保存视图分类
         SC_CX_ShiTuXXModel save = shiTuXXRepository.save(shiTuXXModel);
         return save.getId();
     }
@@ -109,6 +114,7 @@ class ShiTuXXServiceImpl implements ShiTuXXService {
      */
     @Override
     public List<ShiTuFLDto> getShiTuFLList(String fuLeiID, String likeQuery) {
+        //获取视图分类列表
         return shiTuXXRepository.getShiTuFLList(fuLeiID,likeQuery);
     }
 
@@ -118,8 +124,10 @@ class ShiTuXXServiceImpl implements ShiTuXXService {
      */
     @Override
     public ShiTuFLDto getShiTuFLByID(String id) throws WeiZhaoDSJException {
+        //获取视图信息
         SC_CX_ShiTuXXDto shiTuXXByID = getShiTuXXByID(id);
         ShiTuFLDto shiTuFLByIDDto = new ShiTuFLDto();
+        //复制属性
         BeanUtil.copyProperties(shiTuXXByID,shiTuFLByIDDto);
         shiTuFLByIDDto.setShiTuFLMC(shiTuXXByID.getFuLeiMC());
         return shiTuFLByIDDto;
@@ -131,12 +139,15 @@ class ShiTuXXServiceImpl implements ShiTuXXService {
      */
     @Override
     public String addShiTuXX(ShiTuXXDto dto) {
+        //生成视图id
         dto.setShiTuID(stringGenerator.Create());
+        //复制属性
     var shiTuXXModel= BeanUtil.copyProperties(dto,SC_CX_ShiTuXXModel::new);
         shiTuXXModel.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
         shiTuXXModel.setZuZhiJGID(lyraIdentityService.getJiGouID());
         shiTuXXModel.setMoJiBZ(1);
         shiTuXXModel.setShunXuHao(dto.getShunXuHao()==null?shiTuXXRepository.getMaxShunXuHaoByFuLeiID(dto.getFuLeiID())+1:dto.getShunXuHao());
+        //保存返回id
         SC_CX_ShiTuXXModel save = shiTuXXRepository.save(shiTuXXModel);
         return save.getId();
     }
@@ -147,9 +158,11 @@ class ShiTuXXServiceImpl implements ShiTuXXService {
     @Override
     public Boolean updateShiTuXX(SC_CX_ShiTuXXDto dto) throws TongYongYWException {
 
+        //获取视图信息
         SC_CX_ShiTuXXModel scCxShiTuXXModel = shiTuXXRepository.findById(dto.getId()).orElse(null);
         AssertUtil.checkTongYongYW(scCxShiTuXXModel!=null, "未找到");
         BeanUtil.copyProperties(dto,scCxShiTuXXModel);
+        //更新
         shiTuXXRepository.save(scCxShiTuXXModel);
         return true;
     }
@@ -159,10 +172,12 @@ class ShiTuXXServiceImpl implements ShiTuXXService {
      */
     @Override
     public Boolean updateShiTuFL(ShiTuFLDto dto) throws TongYongYWException {
+        //判断是否存
         SC_CX_ShiTuXXModel scCxShiTuXXModel = shiTuXXRepository.findById(dto.getId()).orElse(null);
         if (scCxShiTuXXModel==null) {
             throw new TongYongYWException("未获取到数据");
         }
+        //修改分类名称
         scCxShiTuXXModel.setFuLeiMC(dto.getShiTuFLMC());
         shiTuXXRepository.save(scCxShiTuXXModel);
         return true;

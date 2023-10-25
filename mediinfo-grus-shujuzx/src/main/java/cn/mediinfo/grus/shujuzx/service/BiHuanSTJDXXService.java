@@ -32,4 +32,6 @@ public interface BiHuanSTJDXXService {
                                 Integer qiYongBZ);
 
     List<KeXuanJDDto> getKeXuanJDBybiHuanLXDM(String biHuanLXDM);
+
+    Boolean updateJieDianQYBZ(String id,Integer qiYongBZ);
 }

@@ -54,6 +54,14 @@ public class BiHuanSZController {
         return MsfResponse.success(biHuanSTMXService.getRuChanZDXX(biHuanLXDM));
     }
 
+    @Operation(summary = "添加入参信息")
+    @PostMapping("getBiHuanSZXXByBiHuanID")
+    public MsfResponse<String> getBiHuanSZXXByBiHuanID()
+    {
+                return MsfResponse.success();
+    }
+
+
 
 
 }

@@ -166,6 +166,13 @@ public class JieDianGLController {
         return MsfResponse.success(biHuanSTJDXXService.getKeXuanJDBybiHuanLXDM(biHuanLXDM));
 
     }
+    @Operation(summary = "节点启用标志")
+    @PutMapping("updateJieDianQYBZ")
+    public MsfResponse<Boolean> updateJieDianQYBZ(@NotEmpty(message ="id") String id,Integer qiYongBZ)
+    {
+        return MsfResponse.success(biHuanSTJDXXService.updateJieDianQYBZ(id,qiYongBZ));
+    }
+
 
 
 

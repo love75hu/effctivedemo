@@ -1,10 +1,8 @@
 package cn.mediinfo.grus.shujuzx.service;
 
 import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
-import cn.mediinfo.grus.shujuzx.dto.JieDianGL.AddBiHuanSTJDMXDto;
-import cn.mediinfo.grus.shujuzx.dto.JieDianGL.BiHuanSTZDDto;
-import cn.mediinfo.grus.shujuzx.dto.JieDianGL.KeXuanZDDto;
-import cn.mediinfo.grus.shujuzx.dto.JieDianGL.SaveBiHuanSTJDMXDto;
+import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
+import cn.mediinfo.grus.shujuzx.dto.JieDianGL.*;
 import cn.mediinfo.grus.shujuzx.dto.bihuangl.SC_BH_ShiTuMXDto;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,6 +22,8 @@ public interface BiHuanSTMXService {
     List<KeXuanZDDto> getShiTUZDXX(String shiTUID);
 
     List<KeXuanZDDto> getRuChanZDXX(String biHuanLXDM);
+
+    List<ShiJianXXDto> getShiJianXX(String shiTuID) throws WeiZhaoDSJException, YuanChengException;
 
 
 

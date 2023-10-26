@@ -106,6 +106,18 @@ public class ShiTuMXServiceImpl implements ShiTuMXService {
 
     @Override
     public List<TableDTO> listTable(Set<String> shiTuMXIds) {
+        //查询视图明细
+        List<SC_CX_ShiTuMXByIdDto>  shiTuMXModels = shiTuMXRepository.findByIdIs(shiTuMXIds);
+        //获取视图id集合
+        Set<String> shiTuIds = shiTuMXModels.stream().map(SC_CX_ShiTuMXByIdDto::getShiTuID).collect(java.util.stream.Collectors.toSet());
+        //查询视图信息
+        List<SC_CX_ShiTuXXByShiTuIDDto> shiTuXXList =  shiTuXXRepository.findByShiTuIDIn(shiTuIds);
+
+
+
+
+
+
         return null;
     }
 

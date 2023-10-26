@@ -2,6 +2,7 @@ package cn.mediinfo.grus.shujuzx.remoteservice;
 
 import cn.mediinfo.cyan.msf.core.response.MsfResponse;
 import cn.mediinfo.grus.shujuzx.dto.shitumx.FieldDTO;
+import cn.mediinfo.grus.shujuzx.dto.shitumx.SC_CX_ShiTuXXListDto;
 import cn.mediinfo.grus.shujuzx.dto.shitumx.SC_CX_ShiTuXXZDDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,4 +20,5 @@ public interface GongYongRemoteService {
      */
     @PostMapping("api/v1.0/shujust/getShiTuZDXXList")
     MsfResponse<List<FieldDTO>> getShiTuZDXXList(@RequestBody List<SC_CX_ShiTuXXZDDto> dtos);
+
 }

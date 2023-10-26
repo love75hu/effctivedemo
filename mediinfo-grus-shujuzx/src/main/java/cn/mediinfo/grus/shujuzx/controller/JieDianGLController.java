@@ -1,6 +1,7 @@
 package cn.mediinfo.grus.shujuzx.controller;
 
 import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
+import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
 import cn.mediinfo.cyan.msf.core.response.MsfResponse;
 import cn.mediinfo.grus.shujuzx.dto.JieDianGL.*;
 import cn.mediinfo.grus.shujuzx.dto.bihuangl.SC_BH_ShiTuXXDto;
@@ -114,9 +115,8 @@ public class JieDianGLController {
     }
     @Operation(summary = "获取事件信息接口")
     @GetMapping("getShiJianXX")
-    public MsfResponse<List<ShiJianXXDto>> getShiJianXX(@NotEmpty(message = "id不能为空")  String ziDuanBM)
-    {
-        return MsfResponse.success();
+    public MsfResponse<List<ShiJianXXDto>> getShiJianXX(@NotEmpty(message = "id不能为空")  String shiTuID) throws WeiZhaoDSJException, YuanChengException { //BiHuanSTMXService
+        return MsfResponse.success(biHuanSTMXService.getShiJianXX(shiTuID));
     }
     @Operation(summary = "获取关系节点")
     @GetMapping("getGuanLianJDXX")

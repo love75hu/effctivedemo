@@ -5,6 +5,7 @@ import cn.mediinfo.grus.shujuzx.common.fangan.condition.FangAnTreeNode;
 import cn.mediinfo.grus.shujuzx.enums.NodeTypeEnum;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * FangAnTree工具类
@@ -25,8 +26,11 @@ public final class FangAnTreeUtils {
         if (NodeTypeEnum.CONDITION_NODE.getType().equals(root.getNodeType())) {
             conditionList.add(root.getCondition());
         }
-
-        getConditionList(root.getLeft(), conditionList);
-        getConditionList(root.getRight(), conditionList);
+        if (Objects.isNull(root.getChildrenConditions())|| root.getChildrenConditions().isEmpty()) {
+            return;
+        }
+        root.getChildrenConditions().forEach(item->{
+            getConditionList(item, conditionList);
+        });
     }
 }

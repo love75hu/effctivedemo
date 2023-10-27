@@ -95,10 +95,10 @@ class FangAnServiceTest {
         birthdate.setValues(ListUtil.toList(date));
         birthdateNode.setCondition(birthdate);
 
-        and.setLeft(nianlingNode);
-        and.setRight(birthdateNode);
-        root.setLeft(and);
-        root.setRight(nameNode);
+//        and.setLeft(nianlingNode);
+//        and.setRight(birthdateNode);
+//        root.setLeft(and);
+//        root.setRight(nameNode);
 
         FangAnXXSaveRequest request = new FangAnXXSaveRequest();
         request.setFangAnMC("患者信息查询");

@@ -22,7 +22,7 @@ public interface FangAnService {
      * @param fangAnSCList 方案输出项
      * @return sql
      */
-    String getSql(FangAnTreeNode root, List<FangAnSC> fangAnSCList) throws YuanChengException;
+    String getSql(FangAnTreeNode root, List<FangAnSC> fangAnSCList, String fangAnLXDM) throws YuanChengException;
 
 
 }

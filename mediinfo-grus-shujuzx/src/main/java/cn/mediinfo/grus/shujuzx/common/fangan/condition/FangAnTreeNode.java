@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import java.util.List;
 
 /**
  *  方案树
@@ -23,9 +24,6 @@ public class FangAnTreeNode {
     @Schema(description = "关系，and-并且，or-或者，()-括号")
     private String relation;
 
-    @Schema(description = "左节点")
-    private FangAnTreeNode left;
-
-    @Schema(description = "右节点")
-    private FangAnTreeNode right;
+    @Schema(description = "查询子节点")
+    private List<FangAnTreeNode> childrenConditions;
 }

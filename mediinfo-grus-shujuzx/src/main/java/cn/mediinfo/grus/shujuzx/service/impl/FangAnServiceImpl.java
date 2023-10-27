@@ -3,10 +3,13 @@ package cn.mediinfo.grus.shujuzx.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.StopWatch;
-import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
 import cn.mediinfo.cyan.msf.core.util.JacksonUtil;
+import cn.mediinfo.cyan.msf.core.util.MapUtil;
+import cn.mediinfo.cyan.msf.core.util.MapUtils;
+import cn.mediinfo.cyan.msf.core.util.StringUtil;
+import cn.mediinfo.cyan.msf.orm.datasource.MsfDataSource;
 import cn.mediinfo.cyan.msf.tenant.security.TenantIdentityService;
 import cn.mediinfo.grus.shujuzx.bo.RelatedFangAnBO;
 import cn.mediinfo.grus.shujuzx.common.fangan.condition.*;
@@ -30,15 +33,20 @@ import cn.mediinfo.grus.shujuzx.sql.ast.SQLQueryObject;
 import cn.mediinfo.grus.shujuzx.sql.enums.SQLBinaryOperator;
 import cn.mediinfo.grus.shujuzx.util.FangAnTreeUtils;
 import cn.mediinfo.grus.shujuzx.util.SqlUtils;
+import com.querydsl.core.util.CollectionUtils;
+import jakarta.annotation.Resource;
+import kotlin.Triple;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.math3.analysis.function.Subtract;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -61,21 +69,35 @@ public class FangAnServiceImpl implements FangAnService {
     @Autowired
     private FangAnNRService fangAnNRService;
 
+    @Resource
+    @Qualifier("datasourcesjzx_jdbcTemplateFactory")
+    JdbcTemplate jdbcTemplate;
 
+    /**
+     * 保存方案
+     * @param request
+     */
     @Override
     public String saveFangAn(FangAnXXSaveRequest request) throws YuanChengException {
         StopWatch watch = new StopWatch();
         watch.start("AST树转换成sql");
-        String sql = getSql(request.getRoot(), request.getFangAnSCList());
+        String sql = getSql(request.getRoot(), request.getFangAnSCList(), request.getFangAnLXDM());
         log.info("sql expr sql:{}", sql);
         watch.stop();
         log.info(watch.prettyPrint(TimeUnit.MILLISECONDS));
         return fangAnManager.saveFangAn(request, sql);
     }
 
+    /**
+     * 获取SQL
+     * @param root 方案树
+     * @param fangAnSCList 方案输出项
+     * @param fangAnLXDM 方案类型代码
+     * @return String
+     * @throws YuanChengException
+     */
     @Override
-    public String getSql(FangAnTreeNode root, List<FangAnSC> fangAnSCList) throws YuanChengException {
-
+    public String getSql(FangAnTreeNode root, List<FangAnSC> fangAnSCList, String fangAnLXDM) throws YuanChengException {
         List<FangAnCondition> conditionList = ListUtil.toList();
         FangAnTreeUtils.getConditionList(root, conditionList);
         //todo 校验条件
@@ -86,18 +108,21 @@ public class FangAnServiceImpl implements FangAnService {
         Set<String> shiTuMXIds = conditionList.stream().map(FangAnCondition::getShiTuMXID).collect(Collectors.toSet());
         //from
         List<TableDTO> tableList = shiTuMXService.listTable(shiTuMXIds);
-
-        //生成别名 key schema.table value alias
-        Map<String, String> aliasMap = getAliasMap(tableList);
-        //拼接表关系
-        String table = getTable(aliasMap);
-        //拼接表关联关系
-        String joinRelation = getTableJoinRelation(tableList, aliasMap);
-        // 过滤条件
-        String filterCondition = getFilterCondition(tableList, aliasMap);
+        tableList = (CollUtil.isEmpty(tableList)) ? ListUtil.toList() : tableList;
 
         //输出字段
         FangAnSCDTO fangAnSC = fangAnSCService.getAllFangAnSC(fangAnSCList);
+        fangAnSC = fangAnSC == null ? new FangAnSCDTO() : fangAnSC;
+
+        //生成别名 key schema.table value alias
+        Map<String,Triple<String,Boolean,Boolean>> aliasMap = getAliasMap(tableList,fangAnSC,fangAnLXDM);
+        //拼接表关系
+        String table = getTable(aliasMap);
+        //拼接表关联关系
+        String joinRelation = getTableJoinRelation(tableList, aliasMap, fangAnLXDM);
+        //过滤条件
+        String filterCondition = getFilterCondition(tableList, aliasMap);
+
         String fields = getQueryFields(fangAnSC, aliasMap);
 
         //where
@@ -108,7 +133,7 @@ public class FangAnServiceImpl implements FangAnService {
             e.getRelatedFieldConditions().forEach(s -> shiTuMXIds.add(s.getShiTuMXGXID()));
         });
         List<FieldDTO> fieldList = shiTuMXService.listFields(shiTuMXIds);
-        fieldList.forEach(e -> e.setAlias(aliasMap.get(e.getMoShi() + "." + e.getBiaoMing())));
+        fieldList.forEach(e -> e.setAlias(aliasMap.get(e.getMoShi() + "." + e.getBiaoMing()).getFirst()));
         //转化sql树
         Map<String, FieldDTO> fieldMap = fieldList.stream().collect(Collectors.toMap(FieldDTO::getId, e -> e));
         SQLQueryNode condition = transform(root, fieldMap);
@@ -144,7 +169,6 @@ public class FangAnServiceImpl implements FangAnService {
 
         SQLQueryExpr expr = new SQLQueryExpr(sqlRoot);
         log.debug("sql expr json:{}", JacksonUtil.getBeanToJson(expr));
-
 
         return expr.buildSQL(sqlRoot);
     }
@@ -225,10 +249,46 @@ public class FangAnServiceImpl implements FangAnService {
             sqlNode = new SQLQueryNode(obj);
         }
 
-        sqlNode.setLeft(transform(node.getLeft(), fieldMap));
-        sqlNode.setRight(transform(node.getRight(), fieldMap));
+        if(CollUtil.isEmpty(node.getChildrenConditions()))
+        {
+            return  sqlNode;
+        }
 
+        List<FangAnTreeNode> list=new ArrayList<>(node.getChildrenConditions());
+        Collections.reverse(list);
+        int index=0;
+        SQLQueryNode currentSqlNode=sqlNode;
+        for (FangAnTreeNode item : list) {
+            boolean isGuanXiJD = Objects.isNull(item.getCondition());
+            if (0 == index) {
+                currentSqlNode.setRight(getGuanXiNode(transform(item, fieldMap),isGuanXiJD));
+            } else if (index == list.size() - 1) {
+                currentSqlNode.setLeft(getGuanXiNode(transform(item, fieldMap),isGuanXiJD));
+            } else {
+                SQLQueryNode childrenSqlNode = new SQLQueryNode(new SQLQueryObject(sqlOperator));
+                childrenSqlNode.setRight(transform(item, fieldMap));
+                currentSqlNode.setLeft(getGuanXiNode(childrenSqlNode,isGuanXiJD));
+                currentSqlNode = currentSqlNode.getLeft();
+            }
+            index++;
+        }
         return sqlNode;
+    }
+
+    /**
+     * 组合关系节点
+     *
+     * @param childrenNode 子节点
+     * @param isGuanXiJD 是否关系节点
+     * @return SQLQueryNode
+     */
+    private SQLQueryNode getGuanXiNode(SQLQueryNode childrenNode,boolean isGuanXiJD) {
+        if (!isGuanXiJD) {
+            return childrenNode;
+        }
+        SQLQueryNode guanXiNode = new SQLQueryNode(new SQLQueryObject("()"));
+        guanXiNode.setLeft(childrenNode);
+        return  guanXiNode;
     }
 
     private SQLQueryObject toSQLQueryObject(String operator, FieldDTO field, List<String> valList, RelatedFangAnQueryCondition relatedFangAnQueryCondition) {
@@ -241,7 +301,7 @@ public class FangAnServiceImpl implements FangAnService {
                 val = SqlUtils.replaceOutputField(relatedFangAnQueryCondition.getSql(), relatedFangAnQueryCondition.getZiDuanBM());
             }
         } else if (valList.size() > 1) {
-            sqlOperator = FangAnOperator.CONTAIN.getType().equalsIgnoreCase(operator) ? SQLBinaryOperator.IN : SQLBinaryOperator.NOTIN;
+            sqlOperator =SQLBinaryOperator.getSQLBinaryOperator(operator);
             if (ShuJuZLXDMEnum.NUMBER.getType().equals(field.getShuJuZLXDM())) {
                 val = CharSequenceUtil.join(",", valList);
             } else {
@@ -281,21 +341,56 @@ public class FangAnServiceImpl implements FangAnService {
         return  builder.toString();
     }
 
-
     /**
      * 获取表别名
      *
      * @param tableList 表
+     * @param fangAnSC 方案输出
+     * @param fangAnLXDM 方案类型代码
      * @return Map
      */
-    private Map<String, String> getAliasMap(List<TableDTO> tableList) {
-        Map<String, String> aliasMap = MapUtil.newHashMap(tableList.size());
+    private Map<String,Triple<String,Boolean,Boolean>> getAliasMap(List<TableDTO> tableList, FangAnSCDTO fangAnSC, String fangAnLXDM) {
+        Map<String,Triple<String,Boolean,Boolean>> aliasMap= MapUtil.newHashMap(); //First：别名，Second:是否外连表，Third:是否基础表
         List<SchemaTable> schemaTableList = ListUtil.toList();
         tableList.forEach(e -> schemaTableList.addAll(e.getSchemaTableList()));
+
+        //基础表
+        SchemaTable jiChuBiao=new SchemaTable();
+        switch (fangAnLXDM)
+        {
+            case "1":
+                jiChuBiao.setBiaoMing("jz_mz_jiuzhenxx");
+                jiChuBiao.setMoShi("vela_jz");
+                break;
+            case "3":
+                jiChuBiao.setBiaoMing("jz_zy_jiuzhenxx");
+                jiChuBiao.setMoShi("vela_jz");
+                break;
+        }
+
         for (int i = 0; i < schemaTableList.size(); i++) {
             SchemaTable table = schemaTableList.get(i);
-            aliasMap.put(table.getMoShi() + "." + table.getBiaoMing(), "t" + i);
+            String tableName=table.getMoShi() + "." + table.getBiaoMing();
+            aliasMap.put(tableName,new Triple<>("t" + i,false,tableName.equals(StringUtil.concat(jiChuBiao.getMoShi(),".",jiChuBiao.getBiaoMing()))) );
         }
+
+        if (ObjectUtils.isNotEmpty(jiChuBiao) && !StringUtils.isBlank(jiChuBiao.getBiaoMing())&& !aliasMap.containsKey(jiChuBiao.getMoShi() + "." + jiChuBiao.getBiaoMing())) {
+            aliasMap.put(jiChuBiao.getMoShi() + "." + jiChuBiao.getBiaoMing(),new Triple<>("t" + aliasMap.size(),false,true));
+        }
+        //输出所需表
+        //数据元表
+        List<SchemaTable> shuChuBiaoList= MapUtils.copyListProperties(fangAnSC.getQueryFields(), SchemaTable::new);
+        //TODO 药品，检查，检验
+
+        //获取外连表
+        int index=aliasMap.size();
+        List<SchemaTable> waiLianBiaoList= shuChuBiaoList.stream().filter(p->!aliasMap.containsKey(p.getMoShi() + "." + p.getBiaoMing())).toList();
+        for(SchemaTable item :waiLianBiaoList)
+        {
+            aliasMap.put(item.getMoShi() + "." + item.getBiaoMing(),new Triple<>("t" + index,true,false));
+            index++;
+        }
+
         return aliasMap;
     }
 
@@ -305,9 +400,9 @@ public class FangAnServiceImpl implements FangAnService {
      * @param aliasMap 表别名
      * @return 表
      */
-    private String getTable(Map<String, String> aliasMap) {
+    private String getTable(Map<String,Triple<String,Boolean,Boolean>> aliasMap) {
         List<String> tableList = ListUtil.toList();
-        aliasMap.forEach((k, v) -> tableList.add(k + " " + v));
+        aliasMap.forEach((k, v) -> tableList.add(k + " " + v.getFirst()));
 
         return " " + CharSequenceUtil.join(",", tableList);
     }
@@ -317,29 +412,75 @@ public class FangAnServiceImpl implements FangAnService {
      *
      * @param tableList 表
      * @param aliasMap  表别名
+     * @param fangAnLXDM  方案类型代码
      * @return 表关系sql
      */
-    private String getTableJoinRelation(List<TableDTO> tableList, Map<String, String> aliasMap) {
+    private String getTableJoinRelation(List<TableDTO> tableList, Map<String,Triple<String,Boolean,Boolean>> aliasMap, String fangAnLXDM) {
         List<TableRelationCondition> tableRelationConditionList = ListUtil.toList();
         tableList.forEach(e -> {
             if (CollUtil.isNotEmpty(e.getTableRelationConditionList())) {
                 tableRelationConditionList.addAll(e.getTableRelationConditionList());
             }
         });
+        //获取基础表
+        Triple<String,Boolean,Boolean> jiChuTable=aliasMap.values().stream().filter(Triple::getThird).findFirst().orElse(null);
+
+        Map<String,Boolean> neiLianTableMap=new HashMap<>();
+        StringBuilder builder = new StringBuilder();
         if (CollUtil.isEmpty(tableRelationConditionList)) {
-            return "";
+            tableRelationConditionList.forEach(e -> {
+                String key = e.getMoShi() + "." + e.getBiaoMing();
+                String alias = aliasMap.get(key).getFirst();
+                builder.append(alias).append(".").append(e.getZiduan());
+                builder.append("=");
+                neiLianTableMap.put(key,true);
+                key = e.getGlMoShi() + "." + e.getGlBiaoMing();
+                alias = aliasMap.get(key).getFirst();
+                builder.append(alias).append(".").append(e.getGlZiDuan());
+                builder.append(" AND ");
+                neiLianTableMap.put(key,false);
+            });
+        }
+        if(Objects.isNull(jiChuTable)){
+            return CharSequenceUtil.replaceLast(builder.toString(), " AND ", " ");
+        }
+        Map<String,String> jiChuBGX=new HashMap<>(); //基础表关系 first:基础表字段 second:关联表字段，默认同种方案类型于基础表的关联关系一致
+        switch (fangAnLXDM) {
+            case "0":
+                jiChuBGX.put("jiuzhenywid","jiuzhenywid");
+                jiChuBGX.put("jiuzhenywlx","jiuzhenywlx");
+                jiChuBGX.put("zuzhijgid","zuzhijgid");
+                break;
+            case "1":
+                jiChuBGX.put("id","jiuzhenid");
+                jiChuBGX.put("zuzhijgid","zuzhijgid");
+                break;
+            case "3":
+                jiChuBGX.put("id","zhuyuanjzid");
+                jiChuBGX.put("zuzhijgid","zuzhijgid");
+                break;
+            default:
+                break;
         }
 
-        StringBuilder builder = new StringBuilder();
-        tableRelationConditionList.forEach(e -> {
-            String key = e.getMoShi() + "." + e.getBiaoMing();
-            String alias = aliasMap.get(key);
-            builder.append(alias).append(".").append(e.getZiduan());
-            builder.append("=");
-            key = e.getGlMoShi() + "." + e.getGlBiaoMing();
-            alias = aliasMap.get(key);
-            builder.append(alias).append(".").append(e.getGlZiDuan());
-            builder.append(" AND ");
+        aliasMap.forEach((k,v)->{
+            if (!Objects.isNull(neiLianTableMap.get(k)) && !neiLianTableMap.get(k)) {
+                return;
+            }
+            //外连不考虑
+            if (v.getSecond()) {
+                return;
+            }
+            if(v.getFirst().equals(jiChuTable.getFirst()))
+            {
+                return;
+            }
+            jiChuBGX.forEach((k1,v1)->{
+                builder.append(jiChuTable.getFirst()).append(".").append(k1);
+                builder.append("=");
+                builder.append(v.getFirst()).append(".").append(v1);
+                builder.append(" AND ");
+            });
         });
 
         return CharSequenceUtil.replaceLast(builder.toString(), " AND ", " ");
@@ -352,7 +493,7 @@ public class FangAnServiceImpl implements FangAnService {
      * @param aliasMap  表别名
      * @return 过滤条件sql
      */
-    private String getFilterCondition(List<TableDTO> tableList, Map<String, String> aliasMap) {
+    private String getFilterCondition(List<TableDTO> tableList, Map<String,Triple<String,Boolean,Boolean>> aliasMap) {
         List<SqlFilterCondition> filterConditionList = ListUtil.toList();
         tableList.forEach(e -> {
             if (CollUtil.isNotEmpty(e.getFilterConditionList())) {
@@ -369,7 +510,7 @@ public class FangAnServiceImpl implements FangAnService {
         StringBuilder builder = new StringBuilder();
         filterConditionList.forEach(e -> {
             String key = e.getMoShi() + "." + e.getBiaoMing();
-            String alias = aliasMap.get(key);
+            String alias = aliasMap.get(key).getFirst();
             builder.append(alias).append(".").append(e.getZiDuanBM());
             builder.append(e.getOperator());
             builder.append(e.getVal());
@@ -385,14 +526,14 @@ public class FangAnServiceImpl implements FangAnService {
      * @param aliasMap 表别名
      * @return 默认条件
      */
-    private String getDefaultCondition(Map<String, String> aliasMap) {
+    private String getDefaultCondition(Map<String,Triple<String,Boolean,Boolean>> aliasMap) {
         String tenantId = tenantIdentityService.getCurrentTenant().TenantId();
 
         StringBuilder builder = new StringBuilder();
         aliasMap.values().forEach(e -> {
-            builder.append(e).append(".zuofeibz=0");
+            builder.append(e.getFirst()).append(".zuofeibz=0");
             builder.append(" AND ");
-            builder.append(e).append(".zuhuid='").append(tenantId).append("'");
+            builder.append(e.getFirst()).append(".zuhuid='").append(tenantId).append("'");
             builder.append(" AND ");
         });
         return CharSequenceUtil.replaceLast(builder.toString(), " AND ", " ");
@@ -406,18 +547,25 @@ public class FangAnServiceImpl implements FangAnService {
      * @param aliasMap 表别名
      * @return 输出字段
      */
-    private String getQueryFields(FangAnSCDTO fangAnSC, Map<String, String> aliasMap) {
+    private String getQueryFields(FangAnSCDTO fangAnSC, Map<String,Triple<String,Boolean,Boolean>> aliasMap) {
         List<QueryField> queryFields = fangAnSC.getQueryFields();
         if (CollUtil.isEmpty(queryFields)) {
             return "";
         }
 
         List<String> fields = ListUtil.toList();
-        queryFields.forEach(e -> {
+        //增加基础表默认输出字段
+        Triple<String,Boolean,Boolean> jiChuTable=aliasMap.values().stream().filter(Triple::getThird).findFirst().orElse(null);
+        if(!Objects.isNull(jiChuTable)){
+            fields.add(jiChuTable.getFirst() + ".id");
+            fields.add(jiChuTable.getFirst() + ".bingrenid");
+        }
+
+        for (QueryField e : queryFields) {
             String key = e.getMoShi() + "." + e.getBiaoMing();
-            String alias = aliasMap.get(key);
+            String alias = aliasMap.containsKey(key) ? aliasMap.get(key).getFirst() : "";
             fields.add(alias + "." + e.getZiDuanBM());
-        });
+        }
 
         return " " + CharSequenceUtil.join(",", fields);
     }

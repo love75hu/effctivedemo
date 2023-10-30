@@ -86,4 +86,20 @@ public interface SC_CX_ShiTuXXRepository extends MsfJpaRepository<QSC_CX_ShiTuXX
         return this.asQuerydsl().where(s -> s.shiTuID.in(shiTuIDs)).select(SC_CX_ShiTuXXByShiTuIDDto.class).fetch();
     }
 
+
+
+    /**
+     * 获取视图信息列表
+     * @param yeWuLX  1 门诊,2 住院 ,3 急诊,9 公卫
+     * @return
+     */
+    default List<SC_CX_ShiTuXXModel> getShiTuXXSJ(Integer yeWuLX){
+        return this.asQuerydsl()
+                .where(t->t.moJiBZ.eq(1))
+                .whereIf(yeWuLX ==1, t->t.menZhenSYBZ.eq(1))
+                .whereIf(yeWuLX ==2, t->t.zhuYuanSYBZ.eq(1))
+                .whereIf(yeWuLX ==3, t->t.jiZhenSYBZ.eq(1))
+                .whereIf(yeWuLX ==4, t->t.gongWeiZYBZ.eq(1))
+                .fetchDetach();
+    }
 }

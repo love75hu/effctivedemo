@@ -6,6 +6,7 @@ import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
 import cn.mediinfo.cyan.msf.core.util.AssertUtil;
 import cn.mediinfo.cyan.msf.core.util.BeanUtil;
 import cn.mediinfo.cyan.msf.stringgenerator.StringGenerator;
+import cn.mediinfo.grus.shujuzx.constant.ShuJuZXConstant;
 import cn.mediinfo.grus.shujuzx.dto.shitumx.SC_CX_ShiTuXXByShiTuIDDto;
 import cn.mediinfo.grus.shujuzx.dto.zonghecx.*;
 import cn.mediinfo.grus.shujuzx.model.SC_CX_ShiTuXXModel;
@@ -47,7 +48,7 @@ class ShiTuXXServiceImpl implements ShiTuXXService {
     @Override
     public SC_CX_ShiTuXXDto getShiTuXXByID(String id) throws WeiZhaoDSJException {
         //获取视图信息
-        var result = shiTuXXRepository.asQuerydsl().where(s -> s.id.eq(id)).select(SC_CX_ShiTuXXDto.class).fetchFirst();
+        var result = shiTuXXRepository.asQuerydsl().where(s -> s.id.eq(id)).select(SC_CX_ShiTuXXDto.class).fetchFirst(); //todo 优化
         AssertUtil.checkWeiZhaoDSJ(result != null, "未获取到数据");
         return result;
     }
@@ -98,12 +99,12 @@ class ShiTuXXServiceImpl implements ShiTuXXService {
         //新增视图分类
         SC_CX_ShiTuXXModel shiTuXXModel =new SC_CX_ShiTuXXModel();
         shiTuXXModel.setFuLeiID("0");
-        shiTuXXModel.setZuZhiJGID(lyraIdentityService.getJiGouID());
-        shiTuXXModel.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
+        shiTuXXModel.setZuZhiJGID(ShuJuZXConstant.TONGYONG_JGID);
+        shiTuXXModel.setZuZhiJGMC(ShuJuZXConstant.TONGYONG_JGMC);
         shiTuXXModel.setFuLeiMC(dto.getShiTuFLMC());
         var shunXuHao=shiTuXXRepository.getMaxShunXuHao();
         //设置顺序号
-        shiTuXXModel.setShunXuHao(dto.getShunXuHao()!=null?dto.getShunXuHao():shunXuHao+1);
+        shiTuXXModel.setShunXuHao(dto.getShunXuHao()!=null?dto.getShunXuHao():shunXuHao+1);//顺序
         //保存视图分类
         SC_CX_ShiTuXXModel save = shiTuXXRepository.save(shiTuXXModel);
         return save.getId();
@@ -143,12 +144,11 @@ class ShiTuXXServiceImpl implements ShiTuXXService {
         dto.setShiTuID(stringGenerator.Create());
         //复制属性
     var shiTuXXModel= BeanUtil.copyProperties(dto,SC_CX_ShiTuXXModel::new);
-        shiTuXXModel.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
-        shiTuXXModel.setZuZhiJGID(lyraIdentityService.getJiGouID());
-        shiTuXXModel.setMoJiBZ(1);
-        shiTuXXModel.setShunXuHao(dto.getShunXuHao()==null?shiTuXXRepository.getMaxShunXuHaoByFuLeiID(dto.getFuLeiID())+1:dto.getShunXuHao());
+        shiTuXXModel.setZuZhiJGMC(ShuJuZXConstant.TONGYONG_JGMC);
+        shiTuXXModel.setZuZhiJGID(ShuJuZXConstant.TONGYONG_JGID);
+        shiTuXXModel.setShunXuHao(dto.getShunXuHao()==null?shiTuXXRepository.getMaxShunXuHaoByFuLeiID(dto.getFuLeiID())+1:dto.getShunXuHao()); //todo
         //保存返回id
-        SC_CX_ShiTuXXModel save = shiTuXXRepository.save(shiTuXXModel);
+        SC_CX_ShiTuXXModel save = shiTuXXRepository.insert(shiTuXXModel);
         return save.getId();
     }
 
@@ -188,7 +188,8 @@ class ShiTuXXServiceImpl implements ShiTuXXService {
      */
     @Override
     public Boolean zuoFeiShiTuFL(String id) throws WeiZhaoDSJException {
-        getShiTuXXByID(id);
+       // getShiTuXXByID(id); todo  作废 联动
+
         shiTuXXRepository.deleteById(id);
         return true;
     }

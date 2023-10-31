@@ -178,6 +178,12 @@ public class JieDianGLController {
     {
         return MsfResponse.success(biHuanSTJDXXService.updateJieDianQYBZ(id,qiYongBZ));
     }
+    @Operation(summary = "获取闭环视图节点")
+    @GetMapping("getBiHuanSTJD")
+    public MsfResponse<String> getBiHuanSTJD()
+    {
+        return MsfResponse.success();
+    }
 
 
 

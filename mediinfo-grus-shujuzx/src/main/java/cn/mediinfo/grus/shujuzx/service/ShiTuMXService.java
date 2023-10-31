@@ -33,7 +33,7 @@ public interface ShiTuMXService {
      * @param shiTuMXIds 视图明细id
      * @return 表信息
      */
-     List<TableDTO> listTable(Set<String> shiTuMXIds);
+     List<TableDTO> listTable(Set<String> shiTuMXIds) throws YuanChengException;
 
     /**
      * 获取视图配置的数据库配置信息

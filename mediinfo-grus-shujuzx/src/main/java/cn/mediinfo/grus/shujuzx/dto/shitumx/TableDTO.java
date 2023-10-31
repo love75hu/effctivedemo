@@ -24,10 +24,12 @@ public class TableDTO {
      * 表关联关系
      */
     private List<TableRelationCondition> tableRelationConditionList;
+    //private String tableRelationConditionList;
 
     /**
      * 表过滤条件
      */
     private List<SqlFilterCondition> filterConditionList;
+   // private String filterConditionList;
 
 }

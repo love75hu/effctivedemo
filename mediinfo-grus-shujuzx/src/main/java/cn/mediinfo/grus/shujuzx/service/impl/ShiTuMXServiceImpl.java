@@ -6,6 +6,7 @@ import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
 import cn.mediinfo.cyan.msf.core.util.AssertUtil;
 import cn.mediinfo.cyan.msf.core.util.BeanUtil;
 import cn.mediinfo.cyan.msf.core.util.StringUtil;
+import cn.mediinfo.grus.shujuzx.constant.ShuJuZXConstant;
 import cn.mediinfo.grus.shujuzx.dto.shitumx.*;
 import cn.mediinfo.grus.shujuzx.dto.zonghecx.*;
 import cn.mediinfo.grus.shujuzx.model.SC_CX_ShiTuMXModel;
@@ -105,20 +106,18 @@ public class ShiTuMXServiceImpl implements ShiTuMXService {
     }
 
     @Override
-    public List<TableDTO> listTable(Set<String> shiTuMXIds) {
+    public List<TableDTO> listTable(Set<String> shiTuMXIds) throws YuanChengException {
+
         //查询视图明细
         List<SC_CX_ShiTuMXByIdDto>  shiTuMXModels = shiTuMXRepository.findByIdIs(shiTuMXIds);
         //获取视图id集合
         Set<String> shiTuIds = shiTuMXModels.stream().map(SC_CX_ShiTuMXByIdDto::getShiTuID).collect(java.util.stream.Collectors.toSet());
         //查询视图信息
-        List<SC_CX_ShiTuXXByShiTuIDDto> shiTuXXList =  shiTuXXRepository.findByShiTuIDIn(shiTuIds);
+        var  shiTuXXList =  shiTuXXRepository.findByShiTuIDIn(shiTuIds);
 
+        List<ShuJuLYDto> shuJuLYDtos = BeanUtil.copyListProperties(shiTuXXList, ShuJuLYDto::new);
+      return   gongYongRemoteService.getShiTuGLFSGLTJ(shuJuLYDtos).getData("获取功能服务字段信息失败");
 
-
-
-
-
-        return null;
     }
 
     @Override
@@ -138,8 +137,8 @@ public class ShiTuMXServiceImpl implements ShiTuMXService {
             SC_CX_ShiTuMXModel shiTuMXModel=new SC_CX_ShiTuMXModel();
             shiTuMXModel.setShiTuID(addShiTuMXDto.getShiTuID());
             shiTuMXModel.setShiTuMC(addShiTuMXDto.getShiTuMC());
-            shiTuMXModel.setZuZhiJGID(lyraIdentityService.getJiGouID());
-            shiTuMXModel.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
+            shiTuMXModel.setZuZhiJGID(ShuJuZXConstant.TONGYONG_JGID);
+            shiTuMXModel.setZuZhiJGMC(ShuJuZXConstant.TONGYONG_JGMC);
             BeanUtil.copyProperties(s,shiTuMXModel);
             shiTuMXModels.add(shiTuMXModel);
         });

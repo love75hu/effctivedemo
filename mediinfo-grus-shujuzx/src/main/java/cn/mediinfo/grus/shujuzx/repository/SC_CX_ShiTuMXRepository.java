@@ -9,7 +9,7 @@ import cn.mediinfo.grus.shujuzx.dto.zonghecx.ShiTuMXListDto;
 import cn.mediinfo.grus.shujuzx.model.QSC_CX_ShiTuMXModel;
 import cn.mediinfo.grus.shujuzx.model.SC_CX_ShiTuMXModel;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-
+import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 import java.util.Set;
 
@@ -81,4 +81,17 @@ public interface SC_CX_ShiTuMXRepository extends MsfJpaRepository<QSC_CX_ShiTuMX
                 .fetch();
     }
 
+
+    /**
+     * 获取视图明细数据
+     * @param shiTuIDs
+     * @return
+     */
+    default List<SC_CX_ShiTuMXModel> getShiTuMXSJ(List<String> shiTuIDs,String likeQuery) {
+        return this.asQuerydsl()
+                .where(e->e.shuChuBZ.eq(1))
+                .where(e->e.shiTuID.in(shiTuIDs))
+                .whereIf(StringUtil.hasText(likeQuery), e -> e.ziDuanMC.contains(likeQuery))
+                .fetchDetach();
+    }
 }

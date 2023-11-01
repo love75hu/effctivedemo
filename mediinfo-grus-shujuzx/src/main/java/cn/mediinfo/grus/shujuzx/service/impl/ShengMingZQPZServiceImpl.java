@@ -6,8 +6,10 @@ import cn.mediinfo.cyan.msf.core.util.MapUtils;
 import cn.mediinfo.cyan.msf.core.util.StringUtil;
 import cn.mediinfo.grus.shujuzx.constant.ShuJuZXConstant;
 import cn.mediinfo.grus.shujuzx.dto.shengmingzqpzs.SC_ZD_ShengMingZQCreateDto;
+import cn.mediinfo.grus.shujuzx.dto.shengmingzqpzs.SC_ZD_ShengMingZQDto;
 import cn.mediinfo.grus.shujuzx.dto.shengmingzqpzs.SC_ZD_ShengMingZQListDto;
 import cn.mediinfo.grus.shujuzx.dto.shengmingzqpzs.SC_ZD_ShengMingZQUpdateDto;
+import cn.mediinfo.grus.shujuzx.dto.shujuyzys.SC_ZD_ShuJuYZYDto;
 import cn.mediinfo.grus.shujuzx.model.SC_ZD_ShengMingZQModel;
 import cn.mediinfo.grus.shujuzx.repository.SC_ZD_ShengMingZQRepository;
 import cn.mediinfo.grus.shujuzx.service.ShengMingZQPZService;
@@ -109,6 +111,12 @@ public class ShengMingZQPZServiceImpl implements ShengMingZQPZService {
         //删除数据源值域
         shengMingZQRepository.delete(entity);
         return true;
+    }
+
+    @Override
+    public SC_ZD_ShengMingZQDto getShengMingZQByID(String id) {
+        var shuJuYZY = shengMingZQRepository.findById(id).orElse(null);
+        return MapUtils.copyProperties(shuJuYZY, SC_ZD_ShengMingZQDto::new);
     }
 
 }

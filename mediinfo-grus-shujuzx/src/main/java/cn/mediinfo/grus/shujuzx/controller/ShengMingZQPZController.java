@@ -5,8 +5,10 @@ import cn.mediinfo.cyan.msf.core.response.MsfResponse;
 import cn.mediinfo.cyan.msf.core.response.XiTongResponseCode;
 import cn.mediinfo.cyan.msf.core.util.StringUtil;
 import cn.mediinfo.grus.shujuzx.dto.shengmingzqpzs.SC_ZD_ShengMingZQCreateDto;
+import cn.mediinfo.grus.shujuzx.dto.shengmingzqpzs.SC_ZD_ShengMingZQDto;
 import cn.mediinfo.grus.shujuzx.dto.shengmingzqpzs.SC_ZD_ShengMingZQListDto;
 import cn.mediinfo.grus.shujuzx.dto.shengmingzqpzs.SC_ZD_ShengMingZQUpdateDto;
+import cn.mediinfo.grus.shujuzx.dto.shujuyzys.SC_ZD_ShuJuYZYDto;
 import cn.mediinfo.grus.shujuzx.dto.zhibiaoxxs.ZhiBiaoXXCreateDto;
 import cn.mediinfo.grus.shujuzx.dto.zhibiaoxxs.ZhiBiaoXXListDto;
 import cn.mediinfo.grus.shujuzx.dto.zhibiaoxxs.ZhiBiaoXXUpdateDto;
@@ -73,6 +75,19 @@ public class ShengMingZQPZController {
     @DeleteMapping("ZuoFeiShengMingZQ")
     public MsfResponse<Boolean> zuoFeiShengMingZQ(@NotEmpty(message = "id不能为空") String id) throws TongYongYWException {
         return MsfResponse.success(shengMingZQPZService.zuoFeiShengMingZQ(id));
+    }
+
+    /**
+     * 根据ID获取生命周期
+     *
+     * @param id
+     * @return
+     * @throws
+     */
+    @Operation(summary = "根据ID获取生命周期")
+    @GetMapping("GetShengMingZQByID")
+    public MsfResponse<SC_ZD_ShengMingZQDto> getShengMingZQByID(@NotEmpty(message = "主键ID必传！") String id) {
+        return MsfResponse.success(shengMingZQPZService.getShengMingZQByID(id));
     }
 
 }

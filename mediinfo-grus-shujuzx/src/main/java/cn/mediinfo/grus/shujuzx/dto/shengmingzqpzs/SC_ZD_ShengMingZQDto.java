@@ -6,6 +6,8 @@ import lombok.Data;
 
 @Data
 public class SC_ZD_ShengMingZQDto {
+    @Schema(description = "主键id")
+    private String id;
     @Schema(description = "生命周期ID")
     private String shengMingZQID;
     @Schema(description = "生命周期名称")

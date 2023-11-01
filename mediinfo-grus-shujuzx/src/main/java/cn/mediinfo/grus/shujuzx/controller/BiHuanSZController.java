@@ -1,12 +1,10 @@
 package cn.mediinfo.grus.shujuzx.controller;
 
+import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 import cn.mediinfo.cyan.msf.core.response.MsfResponse;
 import cn.mediinfo.grus.shujuzx.dto.JieDianGL.JieDianNRDto;
 import cn.mediinfo.grus.shujuzx.dto.JieDianGL.KeXuanZDDto;
-import cn.mediinfo.grus.shujuzx.dto.bihuansz.AddBiHuanSZXXDto;
-import cn.mediinfo.grus.shujuzx.dto.bihuansz.AddBiHuanXXDto;
-import cn.mediinfo.grus.shujuzx.dto.bihuansz.BiHuanJBXXTreeDto;
-import cn.mediinfo.grus.shujuzx.dto.bihuansz.BiHuanSZXXDto;
+import cn.mediinfo.grus.shujuzx.dto.bihuansz.*;
 import cn.mediinfo.grus.shujuzx.service.BiHuanSTJDMXService;
 import cn.mediinfo.grus.shujuzx.service.BiHuanSTMXService;
 import cn.mediinfo.grus.shujuzx.service.JiBenXXService;
@@ -99,6 +97,41 @@ public class BiHuanSZController {
     {
         return MsfResponse.success(jieDianXXService.getBiHuanSZXXBybiHuanID(biHuanID));
     }
+
+    @Operation(summary = "闭环设置下发")
+    @PostMapping("biHuanSZXF")
+    public MsfResponse<Boolean> biHuanSZXF(@RequestBody @Validated  BiHuanSZXFDto dto) throws TongYongYWException {
+        return MsfResponse.success(jiBenXXService.biHuanSZXF(dto));
+    }
+
+    @Operation(summary = "闭环设置复制")
+    @PostMapping("biHuanSZFZ")
+    public MsfResponse<String> biHuanSZFZ(@RequestParam  String biHuanID)
+    {
+        return MsfResponse.success(jiBenXXService.biHuanSZFZ(biHuanID));
+    }
+    @Operation(summary = "闭环设置删除")
+    @DeleteMapping("biHuanSZSC")
+    public MsfResponse<Boolean> biHuanSZSC(@RequestParam  String biHuanID)
+    {
+        return MsfResponse.success(jiBenXXService.biHuanSZSC(biHuanID));
+    }
+
+    @Operation(summary = "闭环设置启用")
+    @PutMapping("biHuanSZQY")
+    public MsfResponse<Boolean> biHuanSZQY(@RequestParam  String biHuanID)
+    {
+        return MsfResponse.success(jiBenXXService.biHuanSZQY(biHuanID));
+    }
+
+
+
+
+
+
+
+
+
 
 
 

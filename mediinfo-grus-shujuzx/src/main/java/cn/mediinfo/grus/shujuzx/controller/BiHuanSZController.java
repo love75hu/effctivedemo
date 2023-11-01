@@ -1,12 +1,16 @@
 package cn.mediinfo.grus.shujuzx.controller;
 
 import cn.mediinfo.cyan.msf.core.response.MsfResponse;
+import cn.mediinfo.grus.shujuzx.dto.JieDianGL.JieDianNRDto;
 import cn.mediinfo.grus.shujuzx.dto.JieDianGL.KeXuanZDDto;
+import cn.mediinfo.grus.shujuzx.dto.bihuansz.AddBiHuanSZXXDto;
 import cn.mediinfo.grus.shujuzx.dto.bihuansz.AddBiHuanXXDto;
-import cn.mediinfo.grus.shujuzx.dto.bihuansz.AddRuCanXXDto;
 import cn.mediinfo.grus.shujuzx.dto.bihuansz.BiHuanJBXXTreeDto;
+import cn.mediinfo.grus.shujuzx.dto.bihuansz.BiHuanSZXXDto;
+import cn.mediinfo.grus.shujuzx.service.BiHuanSTJDMXService;
 import cn.mediinfo.grus.shujuzx.service.BiHuanSTMXService;
 import cn.mediinfo.grus.shujuzx.service.JiBenXXService;
+import cn.mediinfo.grus.shujuzx.service.JieDianXXService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotEmpty;
@@ -28,10 +32,16 @@ public class BiHuanSZController {
 
     private final BiHuanSTMXService biHuanSTMXService;
 
+    private final BiHuanSTJDMXService biHuanSTJDMXService;
 
-    public BiHuanSZController(JiBenXXService jiBenXXService, BiHuanSTMXService biHuanSTMXService) {
+    private final JieDianXXService jieDianXXService;
+
+
+    public BiHuanSZController(JiBenXXService jiBenXXService, BiHuanSTMXService biHuanSTMXService, BiHuanSTJDMXService biHuanSTJDMXService, JieDianXXService jieDianXXService) {
         this.jiBenXXService = jiBenXXService;
         this.biHuanSTMXService = biHuanSTMXService;
+        this.biHuanSTJDMXService = biHuanSTJDMXService;
+        this.jieDianXXService = jieDianXXService;
     }
 
     @Operation(summary = "获取闭环信息")
@@ -60,6 +70,34 @@ public class BiHuanSZController {
     {
 
                 return MsfResponse.success();
+    }
+
+    @Operation(summary = "获取入参信息")
+    @GetMapping("getRuCanXX")
+    public MsfResponse<String> GetBiHuanZDList(String jieDianID)
+    {
+        return MsfResponse.success();
+    }
+
+    @Operation(summary = "获取节点下失效字段")
+    @GetMapping("getShiTuJDMXByJieDianID")
+    public MsfResponse<List<JieDianNRDto>> getShiTuJDMXByJieDianID(String jieDianID)
+    {
+        return MsfResponse.success(biHuanSTJDMXService.getShiTuJDMXByJieDianID(jieDianID));
+    }
+
+    @Operation(summary = "添加闭环设置信息")
+    @PostMapping("addBiHuanSZXX")
+    public MsfResponse<String> addBiHuanSZXX(@RequestBody @Validated AddBiHuanSZXXDto dto)
+    {
+        return MsfResponse.success(jieDianXXService.addBiHuanSZXX(dto));
+    }
+
+    @Operation(summary = "根据ID获取闭环节点信息")
+    @GetMapping("getBiHuanSZXXBybiHuanID")
+    public MsfResponse<List<BiHuanSZXXDto>> getBiHuanSZXXBybiHuanID(@NotEmpty(message = "闭环ID不能为空") String biHuanID)
+    {
+        return MsfResponse.success(jieDianXXService.getBiHuanSZXXBybiHuanID(biHuanID));
     }
 
 

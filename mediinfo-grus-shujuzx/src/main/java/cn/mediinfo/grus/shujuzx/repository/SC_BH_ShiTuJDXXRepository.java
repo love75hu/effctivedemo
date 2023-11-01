@@ -27,6 +27,11 @@ public interface SC_BH_ShiTuJDXXRepository extends MsfJpaRepository<QSC_BH_ShiTu
                .whereIf(qiYongBZ.equals(1),n->n.qiYongBZ.eq(qiYongBZ))
                .select(BiHuanJDXXListDto.class).fetchPage(pageIndex,pageSize);
    }
+   default List<BiHuanJDXXListDto> getBiHuanJDList(String biHuanLXDM)
+   {
+        return this.asQuerydsl().where(n->n.biHuanLXDM.eq(biHuanLXDM))
+                .select(BiHuanJDXXListDto.class).fetch();
+   }
     default Integer getBiHuanJDXXCount(String shiTuID,
                                                       String biHuanLXDM,
                                                       String jieDianMC,

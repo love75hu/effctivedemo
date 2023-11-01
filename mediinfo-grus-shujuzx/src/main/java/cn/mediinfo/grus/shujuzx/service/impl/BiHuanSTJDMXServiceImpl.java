@@ -46,7 +46,14 @@ return result;
                 return shiTuJDMXRepository.getJieDianMXs(jieDianID);
     }
     @Override
-    public Boolean addShiTuJDMX(List<JieDianNRDto> jieDianNRDtos,String jieDianID,String jieDianMC,String shiTuID,String shiTuMC)
+    public List<JieDianNRDto> getShiTuJDMXByJieDianID(String jieDianID)
+    {
+        return shiTuJDMXRepository.asQuerydsl()
+                .where(n->n.jieDianID.eq(jieDianID))
+                .where(n->n.kongZhiSJBZ.eq(1)).select(JieDianNRDto.class).fetch();
+    }
+    @Override
+    public Boolean addShiTuJDMX(List<JieDianNRDto> jieDianNRDtos, String shiTuID,String jieDianMC,String jieDianID,String shiTuMC)
     {
         shiTuJDMXRepository.asDeleteDsl().where(n->n.shiTuID.eq(shiTuID)).where(n->n.jieDianID.eq(jieDianID)).execute();
         List<SC_BH_ShiTuJDMXModel> shiTuJDMXList=new ArrayList<>();

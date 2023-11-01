@@ -7,6 +7,7 @@ import cn.mediinfo.cyan.msf.stringgenerator.StringGenerator;
 import cn.mediinfo.grus.shujuzx.dto.bihuansz.AddBiHuanXXDto;
 import cn.mediinfo.grus.shujuzx.dto.bihuansz.BiHuanJBXXTreeDto;
 import cn.mediinfo.grus.shujuzx.dto.bihuansz.SC_BH_JIBENXXDto;
+import cn.mediinfo.grus.shujuzx.model.SC_BH_JIBENXXModel;
 import cn.mediinfo.grus.shujuzx.model.SC_BH_ShiTuMXModel;
 import cn.mediinfo.grus.shujuzx.repository.SC_BH_JIBENXXRepository;
 import cn.mediinfo.grus.shujuzx.service.JiBenXXService;
@@ -67,12 +68,13 @@ class JiBenXXServiceImpl implements JiBenXXService {
     @Override
     public Boolean addBiHuanJBXX(AddBiHuanXXDto dto) {
 
-        SC_BH_ShiTuMXModel shiTuMXModel=new SC_BH_ShiTuMXModel();
+        SC_BH_JIBENXXModel shiTuMXModel=new SC_BH_JIBENXXModel();
         BeanUtil.copyProperties(dto,shiTuMXModel);
         shiTuMXModel.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
         shiTuMXModel.setZuZhiJGID(lyraIdentityService.getJiGouID());
-        shiTuMXModel.setShiTuID(stringGenerator.Create());
-        ruCanXXService.addRuCanXX(dto.getRuCanXXDtoList(),dto.getBiHuanLXDM(),dto.getBiHuanLXMC(),shiTuMXModel.getShiTuID(),shiTuMXModel.getShiTuMC());
+       // shiTuMXModel.setShiTuID(stringGenerator.Create());
+        ruCanXXService.addRuCanXX(dto.getRuCanXXDtoList(),dto.getBiHuanLXDM(),dto.getBiHuanLXMC(),"","");
+        jIBENXXRepository.save(shiTuMXModel);
         return true;
     }
 }

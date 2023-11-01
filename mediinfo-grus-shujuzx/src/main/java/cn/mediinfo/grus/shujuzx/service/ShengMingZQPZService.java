@@ -2,6 +2,7 @@ package cn.mediinfo.grus.shujuzx.service;
 
 import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 import cn.mediinfo.grus.shujuzx.dto.shengmingzqpzs.SC_ZD_ShengMingZQCreateDto;
+import cn.mediinfo.grus.shujuzx.dto.shengmingzqpzs.SC_ZD_ShengMingZQDto;
 import cn.mediinfo.grus.shujuzx.dto.shengmingzqpzs.SC_ZD_ShengMingZQListDto;
 import cn.mediinfo.grus.shujuzx.dto.shengmingzqpzs.SC_ZD_ShengMingZQUpdateDto;
 import jakarta.transaction.Transactional;
@@ -17,4 +18,6 @@ public interface ShengMingZQPZService {
 
     @Transactional(rollbackOn = Exception.class)
     Boolean zuoFeiShengMingZQ(String id) throws TongYongYWException;
+
+    SC_ZD_ShengMingZQDto getShengMingZQByID(String id);
 }

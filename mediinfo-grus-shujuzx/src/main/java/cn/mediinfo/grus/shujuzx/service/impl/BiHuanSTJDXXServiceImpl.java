@@ -4,16 +4,18 @@ import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
 import cn.mediinfo.cyan.msf.core.util.AssertUtil;
 import cn.mediinfo.cyan.msf.core.util.BeanUtil;
 import cn.mediinfo.cyan.msf.stringgenerator.StringGenerator;
-import cn.mediinfo.grus.shujuzx.dto.JieDianGL.BiHuanJDXXListDto;
-import cn.mediinfo.grus.shujuzx.dto.JieDianGL.BiHuanSTJDDto;
-import cn.mediinfo.grus.shujuzx.dto.JieDianGL.GuanLianJDDto;
+import cn.mediinfo.grus.shujuzx.dto.JieDianGL.*;
 import cn.mediinfo.grus.shujuzx.dto.bihuangl.SC_BH_ShiTuJDGXDto;
 import cn.mediinfo.grus.shujuzx.dto.bihuangl.SC_BH_ShiTuJDMXDto;
 import cn.mediinfo.grus.shujuzx.dto.bihuangl.SC_BH_ShiTuJDXXDto;
+import cn.mediinfo.grus.shujuzx.dto.bihuansz.AddBiHuanSZXXDto;
 import cn.mediinfo.grus.shujuzx.dto.bihuansz.KeXuanJDDto;
 import cn.mediinfo.grus.shujuzx.dto.bihuansz.KeXuanJDXXDto;
+import cn.mediinfo.grus.shujuzx.dto.bihuansz.SC_BH_JIBENXXDto;
 import cn.mediinfo.grus.shujuzx.model.SC_BH_ShiTuJDXXModel;
 import cn.mediinfo.grus.shujuzx.model.SC_BH_ShiTuXXModel;
+import cn.mediinfo.grus.shujuzx.repository.SC_BH_JIBENXXRepository;
+import cn.mediinfo.grus.shujuzx.repository.SC_BH_JieDianXXRepository;
 import cn.mediinfo.grus.shujuzx.repository.SC_BH_ShiTuJDXXRepository;
 import cn.mediinfo.grus.shujuzx.repository.SC_BH_ShiTuXXRepository;
 import cn.mediinfo.grus.shujuzx.service.BiHuanSTJDXXService;
@@ -21,6 +23,7 @@ import cn.mediinfo.lyra.extension.service.LyraIdentityService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,22 +33,24 @@ import java.util.stream.Collectors;
 @Service
 public class BiHuanSTJDXXServiceImpl implements BiHuanSTJDXXService {
     private final SC_BH_ShiTuJDXXRepository shiTuJDXXRepository;
-
     private final SC_BH_ShiTuXXRepository shiTuXXRepository;
     private final  BiHuanSTJDGXServiceImpl biHuanSTJDGXService;
     private final  BiHuanSTJDMXServiceImpl biHuanSTJDMXService;
-
+    private final SC_BH_JIBENXXRepository scBhJiBenxxRepository;
+    private final SC_BH_JieDianXXRepository scBhJieDianxxRepository;
     private final StringGenerator stringGenerator;
 
 
 
     private final LyraIdentityService lyraIdentityService;
 
-    public BiHuanSTJDXXServiceImpl(SC_BH_ShiTuJDXXRepository shiTuJDXXRepository, SC_BH_ShiTuXXRepository shiTuXXRepository, BiHuanSTJDGXServiceImpl biHuanSTJDGXService, BiHuanSTJDMXServiceImpl biHuanSTJDMXService, StringGenerator stringGenerator, LyraIdentityService lyraIdentityService) {
+    public BiHuanSTJDXXServiceImpl(SC_BH_ShiTuJDXXRepository shiTuJDXXRepository, SC_BH_ShiTuXXRepository shiTuXXRepository, BiHuanSTJDGXServiceImpl biHuanSTJDGXService, BiHuanSTJDMXServiceImpl biHuanSTJDMXService, SC_BH_JIBENXXRepository scBhJiBenxxRepository, SC_BH_JieDianXXRepository scBhJieDianxxRepository, StringGenerator stringGenerator, LyraIdentityService lyraIdentityService) {
         this.shiTuJDXXRepository = shiTuJDXXRepository;
         this.shiTuXXRepository = shiTuXXRepository;
         this.biHuanSTJDGXService = biHuanSTJDGXService;
         this.biHuanSTJDMXService = biHuanSTJDMXService;
+        this.scBhJiBenxxRepository = scBhJiBenxxRepository;
+        this.scBhJieDianxxRepository = scBhJieDianxxRepository;
         this.stringGenerator = stringGenerator;
         this.lyraIdentityService = lyraIdentityService;
     }
@@ -127,7 +132,7 @@ public class BiHuanSTJDXXServiceImpl implements BiHuanSTJDXXService {
                                                      Integer pageIndex,
                                                      Integer pageSize){
         List<BiHuanJDXXListDto> biHuanJDXXList = shiTuJDXXRepository.getBiHuanJDXXList(shiTuID,biHuanLXDM, jieDianMC, qiYongBZ, pageIndex, pageSize);
-        var jieDianIDs=biHuanJDXXList.stream().map(n->n.getJieDianID()).collect(Collectors.toList());
+        var jieDianIDs=biHuanJDXXList.stream().map(BiHuanJDXXListDto::getJieDianID).collect(Collectors.toList());
         //获取所有列表下的 节点内容
         var shiTuJDMX=biHuanSTJDMXService.getShiTuJDMXs(jieDianIDs);
         //获取所有列表下的 关联节点
@@ -135,10 +140,10 @@ public class BiHuanSTJDXXServiceImpl implements BiHuanSTJDXXService {
 
         for (var b:biHuanJDXXList)
         {
-            b.setJieDianNR( shiTuJDMX.stream().filter(n->n.getShiTuID().equals(shiTuID)
-                    &&n.getJieDianID().equals(b.getJieDianID())).map(SC_BH_ShiTuJDMXDto::getJieDianMC).toList());
-            b.setGuanLianJD(guanLianJDXXS.stream().filter(n->n.getShiTuID().equals(shiTuID)
-                    &&n.getJieDianID().equals(b.getJieDianID())).map(SC_BH_ShiTuJDGXDto::getGuanLianJDMC).toList());
+            b.setJieDianNR( shiTuJDMX.stream().filter(n-> n.getShiTuID().equals(b.getShiTuID())&&
+                    n.getJieDianID().equals(b.getJieDianID())).map(SC_BH_ShiTuJDMXDto::getZiDuanMC).toList());
+            b.setGuanLianJD(guanLianJDXXS.stream().filter(n->n.getShiTuID().equals(b.getShiTuID())&&
+                    n.getJieDianID().equals(b.getJieDianID())).map(SC_BH_ShiTuJDGXDto::getGuanLianJDMC).toList());
         }
         return biHuanJDXXList;
     }
@@ -187,7 +192,12 @@ public class BiHuanSTJDXXServiceImpl implements BiHuanSTJDXXService {
         {
             throw new WeiZhaoDSJException("未找到节点信息");
         }
-        BeanUtil.copyProperties(dto,scBhShiTuJDXXModel);
+        scBhShiTuJDXXModel.setShunXuHao(dto.getShunXuHao());
+        scBhShiTuJDXXModel.setJieDianMC(dto.getJieDianMC());
+        scBhShiTuJDXXModel.setShiJianMC(dto.getShiJianMC());
+        scBhShiTuJDXXModel.setShiJianDM(dto.getShiJianDM());
+        scBhShiTuJDXXModel.setShiJianZDBM(dto.getShiJianZDBM());
+        scBhShiTuJDXXModel.setShiJianZDMC(dto.getShiJianZDMC());
         shiTuJDXXRepository.save(scBhShiTuJDXXModel);
         //添加关联节点
         biHuanSTJDGXService.addGuanLianJDXX(dto.getGuanLianJD(),
@@ -200,6 +210,22 @@ public class BiHuanSTJDXXServiceImpl implements BiHuanSTJDXXService {
         return true;
 
     }
+
+    @Override
+    public List<BiHuanSTJDXXDto> getBiHuanSTJD(String biHuanLXDM)
+    {
+        List<BiHuanJDXXListDto> biHuanJDList = shiTuJDXXRepository.getBiHuanJDList(biHuanLXDM);
+      return  biHuanJDList.stream().collect(Collectors.groupingBy(p-> Arrays.asList(p.getShiTuID(),p.getShiTuMC())))
+                .entrySet().stream().map(p->{
+                    BiHuanSTJDXXDto dto=new BiHuanSTJDXXDto();
+                    dto.setShiTuID(p.getKey().get(0));
+                    dto.setShiTuMC(p.getKey().get(1));
+                    dto.setJieDianNR(BeanUtil.copyListProperties(p.getValue(), JieDianDto::new));
+                    return dto;
+                }).toList();
+    }
+
+
 
 
 }

@@ -16,4 +16,12 @@ public interface SC_BH_JIBENXXRepository extends MsfJpaRepository<QSC_BH_JIBENXX
         return asQuerydsl().where(n->n.zuZhiJGID.eq(zuZhiJGID).and(n.biHuanMC.like("%"+likeQuery+"%")))
                 .select(SC_BH_JIBENXXDto.class).fetch();
     }
+
+    //
+    default List<SC_BH_JIBENXXDto> getjiBeNXXBybiHuanID(String zuZhiJGID,String biHuanID)
+    {
+        return asQuerydsl()
+                .where(n->n.zuZhiJGID.eq(zuZhiJGID).and(n.biHuanID.eq(biHuanID)))
+                .select(SC_BH_JIBENXXDto.class).fetch();
+    }
 }

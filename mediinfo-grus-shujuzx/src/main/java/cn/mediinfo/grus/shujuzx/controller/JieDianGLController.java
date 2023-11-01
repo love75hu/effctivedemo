@@ -180,9 +180,9 @@ public class JieDianGLController {
     }
     @Operation(summary = "获取闭环视图节点")
     @GetMapping("getBiHuanSTJD")
-    public MsfResponse<String> getBiHuanSTJD()
+    public MsfResponse<List<BiHuanSTJDXXDto>> getBiHuanSTJD(@NotEmpty(message = "闭环类型代码不能为空")  String biHuanLXDM)
     {
-        return MsfResponse.success();
+        return MsfResponse.success(biHuanSTJDXXService.getBiHuanSTJD(biHuanLXDM));
     }
 
 

@@ -9,7 +9,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name="sc_bh_jibenxx")
-public class SC_BH_JIBENXXModel extends StringMTEntity {
+public class SC_BH_JiBenXXModel extends StringMTEntity {
 
    /**
     * 组织机构ID

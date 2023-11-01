@@ -85,6 +85,7 @@ mediinfo:
     urls:
       mediinfo-grus-huanzhe-query: "http://mediinfo-grus-huanzhe-query/mediinfo-grus-huanzhe-query"
       mediinfo-lyra-gongyong: "http://mediinfo-lyra-gongyong"
+      mediinfo-lyra-dizuo: "http://mediinfo-lyra-dizuo"
   sequence:
     provider: redis
   string-generator:

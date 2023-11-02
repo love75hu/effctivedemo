@@ -3,6 +3,7 @@ package cn.mediinfo.grus.shujuzx.service;
 import cn.mediinfo.cyan.msf.core.exception.MsfResponseException;
 import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
+import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
 import cn.mediinfo.grus.shujuzx.dto.bihuansz.AddBiHuanXXDto;
 import cn.mediinfo.grus.shujuzx.dto.bihuansz.BiHuanJBXXTreeDto;
 import cn.mediinfo.grus.shujuzx.dto.bihuansz.BiHuanSZXFDto;
@@ -26,11 +27,11 @@ public interface JiBenXXService {
     /**
      * 闭环设置下发
      */
-    Boolean biHuanSZXF(BiHuanSZXFDto dto) throws TongYongYWException;
+    Boolean biHuanSZXF(BiHuanSZXFDto dto) throws TongYongYWException, YuanChengException;
     /**
-     * 闭环设置删除
+     * 闭环设置复制
      */
-    String biHuanSZFZ( String biHuanID);
+    String biHuanSZFZ(String biHuanID, String zuZhiJGID, String zuZhiJGMC);
 
     /**
      * 闭环设置删除
@@ -40,5 +41,5 @@ public interface JiBenXXService {
     /**
      * 闭环设置启用
      */
-    Boolean biHuanSZQY(String biHuanID);
+    Boolean biHuanSZQY(String biHuanID,Integer qiyongBZ);
 }

@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.List;
+
 /**
  * schema+table
  */
@@ -21,4 +23,9 @@ public class SchemaTable {
      * schema
      */
     private String moShi;
+
+    /**
+     * 字段
+     */
+    private List<ShuJuJMXZDDto> shuJuJMXZDDtos;
 }

@@ -9,4 +9,9 @@ public class ShuJuJMXZDDto {
     private String ziDuanBM;
     @Schema(description = "字段名称")
     private String ziDuanMC;
+
+    /**
+     * schema
+     */
+    private String moShi;
 }

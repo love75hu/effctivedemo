@@ -20,7 +20,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://172.19.80.10:30003/mediinfo-lyra-authserver
+          issuer-uri: http://172.19.80.10:31003/mediinfo-lyra-authserver
   datasource:
     driver-class-name: oracle.jdbc.OracleDriver
     url: jdbc:oracle:thin:@172.19.80.161:1521:orcl

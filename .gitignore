@@ -37,3 +37,4 @@ out/
 .vscode/
 /mediinfo-vela-bingli/.idea
 /.idea
+/mediinfo-grus-shujuzx/logs/service/*.log

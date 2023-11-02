@@ -1,14 +1,13 @@
 package cn.mediinfo.grus.shujuzx.service.impl;
 
-import cn.mediinfo.cyan.msf.core.util.DateUtil;
-import cn.mediinfo.cyan.msf.core.util.MapUtils;
-import cn.mediinfo.cyan.msf.core.util.PageRequestUtil;
-import cn.mediinfo.cyan.msf.core.util.StringUtil;
+import cn.mediinfo.cyan.msf.core.util.*;
 import cn.mediinfo.cyan.msf.orm.util.QueryDSLUtils;
+import cn.mediinfo.grus.shujuzx.dto.gongxiangwd.SC_RZ_FangWenGXWDCreateDto;
+import cn.mediinfo.grus.shujuzx.dto.gongxiangwd.SC_RZ_FangWenGXWDto;
 import cn.mediinfo.grus.shujuzx.dto.shujuzxfwrz.AddFangWenRZDto;
 import cn.mediinfo.grus.shujuzx.dto.shujuzxfwrz.ShuJuZXFWRZDto;
-import cn.mediinfo.grus.shujuzx.model.QSC_RZ_FangWenLCSJModel;
-import cn.mediinfo.grus.shujuzx.model.SC_RZ_FangWenLCSJModel;
+import cn.mediinfo.grus.shujuzx.model.*;
+import cn.mediinfo.grus.shujuzx.repository.SC_RZ_FangWenGXWDRepository;
 import cn.mediinfo.grus.shujuzx.repository.SC_RZ_FangWenLCSJRepository;
 import cn.mediinfo.grus.shujuzx.service.ShuJuZXFWRZService;
 import cn.mediinfo.lyra.extension.service.LyraIdentityService;
@@ -16,10 +15,9 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /*
  * 360访问日志
@@ -29,12 +27,14 @@ public class ShuJuZXFWRZServiceImpl implements ShuJuZXFWRZService {
 
     private final LyraIdentityService lyraIdentityService;
     private final SC_RZ_FangWenLCSJRepository sc_rz_fangWenLCSJRepository;
+    private final SC_RZ_FangWenGXWDRepository sc_rz_fangWenGXWDRepository;
     private final EntityManager entityManager;
 
 
     public ShuJuZXFWRZServiceImpl(LyraIdentityService lyraIdentityService,
-                                  SC_RZ_FangWenLCSJRepository sc_rz_fangWenLCSJRepository, EntityManager entityManager) {
+                                  SC_RZ_FangWenLCSJRepository sc_rz_fangWenLCSJRepository, EntityManager entityManager, SC_RZ_FangWenGXWDRepository sc_rz_fangWenGXWDRepository) {
         this.lyraIdentityService = lyraIdentityService;
+        this.sc_rz_fangWenGXWDRepository = sc_rz_fangWenGXWDRepository;
         this.sc_rz_fangWenLCSJRepository = sc_rz_fangWenLCSJRepository;
         this.entityManager = entityManager;
     }
@@ -54,22 +54,22 @@ public class ShuJuZXFWRZServiceImpl implements ShuJuZXFWRZService {
         fangWenRZ.setFangWenRID(userID);
         fangWenRZ.setFangWenRXM(userName);
         fangWenRZ.setFangWenSJ(new Date());
-        MapUtils.mergeProperties(addFangWenRZDto,fangWenRZ,true);
+        MapUtils.mergeProperties(addFangWenRZDto, fangWenRZ, true);
         sc_rz_fangWenLCSJRepository.save(fangWenRZ);
         return true;
     }
 
     @Override
     public Integer getFangWenRZCount(Date fangWenKSRQ, Date fangWenJSRQ, String bingRenID, String xingMing, String fangWenRXM) {
-        QSC_RZ_FangWenLCSJModel sjModel=QSC_RZ_FangWenLCSJModel.sC_RZ_FangWenLCSJModel;
+        QSC_RZ_FangWenLCSJModel sjModel = QSC_RZ_FangWenLCSJModel.sC_RZ_FangWenLCSJModel;
         return new JPAQueryFactory(sc_rz_fangWenLCSJRepository.getEntityManager())
                 .select(sjModel)
                 .from(sjModel)
-                .where(QueryDSLUtils.whereIf(fangWenKSRQ != null, ()->sjModel.fangWenSJ.goe(fangWenKSRQ)))
-                .where(QueryDSLUtils.whereIf(fangWenJSRQ != null, ()->sjModel.fangWenSJ.lt(DateUtil.dateAddDays(fangWenJSRQ, 1))))
-                .where(QueryDSLUtils.whereIf(StringUtil.hasText(bingRenID), ()->sjModel.bingRenID.eq(bingRenID)))
-                .where(QueryDSLUtils.whereIf(StringUtil.hasText(xingMing), ()->sjModel.xingMing.eq(xingMing)))
-                .where(QueryDSLUtils.whereIf(StringUtil.hasText(fangWenRXM), ()->sjModel.fangWenRXM.eq(fangWenRXM)))
+                .where(QueryDSLUtils.whereIf(fangWenKSRQ != null, () -> sjModel.fangWenSJ.goe(fangWenKSRQ)))
+                .where(QueryDSLUtils.whereIf(fangWenJSRQ != null, () -> sjModel.fangWenSJ.lt(DateUtil.dateAddDays(fangWenJSRQ, 1))))
+                .where(QueryDSLUtils.whereIf(StringUtil.hasText(bingRenID), () -> sjModel.bingRenID.eq(bingRenID)))
+                .where(QueryDSLUtils.whereIf(StringUtil.hasText(xingMing), () -> sjModel.xingMing.eq(xingMing)))
+                .where(QueryDSLUtils.whereIf(StringUtil.hasText(fangWenRXM), () -> sjModel.fangWenRXM.eq(fangWenRXM)))
                 .fetch().size();
     }
 
@@ -79,14 +79,68 @@ public class ShuJuZXFWRZServiceImpl implements ShuJuZXFWRZService {
         List<SC_RZ_FangWenLCSJModel> list = new JPAQueryFactory(sc_rz_fangWenLCSJRepository.getEntityManager())
                 .select(sjModel)
                 .from(sjModel)
-                .where(QueryDSLUtils.whereIf(fangWenKSRQ != null, ()->sjModel.fangWenSJ.goe(fangWenKSRQ)))
-                .where(QueryDSLUtils.whereIf(fangWenJSRQ != null, ()->sjModel.fangWenSJ.lt(DateUtil.dateAddDays(fangWenJSRQ, 1))))
-                .where(QueryDSLUtils.whereIf(StringUtil.hasText(bingRenID), ()->sjModel.bingRenID.eq(bingRenID)))
-                .where(QueryDSLUtils.whereIf(StringUtil.hasText(xingMing), ()->sjModel.xingMing.contains(xingMing)))
-                .where(QueryDSLUtils.whereIf(StringUtil.hasText(fangWenRXM), ()->sjModel.fangWenRXM.contains(fangWenRXM)))
+                .where(QueryDSLUtils.whereIf(fangWenKSRQ != null, () -> sjModel.fangWenSJ.goe(fangWenKSRQ)))
+                .where(QueryDSLUtils.whereIf(fangWenJSRQ != null, () -> sjModel.fangWenSJ.lt(DateUtil.dateAddDays(fangWenJSRQ, 1))))
+                .where(QueryDSLUtils.whereIf(StringUtil.hasText(bingRenID), () -> sjModel.bingRenID.eq(bingRenID)))
+                .where(QueryDSLUtils.whereIf(StringUtil.hasText(xingMing), () -> sjModel.xingMing.contains(xingMing)))
+                .where(QueryDSLUtils.whereIf(StringUtil.hasText(fangWenRXM), () -> sjModel.fangWenRXM.contains(fangWenRXM)))
                 .orderBy(sjModel.fangWenSJ.desc())
                 .offset(PageRequestUtil.of(pageIndex, pageSize).getOffset()).limit(pageSize)
                 .fetch();
         return CollectionUtils.isEmpty(list) ? Collections.emptyList() : MapUtils.copyListProperties(list, ShuJuZXFWRZDto::new);
     }
+
+    /**
+     * 获取共享文档访问日志列表
+     */
+    @Override
+    public List<SC_RZ_FangWenGXWDto> getFangWenGXWDList(Date fangWenRQKS, Date fangWenRQJS, String likeQuery, String fangWenR, Integer pageIndex, Integer pageSize) {
+        QSC_RZ_FangWenGXWDModel sjModel = QSC_RZ_FangWenGXWDModel.sC_RZ_FangWenGXWDModel;
+        List<SC_RZ_FangWenGXWDModel> list = new JPAQueryFactory(sc_rz_fangWenGXWDRepository.getEntityManager())
+                .select(sjModel)
+                .from(sjModel)
+                .where(QueryDSLUtils.whereIf(Objects.nonNull(fangWenRQKS), () -> sjModel.fangWenSJ.goe(fangWenRQKS)))
+                .where(QueryDSLUtils.whereIf(Objects.nonNull(fangWenRQJS), () -> sjModel.fangWenSJ.loe(fangWenRQJS)))
+                .where(QueryDSLUtils.whereIf(StringUtils.hasText(likeQuery), () -> sjModel.bingRenID.contains(likeQuery).or(sjModel.xingMing.contains(likeQuery))))
+                .where(QueryDSLUtils.whereIf(StringUtils.hasText(fangWenR), () -> sjModel.fangWenRXM.contains(fangWenR)))
+                .orderBy(sjModel.fangWenSJ.desc())
+                .offset(PageRequestUtil.of(pageIndex, pageSize).getOffset()).limit(pageSize)
+                .fetch();
+        return CollectionUtils.isEmpty(list) ? Collections.emptyList() : MapUtils.copyListProperties(list, SC_RZ_FangWenGXWDto::new);
+    }
+
+    /**
+     * 获取共享文档访问日志数量
+     */
+    @Override
+    public long getFangWenGXWDCount(Date fangWenRQKS, Date fangWenRQJS, String likeQuery, String fangWenR) {
+        QSC_RZ_FangWenGXWDModel sjModel = QSC_RZ_FangWenGXWDModel.sC_RZ_FangWenGXWDModel;
+        var Count = new JPAQueryFactory(sc_rz_fangWenGXWDRepository.getEntityManager())
+                .select(sjModel)
+                .from(sjModel)
+                .where(QueryDSLUtils.whereIf(Objects.nonNull(fangWenRQKS), () -> sjModel.fangWenSJ.goe(fangWenRQKS)))
+                .where(QueryDSLUtils.whereIf(Objects.nonNull(fangWenRQJS), () -> sjModel.fangWenSJ.loe(fangWenRQJS)))
+                .where(QueryDSLUtils.whereIf(StringUtils.hasText(likeQuery), () -> sjModel.bingRenID.contains(likeQuery).or(sjModel.xingMing.contains(likeQuery))))
+                .where(QueryDSLUtils.whereIf(StringUtils.hasText(fangWenR), () -> sjModel.fangWenRXM.contains(fangWenR)))
+                .fetch().size();
+        return Count;
+    }
+
+    @Override
+    public String addFangWenGXWD(SC_RZ_FangWenGXWDCreateDto fangWenGXWDCreateDto) {
+        var zuZhiJGID = lyraIdentityService.getJiGouID();
+        var jiGouMC = lyraIdentityService.getJiGouMC();
+        var userID = lyraIdentityService.getYongHuId();
+        var userName = lyraIdentityService.getUserName();
+        var FangWenGXWD = new SC_RZ_FangWenGXWDModel();
+        FangWenGXWD.setZuZhiJGID(zuZhiJGID);
+        FangWenGXWD.setZuZhiJGMC(jiGouMC);
+        FangWenGXWD.setFangWenRID(userID);
+        FangWenGXWD.setFangWenRXM(userName);
+        FangWenGXWD.setFangWenSJ(new Date());
+        MapUtils.mergeProperties(fangWenGXWDCreateDto, FangWenGXWD, true);
+        sc_rz_fangWenGXWDRepository.save(FangWenGXWD);
+        return FangWenGXWD.getId();
+    }
+
 }

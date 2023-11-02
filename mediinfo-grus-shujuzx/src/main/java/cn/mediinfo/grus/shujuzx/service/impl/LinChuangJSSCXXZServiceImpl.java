@@ -2,16 +2,15 @@ package cn.mediinfo.grus.shujuzx.service.impl;
 
 import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
 import cn.mediinfo.cyan.msf.core.util.CollectionUtil;
-import cn.mediinfo.cyan.msf.core.util.JacksonUtil;
-import cn.mediinfo.cyan.msf.core.util.MapUtils;
-import cn.mediinfo.cyan.msf.core.util.StringUtil;
 import cn.mediinfo.grus.shujuzx.dto.shitumx.*;
 import cn.mediinfo.grus.shujuzx.model.SC_CX_ShiTuMXModel;
 import cn.mediinfo.grus.shujuzx.model.SC_CX_ShiTuXXModel;
+import cn.mediinfo.grus.shujuzx.remotedto.GongYong.LingChuangJSPZZDXXRso;
 import cn.mediinfo.grus.shujuzx.remoteservice.GongYongRemoteService;
 import cn.mediinfo.grus.shujuzx.repository.SC_CX_ShiTuMXRepository;
 import cn.mediinfo.grus.shujuzx.repository.SC_CX_ShiTuXXRepository;
 import cn.mediinfo.grus.shujuzx.service.LinChuangJSSCXXZService;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
@@ -76,9 +75,11 @@ public class LinChuangJSSCXXZServiceImpl implements LinChuangJSSCXXZService {
         if (lingChuangJSPZDtos.isEmpty()){
             return new ArrayList<>();
         }
-        System.out.print(JacksonUtil.getBeanToJson(lingChuangJSPZDtos));
         //获取公共接口数据
-        List<LingChuangJSPZZDXXDto> lingChuangJSPZZDList = gongYongRemoteService.getlingChuangJSPZZDXX(lingChuangJSPZDtos).getData("远程调用接口getlingChuangJSPZZDXX错误！");
+        List<LingChuangJSPZZDXXRso> lingChuangJSPZZDList = gongYongRemoteService.getlingChuangJSPZZDXX(lingChuangJSPZDtos).getData("远程调用接口getlingChuangJSPZZDXX错误！");
+        if (!ObjectUtils.isEmpty(lingChuangJSPZZDList)){
+            return new ArrayList<>();
+        }
         List<ShiTuMXZHCXDto> resultlist = new ArrayList<>();
         for (SC_CX_ShiTuXXModel e :shiTuXXList) {
             var cunZaiJSPZ = lingChuangJSPZZDList.stream().filter(t->t.getShuJuLYID().equals(e.getShuJuLYID())).findFirst().orElse(null);

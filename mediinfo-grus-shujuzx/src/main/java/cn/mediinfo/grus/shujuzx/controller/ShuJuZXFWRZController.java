@@ -1,6 +1,8 @@
 package cn.mediinfo.grus.shujuzx.controller;
 
 import cn.mediinfo.cyan.msf.core.response.MsfResponse;
+import cn.mediinfo.grus.shujuzx.dto.gongxiangwd.SC_RZ_FangWenGXWDCreateDto;
+import cn.mediinfo.grus.shujuzx.dto.gongxiangwd.SC_RZ_FangWenGXWDto;
 import cn.mediinfo.grus.shujuzx.dto.shujuzxfwrz.AddFangWenRZDto;
 import cn.mediinfo.grus.shujuzx.dto.shujuzxfwrz.ShuJuZXFWRZDto;
 import cn.mediinfo.grus.shujuzx.service.ShuJuZXFWRZService;
@@ -25,15 +27,14 @@ public class ShuJuZXFWRZController {
     private final ZhuSuoYCZRZService zhuSuoYCZRZService;
 
     public ShuJuZXFWRZController(ShuJuZXFWRZService shuJuZXFWRZService,
-                                 ZhuSuoYCZRZService zhuSuoYCZRZService)
-    {
-        this.shuJuZXFWRZService=shuJuZXFWRZService;
-        this.zhuSuoYCZRZService=zhuSuoYCZRZService;
+                                 ZhuSuoYCZRZService zhuSuoYCZRZService) {
+        this.shuJuZXFWRZService = shuJuZXFWRZService;
+        this.zhuSuoYCZRZService = zhuSuoYCZRZService;
     }
+
     @Operation(summary = "添加访问日志")
     @PostMapping("AddFangWenRZ")
-    public MsfResponse<Boolean> AddFangWenRZ(@RequestBody AddFangWenRZDto addFangWenRZDto)
-    {
+    public MsfResponse<Boolean> AddFangWenRZ(@RequestBody AddFangWenRZDto addFangWenRZDto) {
         return MsfResponse.success(shuJuZXFWRZService.addFangWenRZ(addFangWenRZDto));
     }
 
@@ -50,11 +51,47 @@ public class ShuJuZXFWRZController {
                                                               @RequestParam(required = false) String bingRenID,
                                                               @RequestParam(required = false) String xingMing,
                                                               @RequestParam(required = false) String fangWenRXM,
-                                                              @RequestParam(required = false,defaultValue = "1") Integer pageIndex,
-                                                              @RequestParam(required = false,defaultValue = "10") Integer pageSize) {
-        return MsfResponse.success(shuJuZXFWRZService.getFangWenRZList(fangWenKSRQ, fangWenJSRQ, bingRenID, xingMing, fangWenRXM,pageIndex, pageSize));
+                                                              @RequestParam(required = false, defaultValue = "1") Integer pageIndex,
+                                                              @RequestParam(required = false, defaultValue = "10") Integer pageSize) {
+        return MsfResponse.success(shuJuZXFWRZService.getFangWenRZList(fangWenKSRQ, fangWenJSRQ, bingRenID, xingMing, fangWenRXM, pageIndex, pageSize));
     }
 
+    /**
+     * 获取共享文档访问日志列表
+     */
+    @Operation(summary = "获取共享文档访问日志列表")
+    @GetMapping("GetFangWenGXWDList")
+    public MsfResponse<List<SC_RZ_FangWenGXWDto>> getFangWenGXWDList(
+            @RequestParam(required = false) Date fangWenRQKS,
+            @RequestParam(required = false) Date fangWenRQJS,
+            @RequestParam(required = false) String likeQuery,
+            @RequestParam(required = false) String fangWenR,
+            @RequestParam(required = false, defaultValue = "1") Integer PageIndex,
+            @RequestParam(required = false, defaultValue = "10") Integer PageSize) {
+        return MsfResponse.success(shuJuZXFWRZService.getFangWenGXWDList(fangWenRQKS, fangWenRQJS, likeQuery, fangWenR, PageIndex, PageSize));
+    }
 
+    
+    /**
+     * 获取共享文档访问日志数量
+     */
+    @Operation(summary = "获取共享文档访问日志数量")
+    @GetMapping("GetFangWenGXWDCount")
+    public MsfResponse<Long> getFangWenGXWDCount(
+            @RequestParam(required = false) Date fangWenRQKS,
+            @RequestParam(required = false) Date fangWenRQJS,
+            @RequestParam(required = false) String likeQuery,
+            @RequestParam(required = false) String fangWenR) {
+        return MsfResponse.success(shuJuZXFWRZService.getFangWenGXWDCount(fangWenRQKS, fangWenRQJS, likeQuery, fangWenR));
+    }
+
+    /**
+     * 添加共享文档访问日志
+     */
+    @Operation(summary = "添加共享文档访问日志")
+    @PostMapping("AddFangWenGXWD")
+    public MsfResponse<String> addFangWenGXWD(@RequestBody SC_RZ_FangWenGXWDCreateDto fangWenGXWCreateDto) {
+        return MsfResponse.success(shuJuZXFWRZService.addFangWenGXWD(fangWenGXWCreateDto));
+    }
 
 }

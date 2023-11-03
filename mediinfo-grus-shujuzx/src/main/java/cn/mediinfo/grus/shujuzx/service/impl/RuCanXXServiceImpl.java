@@ -41,8 +41,8 @@ public class RuCanXXServiceImpl implements RuCanXXService {
     {
         ruCanXXRepository.asDeleteDsl().where(n->n.biHuanID.eq(biHuanID)).execute();
         ruCanXXRepository.saveAll(BeanUtil.copyListProperties(dto, SC_BH_RuCanXXModel::new, (d, s) -> {
-//            s.setShiTuMC(d.getShiTuMC());
-//            s.setShiTuID(d.getShiTuID());
+            s.setZuZhiJGID("0");
+            s.setZuZhiJGMC("通用");
             s.setBiHuanID(biHuanID);
             s.setBiHuanLXDM(biHuanLXDM);
             s.setBiHuanLXMC(biHuanLXMC);

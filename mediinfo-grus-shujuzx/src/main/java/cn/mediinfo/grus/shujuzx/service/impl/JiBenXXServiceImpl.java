@@ -76,7 +76,7 @@ class JiBenXXServiceImpl implements JiBenXXService {
          {
              SC_BH_JIBENXXDto scBhJibenxxDto = jIBENXXList.stream().filter(x -> x.getBiHuanLXDM().equals(a)).findFirst().orElse(new SC_BH_JIBENXXDto());
              BiHuanJBXXTreeDto biHuanJBXXTreeDto = BeanUtil.copyProperties(scBhJibenxxDto, BiHuanJBXXTreeDto::new);
-             biHuanJBXXTreeDto.setChildrenl(BeanUtil.copyListProperties(jIBENXXList.stream().filter(x -> x.getBiHuanLXDM().equals(a)).collect(Collectors.toList()),BiHuanJBXXTreeDto::new));
+             biHuanJBXXTreeDto.setChildren(BeanUtil.copyListProperties(jIBENXXList.stream().filter(x -> x.getBiHuanLXDM().equals(a)).collect(Collectors.toList()),BiHuanJBXXTreeDto::new));
              biHuanJBXXTreeDtos.add(biHuanJBXXTreeDto);
          }
         return biHuanJBXXTreeDtos;
@@ -134,7 +134,7 @@ class JiBenXXServiceImpl implements JiBenXXService {
             List<SC_BH_ZiBiHXSLModel> addziBiHXSL=new ArrayList<>();
             for (var j:xiaFaJGIdGList)
             {
-                //通用机构下有的，机构下没有的下发
+                //通用机构下有的，机构下没有的下发e
                 List<String> biHuanID = jiBenJGX.stream().filter(n -> n.getZuZhiJGID().equals(j.getZuZhiJGID())).map(SC_BH_JiBenXXModel::getBiHuanID).toList();
 
                 jiBenTYX.stream().filter(n->!biHuanID.contains(n.getBiHuanID())).forEach(a->{

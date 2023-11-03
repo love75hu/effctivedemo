@@ -63,21 +63,6 @@ public class BiHuanSZController {
         return MsfResponse.success(biHuanSTMXService.getRuChanZDXX(biHuanLXDM));
     }
 
-    @Operation(summary = "添加入参信息")
-    @PostMapping("getBiHuanSZXXByBiHuanID")
-    public MsfResponse<String> getBiHuanSZXXByBiHuanID()
-    {
-
-                return MsfResponse.success();
-    }
-
-    @Operation(summary = "获取入参信息")
-    @GetMapping("getRuCanXX")
-    public MsfResponse<String> GetBiHuanZDList(String jieDianID)
-    {
-        return MsfResponse.success();
-    }
-
     @Operation(summary = "获取节点下失效字段")
     @GetMapping("getShiTuJDMXByJieDianID")
     public MsfResponse<List<JieDianNRDto>> getShiTuJDMXByJieDianID(String jieDianID)

@@ -87,8 +87,8 @@ class JiBenXXServiceImpl implements JiBenXXService {
 
         SC_BH_JiBenXXModel shiTuMXModel=new SC_BH_JiBenXXModel();
         BeanUtil.copyProperties(dto,shiTuMXModel);
-        shiTuMXModel.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
-        shiTuMXModel.setZuZhiJGID(lyraIdentityService.getJiGouID());
+        shiTuMXModel.setZuZhiJGMC("0");
+        shiTuMXModel.setZuZhiJGID("通用");
        // shiTuMXModel.setShiTuID(stringGenerator.Create());
         ruCanXXService.addRuCanXX(dto.getRuCanXXDtoList(),dto.getBiHuanLXDM(),dto.getBiHuanLXMC(),"","");
         jIBENXXRepository.save(shiTuMXModel);

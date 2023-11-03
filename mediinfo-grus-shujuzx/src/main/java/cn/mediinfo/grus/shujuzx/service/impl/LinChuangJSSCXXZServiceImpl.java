@@ -77,7 +77,7 @@ public class LinChuangJSSCXXZServiceImpl implements LinChuangJSSCXXZService {
         }
         //获取公共接口数据
         List<LingChuangJSPZZDXXRso> lingChuangJSPZZDList = gongYongRemoteService.getlingChuangJSPZZDXX(lingChuangJSPZDtos).getData("远程调用接口getlingChuangJSPZZDXX错误！");
-        if (!ObjectUtils.isEmpty(lingChuangJSPZZDList)){
+        if (ObjectUtils.isEmpty(lingChuangJSPZZDList)){
             return new ArrayList<>();
         }
         List<ShiTuMXZHCXDto> resultlist = new ArrayList<>();

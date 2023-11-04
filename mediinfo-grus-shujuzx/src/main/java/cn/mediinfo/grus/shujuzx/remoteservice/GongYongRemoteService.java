@@ -3,7 +3,9 @@ package cn.mediinfo.grus.shujuzx.remoteservice;
 import cn.mediinfo.cyan.msf.core.response.MsfResponse;
 import cn.mediinfo.grus.shujuzx.dto.shitumx.*;
 import cn.mediinfo.grus.shujuzx.remotedto.GongYong.LingChuangJSPZZDXXRso;
+import cn.mediinfo.grus.shujuzx.remotedto.GongYong.ShuJuXXMSRso;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -31,5 +33,13 @@ public interface GongYongRemoteService {
      */
     @PostMapping ("/api/v1.0/shujust/getlingChuangJSPZZDXX")
     MsfResponse<List<LingChuangJSPZZDXXRso>> getlingChuangJSPZZDXX(@RequestBody List<LingChuangJSPZDto> dtos);
+
+    /**
+     * 根据表名获取模式信息
+     * @param biaoMing 表名（大写）
+     * @return
+     */
+    @GetMapping("api/v1.0/shujujmx/getShuJXXMS")
+    MsfResponse<List<ShuJuXXMSRso>> getShuJXXMS(List<String> biaoMing);
 
 }

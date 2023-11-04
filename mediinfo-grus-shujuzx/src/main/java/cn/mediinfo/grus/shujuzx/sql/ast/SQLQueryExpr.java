@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.Optional;
+
 
 /**
  * sql查询表达式
@@ -35,7 +37,7 @@ public class SQLQueryExpr {
         }
         String right = buildSQL(node.getRight());
         String left = buildSQL(node.getLeft());
-        String text = node.getValue().getText();
+        String text = Optional.ofNullable(node.getValue()).orElse(new SQLQueryObject()).getText();
         if (StringUtil.isBlank(text)) {
             return "";
         }

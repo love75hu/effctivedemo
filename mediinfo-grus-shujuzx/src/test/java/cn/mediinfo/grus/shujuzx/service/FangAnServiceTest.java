@@ -124,7 +124,7 @@ class FangAnServiceTest {
 
         table.setSchemaTableList(ListUtil.toList(br, jz));
 
-        TableRelationCondition join = new TableRelationCondition();
+        /*TableRelationCondition join = new TableRelationCondition();
         join.setBiaoMing("br_da_jibenxx");
         join.setMoShi("vela_br");
         join.setZiduan("id");
@@ -141,7 +141,7 @@ class FangAnServiceTest {
         filter.setOperator("<>");
         filter.setVal("'2'");
 
-        table.setFilterConditionList(ListUtil.toList(filter));
+        table.setFilterConditionList(ListUtil.toList(filter));*/
 
         return ListUtil.toList(table);
     }

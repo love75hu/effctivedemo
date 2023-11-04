@@ -2,7 +2,9 @@ package cn.mediinfo.grus.shujuzx.util;
 
 import cn.hutool.core.util.StrUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.message.StringFormattedMessage;
 
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Objects;
 
@@ -20,23 +22,8 @@ public final class SqlUtils {
         if (StringUtils.isEmpty(sql) || (!sql.startsWith("SELECT") && !sql.startsWith("select"))) {
             return "";
         }
-        sql = sql.replace("select", "SELECT").replace("from", "FROM");
-        int selectIndex = sql.indexOf("SELECT") + "SELECT".length();
-        int fromIndex = sql.indexOf("FROM");
-
-        String fields = sql.substring(selectIndex, fromIndex).trim();
-        List<String> fieldList = StrUtil.split(fields, ",");
-
-        String replaceFields = "";
-        for (String e : fieldList) {
-            String col = e.contains(".") ? e.substring(e.indexOf(".") + 1) : e;
-            if (Objects.equals(col, field)) {
-                replaceFields = e;
-                break;
-            }
-        }
-
-        return sql.replace(fields, replaceFields);
+        String pattern="t_(\\d+)";
+        return MessageFormat.format("select {0} from ({1}) as ll0",field,sql.replaceAll(pattern,"zcx_$1"));
     }
 
 }

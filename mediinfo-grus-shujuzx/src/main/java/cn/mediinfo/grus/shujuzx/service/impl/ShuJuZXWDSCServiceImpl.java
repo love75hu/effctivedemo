@@ -39,10 +39,12 @@ public class ShuJuZXWDSCServiceImpl implements ShuJuZXWDSCService {
     private final EntityManager entityManager;
 
 
+    private record XMModelAndXXModelPO(String id, String shouCangJMC, String beiZhu, Integer shunXuHao,
+                                       SC_SC_ShouCangJMXModel mxModel) {
+    }
 
-    private record XMModelAndXXModelPO(String id,String shouCangJMC,String beiZhu,Integer shunXuHao,SC_SC_ShouCangJMXModel mxModel) {}
-    private record GroupXMModelAndXXModelPO(String id,String shouCangJMC,String beiZhu,Integer shunXuHao) {}
-
+    private record GroupXMModelAndXXModelPO(String id, String shouCangJMC, String beiZhu, Integer shunXuHao) {
+    }
 
 
     public ShuJuZXWDSCServiceImpl(LyraIdentityService lyraIdentityService, SC_SC_ShouCangJXXRepository scScShouCangJXXRepository, SC_SC_ShouCangJMXRepository scScShouCangJMXRepository, SC_LC_BingRenYLSJRepository scLcBingRenYLSJRepository, EntityManager entityManager) {
@@ -52,15 +54,16 @@ public class ShuJuZXWDSCServiceImpl implements ShuJuZXWDSCService {
         this.sc_lc_bingRenYLSJRepository = scLcBingRenYLSJRepository;
         this.entityManager = entityManager;
     }
+
     @Override
-    public Integer  addShouCangJia(SC_SC_ShouCangJXXInDto shouCangJInDto) throws TongYongYWException {
-        if (sc_sc_shouCangJXXRepository.existsByShouCangJMCAndYongHuID(shouCangJInDto.getShouCangJMC(),lyraIdentityService.getYongHuId())) {
+    public Integer addShouCangJia(SC_SC_ShouCangJXXInDto shouCangJInDto) throws TongYongYWException {
+        if (sc_sc_shouCangJXXRepository.existsByShouCangJMCAndYongHuID(shouCangJInDto.getShouCangJMC(), lyraIdentityService.getYongHuId())) {
             throw new TongYongYWException("收藏夹名称已存在,请重新确认!");
         }
 
         SC_SC_ShouCangJXXModel addModel = new SC_SC_ShouCangJXXModel();
-        MapUtils.mergeProperties(shouCangJInDto, addModel,false);
-        if (Objects.isNull(addModel.getShunXuHao())){
+        MapUtils.mergeProperties(shouCangJInDto, addModel, false);
+        if (Objects.isNull(addModel.getShunXuHao())) {
             addModel.setShunXuHao(sc_sc_shouCangJXXRepository.getMaxShunXuHao(lyraIdentityService.getYongHuId()) + 1);
         }
         addModel.setZuZhiJGID(lyraIdentityService.getJiGouID());
@@ -74,7 +77,7 @@ public class ShuJuZXWDSCServiceImpl implements ShuJuZXWDSCService {
     @Override
     public Integer addShouCangJMX(SC_SC_ShouCangJMXInDto shouCangJMXInDto) {
         SC_SC_ShouCangJMXModel addModel = new SC_SC_ShouCangJMXModel();
-        MapUtils.mergeProperties(shouCangJMXInDto, addModel,false);
+        MapUtils.mergeProperties(shouCangJMXInDto, addModel, false);
         addModel.setZuZhiJGID(lyraIdentityService.getJiGouID());
         addModel.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
         addModel.setShouCangRID(lyraIdentityService.getYongHuId());
@@ -93,16 +96,16 @@ public class ShuJuZXWDSCServiceImpl implements ShuJuZXWDSCService {
 
         }
         List<SC_SC_ShouCangJMXModel> shouCangJMXList = sc_sc_shouCangJMXRepository.findByShouCangJID(shouCangJInDto.getId());
-        MapUtils.mergeProperties(shouCangJInDto,updateModel,true);
+        MapUtils.mergeProperties(shouCangJInDto, updateModel, true);
         sc_sc_shouCangJXXRepository.save(updateModel);
-        shouCangJMXList.forEach(s->s.setShouCangJMC(shouCangJInDto.getShouCangJMC()));
+        shouCangJMXList.forEach(s -> s.setShouCangJMC(shouCangJInDto.getShouCangJMC()));
         sc_sc_shouCangJMXRepository.saveAll(shouCangJMXList);
         return 1;
     }
 
     @Override
-    public Integer yiChuShouCangJMX(String id){
-        sc_sc_shouCangJMXRepository.deleteById( id);
+    public Integer yiChuShouCangJMX(String id) {
+        sc_sc_shouCangJMXRepository.deleteById(id);
         return 1;
     }
 
@@ -138,7 +141,7 @@ public class ShuJuZXWDSCServiceImpl implements ShuJuZXWDSCService {
                         .and(xxModel.zuZhiJGID.eq(mxModel.zuZhiJGID)))
                 .where(xxModel.zuZhiJGID.eq(lyraIdentityService.getJiGouID())
                         .and(xxModel.yongHuID.eq(lyraIdentityService.getYongHuId())))
-                .where(QueryDSLUtils.whereIf(Objects.nonNull(likeQuery), ()->xxModel.shouCangJMC.contains(likeQuery)))
+                .where(QueryDSLUtils.whereIf(Objects.nonNull(likeQuery), () -> xxModel.shouCangJMC.contains(likeQuery)))
                 .fetch();
 
         return list
@@ -171,15 +174,15 @@ public class ShuJuZXWDSCServiceImpl implements ShuJuZXWDSCService {
     @Override
     public Integer getShouCangJMXCount(String likeQuery, String shouCangJID) {
         //根据收藏夹id 获取明细
-        List<SC_SC_ShouCangJMXModel> shouCangMXList= sc_sc_shouCangJMXRepository.findByShouCangJIDAndZuZhiJGID(shouCangJID,lyraIdentityService.getJiGouID());
+        List<SC_SC_ShouCangJMXModel> shouCangMXList = sc_sc_shouCangJMXRepository.findByShouCangJIDAndZuZhiJGID(shouCangJID, lyraIdentityService.getJiGouID());
         //通过明细的病人id 获取病人信息
         List<String> bingRenIDList = shouCangMXList.stream().map(SC_SC_ShouCangJMXModel::getBingRenID).distinct().toList();
-        QSC_LC_BingRenYLSJModel sjModel=QSC_LC_BingRenYLSJModel.sC_LC_BingRenYLSJModel;
+        QSC_LC_BingRenYLSJModel sjModel = QSC_LC_BingRenYLSJModel.sC_LC_BingRenYLSJModel;
         return new JPAQueryFactory(sc_lc_bingRenYLSJRepository.getEntityManager())
                 .select(sjModel)
                 .from(sjModel)
                 .where(sjModel.bingRenID.in(bingRenIDList))
-                .where(QueryDSLUtils.whereIf(StringUtil.hasText(likeQuery),()->
+                .where(QueryDSLUtils.whereIf(StringUtil.hasText(likeQuery), () ->
                         sjModel.xingMing.contains(likeQuery)
                                 .or(sjModel.id.contains(likeQuery)
                                         .or(sjModel.zhengJianHM.contains(likeQuery)))))
@@ -199,7 +202,7 @@ public class ShuJuZXWDSCServiceImpl implements ShuJuZXWDSCService {
                 .select(sjModel)
                 .from(sjModel)
                 .where(sjModel.bingRenID.in(bingRenIDList))
-                .where(QueryDSLUtils.whereIf(StringUtil.hasText(likeQuery),()->
+                .where(QueryDSLUtils.whereIf(StringUtil.hasText(likeQuery), () ->
                         sjModel.xingMing.contains(likeQuery)
                                 .or(sjModel.id.contains(likeQuery)
                                         .or(sjModel.zhengJianHM.contains(likeQuery)))))

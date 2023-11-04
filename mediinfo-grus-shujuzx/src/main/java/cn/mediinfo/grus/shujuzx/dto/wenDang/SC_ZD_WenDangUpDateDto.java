@@ -4,7 +4,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
-public class SC_ZD_WenDangGreaterDto {
+public class SC_ZD_WenDangUpDateDto {
+    @Schema(description = "主键id")
+    private String id;
+
     @Schema(description = "文档ID")
     private String wenDangID;
 

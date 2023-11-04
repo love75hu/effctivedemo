@@ -1,12 +1,17 @@
 package cn.mediinfo.grus.shujuzx.controller;
 
+import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 import cn.mediinfo.cyan.msf.core.response.MsfResponse;
+import cn.mediinfo.cyan.msf.core.response.XiTongResponseCode;
 import cn.mediinfo.grus.shujuzx.dto.wenDang.SC_ZD_WenDangDto;
 import cn.mediinfo.grus.shujuzx.dto.wenDang.SC_ZD_WenDangGreaterDto;
+import cn.mediinfo.grus.shujuzx.dto.wenDang.SC_ZD_WenDangMBDto;
+import cn.mediinfo.grus.shujuzx.dto.wenDang.SC_ZD_WenDangUpDateDto;
 import cn.mediinfo.grus.shujuzx.service.WenDangPZService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,9 +57,33 @@ public class WenDangPZController {
     /**
      * 新增文档配置
      */
-    @Operation(summary = "添加共享文档访问日志")
+    @Operation(summary = "添加文档配置")
     @PostMapping("AddWenDangPZ")
-    public MsfResponse<String> addWenDangPZ(@RequestBody SC_ZD_WenDangGreaterDto wenDangGreaterDto) {
+    public MsfResponse<String> addWenDangPZ(@RequestBody SC_ZD_WenDangGreaterDto wenDangGreaterDto) throws TongYongYWException {
+        if (!StringUtils.hasText(wenDangGreaterDto.getWenDangID()) || !StringUtils.hasText(wenDangGreaterDto.getWenDangMC())) {
+            return MsfResponse.fail(XiTongResponseCode.CANSHUYC, "文档ID和文档名称不可为空！");
+        }
         return MsfResponse.success(wenDangPZService.addWenDangPZ(wenDangGreaterDto));
+    }
+
+    /**
+     * 编辑文档配置
+     */
+    @Operation(summary = "编辑文档配置")
+    @PostMapping("UpDateWenDangPZ")
+    public MsfResponse<Boolean> UpDateWenDangPZ(@RequestBody SC_ZD_WenDangUpDateDto wenDangUpDateDto) throws TongYongYWException {
+        if (!StringUtils.hasText(wenDangUpDateDto.getId()) ||!StringUtils.hasText(wenDangUpDateDto.getWenDangID()) || !StringUtils.hasText(wenDangUpDateDto.getWenDangMC())) {
+            return MsfResponse.fail(XiTongResponseCode.CANSHUYC, "主键ID，文档ID，文档名称不可为空！");
+        }
+        return MsfResponse.success(wenDangPZService.UpDateWenDangPZ(wenDangUpDateDto));
+    }
+
+    /**
+     * 根据文档ID获取模板内容
+     */
+    @Operation(summary = "根据文档ID获取模板内容")
+    @GetMapping("GetWenDangMBXX")
+    public MsfResponse<SC_ZD_WenDangMBDto> getWenDangMBXX(@RequestParam(required = false) String wenDangID)  throws TongYongYWException{
+        return MsfResponse.success(wenDangPZService.getWenDangMBXX(wenDangID));
     }
 }

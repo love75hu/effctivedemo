@@ -10,10 +10,10 @@ import org.springframework.context.annotation.Primary;
 
 @Configuration
 public class DataSourceConfig {
-    @Bean(name = "datasourcesjzx_dataSourceProperties")
     @Primary
     @ConfigurationProperties("spring.datasource.multiple.datasourcesjzx")
-    public DataSourceProperties dataSourceProperties() {
+    @Bean(name = "datasourcesjzx_dataSourceProperties")
+    public DataSourceProperties datasourcesjzx_dataSourceProperties() {
         return new DataSourceProperties();
     }
 

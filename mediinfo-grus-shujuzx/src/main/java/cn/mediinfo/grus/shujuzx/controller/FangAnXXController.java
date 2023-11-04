@@ -14,7 +14,6 @@ import cn.mediinfo.grus.shujuzx.service.FangAnService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Null;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -54,7 +53,7 @@ public class FangAnXXController {
     @Operation(summary = "查询sql")
     @PostMapping("/getSql")
     public MsfResponse<String> getFangAnSql(@Validated @RequestBody FangAnQuerySqlRequest request) throws YuanChengException {
-        return MsfResponse.success(fangAnService.getSql(request.getRoot(),request.getFangAnSCList(),request.getFangAnLXDM()));
+        return MsfResponse.success(fangAnService.getSql(request.getRoot(),request.getFangAnSCList(),request.getFangAnLXDM(),0));
     }
 
 

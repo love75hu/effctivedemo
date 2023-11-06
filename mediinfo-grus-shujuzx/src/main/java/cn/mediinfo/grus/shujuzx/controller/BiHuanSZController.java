@@ -110,6 +110,13 @@ public class BiHuanSZController {
         return MsfResponse.success(jiBenXXService.biHuanSZQY(biHuanID,qiyongBZ));
     }
 
+    @Operation(summary = "获取闭环信息")
+    @GetMapping("getBiHuanXXBYID")
+    public MsfResponse<BiHuanXXDto> getBiHuanXXBYID(@NotEmpty(message = "闭环ID不能为空")  String biHuanID)
+    {
+        return MsfResponse.success(jiBenXXService.getBiHuanXXBYID(biHuanID));
+    }
+
 
 
 

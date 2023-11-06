@@ -4,10 +4,7 @@ import cn.mediinfo.cyan.msf.core.exception.MsfResponseException;
 import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
 import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
-import cn.mediinfo.grus.shujuzx.dto.bihuansz.AddBiHuanXXDto;
-import cn.mediinfo.grus.shujuzx.dto.bihuansz.BiHuanJBXXTreeDto;
-import cn.mediinfo.grus.shujuzx.dto.bihuansz.BiHuanSZXFDto;
-import cn.mediinfo.grus.shujuzx.dto.bihuansz.SC_BH_JIBENXXDto;
+import cn.mediinfo.grus.shujuzx.dto.bihuansz.*;
 
 import java.util.List;
 
@@ -42,4 +39,6 @@ public interface JiBenXXService {
      * 闭环设置启用
      */
     Boolean biHuanSZQY(String biHuanID,Integer qiyongBZ);
+
+    BiHuanXXDto getBiHuanXXBYID(String biHuanID);
 }

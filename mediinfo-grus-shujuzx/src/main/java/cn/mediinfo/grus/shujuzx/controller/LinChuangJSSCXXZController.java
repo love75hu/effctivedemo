@@ -47,10 +47,6 @@ public class LinChuangJSSCXXZController {
             return MsfResponse.fail("接口类型不允许为空!");
         }
         List<ShiTuMXZHCXDto> list = _linChuangJSSCXXZService.getShuTuMXForZHCX(yeWuLX, jieKouLX,likeQuery);
-        if (list.isEmpty())
-        {
-            return MsfResponse.fail("无数据!");
-        }
         return MsfResponse.success(list) ;
     }
 }

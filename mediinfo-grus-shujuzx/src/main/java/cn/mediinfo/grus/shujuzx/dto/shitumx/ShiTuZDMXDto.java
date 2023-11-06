@@ -7,7 +7,10 @@ import java.util.List;
 
 @Data
 public class ShiTuZDMXDto {
-
+    @Schema(description = "视图ID")
+    private String shiTuID;
+    @Schema(description = "视图名称")
+    private String shiTuMC;
     @Schema(description = "数据集ID")
     private String shuJuJID;
     @Schema(description = "数据集名称")

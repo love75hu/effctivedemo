@@ -88,6 +88,10 @@ public class LinChuangJSSCXXZServiceImpl implements LinChuangJSSCXXZService {
                 var cunZaiZDBM = shiTuMXList.stream().filter(t-> Objects.equals(t.getShiTuID(),e.getShiTuID())).map(SC_CX_ShiTuMXModel::getZiDuanBM).toList();
                 List<ShiTuZDMXDto> gongGongZDMX = cunZaiJSPZ.getShiTuMXZDDtos().stream().filter(t->cunZaiZDBM.contains(t.getZiDuanBM())).toList();
                 if(!gongGongZDMX.isEmpty()){
+                    for ( ShiTuZDMXDto zdmxDto : gongGongZDMX) {
+                        zdmxDto.setShiTuID(e.getShiTuID());
+                        zdmxDto.setShiTuMC(e.getShiTuMC());
+                    }
                     var cunZaiDto = resultlist.stream().filter(t->t.getFuLeiID().equals(e.getFuLeiID())).findFirst().orElse(null);
                     //存在则合并
                     if(cunZaiDto == null){

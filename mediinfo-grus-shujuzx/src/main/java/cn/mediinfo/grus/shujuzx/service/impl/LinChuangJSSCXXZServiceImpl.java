@@ -31,15 +31,16 @@ public class LinChuangJSSCXXZServiceImpl implements LinChuangJSSCXXZService {
      * 综合查询输出项选择列表
      * @param yeWuLX
      * @param likeQuery
+     * @param jieKouLX
      * @return
      */
     @Override
-    public List<ShiTuMXZHCXDto> getShuTuMXForZHCX (Integer yeWuLX, String likeQuery) throws YuanChengException {
+    public List<ShiTuMXZHCXDto> getShuTuMXForZHCX (Integer yeWuLX, Integer jieKouLX,String likeQuery) throws YuanChengException {
         //获取视图信息数据
         List<SC_CX_ShiTuXXModel> shiTuXXList = sc_cx_shiTuXXRepository.getShiTuXXSJ(yeWuLX);
         List<String> shiTuIDs = shiTuXXList.stream().map(SC_CX_ShiTuXXModel::getShiTuID).toList();
         //获取视图明细数据
-        List<SC_CX_ShiTuMXModel> shiTuMXList = sc_cx_shiTuMXRepository.getShiTuMXSJ(shiTuIDs,likeQuery);
+        List<SC_CX_ShiTuMXModel> shiTuMXList = sc_cx_shiTuMXRepository.getShiTuMXSJ(shiTuIDs,jieKouLX,likeQuery);
         if (shiTuMXList.isEmpty()){
             return new ArrayList<>();
         }

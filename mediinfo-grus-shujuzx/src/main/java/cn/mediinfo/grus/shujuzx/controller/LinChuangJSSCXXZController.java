@@ -7,6 +7,7 @@ import cn.mediinfo.grus.shujuzx.service.LinChuangJSSCXXZService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.weaver.patterns.IfPointcut;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,18 +30,23 @@ public class LinChuangJSSCXXZController {
     }
     /**
      *综合查询输出项选择列表
-     * @param yeWuLX
-     * @param likeQuery
+     * @param yeWuLX  0全部 ,1门诊 ,2住院 ,3急诊 ,9公卫
+     * @param jieKouLX 1：输出标志   0：条件标志
+     * @param likeQuery 字段名称模糊查询
      * @return
      */
     @Operation(summary = "综合查询输出项选择列表")
     @GetMapping(path = "GetShuTuMXForZHCX")
     public MsfResponse<List<ShiTuMXZHCXDto>> getShuTuMXForZHCX(@RequestParam(required = false) Integer yeWuLX,
+                                                               @RequestParam(required = false) Integer jieKouLX,
                                                                @RequestParam(required = false) String likeQuery) throws YuanChengException {
         if (yeWuLX == null){
             return MsfResponse.fail("业务类型不允许为空!");
         }
-        List<ShiTuMXZHCXDto> list = _linChuangJSSCXXZService.getShuTuMXForZHCX(yeWuLX, likeQuery);
+        if (jieKouLX == null){
+            return MsfResponse.fail("接口类型不允许为空!");
+        }
+        List<ShiTuMXZHCXDto> list = _linChuangJSSCXXZService.getShuTuMXForZHCX(yeWuLX, jieKouLX,likeQuery);
         if (list.isEmpty())
         {
             return MsfResponse.fail("无数据!");

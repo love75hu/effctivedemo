@@ -8,8 +8,9 @@ public interface LinChuangJSSCXXZService {
     /**
      *综合查询输出项选择列表
      * @param yeWuLX
+     * @param jieKouLX
      * @param likeQuery
      * @return
      */
-    List<ShiTuMXZHCXDto> getShuTuMXForZHCX(Integer yeWuLX, String likeQuery) throws YuanChengException;
+    List<ShiTuMXZHCXDto> getShuTuMXForZHCX(Integer yeWuLX,Integer jieKouLX, String likeQuery) throws YuanChengException;
 }

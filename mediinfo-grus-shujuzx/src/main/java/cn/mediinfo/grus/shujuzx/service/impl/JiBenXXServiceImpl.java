@@ -84,13 +84,13 @@ class JiBenXXServiceImpl implements JiBenXXService {
 
     @Override
     public Boolean addBiHuanJBXX(AddBiHuanXXDto dto) {
-
+        var biHuanID=stringGenerator.Create();
         SC_BH_JiBenXXModel shiTuMXModel=new SC_BH_JiBenXXModel();
         BeanUtil.copyProperties(dto,shiTuMXModel);
+        shiTuMXModel.setBiHuanID(biHuanID);
         shiTuMXModel.setZuZhiJGMC("0");
         shiTuMXModel.setZuZhiJGID("通用");
-       // shiTuMXModel.setShiTuID(stringGenerator.Create());
-        ruCanXXService.addRuCanXX(dto.getRuCanXXDtoList(),dto.getBiHuanLXDM(),dto.getBiHuanLXMC(),"","");
+        ruCanXXService.addRuCanXX(dto.getRuCanXXDtoList(),dto.getBiHuanLXDM(),dto.getBiHuanLXMC(),biHuanID,dto.getBiHuanMC());
         jIBENXXRepository.save(shiTuMXModel);
         return true;
     }
@@ -285,6 +285,15 @@ List<SC_BH_JieDianXXModel> addjieDianXXList=new ArrayList<>();
     public Boolean biHuanSZQY(String biHuanID,Integer qiyongBZ) {
         jIBENXXRepository.asUpdateDsl().where(n->n.biHuanID.eq(biHuanID)).set(n->n.qiYongBZ,qiyongBZ).execute();
         return true;
+    }
+
+    @Override
+    public BiHuanXXDto getBiHuanXXBYID(String biHuanID) {
+
+       var biHuanXX=BeanUtil.copyProperties( jIBENXXRepository.asQuerydsl().where(n->n.biHuanID.eq(biHuanID)).fetchFirst(),BiHuanXXDto.class);;
+        biHuanXX.setRuCanXXDtos(ruCanXXService.getRuCanXXByBiHuanID(biHuanID));
+
+        return biHuanXX;
     }
 
 }

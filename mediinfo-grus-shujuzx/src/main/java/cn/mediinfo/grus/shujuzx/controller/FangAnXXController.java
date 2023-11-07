@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.plaf.PanelUI;
 import java.util.List;
 
 @RestController
@@ -114,5 +115,12 @@ public class FangAnXXController {
     @DeleteMapping("DeleteChaXunFA")
     public MsfResponse<Boolean> deleteChaXunFA(@RequestParam String id) {
         return MsfResponse.success(chaXunFAXXService.deleteChaXunFA(id));
+    }
+
+    @Operation(summary = "查询病历详情")
+    @GetMapping("getBingLiXQ")
+    public MsfResponse<String> getBingLiXQ(String getBingLiXQ,String jiuzhenId ,String jiuzhenLXDM ,String bingRenId)
+    {
+        return MsfResponse.success();
     }
 }

@@ -3,9 +3,7 @@ package cn.mediinfo.grus.shujuzx.service;
 import cn.mediinfo.cyan.msf.core.exception.MsfResponseException;
 import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
 import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
-import cn.mediinfo.grus.shujuzx.dto.shitumx.DatabaseDTO;
-import cn.mediinfo.grus.shujuzx.dto.shitumx.FieldDTO;
-import cn.mediinfo.grus.shujuzx.dto.shitumx.TableDTO;
+import cn.mediinfo.grus.shujuzx.dto.shitumx.*;
 import cn.mediinfo.grus.shujuzx.dto.zonghecx.*;
 import cn.mediinfo.grus.shujuzx.model.SC_CX_ShiTuMXModel;
 
@@ -84,6 +82,11 @@ public interface ShiTuMXService {
     Boolean zuoFeiShiTMX(String id) throws WeiZhaoDSJException;
 
     public Boolean updateShiTuMX(UpdateShiTuMXDto updateShiTuMXDto) throws WeiZhaoDSJException;
+
+    /**
+     * 根据视图ID获取视图明细
+     */
+    public List<SchemaTable> getFangAnSCZD(List<ShuJuSTDto> shuJuSTDto) throws WeiZhaoDSJException;
 
 
 }

@@ -77,6 +77,10 @@ class JiBenXXServiceImpl implements JiBenXXService {
              SC_BH_JIBENXXDto scBhJibenxxDto = jIBENXXList.stream().filter(x -> x.getBiHuanLXDM().equals(a)).findFirst().orElse(new SC_BH_JIBENXXDto());
              BiHuanJBXXTreeDto biHuanJBXXTreeDto = BeanUtil.copyProperties(scBhJibenxxDto, BiHuanJBXXTreeDto::new);
              biHuanJBXXTreeDto.setLabel(scBhJibenxxDto.getBiHuanLXMC());
+             biHuanJBXXTreeDto.setBiHuanID("");
+             biHuanJBXXTreeDto.setBiHuanMC("");
+             biHuanJBXXTreeDto.setId("");
+
              biHuanJBXXTreeDto.setChildren(BeanUtil.copyListProperties(jIBENXXList.stream().filter(x -> x.getBiHuanLXDM().equals(a)).collect(Collectors.toList()),BiHuanJBXXTreeDto::new,(p,s)->{
                     s.setLabel(s.getBiHuanMC());
              }));

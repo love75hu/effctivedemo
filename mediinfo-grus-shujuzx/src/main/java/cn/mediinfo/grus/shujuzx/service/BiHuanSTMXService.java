@@ -25,6 +25,8 @@ public interface BiHuanSTMXService {
 
     List<ShiJianXXDto> getShiJianXX(String shiTuID) throws WeiZhaoDSJException, YuanChengException;
 
+    List<BiHuanSTZDDto> getBiHuanSTZDBybiHuanLXDM(String biHuanLXDM);
+
 
 
 }

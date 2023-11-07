@@ -189,4 +189,10 @@ public class BiHuanSTMXServiceImpl implements BiHuanSTMXService {
 
         return BeanUtil.copyListProperties(shiTuList, ShiJianXXDto::new);
     }
+
+    @Override
+    public List<BiHuanSTZDDto> getBiHuanSTZDBybiHuanLXDM(String biHuanLXDM) {
+       return shiTuMXRepository.getBiHuanSTZDBybiHuanLXDM(biHuanLXDM);
+    }
+
 }

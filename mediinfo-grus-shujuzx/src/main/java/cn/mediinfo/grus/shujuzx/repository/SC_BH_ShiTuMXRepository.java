@@ -28,6 +28,12 @@ public interface SC_BH_ShiTuMXRepository extends MsfJpaRepository<QSC_BH_ShiTuMX
                 .fetchPage(pageIndex,pageSize);
     }
 
+    default List<BiHuanSTZDDto> getBiHuanSTZDBybiHuanLXDM(String biHuanLXDM)
+    {
+        return this.asQuerydsl().where(e->e.biHuanLXDM.eq(biHuanLXDM)).select(BiHuanSTZDDto.class).fetch();
+
+    }
+
     default Integer getBiHuanSTZDCount(String shiTuID ,String ziDuanMC, String biHuanLXDM, Integer chaXunLXDM)
     {
         return this.asQuerydsl()

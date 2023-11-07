@@ -236,5 +236,16 @@ public class ShiTuMXServiceImpl implements ShiTuMXService {
         return true;
     }
 
+    /**
+     * 根据视图ID获取视图明细
+     *
+     */
+    @Override
+    public List<SchemaTable> getFangAnSCZD(List<ShuJuSTDto> shuJuSTDto) throws WeiZhaoDSJException {
+
+
+        return null;
+    }
+
 
 }

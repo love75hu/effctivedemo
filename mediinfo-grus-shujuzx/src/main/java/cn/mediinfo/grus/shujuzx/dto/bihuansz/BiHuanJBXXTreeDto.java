@@ -12,5 +12,6 @@ public class BiHuanJBXXTreeDto {
     private String biHuanID;
     private String qiYongBZ;
     private String biHuanMC;
+    private String label;
     private List<BiHuanJBXXTreeDto> children;
 }

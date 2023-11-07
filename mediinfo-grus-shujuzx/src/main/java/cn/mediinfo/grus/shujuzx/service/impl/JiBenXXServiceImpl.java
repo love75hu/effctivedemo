@@ -76,7 +76,10 @@ class JiBenXXServiceImpl implements JiBenXXService {
          {
              SC_BH_JIBENXXDto scBhJibenxxDto = jIBENXXList.stream().filter(x -> x.getBiHuanLXDM().equals(a)).findFirst().orElse(new SC_BH_JIBENXXDto());
              BiHuanJBXXTreeDto biHuanJBXXTreeDto = BeanUtil.copyProperties(scBhJibenxxDto, BiHuanJBXXTreeDto::new);
-             biHuanJBXXTreeDto.setChildren(BeanUtil.copyListProperties(jIBENXXList.stream().filter(x -> x.getBiHuanLXDM().equals(a)).collect(Collectors.toList()),BiHuanJBXXTreeDto::new));
+             biHuanJBXXTreeDto.setLabel(scBhJibenxxDto.getBiHuanLXMC());
+             biHuanJBXXTreeDto.setChildren(BeanUtil.copyListProperties(jIBENXXList.stream().filter(x -> x.getBiHuanLXDM().equals(a)).collect(Collectors.toList()),BiHuanJBXXTreeDto::new,(p,s)->{
+                    s.setLabel(s.getBiHuanMC());
+             }));
              biHuanJBXXTreeDtos.add(biHuanJBXXTreeDto);
          }
         return biHuanJBXXTreeDtos;
@@ -88,8 +91,8 @@ class JiBenXXServiceImpl implements JiBenXXService {
         SC_BH_JiBenXXModel shiTuMXModel=new SC_BH_JiBenXXModel();
         BeanUtil.copyProperties(dto,shiTuMXModel);
         shiTuMXModel.setBiHuanID(biHuanID);
-        shiTuMXModel.setZuZhiJGMC("0");
-        shiTuMXModel.setZuZhiJGID("通用");
+        shiTuMXModel.setZuZhiJGMC("通用");
+        shiTuMXModel.setZuZhiJGID("0");
         ruCanXXService.addRuCanXX(dto.getRuCanXXDtoList(),dto.getBiHuanLXDM(),dto.getBiHuanLXMC(),biHuanID,dto.getBiHuanMC());
         jIBENXXRepository.save(shiTuMXModel);
         return true;

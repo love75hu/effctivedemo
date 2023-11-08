@@ -113,11 +113,11 @@ public class ChaXunFAXXServiceImpl implements ChaXunFAXXService {
     @Override
     public FangAnCXLSDTO getFangAnCXLSByID(String id) {
         FangAnCXLSDTO result = new FangAnCXLSDTO();
-        SC_CX_FangAnCXLSModel model = fangAnCXLSRepository.getById(id);
-        if (ObjectUtils.isEmpty(model)) {
+        SC_CX_FangAnCXLSModel model = fangAnCXLSRepository.findById(id).orElse(null);
+        if (model==null) {
             return result;
         }
-        MapUtils.copyProperties(model, FangAnCXLSDto::new);
+        MapUtils.copyProperties(model, result);
         return result;
     }
 

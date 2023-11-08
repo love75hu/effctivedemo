@@ -14,6 +14,7 @@ import cn.mediinfo.grus.shujuzx.service.ChaXunFAXXService;
 import cn.mediinfo.grus.shujuzx.service.FangAnService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.NotBlank;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -44,7 +45,7 @@ public class FangAnXXController {
 
     @Operation(summary = "获取方案信息")
     @GetMapping("/get")
-    public MsfResponse<FangAnQueryDTO> getFangAnXX(@RequestParam String id) throws TongYongYWException {
+    public MsfResponse<FangAnQueryDTO> getFangAnXX(@NotBlank(message = "ID不能为空") @RequestParam String id) throws TongYongYWException {
         return MsfResponse.success(fangAnService.getFangAnXX(id));
     }
 

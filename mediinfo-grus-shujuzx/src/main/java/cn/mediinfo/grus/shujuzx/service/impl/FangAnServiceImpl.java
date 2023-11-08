@@ -4,13 +4,23 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.StopWatch;
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
 import cn.mediinfo.cyan.msf.core.util.JacksonUtil;
+import cn.mediinfo.cyan.msf.core.util.MapUtils;
 import cn.mediinfo.cyan.msf.core.util.Tuple;
 import cn.mediinfo.cyan.msf.tenant.security.TenantIdentityService;
 import cn.mediinfo.grus.shujuzx.bo.RelatedFangAnBO;
-import cn.mediinfo.grus.shujuzx.common.fangan.condition.*;
+import cn.mediinfo.grus.shujuzx.common.fangan.condition.FangAnCondition;
+import cn.mediinfo.grus.shujuzx.common.fangan.condition.FangAnTreeNode;
+import cn.mediinfo.grus.shujuzx.common.fangan.condition.RelatedFangAnQueryCondition;
+import cn.mediinfo.grus.shujuzx.common.fangan.condition.RelatedFieldCondition;
+import cn.mediinfo.grus.shujuzx.dto.fangan.FangAnByFACXLSDTO;
+import cn.mediinfo.grus.shujuzx.dto.fangan.FangAnHZXXDTO;
+import cn.mediinfo.grus.shujuzx.dto.fangan.FangAnQueryDTO;
+import cn.mediinfo.grus.shujuzx.dto.fangancxls.FangAnCXLSDTO;
 import cn.mediinfo.grus.shujuzx.dto.fangannr.FangAnSqlDTO;
+import cn.mediinfo.grus.shujuzx.dto.result.QueryResultDTO;
 import cn.mediinfo.grus.shujuzx.dto.shitumx.FieldDTO;
 import cn.mediinfo.grus.shujuzx.dto.shitumx.SchemaTable;
 import cn.mediinfo.grus.shujuzx.dto.shitumx.ShuJuJMXZDDto;
@@ -23,10 +33,11 @@ import cn.mediinfo.grus.shujuzx.remotedto.GongYong.ShuJuXXMSRso;
 import cn.mediinfo.grus.shujuzx.remoteservice.GongYongRemoteService;
 import cn.mediinfo.grus.shujuzx.request.fangan.FangAnSC;
 import cn.mediinfo.grus.shujuzx.request.fangan.FangAnXXSaveRequest;
-import cn.mediinfo.grus.shujuzx.service.FangAnNRService;
-import cn.mediinfo.grus.shujuzx.service.FangAnSCService;
-import cn.mediinfo.grus.shujuzx.service.FangAnService;
-import cn.mediinfo.grus.shujuzx.service.ShiTuMXService;
+import cn.mediinfo.grus.shujuzx.request.fangan.FangAnXXUpdateRequest;
+import cn.mediinfo.grus.shujuzx.request.fangancxls.FangAnCXLSByIdRequest;
+import cn.mediinfo.grus.shujuzx.request.result.QueryResultCountRequest;
+import cn.mediinfo.grus.shujuzx.request.result.QueryResultPageRequest;
+import cn.mediinfo.grus.shujuzx.service.*;
 import cn.mediinfo.grus.shujuzx.sql.ast.SQLQueryExpr;
 import cn.mediinfo.grus.shujuzx.sql.ast.SQLQueryNode;
 import cn.mediinfo.grus.shujuzx.sql.ast.SQLQueryObject;
@@ -42,7 +53,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.text.MessageFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -67,9 +77,10 @@ public class FangAnServiceImpl implements FangAnService {
     private FangAnNRService fangAnNRService;
     @Autowired
     private GongYongRemoteService gongYongRemoteService;
+    @Autowired
+    private ChaXunFAXXService chaXunFAXXService;
 
     /**
-     * s
      * 保存方案
      *
      * @param request
@@ -83,6 +94,62 @@ public class FangAnServiceImpl implements FangAnService {
         watch.stop();
         log.info(watch.prettyPrint(TimeUnit.MILLISECONDS));
         return fangAnManager.saveFangAn(request, sql);
+    }
+
+    /**
+     * 根据方案ID获取方案信息
+     *
+     * @param id 主键ID
+     * @return
+     * @throws TongYongYWException
+     */
+    @Override
+    public FangAnQueryDTO getFangAnXX(String id) throws TongYongYWException {
+        return fangAnManager.getFangAnXXByID(id);
+    }
+
+    /**
+     * 更新方案
+     *
+     * @param request
+     * @return
+     * @throws YuanChengException
+     * @throws TongYongYWException
+     */
+    @Override
+    public Boolean updateFangAnXX(FangAnXXUpdateRequest request) throws YuanChengException, TongYongYWException {
+        StopWatch watch = new StopWatch();
+        watch.start("AST树转换成sql");
+        String sql = getSql(request.getRoot(), request.getFangAnSCList(), request.getFangAnLXDM(), 0);
+        log.info("sql expr sql:{}", sql);
+        watch.stop();
+        log.info(watch.prettyPrint(TimeUnit.MILLISECONDS));
+        return fangAnManager.updateFangAnXX(request, sql);
+    }
+
+    /**
+     * 根据方案查询历史获取方案信息
+     *
+     * @param request
+     * @return
+     * @throws TongYongYWException
+     */
+    @Override
+    public FangAnByFACXLSDTO getFangAnCXLS(FangAnCXLSByIdRequest request) throws TongYongYWException {
+        FangAnByFACXLSDTO result = new FangAnByFACXLSDTO();
+        FangAnCXLSDTO fangAnCXLS = chaXunFAXXService.getFangAnCXLSByID(request.getFangAnCXLSId());
+        if (ObjectUtils.isEmpty(fangAnCXLS)) {
+            throw new TongYongYWException("查询方案历史不存在");
+        }
+        MapUtils.copyProperties(fangAnCXLS, result);
+        if (StringUtils.isBlank(fangAnCXLS.getFangAnID())) {
+            return result;
+        }
+        FangAnQueryDTO fangAnXX = fangAnManager.getFangAnXXByFAID(fangAnCXLS.getFangAnID());
+        if (ObjectUtils.isNotEmpty(fangAnXX)) {
+            MapUtils.copyProperties(fangAnXX, result);
+        }
+        return result;
     }
 
     /**
@@ -100,7 +167,9 @@ public class FangAnServiceImpl implements FangAnService {
         List<FangAnCondition> conditionList = ListUtil.toList();
         FangAnTreeUtils.getConditionList(root, conditionList);
         //todo 校验条件
-
+        if (StringUtils.isBlank(fangAnLXDM)) {
+            return "";
+        }
         //子方案
         subFangAn(conditionList);
 
@@ -167,8 +236,63 @@ public class FangAnServiceImpl implements FangAnService {
         return expr.buildSQL(sqlRoot);
     }
 
-    public List<Object> getFangAnJG() {
+    /**
+     * 获取结果列表总数
+     *
+     * @param request
+     * @return
+     * @throws TongYongYWException
+     */
+    @Override
+    public Long getFangAnJGCount(QueryResultCountRequest request) throws TongYongYWException {
+        FangAnCXLSDTO fangAnCXLS = chaXunFAXXService.getFangAnCXLSByID(request.getFangAnCXLSId());
+        if (ObjectUtils.isEmpty(fangAnCXLS)) {
+            throw new TongYongYWException("查询方案历史不存在");
+        }
+        String guanJianZD = "id";
+        if (request.getMergeType().equals(1)) {
+            guanJianZD = "zuzhijgid,bingrenid";
+        }
+        String sql = MessageFormat.format("select count(1) as count from ({1}) tt group by {0}", guanJianZD, fangAnCXLS.getChaXunSQL());
+
+        return jdbcTemplate.queryForObject(sql, Long.class);
+    }
+
+    public List<List<QueryResultDTO>> getFangAnJGList(QueryResultPageRequest request) throws TongYongYWException {
+        FangAnCXLSDTO fangAnCXLS = chaXunFAXXService.getFangAnCXLSByID(request.getFangAnCXLSId());
+        if (ObjectUtils.isEmpty(fangAnCXLS)) {
+            throw new TongYongYWException("查询方案历史不存在");
+        }
+        //根据合并方式分页获取关键字段
+        String guanJianZD = "id";
+        if (request.getMergeType().equals(1)) {
+            guanJianZD = "zuzhijgid,bingrenid";
+        }
+        String guanJianZDSql = MessageFormat.format("select * from (select {0} from ({1}) tt group by {0} order by {0} limit {2} offset {3}", guanJianZD, fangAnCXLS.getChaXunSQL(), request.getPageSize(), request.getPageSize() * (request.getPageIndex() - 1));
+        Map<String, Object> guanJianZDList = jdbcTemplate.queryForMap(guanJianZDSql);
+        //获取详细的查询结果
+
         return null;
+    }
+
+    /**
+     * 获取方案患者信息
+     * @param request
+     * @return
+     * @throws TongYongYWException
+     */
+    @Override
+    public List<FangAnHZXXDTO> getFangAnHZXXList(QueryResultPageRequest request) throws TongYongYWException {
+        FangAnCXLSDTO fangAnCXLS = chaXunFAXXService.getFangAnCXLSByID(request.getFangAnCXLSId());
+        if (ObjectUtils.isEmpty(fangAnCXLS)) {
+            throw new TongYongYWException("查询方案历史不存在");
+        }
+        //根据合并方式分页获取关键字段
+        String guanJianZD = "zuzhijgid,bingrenid";
+        String guanJianZDSql = MessageFormat.format("select * from (select {0} from ({1}) tt group by {0} order by {0} limit {2} offset {3}", guanJianZD, fangAnCXLS.getChaXunSQL(), request.getPageSize(), request.getPageSize() * (request.getPageIndex() - 1));
+        Map<String, Object> guanJianZDList = jdbcTemplate.queryForMap(guanJianZDSql);
+
+        return jdbcTemplate.queryForList(guanJianZDSql, FangAnHZXXDTO.class);
     }
 
     private void subFangAn(List<FangAnCondition> conditionList) {
@@ -211,7 +335,7 @@ public class FangAnServiceImpl implements FangAnService {
             }
             RelatedFangAnQueryCondition relatedFangAnQueryCondition = e.getRelatedFangAnQueryCondition();
             FangAnSqlDTO fangAnSql = map.get(relatedFangAnQueryCondition.getFangAnId());
-            if(Objects.isNull(fangAnSql)){
+            if (Objects.isNull(fangAnSql)) {
                 return;
             }
             relatedFangAnQueryCondition.setSql(fangAnSql.getSql());
@@ -240,7 +364,11 @@ public class FangAnServiceImpl implements FangAnService {
             sqlNode = new SQLQueryNode(new SQLQueryObject(sqlOperator));
         } else {
             FieldDTO field = fieldMap.get(condition.getShiTuMXID());
-            List<String> valList = Optional.ofNullable(condition.getValues()).orElse(new ArrayList<>()).stream().map(FanganConditionValue::getVal).toList();
+            if (Objects.isNull(field)) {
+                log.error("根据{}获取条件字段信息失败", condition.getShiTuMXID());
+                return null;
+            }
+            List<String> valList = List.of(Optional.ofNullable(condition.getValues()).orElse("").split(","));
             SQLQueryObject obj = toSQLQueryObject(condition.getOperator(), field, valList, condition.getRelatedFangAnQueryCondition());
             //子条件
             if (CollUtil.isNotEmpty(condition.getRelatedFieldConditions())) {
@@ -335,7 +463,7 @@ public class FangAnServiceImpl implements FangAnService {
         StringBuilder builder = new StringBuilder();
         relatedFieldConditions.forEach(e -> {
             FieldDTO field = fieldMap.get(e.getShiTuMXGXID());
-            List<String> valList = e.getValues().stream().map(FanganConditionValue::getVal).toList();
+            List<String> valList = List.of(Optional.ofNullable(e.getValues()).orElse("").split(","));
             SQLQueryObject obj = toSQLQueryObject(e.getOperator(), field, valList, e.getRelatedFangAnQueryCondition());
             builder.append(obj.getText());
             builder.append(" AND ");
@@ -368,6 +496,8 @@ public class FangAnServiceImpl implements FangAnService {
                 ShuJuXXMSRso zhuYuan = jiChuBiaoXXList.stream().filter(p -> p.getBiaoMing().equals("JZ_ZY_JIUZHENXX")).findFirst().orElse(new ShuJuXXMSRso());
                 jiChuBiao.setBiaoMing(Optional.ofNullable(zhuYuan.getBiaoMing()).orElse("").toLowerCase());
                 jiChuBiao.setMoShi(Optional.ofNullable(zhuYuan.getShuJuYMC()).orElse("").toLowerCase());
+                break;
+            default:
                 break;
         }
 
@@ -530,6 +660,7 @@ public class FangAnServiceImpl implements FangAnService {
         Tuple.Tuple4<String, String, Boolean, Boolean> jiChuTable = aliasMap.values().stream().filter(Tuple.Tuple4::item4).findFirst().orElse(null);
         if (!Objects.isNull(jiChuTable)) {
             fields.add(jiChuTable.item1() + ".id");
+            fields.add(jiChuTable.item1() + ".zuzhijgid");
             fields.add(jiChuTable.item1() + ".bingrenid");
         }
         //数据元
@@ -588,6 +719,7 @@ public class FangAnServiceImpl implements FangAnService {
 
     /**
      * 格式化表名
+     *
      * @param moShi
      * @param biaoMing
      * @return

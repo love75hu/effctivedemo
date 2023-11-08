@@ -7,4 +7,5 @@ import cn.mediinfo.grus.shujuzx.model.SC_CX_FangAnNRModel;
 
 @MsfDataSource("datasourcesjzx")
 public interface SC_CX_FangAnNRRepository extends MsfJpaRepository<QSC_CX_FangAnNRModel, SC_CX_FangAnNRModel, String> {
+    SC_CX_FangAnNRModel findByFangAnID(String fangAnID);
 }

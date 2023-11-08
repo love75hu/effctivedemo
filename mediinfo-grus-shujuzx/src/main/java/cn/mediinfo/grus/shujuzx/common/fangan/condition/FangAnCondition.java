@@ -23,7 +23,7 @@ public class FangAnCondition {
     private String operator;
 
     @Schema(description = "查询值")
-    private List<FanganConditionValue> values;
+    private String values;
 
     @Schema(description = "关联方案查询条件")
     private RelatedFangAnQueryCondition relatedFangAnQueryCondition;

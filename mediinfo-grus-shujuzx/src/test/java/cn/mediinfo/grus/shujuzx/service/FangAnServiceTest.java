@@ -2,6 +2,7 @@ package cn.mediinfo.grus.shujuzx.service;
 
 import cn.hutool.core.collection.ListUtil;
 import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
+import cn.mediinfo.cyan.msf.core.response.MsfResponse;
 import cn.mediinfo.cyan.msf.tenant.security.BasicTenantInfo;
 import cn.mediinfo.cyan.msf.tenant.security.TenantIdentityService;
 import cn.mediinfo.grus.shujuzx.common.fangan.condition.FangAnCondition;
@@ -13,6 +14,8 @@ import cn.mediinfo.grus.shujuzx.dto.shitumx.*;
 import cn.mediinfo.grus.shujuzx.enums.NodeTypeEnum;
 import cn.mediinfo.grus.shujuzx.enums.ShuJuZLXDMEnum;
 import cn.mediinfo.grus.shujuzx.manager.FangAnManager;
+import cn.mediinfo.grus.shujuzx.remotedto.GongYong.ShuJuXXMSRso;
+import cn.mediinfo.grus.shujuzx.remoteservice.GongYongRemoteService;
 import cn.mediinfo.grus.shujuzx.request.fangan.FangAnXXSaveRequest;
 import cn.mediinfo.grus.shujuzx.service.impl.FangAnServiceImpl;
 import org.junit.jupiter.api.Test;
@@ -40,6 +43,9 @@ class FangAnServiceTest {
     private FangAnManager fangAnManager;
 
     @Mock
+    private GongYongRemoteService gongYongRemoteService;
+
+    @Mock
     private TenantIdentityService tenantIdentityService;
 
     @InjectMocks
@@ -49,7 +55,8 @@ class FangAnServiceTest {
     void saveFangAn() throws YuanChengException {
         when(shiTuMXService.listTable(anySet())).thenReturn(mockTable());
         when(shiTuMXService.listFields(anySet())).thenReturn(mockFields());
-        when(fangAnSCService.getAllFangAnSC(anyList())).thenReturn(mockFangAnSC());
+        when(gongYongRemoteService.getShuJXXMS(anyList())).thenReturn(mockJiChuTable());
+        //when(fangAnSCService.getAllFangAnSC(anyList())).thenReturn(mockFangAnSC());
         when(fangAnManager.saveFangAn(any(), anyString())).thenReturn("1");
         when(tenantIdentityService.getCurrentTenant()).thenReturn(new BasicTenantInfo("1040209927943733248", "黄岩卫健局"));
 
@@ -65,7 +72,7 @@ class FangAnServiceTest {
         name.setOperator("=");
         FanganConditionValue val = new FanganConditionValue();
         val.setVal("张三");
-        name.setValues(ListUtil.toList(val));
+        name.setValues("张三");
         nameNode.setCondition(name);
 
         FangAnTreeNode and = new FangAnTreeNode();
@@ -80,7 +87,7 @@ class FangAnServiceTest {
         nianling.setOperator(">");
         FanganConditionValue age = new FanganConditionValue();
         age.setVal("30");
-        nianling.setValues(ListUtil.toList(age));
+        nianling.setValues("30");
         nianlingNode.setCondition(nianling);
 
 
@@ -92,7 +99,7 @@ class FangAnServiceTest {
         birthdate.setOperator(">");
         FanganConditionValue date = new FanganConditionValue();
         date.setVal("1940-01-01");
-        birthdate.setValues(ListUtil.toList(date));
+        birthdate.setValues("1940-01-01");
         birthdateNode.setCondition(birthdate);
 
 //        and.setLeft(nianlingNode);
@@ -210,5 +217,18 @@ class FangAnServiceTest {
         FangAnSCDTO fangAnSC = new FangAnSCDTO();
         fangAnSC.setQueryFields(ListUtil.toList(field1, field2, field3, field4, field5));
         return fangAnSC;
+    }
+
+    private MsfResponse<List<ShuJuXXMSRso>> mockJiChuTable() {
+        MsfResponse<List<ShuJuXXMSRso>> result=new MsfResponse<>();
+        ShuJuXXMSRso menZhen=new ShuJuXXMSRso();
+        menZhen.setShuJuYMC("VELA_JZ");
+        menZhen.setBiaoMing("JZ_MZ_JIUZHENXX");
+
+        ShuJuXXMSRso zhuYuan=new ShuJuXXMSRso();
+        zhuYuan.setShuJuYMC("VELA_JZ");
+        zhuYuan.setBiaoMing("JZ_ZY_JIUZHENXX");
+        result.setData(ListUtil.toList(menZhen,zhuYuan));
+        return result;
     }
 }

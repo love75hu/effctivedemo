@@ -13,22 +13,24 @@ import java.util.List;
 @MsfDataSource("datasourcesjzx")
 public interface SC_CX_FangAnXXRepository extends MsfJpaRepository<QSC_CX_FangAnXXModel, SC_CX_FangAnXXModel, String> {
 
-    default List<FangAnXXDto> getFangAnXX(String likeQuery,String fangAnLXDM,int pageIndex, int pageSize){
-         return this.asQuerydsl()
-                 .whereIf(StringUtil.hasText(likeQuery),p->p.fangAnMC.contains(likeQuery).or(p.guanJianZi.contains(likeQuery)))
-                 .whereIf(StringUtil.hasText(fangAnLXDM),p->p.fangAnLXDM.eq(fangAnLXDM))
-                 .orderBy(p->p.chuangJianSJ.desc())
-                 .select(p -> Projections.bean(
-                         FangAnXXDto.class,
-                         p.id.as("id"),
-                         p.fangAnLXDM.as("fangAnLXDM"),
-                         p.fangAnLXMC.as("fangAnLXMC"),
-                         p.fangAnID.as("fangAnID"),
-                         p.fangAnMC.as("fangAnMC"),
-                         p.guanJianZi.as("guanJianZi"),
-                         p.chaXunTJMS.as("chaXunTJMS"),
-                         p.fangAnMC.append("+").append(p.guanJianZi).as("biaoTiMC")
-                 ))
-                 .fetchPage(pageIndex,pageSize);
+    default List<FangAnXXDto> getFangAnXX(String likeQuery, String fangAnLXDM, int pageIndex, int pageSize) {
+        return this.asQuerydsl()
+                .whereIf(StringUtil.hasText(likeQuery), p -> p.fangAnMC.contains(likeQuery).or(p.guanJianZi.contains(likeQuery)))
+                .whereIf(StringUtil.hasText(fangAnLXDM), p -> p.fangAnLXDM.eq(fangAnLXDM))
+                .orderBy(p -> p.chuangJianSJ.desc())
+                .select(p -> Projections.bean(
+                        FangAnXXDto.class,
+                        p.id.as("id"),
+                        p.fangAnLXDM.as("fangAnLXDM"),
+                        p.fangAnLXMC.as("fangAnLXMC"),
+                        p.fangAnID.as("fangAnID"),
+                        p.fangAnMC.as("fangAnMC"),
+                        p.guanJianZi.as("guanJianZi"),
+                        p.chaXunTJMS.as("chaXunTJMS"),
+                        p.fangAnMC.append("+").append(p.guanJianZi).as("biaoTiMC")
+                ))
+                .fetchPage(pageIndex, pageSize);
     }
+
+    SC_CX_FangAnXXModel findByFangAnID(String fangAnID);
 }

@@ -21,6 +21,11 @@ public class ZiBiHXXDto {
      */
     @Schema(description = "子闭环ID")
     private String ziBiHID;
+    @Schema(description = "视图id")
+    private String shiTuID;
+
+    @Schema(description = "视图名称")
+    private String shiTuMC;
     /**
      * 子闭环名称
      */

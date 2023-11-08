@@ -16,6 +16,12 @@ public class AddZiBiHXXDto {
      */
     @Column(columnDefinition = "组织机构名称")
     private String zuZhiJGMC;
+
+    @Schema(description = "视图id")
+    private String shiTuID;
+    @Schema(description = "视图名称")
+    private String shiTuMC;
+
     /**
      * 子闭环ID
      */

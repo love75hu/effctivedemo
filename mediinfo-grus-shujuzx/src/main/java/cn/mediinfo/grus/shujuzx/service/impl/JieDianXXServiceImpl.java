@@ -70,7 +70,12 @@ public class JieDianXXServiceImpl implements JieDianXXService {
         {
             if (BeanUtil.isNotEmpty(b.getZiBiHXXDto()))
             {
-                ziBiHXX.add(BeanUtil.copyProperties(b.getZiBiHXXDto(),SC_BH_ZiBiHXXModel.class));
+              var ziBiHXXModel=  BeanUtil.copyProperties(b.getZiBiHXXDto(),SC_BH_ZiBiHXXModel.class);
+                ziBiHXXModel.setBiHuanID(dto.getBiHuanID());
+                ziBiHXXModel.setBiHuanMC(dto.getBiHuanMC());
+                ziBiHXXModel.setJieDianID(b.getJieDianID());
+                ziBiHXXModel.setJieDianMC(b.getJieDianMC());
+                ziBiHXX.add(ziBiHXXModel);
             }
             //子闭环信息
             SC_BH_JieDianXXModel jieDianXXModel = BeanUtil.copyProperties(b, SC_BH_JieDianXXModel.class);
@@ -133,7 +138,10 @@ public class JieDianXXServiceImpl implements JieDianXXService {
                 .select(SC_BH_JieDianSXDto.class).fetch();
 
         //子闭环信息
-        BiHuanSZXXDto ziBiHXXList = ziBiHXXRepository.asQuerydsl().where(n -> n.biHuanID.eq(biHuanID)).select(BiHuanSZXXDto.class).fetchFirst();
+        var ziBiHXXList = ziBiHXXRepository.asQuerydsl().where(n -> n.biHuanID.eq(biHuanID)).select(SC_BH_ZiBiHXXDto.class).fetch();
+
+
+
         //子闭环显示列
         List<SC_BH_ZiBiHXSLDto> ziBiHXSLList = ziBiHXSLRepository.asQuerydsl()
                 .where(n -> n.biHuanID.eq(biHuanID))
@@ -142,10 +150,7 @@ public class JieDianXXServiceImpl implements JieDianXXService {
 
         for (var a:jieDianXXList)
         {
-            if ( ziBiHXXList!=null&&StringUtil.hasText(a.getZiBiHXXDto().getZiBiHID())) {
-                ZiBiHXXDto ziBiHXXDto = BeanUtil.copyProperties(a, ZiBiHXXDto.class);
-                a.setZiBiHXXDto(ziBiHXXDto);
-            }
+           a.setZiBiHXXDto(BeanUtil.copyProperties(ziBiHXXList.stream().filter(x->x.getJieDianID().equals(a.getJieDianID())).findFirst().orElse(null),ZiBiHXXDto.class));
 
             a.setJieDianSXList(BeanUtil.copyToList(biHuanSZXXList.stream().filter(x->x.getJieDianID().equals(a.getJieDianID())).collect(Collectors.toList()),JieDianSXDto.class));
 

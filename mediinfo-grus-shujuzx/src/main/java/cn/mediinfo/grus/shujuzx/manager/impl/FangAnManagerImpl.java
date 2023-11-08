@@ -55,8 +55,8 @@ public class FangAnManagerImpl implements FangAnManager {
      */
     @Override
     public FangAnQueryDTO getFangAnXXByID(String id) throws TongYongYWException {
-        SC_CX_FangAnXXModel fangAnXX = fangAnXXRepository.findById(id).orElse(new SC_CX_FangAnXXModel());
-        if (ObjectUtils.isEmpty(fangAnXX)) {
+        SC_CX_FangAnXXModel fangAnXX = fangAnXXRepository.findById(id).orElse(null);
+        if (fangAnXX==null) {
             throw new TongYongYWException("方案不存在！");
         }
         FangAnQueryDTO result = MapUtils.copyProperties(fangAnXX, FangAnQueryDTO::new);
@@ -155,8 +155,8 @@ public class FangAnManagerImpl implements FangAnManager {
     @Transactional(rollbackFor = Exception.class)
     public Boolean updateFangAnXX(FangAnXXUpdateRequest request, String sql) throws TongYongYWException {
         //检索方案信息
-        SC_CX_FangAnXXModel fangAnXXModel = fangAnXXRepository.findById(request.getId()).orElse(new SC_CX_FangAnXXModel());
-        if (ObjectUtils.isEmpty(fangAnXXModel)) {
+        SC_CX_FangAnXXModel fangAnXXModel = fangAnXXRepository.findById(request.getId()).orElse(null);
+        if (fangAnXXModel==null) {
             throw new TongYongYWException("方案不存在");
         }
         MapUtils.mergeProperties(request, fangAnXXModel);

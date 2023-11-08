@@ -10,8 +10,10 @@ import cn.mediinfo.grus.shujuzx.request.fangan.FangAnSC;
 import cn.mediinfo.grus.shujuzx.request.fangan.FangAnXXSaveRequest;
 import cn.mediinfo.grus.shujuzx.request.fangan.FangAnXXUpdateRequest;
 import cn.mediinfo.grus.shujuzx.request.fangancxls.FangAnCXLSByIdRequest;
+import cn.mediinfo.grus.shujuzx.request.result.BingLiXXQueryPageRequest;
 import cn.mediinfo.grus.shujuzx.request.result.QueryResultCountRequest;
 import cn.mediinfo.grus.shujuzx.request.result.QueryResultPageRequest;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -36,11 +38,11 @@ public interface FangAnService {
 
     /**
      * 根据方案查询历史获取方案信息
-     * @param request
+     * @param fangAnCXLSId
      * @return
      * @throws TongYongYWException
      */
-    FangAnByFACXLSDTO getFangAnCXLS(FangAnCXLSByIdRequest request) throws TongYongYWException;
+    FangAnByFACXLSDTO getFangAnCXLS(String fangAnCXLSId) throws TongYongYWException;
 
     /**
      * 更新方案
@@ -66,17 +68,20 @@ public interface FangAnService {
 
     /**
      * 获取结果列表总数
-     * @param request
+     * @param fangAnCXLSId
+     * @param mergeType
      * @return
      * @throws TongYongYWException
      */
-    Long getFangAnJGCount(QueryResultCountRequest request) throws TongYongYWException;
+    Long getFangAnJGCount(String fangAnCXLSId, Integer mergeType) throws TongYongYWException;
 
     /**
      * 获取方案患者信息
-     * @param request
+     * @param fangAnCXLSId
+     * @param pageIndex
+     * @param pageSize
      * @return
      * @throws TongYongYWException
      */
-    List<FangAnHZXXDTO> getFangAnHZXXList(QueryResultPageRequest request) throws TongYongYWException;
+    List<FangAnHZXXDTO> getFangAnHZXXList(String fangAnCXLSId, Integer pageIndex,  Integer pageSize) throws TongYongYWException;
 }

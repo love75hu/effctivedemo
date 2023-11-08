@@ -145,52 +145,6 @@ public class WenDangPZServiceImpl implements WenDangPZService {
         if (wenDangPZMB == null) {
             throw new TongYongYWException("查无此数据！");
         }
-
         return wenDangPZMB;
     }
-
-
-//    public static void main(String[] args) {
-//        // 创建DOM解析器工厂
-//        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-//        // 创建DOM解析器
-//        DocumentBuilder builder = factory.newDocumentBuilder();
-//        // 将XML字符串解析为Document对象
-//        Document document = builder.parse("xml字符串");
-//
-//        // 获取XML文档的根节点
-//        Node root = document.getDocumentElement();
-//
-//        // 遍历根节点的子节点
-//        NodeList nodeList = root.getChildNodes();
-//        for (int i = 0; i < nodeList.getLength(); i++) {
-//            Node node = nodeList.item(i);
-//            if (node.getNodeType() == Node.ELEMENT_NODE) {
-//                // 如果节点是元素节点，则输出节点名称
-//                System.out.println(node.getNodeName());
-//                // 如果节点有子节点，则递归遍历子节点
-//                if (node.hasChildNodes()) {
-//                    printNode(node.getChildNodes(), 1);
-//                }
-//            }
-//        }
-//    }
-//
-//    private static void printNode(NodeList nodeList, int level) {
-//        for (int i = 0; i < nodeList.getLength(); i++) {
-//            Node node = nodeList.item(i);
-//            if (node.getNodeType() == Node.ELEMENT_NODE) {
-//                // 输出缩进
-//                for (int j = 0; j < level; j++) {
-//                    System.out.print("  ");
-//                }
-//                // 输出节点名称
-//                System.out.println(node.getNodeName());
-//                // 如果节点有子节点，则递归遍历子节点
-//                if (node.hasChildNodes()) {
-//                    printNode(node.getChildNodes(), level + 1);
-//                }
-//            }
-//        }
-//    }
 }

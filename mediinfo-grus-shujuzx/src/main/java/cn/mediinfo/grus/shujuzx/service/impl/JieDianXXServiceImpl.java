@@ -142,7 +142,7 @@ public class JieDianXXServiceImpl implements JieDianXXService {
 
         for (var a:jieDianXXList)
         {
-            if (StringUtil.hasText(a.getZiBiHXXDto().getZiBiHID())) {
+            if ( ziBiHXXList!=null&&StringUtil.hasText(a.getZiBiHXXDto().getZiBiHID())) {
                 ZiBiHXXDto ziBiHXXDto = BeanUtil.copyProperties(a, ZiBiHXXDto.class);
                 a.setZiBiHXXDto(ziBiHXXDto);
             }

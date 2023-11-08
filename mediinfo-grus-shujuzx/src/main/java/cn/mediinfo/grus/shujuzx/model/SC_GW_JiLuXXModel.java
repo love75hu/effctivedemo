@@ -6,6 +6,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Data;
 
+import java.util.Date;
+
 /*** 共享文档记录信息*/
 @Data
 @Entity
@@ -37,58 +39,73 @@ public class SC_GW_JiLuXXModel extends StringMTEntity {
     @Column(columnDefinition = "文档ID")
     private String wenDangID;
     /**
-     * 文档ID
+     * 文档名称
      */
     @Column(columnDefinition = "文档名称")
     private String wenDangMC;
     /**
-     * 类别代码[SC0010]
+     * 生成时间
      */
-    @Column(columnDefinition = "类别代码[SC0010]")
-    private String leiBieDM;
+    @Column(columnDefinition = "生成时间")
+    private Date shengChengSJ;
     /**
-     * 类别代码[SC0010]
+     * 病人ID
      */
-    @Column(columnDefinition = "类别名称")
-    private String leiBieMC;
+    @Column(columnDefinition = "病人ID")
+    private String bingRenID;
     /**
-     * 版本代码[SC0011]
+     * 姓名
      */
-    @Column(columnDefinition = "版本代码[SC0011]")
-    private String banBenDM;
+    @Column(columnDefinition = "姓名")
+    private String xingMing;
     /**
-     * 版本名称
+     * 性别代码
      */
-    @Column(columnDefinition = "版本名称")
-    private String banBenMC;
+    @Column(columnDefinition = "性别代码")
+    private String xingBieDM;
     /**
-     * 标准ID
+     * 性别名称
      */
-    @Column(columnDefinition = "标准ID")
-    private String biaoZhunID;
+    @Column(columnDefinition = "性别名称")
+    private String xingBieMC;
     /**
-     * 标准名称
+     * 出生日期
      */
-    @Column(columnDefinition = "标准名称")
-    private String biaoZhunMC;
+    @Column(columnDefinition = "出生日期")
+    private Date chuShengRQ;
     /**
-     * OID
+     * 证件类型代码
      */
-    @Column(columnDefinition = "OID")
-    private String oID;
+    @Column(columnDefinition = "证件类型代码")
+    private String zhengJianLXDM;
     /**
-     * 描述
+     * 证件类型名称
      */
-    @Column(columnDefinition = "描述")
-    private String miaoShu;
+    @Column(columnDefinition = "证件类型名称")
+    private String zhengJianLXMC;
     /**
-     * 顺序号
+     * 证件号码
      */
-    @Column(columnDefinition = "顺序号")
-    private Integer shunXuHao;
+    @Column(columnDefinition = "证件号码")
+    private String zhengJianHM;
     /**
-     * 启用标志
+     * 业务时间
      */
-    @Column(columnDefinition = "启用标志")
-    private Integer qiYongBZ;
+    @Column(columnDefinition = "业务时间")
+    private Date yeWuSJ;
+    /**
+     * 业务主键ID
+     */
+    @Column(columnDefinition = "业务主键ID")
+    private String yeWuZJID;
+    /**
+     * 数据来源代码
+     */
+    @Column(columnDefinition = "数据来源代码")
+    private String shuJuLYDM;
+    /**
+     * 数据来源名称
+     */
+    @Column(columnDefinition = "数据来源名称")
+    private String shuJuLYMC;
 }

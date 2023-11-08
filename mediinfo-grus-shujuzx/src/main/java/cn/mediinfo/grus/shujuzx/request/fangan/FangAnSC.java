@@ -20,6 +20,9 @@ public class FangAnSC {
     @Schema(description = "指标类型代码;1-数据元，2-检验，3-检查，4-药品")
     private String zhiBiaoLXDM;
 
+    @Schema(description = "指标类型名称;1-数据元，2-检验，3-检查，4-药品")
+    private String zhiBiaoLXMC;
+
     @Schema(description = "指标分类id（字段存视图id，检验项目，检查项目id，药品分类）")
     private String zhiBiaoFLID;
 

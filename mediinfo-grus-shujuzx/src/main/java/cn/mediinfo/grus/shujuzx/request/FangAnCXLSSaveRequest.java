@@ -19,8 +19,10 @@ public class FangAnCXLSSaveRequest {
 
 
     @Schema(description = "方案类型代码;0-全部1-门诊2-急诊3-住院4-公卫")
-    @NotBlank(message = "方案类型代码不能为空")
     private String fangAnLXDM;
+
+    @Schema(description = "方案类型名称;0-全部1-门诊2-急诊3-住院4-公卫")
+    private String fangAnLXMC;
 
     @Schema(description = "id")
     private String fangAnId;
@@ -35,7 +37,6 @@ public class FangAnCXLSSaveRequest {
     private FangAnTreeNode root;
 
     @Schema(description = "方案输出项")
-    @NotEmpty(message = "方案输出项不能为空")
     private List<FangAnSC> fangAnSCList;
 
 }

@@ -25,7 +25,7 @@ public enum SQLBinaryOperator {
     IN("IN", ""),
     NOTIN("NOT IN", ""),
     ISNULL("IS NULL", "空值"),
-    ISNOTNULL("IS NOT NULL", "空值"),
+    ISNOTNULL("IS NOT NULL", "有值"),
 
 
     /**

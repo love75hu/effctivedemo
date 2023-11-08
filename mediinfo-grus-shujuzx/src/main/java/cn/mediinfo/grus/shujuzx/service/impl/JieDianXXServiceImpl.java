@@ -68,9 +68,9 @@ public class JieDianXXServiceImpl implements JieDianXXService {
 
         for (var b:dto.getJieDianXXSZDtoList())
         {
-            if (BeanUtil.isNotEmpty(b.getZiBiHXXDtoList()))
+            if (BeanUtil.isNotEmpty(b.getZiBiHXXDto()))
             {
-                ziBiHXX.add(BeanUtil.copyProperties(b.getZiBiHXXDtoList(),SC_BH_ZiBiHXXModel.class));
+                ziBiHXX.add(BeanUtil.copyProperties(b.getZiBiHXXDto(),SC_BH_ZiBiHXXModel.class));
             }
             //子闭环信息
             SC_BH_JieDianXXModel jieDianXXModel = BeanUtil.copyProperties(b, SC_BH_JieDianXXModel.class);

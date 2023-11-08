@@ -60,7 +60,7 @@ public class JieDianXXSZDto {
     /**
      * 子闭环信息
      */
-    AddZiBiHXXDto ziBiHXXDtoList;
+    AddZiBiHXXDto ziBiHXXDto;
 
     /**
      * 节点失效

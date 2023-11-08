@@ -128,22 +128,25 @@ public class JieDianXXServiceImpl implements JieDianXXService {
                 .orderBy(n->n.shunXuHao.asc())
                 .select(BiHuanSZXXDto.class).fetch();
         //节点失效
-        List<BiHuanSZXXDto> biHuanSZXXList = jieDianSXRepository.asQuerydsl()
+        List< SC_BH_JieDianSXDto> biHuanSZXXList = jieDianSXRepository.asQuerydsl()
                 .where(n -> n.biHuanID.eq(biHuanID))
-                .select(BiHuanSZXXDto.class).fetch();
+                .select(SC_BH_JieDianSXDto.class).fetch();
 
         //子闭环信息
         BiHuanSZXXDto ziBiHXXList = ziBiHXXRepository.asQuerydsl().where(n -> n.biHuanID.eq(biHuanID)).select(BiHuanSZXXDto.class).fetchFirst();
         //子闭环显示列
-        List<BiHuanSZXXDto> ziBiHXSLList = ziBiHXSLRepository.asQuerydsl()
+        List<SC_BH_ZiBiHXSLDto> ziBiHXSLList = ziBiHXSLRepository.asQuerydsl()
                 .where(n -> n.biHuanID.eq(biHuanID))
                 .orderBy(n->n.shunXuHao.asc())
-                .select(BiHuanSZXXDto.class).fetch();
+                .select(SC_BH_ZiBiHXSLDto.class).fetch();
 
         for (var a:jieDianXXList)
         {
-            ZiBiHXXDto ziBiHXXDto = BeanUtil.copyProperties(a, ZiBiHXXDto.class);
-            a.setZiBiHXXDto(ziBiHXXDto);
+            if (StringUtil.hasText(a.getZiBiHXXDto().getZiBiHID())) {
+                ZiBiHXXDto ziBiHXXDto = BeanUtil.copyProperties(a, ZiBiHXXDto.class);
+                a.setZiBiHXXDto(ziBiHXXDto);
+            }
+
             a.setJieDianSXList(BeanUtil.copyToList(biHuanSZXXList.stream().filter(x->x.getJieDianID().equals(a.getJieDianID())).collect(Collectors.toList()),JieDianSXDto.class));
 
             a.setZiBiHXSLDtoList(BeanUtil.copyToList(ziBiHXSLList.stream().filter(x->x.getJieDianID().equals(a.getJieDianID())).collect(Collectors.toList()), ZiBiHXSLDto.class));

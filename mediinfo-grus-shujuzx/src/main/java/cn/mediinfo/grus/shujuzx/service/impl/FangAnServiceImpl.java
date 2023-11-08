@@ -259,17 +259,17 @@ public class FangAnServiceImpl implements FangAnService {
         return jdbcTemplate.queryForObject(sql, Long.class);
     }
 
-    public List<List<QueryResultDTO>> getFangAnJGList(QueryResultPageRequest request) throws TongYongYWException {
-        FangAnCXLSDTO fangAnCXLS = chaXunFAXXService.getFangAnCXLSByID(request.getFangAnCXLSId());
+    public List<List<QueryResultDTO>> getFangAnJGList(String fangAnCXLSId, Integer mergeType, Integer pageIndex,  Integer pageSize) throws TongYongYWException {
+        FangAnCXLSDTO fangAnCXLS = chaXunFAXXService.getFangAnCXLSByID(fangAnCXLSId);
         if (ObjectUtils.isEmpty(fangAnCXLS)) {
             throw new TongYongYWException("查询方案历史不存在");
         }
         //根据合并方式分页获取关键字段
         String guanJianZD = "id";
-        if (request.getMergeType().equals(1)) {
+        if (Objects.equals(mergeType,1)) {
             guanJianZD = "zuzhijgid,bingrenid";
         }
-        String guanJianZDSql = MessageFormat.format("select {0} from ({1}) tt group by {0} order by {0} limit {2} offset {3}", guanJianZD, fangAnCXLS.getChaXunSQL(), request.getPageSize(), request.getPageSize() * (request.getPageIndex() - 1));
+        String guanJianZDSql = MessageFormat.format("select {0} from ({1}) tt group by {0} order by {0} limit {2} offset {3}", guanJianZD, fangAnCXLS.getChaXunSQL(), pageSize, pageSize * (pageIndex - 1));
         Map<String, Object> guanJianZDList = jdbcTemplate.queryForMap(guanJianZDSql);
         //获取详细的查询结果
 

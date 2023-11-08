@@ -165,7 +165,7 @@ public class BiHuanSTJDXXServiceImpl implements BiHuanSTJDXXService {
     @Override
     public List<KeXuanJDDto> getKeXuanJDBybiHuanLXDM(String biHuanLXDM) {
         List<SC_BH_ShiTuJDXXDto> shiTuJDXXList = shiTuJDXXRepository.asQuerydsl().where(n -> n.biHuanLXDM.eq(biHuanLXDM)).select(SC_BH_ShiTuJDXXDto.class).fetch();
-        List<String> shiTuIDs = shiTuJDXXList.stream().map(SC_BH_ShiTuJDXXDto::getShiTuID).collect(Collectors.toList());
+        List<String> shiTuIDs = shiTuJDXXList.stream().map(SC_BH_ShiTuJDXXDto::getShiTuID).distinct().collect(Collectors.toList());
         List<KeXuanJDDto> keXuanJDDtoList=new ArrayList<>();
         for (var s :shiTuIDs)
         {

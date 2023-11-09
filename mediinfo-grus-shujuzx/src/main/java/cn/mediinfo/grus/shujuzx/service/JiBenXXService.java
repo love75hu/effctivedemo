@@ -41,4 +41,10 @@ public interface JiBenXXService {
     Boolean biHuanSZQY(String biHuanID,Integer qiyongBZ);
 
     BiHuanXXDto getBiHuanXXBYID(String biHuanID);
+    /**
+     * 获取闭环基本信息列表
+     * @param likeQuery
+     * @return
+     */
+    List<SC_BH_JIBENXXDto> getBiHuanJBXXList(String likeQuery);
 }

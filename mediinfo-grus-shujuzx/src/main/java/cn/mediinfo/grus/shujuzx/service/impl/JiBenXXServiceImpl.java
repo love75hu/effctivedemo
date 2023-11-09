@@ -302,5 +302,14 @@ List<SC_BH_JieDianXXModel> addjieDianXXList=new ArrayList<>();
 
         return biHuanXX;
     }
+    /**
+     * 获取闭环基本信息列表
+     * @param likeQuery
+     * @return
+     */
+    @Override
+    public List<SC_BH_JIBENXXDto> getBiHuanJBXXList(String likeQuery) {
+        return jIBENXXRepository.getJIBENXXList(likeQuery);
+    }
 
 }

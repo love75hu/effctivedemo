@@ -58,14 +58,14 @@ public class FangAnXXController {
     @Operation(summary = "查询sql")
     @PostMapping("/getSql")
     public MsfResponse<String> getFangAnSql(@Validated @RequestBody FangAnQuerySqlRequest request) throws YuanChengException {
-        return MsfResponse.success(fangAnService.getSql(request.getRoot(), request.getFangAnSCList(), request.getFangAnLXDM(), 0));
+        return MsfResponse.success(fangAnService.getSql(request.getRoot(), request.getFangAnSCList(), request.getFangAnLXDM(), request.getGuanJianZi()));
     }
 
 
     @Operation(summary = "保存查询记录")
     @PostMapping("/saveQueryRercord")
     public MsfResponse<String> saveFangAnCXLSSaveRequest(@Validated @RequestBody FangAnCXLSSaveRequest request) throws YuanChengException {
-        String sql = fangAnService.getSql(request.getRoot(), request.getFangAnSCList(), request.getFangAnLXDM(), 0);
+        String sql = fangAnService.getSql(request.getRoot(), request.getFangAnSCList(), request.getFangAnLXDM(), request.getGuanJianZi());
         return MsfResponse.success(chaXunFAXXService.saveFangAnCXLS(request, sql));
     }
 

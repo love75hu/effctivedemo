@@ -30,4 +30,7 @@ public class FangAnQuerySqlRequest {
     @Schema(description = "方案输出项")
     @NotEmpty(message = "方案输出项不能为空")
     private List<FangAnSC> fangAnSCList;
+
+    @Schema(description = "关键字")
+    private String guanJianZi;
 }

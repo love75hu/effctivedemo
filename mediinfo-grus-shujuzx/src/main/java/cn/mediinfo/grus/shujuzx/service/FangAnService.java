@@ -4,16 +4,11 @@ import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
 import cn.mediinfo.grus.shujuzx.common.fangan.condition.FangAnTreeNode;
 import cn.mediinfo.grus.shujuzx.dto.fangan.FangAnByFACXLSDTO;
-import cn.mediinfo.grus.shujuzx.dto.fangan.FangAnHZXXDTO;
+import cn.mediinfo.grus.shujuzx.dto.fangan.HuanZheBLXXDTO;
 import cn.mediinfo.grus.shujuzx.dto.fangan.FangAnQueryDTO;
 import cn.mediinfo.grus.shujuzx.request.fangan.FangAnSC;
 import cn.mediinfo.grus.shujuzx.request.fangan.FangAnXXSaveRequest;
 import cn.mediinfo.grus.shujuzx.request.fangan.FangAnXXUpdateRequest;
-import cn.mediinfo.grus.shujuzx.request.fangancxls.FangAnCXLSByIdRequest;
-import cn.mediinfo.grus.shujuzx.request.result.BingLiXXQueryPageRequest;
-import cn.mediinfo.grus.shujuzx.request.result.QueryResultCountRequest;
-import cn.mediinfo.grus.shujuzx.request.result.QueryResultPageRequest;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -60,11 +55,11 @@ public interface FangAnService {
      * @param root         方案树
      * @param fangAnSCList 方案输出项
      * @param fangAnLXDM   方案类型代码
-     * @param type         查询类别 0获取sql 1查询结果
+     * @param guanJianZi   关键字
      * @return
      * @throws YuanChengException
      */
-    String getSql(FangAnTreeNode root, List<FangAnSC> fangAnSCList, String fangAnLXDM, Integer type) throws YuanChengException;
+    String getSql(FangAnTreeNode root, List<FangAnSC> fangAnSCList, String fangAnLXDM, String guanJianZi) throws YuanChengException;
 
     /**
      * 获取结果列表总数
@@ -83,5 +78,5 @@ public interface FangAnService {
      * @return
      * @throws TongYongYWException
      */
-    List<FangAnHZXXDTO> getFangAnHZXXList(String fangAnCXLSId, Integer pageIndex,  Integer pageSize) throws TongYongYWException;
+    List<HuanZheBLXXDTO> getFangAnHZXXList(String fangAnCXLSId, Integer pageIndex, Integer pageSize) throws TongYongYWException, YuanChengException;
 }

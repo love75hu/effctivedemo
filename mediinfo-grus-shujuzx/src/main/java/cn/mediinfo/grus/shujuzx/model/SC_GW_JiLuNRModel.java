@@ -9,7 +9,7 @@ import lombok.Data;
 /*** 共享文档记录内容*/
 @Data
 @Entity
-@Table(name="SC_GW_JiLuNRModel")
+@Table(name="SC_GW_JiLuNR")
 public class SC_GW_JiLuNRModel extends StringMTEntity {
     /**
      * 租户ID
@@ -50,7 +50,7 @@ public class SC_GW_JiLuNRModel extends StringMTEntity {
      * 内容
      */
     @Column(columnDefinition = "内容")
-    private String NeiRong;
+    private String neiRong;
     /**
      * 压缩方式代码
      */

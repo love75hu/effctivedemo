@@ -44,7 +44,7 @@ public class SC_GW_JiLuNRDto {
      * 内容
      */
     @Column(columnDefinition = "内容")
-    private String NeiRong;
+    private String neiRong;
     /**
      * 压缩方式代码
      */

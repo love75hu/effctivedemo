@@ -1,38 +1,13 @@
-package cn.mediinfo.grus.shujuzx.model;
+package cn.mediinfo.grus.shujuzx.dto.wendangjls;
 
-import cn.mediinfo.cyan.msf.tenant.orm.entity.StringMTEntity;
+import cn.mediinfo.grus.shujuzx.dto.wendangnrs.SC_GW_JiLuNRDto;
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 import lombok.Data;
 
 import java.util.Date;
 
-/*** 共享文档记录信息*/
 @Data
-@Entity
-@Table(name="SC_GW_JiLuXX")
-public class SC_GW_JiLuXXModel extends StringMTEntity {
-    /**
-     * 租户ID
-     */
-    @Column(columnDefinition = "租户ID")
-    private String zuHuID;
-    /**
-     * 租户名称
-     */
-    @Column(columnDefinition = "租户名称")
-    private String zuHuMC;
-    /**
-     * 组织机构ID
-     */
-    @Column(columnDefinition = "组织机构ID")
-    private String zuZhiJGID;
-    /**
-     * 组织机构名称
-     */
-    @Column(columnDefinition = "组织机构名称")
-    private String zuZhiJGMC;
+public class SC_GW_JiLuXXExportDto {
     /**
      * 文档ID
      */
@@ -108,4 +83,14 @@ public class SC_GW_JiLuXXModel extends StringMTEntity {
      */
     @Column(columnDefinition = "数据来源名称")
     private String shuJuLYMC;
+    /**
+     * 压缩方式代码
+     */
+    @Column(columnDefinition = "压缩方式代码")
+    private String yaSuoFSDM;
+    /**
+     * 内容
+     */
+    @Column(columnDefinition = "内容")
+    private String neiRong;
 }

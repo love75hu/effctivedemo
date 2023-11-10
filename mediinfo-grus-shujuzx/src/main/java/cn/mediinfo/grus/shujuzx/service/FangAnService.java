@@ -3,6 +3,8 @@ package cn.mediinfo.grus.shujuzx.service;
 import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
 import cn.mediinfo.grus.shujuzx.common.fangan.condition.FangAnTreeNode;
+import cn.mediinfo.grus.shujuzx.dto.bihuanlcs.BingLiXQDto;
+import cn.mediinfo.grus.shujuzx.dto.bihuanlcs.BingLiXQXXDto;
 import cn.mediinfo.grus.shujuzx.dto.fangan.FangAnByFACXLSDTO;
 import cn.mediinfo.grus.shujuzx.dto.fangan.HuanZheBLXXDTO;
 import cn.mediinfo.grus.shujuzx.dto.fangan.FangAnQueryDTO;
@@ -79,4 +81,6 @@ public interface FangAnService {
      * @throws TongYongYWException
      */
     List<HuanZheBLXXDTO> getFangAnHZXXList(String fangAnCXLSId, Integer pageIndex, Integer pageSize) throws TongYongYWException, YuanChengException;
+
+    List<BingLiXQXXDto> getBingLiXQ(BingLiXQDto bingLiXQDto) throws YuanChengException;
 }

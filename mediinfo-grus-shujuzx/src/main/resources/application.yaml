@@ -83,9 +83,10 @@ logging:
 mediinfo:
   remote:
     urls:
-      mediinfo-grus-huanzhe-query: "http://mediinfo-grus-huanzhe-query/mediinfo-grus-huanzhe-query"
+      mediinfo-grus-huanzhe-query: "http://mediinfo-grus-huanzhe-query"
       mediinfo-lyra-gongyong: "http://mediinfo-lyra-gongyong"
       mediinfo-lyra-dizuo: "http://mediinfo-lyra-dizuo"
+      mediinfo-grus-linchuang-query: "http://mediinfo-grus-linchuang-query"
   sequence:
     provider: redis
   string-generator:

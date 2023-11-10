@@ -13,6 +13,9 @@ import cn.mediinfo.grus.shujuzx.common.fangan.condition.FangAnCondition;
 import cn.mediinfo.grus.shujuzx.common.fangan.condition.FangAnTreeNode;
 import cn.mediinfo.grus.shujuzx.common.fangan.condition.RelatedFangAnQueryCondition;
 import cn.mediinfo.grus.shujuzx.common.fangan.condition.RelatedFieldCondition;
+import cn.mediinfo.grus.shujuzx.dto.bihuanlcs.BingLiXQDto;
+import cn.mediinfo.grus.shujuzx.dto.bihuanlcs.BingLiXQXXDto;
+import cn.mediinfo.grus.shujuzx.dto.bihuanlcs.JiuluTextDto;
 import cn.mediinfo.grus.shujuzx.dto.fangan.*;
 import cn.mediinfo.grus.shujuzx.dto.fangancxls.FangAnCXLSDTO;
 import cn.mediinfo.grus.shujuzx.dto.fangannr.FangAnSqlDTO;
@@ -26,7 +29,12 @@ import cn.mediinfo.grus.shujuzx.enums.NodeTypeEnum;
 import cn.mediinfo.grus.shujuzx.enums.ShuJuZLXDMEnum;
 import cn.mediinfo.grus.shujuzx.manager.FangAnManager;
 import cn.mediinfo.grus.shujuzx.remotedto.GongYong.ShuJuXXMSRso;
+import cn.mediinfo.grus.shujuzx.remotedto.JiuZhenXXs.JiuZhenIDYWLXIDRso;
+import cn.mediinfo.grus.shujuzx.remotedto.JiuZhenXXs.ZhuYuanMZJZXXRso;
+import cn.mediinfo.grus.shujuzx.remotedto.linchuang.JiuluTextRso;
 import cn.mediinfo.grus.shujuzx.remoteservice.GongYongRemoteService;
+import cn.mediinfo.grus.shujuzx.remoteservice.JiuZhenRemoteService;
+import cn.mediinfo.grus.shujuzx.remoteservice.LinChuangRemoteService;
 import cn.mediinfo.grus.shujuzx.request.fangan.FangAnSC;
 import cn.mediinfo.grus.shujuzx.request.fangan.FangAnXXSaveRequest;
 import cn.mediinfo.grus.shujuzx.request.fangan.FangAnXXUpdateRequest;
@@ -73,6 +81,12 @@ public class FangAnServiceImpl implements FangAnService {
     private GongYongRemoteService gongYongRemoteService;
     @Autowired
     private ChaXunFAXXService chaXunFAXXService;
+
+    @Autowired
+    private JiuZhenRemoteService jiuZhenRemoteService;
+
+    @Autowired
+    private LinChuangRemoteService linChuangRemoteService;
 
     /**
      * 保存方案
@@ -336,6 +350,7 @@ public class FangAnServiceImpl implements FangAnService {
             return item;
         }).toList();
     }
+
 
     private void subFangAn(List<FangAnCondition> conditionList) {
         List<RelatedFangAnQueryCondition> list = ListUtil.toList();
@@ -862,5 +877,33 @@ public class FangAnServiceImpl implements FangAnService {
         }
         builder.append(")");
         return builder.toString();
+    }
+
+
+    @Override
+    public List<BingLiXQXXDto> getBingLiXQ(BingLiXQDto bingLiXQDto) throws YuanChengException {
+        List<BingLiXQXXDto> bingLiXQXXDtoList = new ArrayList<>();
+
+        //获取就诊信息
+        List<ZhuYuanMZJZXXRso> jiuZhenXX = jiuZhenRemoteService.getZuYuanMZJZXX(
+                BeanUtil.copyListProperties(bingLiXQDto.getBingLiJQXQList(), JiuZhenIDYWLXIDRso::new)).getData("获取住院门诊就诊信息失败");
+
+        //获取
+        List<JiuluTextRso>  jiuluTextRsos=linChuangRemoteService.getZuYuanMZJZXX(bingLiXQDto).getData("获取病历text信息失败");
+
+        jiuZhenXX.forEach(j->{
+            BingLiXQXXDto bingLiXQXXDto=new BingLiXQXXDto();
+            bingLiXQXXDto.setKeShiID(j.getJiuZhenKSID());
+            bingLiXQXXDto.setKeShiMC(j.getJiuZhenKSMC());
+            bingLiXQXXDto.setJiuZhenJS(j.getJiuZhenJS());
+            bingLiXQXXDto.setZhuZhiJGMC(j.getZuZhiJGMC());
+            bingLiXQXXDto.setZhuZhiJGID(j.getZuZhiJGID());
+
+            List<JiuluTextRso> jiluTest = jiuluTextRsos.stream().filter(n -> n.getJiuZhenID().equals(j.getId()) && n.getJiuZhenYWLX().equals(j.getJiuZhenYWLX())).toList();
+            bingLiXQXXDto.setJiuluTextDtoList(BeanUtil.copyToList(jiluTest, JiuluTextDto.class));
+            bingLiXQXXDtoList.add(bingLiXQXXDto);
+        });
+        return bingLiXQXXDtoList;
+
     }
 }

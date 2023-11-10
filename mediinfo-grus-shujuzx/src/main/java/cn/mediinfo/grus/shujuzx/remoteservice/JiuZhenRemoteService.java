@@ -3,8 +3,11 @@ package cn.mediinfo.grus.shujuzx.remoteservice;
 import cn.mediinfo.cyan.msf.core.response.MsfResponse;
 import cn.mediinfo.grus.shujuzx.remotedto.JiuZhenXXs.BinRenJZCSTJDto;
 import cn.mediinfo.grus.shujuzx.remotedto.JiuZhenXXs.JZ_LC_JiuZhenSLRso;
+import cn.mediinfo.grus.shujuzx.remotedto.JiuZhenXXs.JiuZhenIDYWLXIDRso;
+import cn.mediinfo.grus.shujuzx.remotedto.JiuZhenXXs.ZhuYuanMZJZXXRso;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.SpringQueryMap;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -26,6 +29,16 @@ public interface JiuZhenRemoteService {
      */
     @PostMapping("/api/v1.0/JiuZhen/BinRenJZCSTJ")
     MsfResponse<List<BinRenJZCSTJDto>> BinRenJZCSTJ(@RequestParam Integer shouCiZX, @RequestParam Integer zhiXingSJ);
+
+    /**
+     * 获取就诊信息
+     */
+    @GetMapping("/api/v1.0/JiuZhen/getZuYuanMZJZXX")
+    MsfResponse<List<ZhuYuanMZJZXXRso>> getZuYuanMZJZXX(@SpringQueryMap List<JiuZhenIDYWLXIDRso> jiuZhenIDYWLXIDS);
+
+
+
+
 
 
 }

@@ -1,7 +1,10 @@
 package cn.mediinfo.grus.shujuzx.controller;
 
 import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
+import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
 import cn.mediinfo.cyan.msf.core.response.MsfResponse;
+import cn.mediinfo.grus.shujuzx.dto.bihuanlcs.BingLiXQDto;
+import cn.mediinfo.grus.shujuzx.dto.bihuanlcs.BingLiXQXXDto;
 import cn.mediinfo.grus.shujuzx.dto.fangan.FangAnByFACXLSDTO;
 import cn.mediinfo.grus.shujuzx.dto.result.BingLiXQDTO;
 import cn.mediinfo.grus.shujuzx.dto.result.BingRenJBXXDTO;
@@ -44,11 +47,11 @@ public class FangAnResultController {
         return MsfResponse.success();
     }
 
-    @Operation(summary = "查询病历详情")
-    @PostMapping("/bl/listBingLiXQ")
-    public MsfResponse<List<BingLiXQDTO>> listBingLiXQ(@RequestBody @Validated BingLiXXQRequest request) {
-        return MsfResponse.success();
-    }
+//    @Operation(summary = "查询病历详情")
+//    @PostMapping("/bl/listBingLiXQ")
+//    public MsfResponse<List<BingLiXQDTO>> listBingLiXQ(@RequestBody @Validated BingLiXXQRequest request) {
+//        return MsfResponse.success();
+//    }
 
     @Operation(summary = "查询历史方案")
     @GetMapping("/getFangAnCXLS")
@@ -66,6 +69,11 @@ public class FangAnResultController {
     @GetMapping("/countQueryResult")
     public MsfResponse<Long> countQueryResult(@NotBlank(message="方案查询历史id不能为空") @RequestParam String fangAnCXLSId, @RequestParam(required = false) Integer mergeType) throws TongYongYWException {
         return MsfResponse.success(fangAnService.getFangAnJGCount(fangAnCXLSId,mergeType));
+    }
+    @Operation(summary = "查询病历详情")
+    @PostMapping("getBingLiXQ")
+    public MsfResponse<List<BingLiXQXXDto>> getBingLiXQ(@RequestBody BingLiXQDto bingLiXQDto) throws YuanChengException {
+        return MsfResponse.success(fangAnService.getBingLiXQ(bingLiXQDto));
     }
 }
 

@@ -85,13 +85,13 @@ public class WenDangPZController {
         //Xml字符串清空换行符
         String XmlStr = Dto.getMuBanNR().replaceAll("\\r|\\n", "");
         //XML字符串转Document类型
-        Document document = parseXMLString(XmlStr);
+        Document document = StrToDoc(XmlStr);
         //判断是否转成功
         if (document == null) {
             return MsfResponse.fail(XiTongResponseCode.CANSHUYC, "xml格式错误！");
         }
         //XML转实体
-        List<XML_JieDian> jieDianList = traverseNodes(document.getDocumentElement());
+        List<XML_JieDian> jieDianList = XmlToDto(document.getDocumentElement());
         //定义返回类型
         SC_ZD_WenDangMBXMLDto xmlDto = new SC_ZD_WenDangMBXMLDto();
         xmlDto.setId(Dto.getId());
@@ -100,9 +100,25 @@ public class WenDangPZController {
     }
 
     /**
+     * 根据文档ID获取模板内容
+     */
+    @Operation(summary = "修改模板内容（文档配置编辑提交）")
+    @PostMapping("UpDateWenDangMBXX")
+    public MsfResponse<Boolean> UpDateWenDangMBXX(@RequestBody SC_ZD_WenDangMBXMLDto Dto) throws TongYongYWException {
+        if (!StringUtils.hasText(Dto.getId())) {
+            return MsfResponse.fail(XiTongResponseCode.CANSHUYC, "主键ID不可为空！");
+        }
+        String xmlStr = DtoToXml(Dto.getXmlText());
+        if (!StringUtils.hasText(xmlStr)) {
+            return MsfResponse.fail(XiTongResponseCode.CANSHUYC, "模板内容格式错误！");
+        }
+        return MsfResponse.success(wenDangPZService.UpDateWenDangMBXX(Dto.getId(), xmlStr));
+    }
+
+    /**
      * XML字符串转Document
      */
-    public static Document parseXMLString(String xmlString) {
+    public static Document StrToDoc(String xmlString) {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newDefaultInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
@@ -115,7 +131,7 @@ public class WenDangPZController {
     /**
      * XML转换成实体类
      */
-    public static List<XML_JieDian> traverseNodes(Node node) {
+    public static List<XML_JieDian> XmlToDto(Node node) {
         List<XML_JieDian> Temp = new ArrayList<>();
         if (node.getNodeType() == Node.ELEMENT_NODE) {
             //转类型
@@ -125,7 +141,6 @@ public class WenDangPZController {
             //创建接收节点类
             XML_JieDian jieDian = new XML_JieDian();
             //节点名称赋值
-            String Name = element.getNodeName();
             jieDian.setJieDianName(element.getNodeName());
             //创建节点属性集合类
             List<XML_JieDianSX> jieDianList = new ArrayList<>();
@@ -142,7 +157,6 @@ public class WenDangPZController {
             //获取节点文本
             if (element.hasChildNodes()) {
                 NodeList children = element.getChildNodes();
-                Integer iii = children.getLength();
                 for (int i = 0; i < children.getLength(); i++) {
                     Node child = children.item(i);
                     if (child.getNodeType() == Node.TEXT_NODE) {
@@ -157,12 +171,49 @@ public class WenDangPZController {
             NodeList childNodes = element.getChildNodes();
             List<XML_JieDian> tempJieDian = new ArrayList<>();
             for (int i = 0; i < childNodes.getLength(); i++) {
-                List<XML_JieDian> JieDianTemp = traverseNodes(childNodes.item(i));
+                List<XML_JieDian> JieDianTemp = XmlToDto(childNodes.item(i));
                 tempJieDian.addAll(JieDianTemp);
             }
             jieDian.setJieDianList(tempJieDian);
             Temp.add(jieDian);
         }
         return Temp;
+    }
+
+    /**
+     * 实体类转换成XML字符串
+     */
+    public static String DtoToXml(List<XML_JieDian> Dto) {
+        if (Dto == null) {
+            return "";
+        }
+        StringBuilder XmlStr = new StringBuilder();
+        for (XML_JieDian x : Dto) {
+            if (StringUtils.hasText(x.getJieDianName())) {
+                XmlStr.append(String.format("<%s", x.getJieDianName()));
+            }
+            if (!x.getJieDianSXList().isEmpty()) {
+                for (XML_JieDianSX y : x.getJieDianSXList()) {
+                    XmlStr.append(String.format(" %s=\"%s\"", y.getName(), y.getValue()));
+                }
+            }
+            if (!x.getJieDianList().isEmpty() || StringUtils.hasText(x.getText())) {
+                XmlStr.append(">");
+            } else {
+                XmlStr.append(" />");
+            }
+            if (StringUtils.hasText(x.getText())) {
+                XmlStr.append(x.getText());
+            }
+            if (!x.getJieDianList().isEmpty()) {
+                String Temp = DtoToXml(x.getJieDianList());
+                XmlStr.append(Temp);
+            }
+            if (!x.getJieDianList().isEmpty() || StringUtils.hasText(x.getText())) {
+                XmlStr.append(String.format("</%s>", x.getJieDianName()));
+            }
+
+        }
+        return XmlStr.toString();
     }
 }

@@ -8,7 +8,6 @@ import cn.mediinfo.grus.shujuzx.dto.wenDang.SC_ZD_WenDangDto;
 import cn.mediinfo.grus.shujuzx.dto.wenDang.SC_ZD_WenDangGreaterDto;
 import cn.mediinfo.grus.shujuzx.dto.wenDang.SC_ZD_WenDangMBDto;
 import cn.mediinfo.grus.shujuzx.dto.wenDang.SC_ZD_WenDangUpDateDto;
-import cn.mediinfo.grus.shujuzx.model.QSC_ZD_WenDangMBModel;
 import cn.mediinfo.grus.shujuzx.model.QSC_ZD_WenDangModel;
 import cn.mediinfo.grus.shujuzx.model.SC_ZD_WenDangMBModel;
 import cn.mediinfo.grus.shujuzx.model.SC_ZD_WenDangModel;
@@ -17,7 +16,6 @@ import cn.mediinfo.grus.shujuzx.repository.SC_ZD_WenDangRepository;
 import cn.mediinfo.grus.shujuzx.service.WenDangPZService;
 import cn.mediinfo.lyra.extension.service.LyraIdentityService;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import jakarta.persistence.EntityManager;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -25,28 +23,18 @@ import org.springframework.util.StringUtils;
 import java.util.Collections;
 import java.util.List;
 
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.DocumentBuilder;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Node;
-
 @Service
 public class WenDangPZServiceImpl implements WenDangPZService {
 
     private final LyraIdentityService lyraIdentityService;
     private final SC_ZD_WenDangRepository sc_zd_wenDangRepository;
     private final SC_ZD_WenDangMBRepository sc_zd_wenDangMBRepository;
-    private final EntityManager entityManager;
-
 
     public WenDangPZServiceImpl(LyraIdentityService lyraIdentityService,
-                                SC_ZD_WenDangRepository sc_zd_wenDangRepository, SC_ZD_WenDangMBRepository sc_zd_wenDangMBRepository, EntityManager entityManager) {
+                                SC_ZD_WenDangRepository sc_zd_wenDangRepository, SC_ZD_WenDangMBRepository sc_zd_wenDangMBRepository) {
         this.lyraIdentityService = lyraIdentityService;
         this.sc_zd_wenDangRepository = sc_zd_wenDangRepository;
         this.sc_zd_wenDangMBRepository = sc_zd_wenDangMBRepository;
-        this.entityManager = entityManager;
     }
 
     /**
@@ -72,13 +60,12 @@ public class WenDangPZServiceImpl implements WenDangPZService {
     @Override
     public long getWenDangPZCount(String leiBieDM, String likeQuery) {
         QSC_ZD_WenDangModel sjModel = QSC_ZD_WenDangModel.sC_ZD_WenDangModel;
-        var Count = new JPAQueryFactory(sc_zd_wenDangRepository.getEntityManager())
+        return new JPAQueryFactory(sc_zd_wenDangRepository.getEntityManager())
                 .select(sjModel)
                 .from(sjModel)
                 .where(QueryDSLUtils.whereIf(StringUtils.hasText(leiBieDM), () -> sjModel.leiBieDM.eq(leiBieDM)))
                 .where(QueryDSLUtils.whereIf(StringUtils.hasText(likeQuery), () -> sjModel.wenDangID.contains(likeQuery).or(sjModel.wenDangMC.contains(likeQuery))))
                 .fetch().size();
-        return Count;
     }
 
     /**
@@ -127,8 +114,6 @@ public class WenDangPZServiceImpl implements WenDangPZService {
         MapUtils.mergeProperties(wenDangUpDateDto, wenDangPZ, true);
         sc_zd_wenDangRepository.save(wenDangPZ);
 
-        QSC_ZD_WenDangMBModel Model = QSC_ZD_WenDangMBModel.sC_ZD_WenDangMBModel;
-
         var wenDangPZMB = sc_zd_wenDangMBRepository.asQuerydsl().where(s -> s.wenDangID.eq(wenDangPZ.getWenDangID())).select(SC_ZD_WenDangMBModel.class).fetchFirst();
 
         MapUtils.mergeProperties(wenDangUpDateDto, wenDangPZMB, true);
@@ -146,5 +131,19 @@ public class WenDangPZServiceImpl implements WenDangPZService {
             throw new TongYongYWException("查无此数据！");
         }
         return wenDangPZMB;
+    }
+
+    /**
+     * 修改模板内容（文档配置编辑提交）
+     */
+    @Override
+    public Boolean UpDateWenDangMBXX(String id, String xmlStr) throws TongYongYWException {
+        var wenDangMB = sc_zd_wenDangMBRepository.findById(id).orElseGet(() -> null);
+        if (wenDangMB == null) {
+            throw new TongYongYWException("查无此数据！");
+        }
+        wenDangMB.setMuBanNR(xmlStr);
+        sc_zd_wenDangMBRepository.save(wenDangMB);
+        return true;
     }
 }

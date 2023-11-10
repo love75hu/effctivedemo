@@ -1,7 +1,10 @@
 package cn.mediinfo.grus.shujuzx.service.impl;
 
 import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
+import cn.mediinfo.cyan.msf.core.util.BeanUtil;
 import cn.mediinfo.cyan.msf.core.util.CollectionUtil;
+import cn.mediinfo.cyan.msf.core.util.MapUtils;
+import cn.mediinfo.grus.shujuzx.dto.bihuansz.BiHuanZZJGDto;
 import cn.mediinfo.grus.shujuzx.dto.shitumx.*;
 import cn.mediinfo.grus.shujuzx.model.SC_CX_ShiTuMXModel;
 import cn.mediinfo.grus.shujuzx.model.SC_CX_ShiTuXXModel;
@@ -60,7 +63,7 @@ public class LinChuangJSSCXXZServiceImpl implements LinChuangJSSCXXZService {
             //存在则添加公共入参
             if (!list.isEmpty()){
                 //存在相同数据来源ID则合并去重
-                var cunZaiDto = lingChuangJSPZDtos.stream().filter(t->t.getShuJuLYID().equals(e.getShuJuLYID())).findFirst().orElse(null);
+                var cunZaiDto = lingChuangJSPZDtos.stream().filter(t->t.getShuJuLYID().equals(e.getShuJuLYID()) && t.getShuJuLYLXDM().equals(e.getShuJuLYLXDM())).findFirst().orElse(null);
                 if (cunZaiDto != null){
                     var cunZaiZDMX = cunZaiDto.getShuJuJMXZDDtos();
                     var quanBuZDMX = Stream.concat(cunZaiZDMX.stream(),list.stream()).toList();
@@ -83,7 +86,7 @@ public class LinChuangJSSCXXZServiceImpl implements LinChuangJSSCXXZService {
         }
         List<ShiTuMXZHCXDto> resultlist = new ArrayList<>();
         for (SC_CX_ShiTuXXModel e :shiTuXXList) {
-            var cunZaiJSPZ = lingChuangJSPZZDList.stream().filter(t->t.getShuJuLYID().equals(e.getShuJuLYID())).findFirst().orElse(null);
+            var cunZaiJSPZ = lingChuangJSPZZDList.stream().filter(t->t.getShuJuLYID().equals(e.getShuJuLYID()) && t.getShuJuLYLXDM().equals(e.getShuJuLYLXDM())).findFirst().orElse(null);
             if(cunZaiJSPZ != null){
                 var cunZaiZDBM = shiTuMXList.stream().filter(t-> Objects.equals(t.getShiTuID(),e.getShiTuID())).map(SC_CX_ShiTuMXModel::getZiDuanBM).toList();
                 List<ShiTuZDMXDto> gongGongZDMX = cunZaiJSPZ.getShiTuMXZDDtos().stream().filter(t->cunZaiZDBM.contains(t.getZiDuanBM())).toList();
@@ -92,13 +95,14 @@ public class LinChuangJSSCXXZServiceImpl implements LinChuangJSSCXXZService {
                         zdmxDto.setShiTuID(e.getShiTuID());
                         zdmxDto.setShiTuMC(e.getShiTuMC());
                     }
+                    var copyGongGongZDMX = BeanUtil.copyListProperties(gongGongZDMX.stream().toList(), ShiTuZDMXDto::new);
                     var cunZaiDto = resultlist.stream().filter(t->t.getFuLeiID().equals(e.getFuLeiID())).findFirst().orElse(null);
                     //存在则合并
                     if(cunZaiDto == null){
                         ShiTuMXZHCXDto shiTuMXZHCXDto = new ShiTuMXZHCXDto();
                         shiTuMXZHCXDto.setFuLeiID(e.getFuLeiID());
                         shiTuMXZHCXDto.setFuLeiMC(e.getFuLeiMC());
-                        shiTuMXZHCXDto.setZiDuanList(gongGongZDMX);
+                        shiTuMXZHCXDto.setZiDuanList(copyGongGongZDMX);
                         resultlist.add(shiTuMXZHCXDto);
                     }else {
                         var cunZaiZDMX = cunZaiDto.getZiDuanList();

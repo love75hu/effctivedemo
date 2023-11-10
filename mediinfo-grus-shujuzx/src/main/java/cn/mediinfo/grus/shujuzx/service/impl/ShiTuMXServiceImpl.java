@@ -10,6 +10,9 @@ import cn.mediinfo.grus.shujuzx.constant.ShuJuZXConstant;
 import cn.mediinfo.grus.shujuzx.dto.shitumx.*;
 import cn.mediinfo.grus.shujuzx.dto.zonghecx.*;
 import cn.mediinfo.grus.shujuzx.model.SC_CX_ShiTuMXModel;
+import cn.mediinfo.grus.shujuzx.po.shituxx.ShiTuXXPo;
+import cn.mediinfo.grus.shujuzx.po.zhibiaoxx.ZhiBiaoFLPo;
+import cn.mediinfo.grus.shujuzx.remotedto.GongYong.LingChuangJSPZZDXXRso;
 import cn.mediinfo.grus.shujuzx.remoteservice.GongYongRemoteService;
 import cn.mediinfo.grus.shujuzx.repository.SC_CX_ShiTuMXRepository;
 import cn.mediinfo.grus.shujuzx.repository.SC_CX_ShiTuXXRepository;
@@ -21,8 +24,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 临床检索视图明细服务
@@ -242,9 +247,52 @@ public class ShiTuMXServiceImpl implements ShiTuMXService {
      */
     @Override
     public List<SchemaTable> getFangAnSCZD(List<ShuJuSTDto> shuJuSTDto) throws WeiZhaoDSJException {
-
-
-        return null;
+        var shiTUIDXX = shuJuSTDto.stream().map(ShuJuSTDto::getShiTuID);
+        Set<String> shiTuIds = shiTUIDXX.collect(java.util.stream.Collectors.toSet());
+        var shiTuXXList = shiTuXXRepository.findByShiTuIDIn(shiTuIds);//视图信息
+        var shiTuMXZDList  =  shiTuMXRepository.getShiTuMXSJ(shiTUIDXX.toList(),null,null);//视图明细信息
+        //公共接口入参组装
+        List<LingChuangJSPZDto> lingChuangJSPZDtos = new ArrayList<>();
+        //视图信息分组 数据来源ID 数据来源类型DM
+        var shiTuXXSet = shiTuXXList.stream().collect(Collectors.groupingBy(s -> new ShiTuXXPo(s.getShuJuLYID(),s.getShuJuLYLXDM()))).keySet();
+        for (var key : shiTuXXSet) {
+            LingChuangJSPZDto lingChuangJSPZDto = new LingChuangJSPZDto();
+            lingChuangJSPZDto.setShuJuLYID(key.ShuJuLYID());
+            lingChuangJSPZDto.setShuJuLYLXDM(key.ShuJuLYLXDM());
+            var ids = shiTuXXList.stream().filter(t-> Objects.equals(t.getShuJuLYID(), key.ShuJuLYID()) && Objects.equals(t.getShuJuLYLXDM(), key.ShuJuLYLXDM())).map(SC_CX_ShiTuXXByShiTuIDDto::getShiTuID).toList();
+            List<ShuJuJMXZDDto>  list = shiTuMXZDList.stream().filter(t->ids.contains(t.getShiTuID())).map(t -> {
+                ShuJuJMXZDDto shuJuJMXZDDto = new ShuJuJMXZDDto();
+                shuJuJMXZDDto.setZiDuanBM(t.getZiDuanBM());
+                shuJuJMXZDDto.setZiDuanMC(t.getZiDuanMC());
+                return shuJuJMXZDDto;
+            }).toList();
+            lingChuangJSPZDto.setShuJuJMXZDDtos(list);
+        }
+        //获取公共接口数据
+        List<LingChuangJSPZZDXXRso> lingChuangJSPZZDList = gongYongRemoteService.getlingChuangJSPZZDXX(lingChuangJSPZDtos).getData();
+        List<SchemaTable> result = new ArrayList<>();
+        for (LingChuangJSPZZDXXRso pz : lingChuangJSPZZDList) {
+            for (ShiTuZDMXDto zd : pz.getShiTuMXZDDtos()) {
+                var cunZai = result.stream().filter(t-> Objects.equals(t.getMoShi(), pz.getShuJuLYID()) && Objects.equals(t.getBiaoMing(), zd.getBiaoMing())).findFirst().orElse(null);;
+                ShuJuJMXZDDto shuJuJMXZDDto = new ShuJuJMXZDDto();
+                shuJuJMXZDDto.setMoShi(pz.getShuJuLYID());
+                shuJuJMXZDDto.setZiDuanBM(zd.getZiDuanBM());
+                shuJuJMXZDDto.setZiDuanMC(zd.getZiDuanMC());
+                if(cunZai == null){
+                    SchemaTable schema = new SchemaTable();
+                    List<ShuJuJMXZDDto> dto = new ArrayList<>();
+                    dto.add(shuJuJMXZDDto);
+                    schema.setMoShi(pz.getShuJuLYID());
+                    schema.setBiaoMing(zd.getBiaoMing());
+                    schema.setShuJuJMXZDDtos(dto);
+                    result.add(schema);
+                }else{
+                    var cunZaiZDMX = cunZai.getShuJuJMXZDDtos();
+                    cunZaiZDMX.add(shuJuJMXZDDto);
+                }
+            }
+        }
+        return result;
     }
 
 

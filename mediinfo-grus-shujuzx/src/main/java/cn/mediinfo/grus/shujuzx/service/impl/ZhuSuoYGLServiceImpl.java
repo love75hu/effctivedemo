@@ -1,6 +1,7 @@
 package cn.mediinfo.grus.shujuzx.service.impl;
 
 import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
+import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
 import cn.mediinfo.cyan.msf.core.util.DateUtil;
 import cn.mediinfo.cyan.msf.core.util.MapUtils;
 import cn.mediinfo.cyan.msf.core.util.StringUtil;
@@ -16,6 +17,7 @@ import cn.mediinfo.grus.shujuzx.dto.yinsigzszs.SC_ZD_YinSiPZOutDto;
 import cn.mediinfo.grus.shujuzx.model.*;
 import cn.mediinfo.grus.shujuzx.po.RecordJiBenXXAndHeBingJL;
 import cn.mediinfo.grus.shujuzx.po.RecordJiBenXXAndHeBingJLModel;
+import cn.mediinfo.grus.shujuzx.remoteservice.JiuZhenRemoteService;
 import cn.mediinfo.grus.shujuzx.repository.*;
 import cn.mediinfo.grus.shujuzx.service.YinSiGZSZService;
 import cn.mediinfo.grus.shujuzx.service.ZhuSuoYCZRZService;
@@ -52,7 +54,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
     public final BR_DA_KuoZhanXXRepository brDaKuoZhanXXRepository;
     public final BR_ZD_HeBingGZRepository brZdHeBingGZRepository;
     public final BR_ZD_HeBingGZMXRepository brZdHeBingGZMXRepository;
-
+    public final JiuZhenRemoteService jiuZhenRemoteService;
     private final BR_DA_ZhuSuoYCZRZRepository zhuSuoYCZRZRepository;
     public final YinSiGZSZService yinSiGZSZService;
     public final ZhuSuoYCZRZService zhuSuoYCZRZService;
@@ -62,7 +64,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
 
 
 
-    public ZhuSuoYGLServiceImpl(BR_DA_XiangSiSYRepository brDaXiangSiSYRepository, BR_DA_JiaoChaSYRepository brDaJiaoChaSYRepository, BR_DA_JiBenXXRepository brDaJiBenXXRepository, BR_DA_HeBingJLRepository brDaHeBingJLRepository, BR_DA_JieZhiXXRepository brDaJieZhiXXRepository, BR_DA_KuoZhanXXRepository brDaKuoZhanXXRepository, BR_ZD_HeBingGZRepository brZdHeBingGZRepository, BR_ZD_HeBingGZMXRepository brZdHeBingGZMXRepository, YinSiGZSZService yinSiGZSZService, ZhuSuoYCZRZService zhuSuoYCZRZService, LyraIdentityService lyraIdentityService, BR_DA_ZhuSuoYCZRZRepository zhuSuoYCZRZRepository, SpringCache springCache) {
+    public ZhuSuoYGLServiceImpl(BR_DA_XiangSiSYRepository brDaXiangSiSYRepository, BR_DA_JiaoChaSYRepository brDaJiaoChaSYRepository, BR_DA_JiBenXXRepository brDaJiBenXXRepository, BR_DA_HeBingJLRepository brDaHeBingJLRepository, BR_DA_JieZhiXXRepository brDaJieZhiXXRepository, BR_DA_KuoZhanXXRepository brDaKuoZhanXXRepository, BR_ZD_HeBingGZRepository brZdHeBingGZRepository, BR_ZD_HeBingGZMXRepository brZdHeBingGZMXRepository, JiuZhenRemoteService jiuZhenRemoteService, YinSiGZSZService yinSiGZSZService, ZhuSuoYCZRZService zhuSuoYCZRZService, LyraIdentityService lyraIdentityService, BR_DA_ZhuSuoYCZRZRepository zhuSuoYCZRZRepository, SpringCache springCache) {
         this.brDaXiangSiSYRepository = brDaXiangSiSYRepository;
         this.brDaJiaoChaSYRepository = brDaJiaoChaSYRepository;
         this.brDaJiBenXXRepository = brDaJiBenXXRepository;
@@ -71,6 +73,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
         this.brDaKuoZhanXXRepository = brDaKuoZhanXXRepository;
         this.brZdHeBingGZRepository = brZdHeBingGZRepository;
         this.brZdHeBingGZMXRepository = brZdHeBingGZMXRepository;
+        this.jiuZhenRemoteService = jiuZhenRemoteService;
         this.yinSiGZSZService = yinSiGZSZService;
         this.zhuSuoYCZRZService = zhuSuoYCZRZService;
         this.lyraIdentityService = lyraIdentityService;
@@ -139,26 +142,18 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
      * @throws TongYongYWException 通用异常
      */
     @Override
-    public ZhuSuoYXQDto getZhuSuoYXQ(String bingRenID, String chaXunMSDM) throws TongYongYWException, ParseException, NoSuchFieldException, IllegalAccessException {
+    public ZhuSuoYXQDto getZhuSuoYXQ(String bingRenID, String chaXunMSDM) throws TongYongYWException, ParseException, NoSuchFieldException, IllegalAccessException, YuanChengException {
         if (!StringUtil.hasText(chaXunMSDM)) {
             chaXunMSDM = "1";
         }
-        var bingRenXX = brDaJiBenXXRepository.findById(bingRenID).orElse(null);
-        if (bingRenXX == null) {
-            throw new TongYongYWException("未找到相关病人信息");
-        }
+        var zhuSuoYBRXQ = jiuZhenRemoteService.GetBingRenJBXXByBRID(bingRenID).getData("未找到相关信息");
+
         List<SC_ZD_YinSiPZOutDto> yinSiGZPZ = yinSiGZSZService.getYinSiGZPZList(chaXunMSDM, lyraIdentityService.getJiGouID());
-        //获取交叉索引信息列表
-        var jiaoChaModels = brDaJiaoChaSYRepository.findByZhuBingRID(bingRenID);
-        var xiangSiBRIDList = jiaoChaModels.stream().map(BR_DA_JiaoChaSYModel::getGuanLianBRID).toList();
-        var xiangSiBRList = MapUtils.copyListProperties(brDaJiBenXXRepository.findAllById(xiangSiBRIDList), BR_DA_JiBenXXByZSYXQDto::new);
-        //介质信息列表
-        var jieZhiXXModels = brDaJieZhiXXRepository.findByBingRenIDOrBingRenIDIn(bingRenID, xiangSiBRIDList);
-        List<JieZhiXXDto> jieZhiXXList = MapUtils.copyListProperties(jieZhiXXModels, JieZhiXXDto::new);
+
         var result = new ZhuSuoYXQDto();
         result.setBingRenXXList(new ArrayList<>());
-        result.getBingRenXXList().add(MapUtils.copyProperties(bingRenXX, BR_DA_JiBenXXByZSYXQDto::new));
-        result.getBingRenXXList().addAll(xiangSiBRList);
+        result.getBingRenXXList().add(MapUtils.copyProperties(zhuSuoYBRXQ.getBingRenXX(), BR_DA_JiBenXXByZSYXQDto::new));
+        result.getBingRenXXList().addAll(zhuSuoYBRXQ.getXiangSiBRList());
         for (var item : result.getBingRenXXList()) {
             if (item.getJianDangSJ() == null) {
                 item.setJianDangSJ(item.getChuangJianSJ());
@@ -168,12 +163,12 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
                 MapUtils.mergeProperties(ExpressionUtils.getYinShiSJ(item, yinSiGZPZ), item, true);
             }
         }
-        for (var jieZhi : jieZhiXXList) {
+        for (var jieZhi : zhuSuoYBRXQ.getJieZhiXXList()) {
             if (!StringUtil.hasText(jieZhi.getDiSanFBRID())) {
                 jieZhi.setDiSanFBRID(jieZhi.getBingRenID());
             }
         }
-        result.setGuanLianYXXList(jieZhiXXList);
+        result.setGuanLianYXXList(zhuSuoYBRXQ.getJieZhiXXList());
         return result;
     }
 

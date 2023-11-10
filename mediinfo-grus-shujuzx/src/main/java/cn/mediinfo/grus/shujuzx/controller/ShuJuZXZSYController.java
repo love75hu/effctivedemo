@@ -1,6 +1,7 @@
 package cn.mediinfo.grus.shujuzx.controller;
 
 import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
+import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
 import cn.mediinfo.cyan.msf.core.response.MsfResponse;
 import cn.mediinfo.cyan.msf.core.response.XiTongResponseCode;
 import cn.mediinfo.grus.shujuzx.constant.ZhuSuoYCZLXEnum;
@@ -264,7 +265,7 @@ public class ShuJuZXZSYController {
      */
     @Operation(summary = "获取主索引详情")
     @GetMapping("GetZhuSuoYXQ")
-    public MsfResponse<ZhuSuoYXQDto> getZhuSuoYXQ(String bingRenID,String chaXunMSDM) throws TongYongYWException, ParseException, NoSuchFieldException, IllegalAccessException {
+    public MsfResponse<ZhuSuoYXQDto> getZhuSuoYXQ(String bingRenID,String chaXunMSDM) throws TongYongYWException, ParseException, NoSuchFieldException, IllegalAccessException, YuanChengException {
         var data = zhuSuoYGLService.getZhuSuoYXQ(bingRenID,chaXunMSDM);
         return MsfResponse.success(data);
     }

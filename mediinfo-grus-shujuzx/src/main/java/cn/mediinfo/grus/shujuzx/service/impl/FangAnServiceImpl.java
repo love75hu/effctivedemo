@@ -19,6 +19,8 @@ import cn.mediinfo.grus.shujuzx.dto.bihuanlcs.JiuluTextDto;
 import cn.mediinfo.grus.shujuzx.dto.fangan.*;
 import cn.mediinfo.grus.shujuzx.dto.fangancxls.FangAnCXLSDTO;
 import cn.mediinfo.grus.shujuzx.dto.fangannr.FangAnSqlDTO;
+import cn.mediinfo.grus.shujuzx.dto.result.BingRenJBXXDTO;
+import cn.mediinfo.grus.shujuzx.dto.result.JiuZhenXXDTO;
 import cn.mediinfo.grus.shujuzx.dto.result.QueryResultDTO;
 import cn.mediinfo.grus.shujuzx.dto.shitumx.FieldDTO;
 import cn.mediinfo.grus.shujuzx.dto.shitumx.SchemaTable;
@@ -28,6 +30,7 @@ import cn.mediinfo.grus.shujuzx.enums.FangAnOperator;
 import cn.mediinfo.grus.shujuzx.enums.NodeTypeEnum;
 import cn.mediinfo.grus.shujuzx.enums.ShuJuZLXDMEnum;
 import cn.mediinfo.grus.shujuzx.manager.FangAnManager;
+import cn.mediinfo.grus.shujuzx.model.SC_ZD_BiHuanLCModel;
 import cn.mediinfo.grus.shujuzx.remotedto.GongYong.ShuJuXXMSRso;
 import cn.mediinfo.grus.shujuzx.remotedto.JiuZhenXXs.JiuZhenIDYWLXIDRso;
 import cn.mediinfo.grus.shujuzx.remotedto.JiuZhenXXs.ZhuYuanMZJZXXRso;
@@ -176,7 +179,7 @@ public class FangAnServiceImpl implements FangAnService {
         if (StringUtils.isBlank(fangAnLXDM)) {
             return "";
         }
-        if(Objects.isNull(root) && CollUtil.isEmpty(fangAnSCList)) {
+        if (Objects.isNull(root) && CollUtil.isEmpty(fangAnSCList)) {
             return "";
         }
         List<FangAnCondition> conditionList = ListUtil.toList();
@@ -190,10 +193,10 @@ public class FangAnServiceImpl implements FangAnService {
         tableList = (CollUtil.isEmpty(tableList)) ? ListUtil.toList() : tableList;
 
         //基础表信息
-        List<ShuJuXXMSRso> jiChuBiaoXXList = gongYongRemoteService.getShuJXXMS(ListUtil.toList("JZ_MZ_JIUZHENXX", "JZ_ZY_JIUZHENXX","BL_MZ_BINGLIJLTEXT","BL_WS_JILUTEXT")).getData("获取基础信息表模式信息失败");
+        List<ShuJuXXMSRso> jiChuBiaoXXList = gongYongRemoteService.getShuJXXMS(ListUtil.toList("JZ_MZ_JIUZHENXX", "JZ_ZY_JIUZHENXX", "BL_MZ_BINGLIJLTEXT", "BL_WS_JILUTEXT")).getData("获取基础信息表模式信息失败");
 
         //生成别名 key schema.table value alias
-        Map<String, Tuple.Tuple4<String, String, Boolean, Boolean>> aliasMap = getAliasMap(tableList, fangAnLXDM,jiChuBiaoXXList);
+        Map<String, Tuple.Tuple4<String, String, Boolean, Boolean>> aliasMap = getAliasMap(tableList, fangAnLXDM, jiChuBiaoXXList);
         //拼接表关系
         String table = getTable(aliasMap);
         //拼接表关联关系
@@ -252,6 +255,7 @@ public class FangAnServiceImpl implements FangAnService {
 
     /**
      * 获取结果列表总数
+     *
      * @param fangAnCXLSId
      * @param mergeType
      * @return
@@ -264,21 +268,21 @@ public class FangAnServiceImpl implements FangAnService {
             throw new TongYongYWException("查询方案历史不存在");
         }
         String guanJianZD = "bingrenid";
-        if (Objects.equals(mergeType,1)) {
+        if (Objects.equals(mergeType, 1)) {
             guanJianZD = "zuzhijgid,jiuzhenid";
         }
         String sql = MessageFormat.format("select count(1) from (select {0} from ({1}) tt group by {0}) tt1", guanJianZD, fangAnCXLS.getChaXunSQL());
         return jdbcTemplate.queryForObject(sql, Long.class);
     }
 
-    public List<List<QueryResultDTO>> getFangAnJGList(String fangAnCXLSId, Integer mergeType, Integer pageIndex,  Integer pageSize) throws TongYongYWException {
+    public List<List<QueryResultDTO>> getFangAnJGList(String fangAnCXLSId, Integer mergeType, Integer pageIndex, Integer pageSize) throws TongYongYWException {
         FangAnCXLSDTO fangAnCXLS = chaXunFAXXService.getFangAnCXLSByID(fangAnCXLSId);
         if (ObjectUtils.isEmpty(fangAnCXLS)) {
             throw new TongYongYWException("查询方案历史不存在");
         }
         //根据合并方式分页获取关键字段
         String guanJianZD = "bingrenid";
-        if (Objects.equals(mergeType,1)) {
+        if (Objects.equals(mergeType, 1)) {
             guanJianZD = "zuzhijgid,jiuzhenid";
         }
         String guanJianZDSql = MessageFormat.format("select {0} from ({1}) tt group by {0} order by {0} limit {2} offset {3}", guanJianZD, fangAnCXLS.getChaXunSQL(), pageSize, pageSize * (pageIndex - 1));
@@ -291,6 +295,7 @@ public class FangAnServiceImpl implements FangAnService {
 
     /**
      * 获取方案患者信息
+     *
      * @param fangAnCXLSId
      * @param pageIndex
      * @param pageSize
@@ -298,7 +303,7 @@ public class FangAnServiceImpl implements FangAnService {
      * @throws TongYongYWException
      */
     @Override
-    public List<HuanZheBLXXDTO> getFangAnHZXXList(String fangAnCXLSId, Integer pageIndex, Integer pageSize) throws TongYongYWException, YuanChengException {
+    public List<BingRenJBXXDTO> getBinRenJBXXList(String fangAnCXLSId, Integer pageIndex, Integer pageSize) throws TongYongYWException, YuanChengException {
         FangAnCXLSDTO fangAnCXLS = chaXunFAXXService.getFangAnCXLSByID(fangAnCXLSId);
         if (ObjectUtils.isEmpty(fangAnCXLS)) {
             throw new TongYongYWException("查询方案历史不存在");
@@ -309,48 +314,68 @@ public class FangAnServiceImpl implements FangAnService {
         if (pageSize > 1000) {
             throw new TongYongYWException("每页条数不能超过1000");
         }
-        //表信息
-        List<ShuJuXXMSRso> biaoXinXiList = gongYongRemoteService.getShuJXXMS(ListUtil.toList("SC_LC_BINGRENYLSJ", "BL_MZ_BINGLIJLTEXT", "BL_WS_JILUTEXT")).getData("获取基础信息表模式信息失败");
-        //组合病历查询sql
-        StringBuilder builder = new StringBuilder();
-        builder.append(MessageFormat.format("select a.bingrenid,a.xingming,a.xingbiedm,a.xingbiemc,a.chushengrq,a.menzhencs,a.zhuyuancs,b.jiuzhenid,b.jiuzhenywlx,b.zuzhijgid,b.zuzhijgmc,b.binglijlid from {0} a inner join (select bingrenid,binglijlid,jiuzhenid,''1'' as jiuzhenywlx,zuzhijgid,zuzhijgmc,jilunr from {1} union select bingrenid,binglijlid,zhuyuanjzid as jiuzhenid,''3'' as jiuzhenywlx,zuzhijgid,zuzhijgmc,jilunr from {2}) b on a.bingrenid=b.bingrenid where ", formatBiaoMingByBXX("SC_LC_BINGRENYLSJ", biaoXinXiList), formatBiaoMingByBXX("BL_MZ_BINGLIJLTEXT", biaoXinXiList), formatBiaoMingByBXX("BL_WS_JILUTEXT", biaoXinXiList)));
-        if (StringUtils.isBlank(fangAnCXLS.getChaXunSQL())) {
-            builder.append(" b.jilunr like '%").append(fangAnCXLS.getGuanJianZi()).append("%'");
-        } else {
-            builder.append(MessageFormat.format(" exists(select 1 from ({0}) ll0 where ll0.bingrenid=a.bingrenid)", fangAnCXLS.getChaXunSQL()));
-        }
+
+        String bingLiCXJCSql = getBingRenJBXXSQL(fangAnCXLS.getChaXunSQL(), fangAnCXLS.getGuanJianZi());
+
         //根据合并方式分页获取关键字段
         String guanJianZD = "bingrenid";
-        String guanJianZDSql = MessageFormat.format("select {0} from ({1}) tt group by {0} order by {0} limit {2} offset {3}", guanJianZD, builder.toString(), pageSize, pageSize * (pageIndex - 1));
+        String guanJianZDSql = MessageFormat.format("select {0} from ({1}) tt group by {0} order by {0} limit {2} offset {3}", guanJianZD, bingLiCXJCSql, pageSize, pageSize * (pageIndex - 1));
         List<String> bingRenIDList = jdbcTemplate.query(guanJianZDSql, BeanPropertyRowMapper.newInstance(String.class));
         //获取病历查询结果
-        String bingLiCXSql = MessageFormat.format(" {0} and a.bingrenid in (''{1}'') order by a.bingrenid", builder.toString(), CollUtil.join(bingRenIDList, "','"));
+        String bingLiCXSql = MessageFormat.format(" {0} and a.bingrenid in (''{1}'') order by a.bingrenid", bingLiCXJCSql, CollUtil.join(bingRenIDList, "','"));
 
         List<BingLiSCDTO> bingLiSCList = jdbcTemplate.query(bingLiCXSql, BeanPropertyRowMapper.newInstance(BingLiSCDTO.class));
 
         return bingLiSCList.stream().collect(Collectors.groupingBy(p -> ListUtil.toList(p.getBingRenID(), p.getXingMing(), p.getXingBieDM(), p.getXingBieMC(), p.getChuShengRQ(), p.getMenZhenCS(), p.getZhuYuanCS()))).entrySet().stream().map(p -> {
-            HuanZheBLXXDTO item = new HuanZheBLXXDTO();
-            item.setBingRenID((String) p.getKey().get(0));
-            item.setXingMing((String) p.getKey().get(1));
-            item.setXingBieDM((String) p.getKey().get(2));
-            item.setXingBieMC((String) p.getKey().get(3));
+            BingRenJBXXDTO item = new BingRenJBXXDTO();
+            item.setBingRenID(String.valueOf(p.getKey().get(0)));
+            item.setXingMing(String.valueOf(p.getKey().get(1)));
+            item.setXingBieDM(String.valueOf(p.getKey().get(2)));
+            item.setXingBieMC(String.valueOf(p.getKey().get(3)));
             item.setChuShengRQ((Date) p.getKey().get(4));
-            item.setMenZhenCS((Integer) p.getKey().get(5));
-            item.setZhuYuanCS((Integer) p.getKey().get(6));
-            List<JiuZhenBLXXDTO> jiuZhenXXList = p.getValue().stream().collect(Collectors.groupingBy(q -> ListUtil.toList(q.getJiuZhenID(), q.getJiuZhenYWLX(), q.getZuZhiJGID(), q.getZuZhiJGMC()))).entrySet().stream().map(q -> {
-                JiuZhenBLXXDTO jiuZhenBLXX = new JiuZhenBLXXDTO();
-                jiuZhenBLXX.setJiuZhenID((String) p.getKey().get(0));
-                jiuZhenBLXX.setJiuZhenYWLX((String) p.getKey().get(1));
-                jiuZhenBLXX.setZuZhiJGID((String) p.getKey().get(2));
-                jiuZhenBLXX.setZuZhiJGMC((String) p.getKey().get(3));
+            item.setMzJiuZhenNum((Integer) p.getKey().get(5));
+            item.setZhuYuanNum((Integer) p.getKey().get(6));
+            List<JiuZhenXXDTO> jiuZhenXXList = p.getValue().stream().collect(Collectors.groupingBy(q -> ListUtil.toList(q.getJiuZhenYWID(), q.getJiuZhenYWLXDM(), q.getZuZhiJGID(), q.getZuZhiJGMC(), q.getJiuZhenRQ(), q.getJiuZhenKSID(), q.getJiuZhenKSMC()))).entrySet().stream().map(q -> {
+                JiuZhenXXDTO jiuZhenBLXX = new JiuZhenXXDTO();
+                jiuZhenBLXX.setJiuZhenYWID(String.valueOf(q.getKey().get(0)));
+                jiuZhenBLXX.setJiuZhenYWLXDM(String.valueOf(q.getKey().get(1)));
+                jiuZhenBLXX.setZuZhiJGID(String.valueOf(q.getKey().get(2)));
+                jiuZhenBLXX.setZuZhiJGMC(String.valueOf(q.getKey().get(3)));
+                jiuZhenBLXX.setJiuZhenRQ((Date) q.getKey().get(4));
+                jiuZhenBLXX.setJiuZhenKSID(String.valueOf(q.getKey().get(5)));
+                jiuZhenBLXX.setJiuZhenKSMC(String.valueOf(q.getKey().get(6)));
                 jiuZhenBLXX.setBingLiList(q.getValue().stream().map(BingLiSCDTO::getBingLiJLID).toList());
                 return jiuZhenBLXX;
-            }).toList();
-            item.setJiuZhenList(jiuZhenXXList);
+            }).sorted(Comparator.comparing(JiuZhenXXDTO::getJiuZhenRQ, Comparator.nullsLast(Date::compareTo))).toList();
+            item.setJiuZhenXXList(jiuZhenXXList);
             return item;
         }).toList();
     }
 
+    /**
+     * 获取方案患者信息数量
+     *
+     * @param fangAnCXLSId
+     * @return
+     * @throws TongYongYWException
+     * @throws YuanChengException
+     */
+    public Long getBinRenJBXXCount(String fangAnCXLSId) throws TongYongYWException, YuanChengException {
+        FangAnCXLSDTO fangAnCXLS = chaXunFAXXService.getFangAnCXLSByID(fangAnCXLSId);
+        if (ObjectUtils.isEmpty(fangAnCXLS)) {
+            throw new TongYongYWException("查询方案历史不存在");
+        }
+        if (StringUtils.isBlank(fangAnCXLS.getGuanJianZi())) {
+            return null;
+        }
+
+        String bingLiCXJCSql = getBingRenJBXXSQL(fangAnCXLS.getChaXunSQL(), fangAnCXLS.getGuanJianZi());
+
+        //根据合并方式分页获取关键字段
+        String guanJianZD = "bingrenid";
+        String guanJianZDSql = MessageFormat.format("select count(1) from (select {0} from ({1}) tt group by {0}) lll0 ", guanJianZD, bingLiCXJCSql);
+        return jdbcTemplate.queryForObject(guanJianZDSql, Long.class);
+    }
 
     private void subFangAn(List<FangAnCondition> conditionList) {
         List<RelatedFangAnQueryCondition> list = ListUtil.toList();
@@ -532,12 +557,12 @@ public class FangAnServiceImpl implements FangAnService {
     /**
      * 获取表别名
      *
-     * @param tableList  表
-     * @param fangAnLXDM 方案类型代码
+     * @param tableList       表
+     * @param fangAnLXDM      方案类型代码
      * @param jiChuBiaoXXList 基础表信息
      * @return Map
      */
-    private Map<String, Tuple.Tuple4<String, String, Boolean, Boolean>> getAliasMap(List<TableDTO> tableList, String fangAnLXDM,List<ShuJuXXMSRso> jiChuBiaoXXList) throws YuanChengException {
+    private Map<String, Tuple.Tuple4<String, String, Boolean, Boolean>> getAliasMap(List<TableDTO> tableList, String fangAnLXDM, List<ShuJuXXMSRso> jiChuBiaoXXList) throws YuanChengException {
         //Tuple4中T1：别名，T2: 表关联，T3:是否外连表，T4:是否基础表,LinkedHashMap有序,CaseInsensitiveMap不区分大小写
         Map<String, Tuple.Tuple4<String, String, Boolean, Boolean>> aliasMap = new LinkedHashMap<>();
         //基础表
@@ -592,10 +617,10 @@ public class FangAnServiceImpl implements FangAnService {
     /**
      * 拼接表关联关系
      *
-     * @param tableList  表
-     * @param aliasMap   表别名
-     * @param fangAnLXDM 方案类型代码
-     * @param guanJianZi 关键字
+     * @param tableList       表
+     * @param aliasMap        表别名
+     * @param fangAnLXDM      方案类型代码
+     * @param guanJianZi      关键字
      * @param jiChuBiaoXXList 基础表信息
      * @return 表关系sql
      */
@@ -643,12 +668,12 @@ public class FangAnServiceImpl implements FangAnService {
             });
         });
 
-        if(StringUtils.isBlank(guanJianZi)){
+        if (StringUtils.isBlank(guanJianZi)) {
             return CharSequenceUtil.replaceLast(builder.toString(), " AND ", " ");
         }
 
         //关键字查询条件
-        builder.append(MessageFormat.format("exists(select 1 from (select bingrenid,binglijlid,jiuzhenid,''1'' as jiuzhenywlx,jilunr from {0} union select bingrenid,binglijlid,zhuyuanjzid as jiuzhenid,''3'' as jiuzhenywlx,jilunr from {1}) ll0 where ll0.jilunr like ''%{2}%'' and {3}.bingrenid=ll0.bingrenid)",formatBiaoMingByBXX("BL_MZ_BINGLIJLTEXT",jiChuBiaoXXList),formatBiaoMingByBXX("BL_WS_JILUTEXT",jiChuBiaoXXList),guanJianZi,jiChuTable.item1()));
+        builder.append(MessageFormat.format("exists(select 1 from (select bingrenid,binglijlid,jiuzhenid,''1'' as jiuzhenywlx,jilunr from {0} union select bingrenid,binglijlid,zhuyuanjzid as jiuzhenid,''3'' as jiuzhenywlx,jilunr from {1}) ll0 where ll0.jilunr like ''%{2}%'' and {3}.bingrenid=ll0.bingrenid)", formatBiaoMingByBXX("BL_MZ_BINGLIJLTEXT", jiChuBiaoXXList), formatBiaoMingByBXX("BL_WS_JILUTEXT", jiChuBiaoXXList), guanJianZi, jiChuTable.item1()));
         builder.append(" AND ");
 
         return CharSequenceUtil.replaceLast(builder.toString(), " AND ", " ");
@@ -725,20 +750,20 @@ public class FangAnServiceImpl implements FangAnService {
         List<String> fields = ListUtil.toList();
         //增加基础表默认输出字段
         Tuple.Tuple4<String, String, Boolean, Boolean> jiChuTable = aliasMap.values().stream().filter(Tuple.Tuple4::item4).findFirst().orElse(null);
-        String jiuZhenYWLX="'' as jiuzhenywlx";
+        String jiuZhenYWLX = "'' as jiuzhenywlx";
         switch (fangAnLXDM) {
             case "1": //门诊
-                jiuZhenYWLX="'1' as jiuzhenywlx";
+                jiuZhenYWLX = "'1' as jiuzhenywlx";
                 break;
             case "3": //住院
-                jiuZhenYWLX="'3' as jiuzhenywlx";
+                jiuZhenYWLX = "'3' as jiuzhenywlx";
                 break;
             default:
                 break;
         }
         if (!Objects.isNull(jiChuTable)) {
             fields.add(jiChuTable.item1() + ".id as jiuzhenid");
-            if(StringUtil.hasText(jiuZhenYWLX)){
+            if (StringUtil.hasText(jiuZhenYWLX)) {
                 fields.add(jiuZhenYWLX);
             }
             fields.add(jiChuTable.item1() + ".zuzhijgid");
@@ -816,12 +841,13 @@ public class FangAnServiceImpl implements FangAnService {
 
     /**
      * 根据表信息拼接表
+     *
      * @param biaoMing
      * @param biaoXinXiList
      * @return
      */
-    private String formatBiaoMingByBXX(String biaoMing,List<ShuJuXXMSRso> biaoXinXiList) {
-        String moShi=biaoXinXiList.stream().filter(p -> p.getBiaoMing().equals(biaoMing.toUpperCase())).findFirst().orElse(new ShuJuXXMSRso()).getShuJuYMC();
+    private String formatBiaoMingByBXX(String biaoMing, List<ShuJuXXMSRso> biaoXinXiList) {
+        String moShi = biaoXinXiList.stream().filter(p -> p.getBiaoMing().equals(biaoMing.toUpperCase())).findFirst().orElse(new ShuJuXXMSRso()).getShuJuYMC();
         StringBuilder builder = new StringBuilder();
         if (StringUtils.isNotBlank(moShi)) {
             builder.append(moShi + ".");
@@ -879,6 +905,27 @@ public class FangAnServiceImpl implements FangAnService {
         return builder.toString();
     }
 
+    /**
+     * 获取病历查询SQL
+     *
+     * @param chaXunSQL
+     * @param guanJianZi
+     * @return
+     * @throws YuanChengException
+     */
+    private String getBingRenJBXXSQL(String chaXunSQL, String guanJianZi) throws YuanChengException {
+        //表信息
+        List<ShuJuXXMSRso> biaoXinXiList = gongYongRemoteService.getShuJXXMS(ListUtil.toList("SC_LC_BINGRENYLSJ", "BL_MZ_BINGLIJLTEXT", "BL_WS_JILUTEXT", "JZ_MZ_JIUZHENXX", "JZ_ZY_JIUZHENXX")).getData("获取基础信息表模式信息失败");
+        //组合病历查询sql
+        StringBuilder builder = new StringBuilder();
+        builder.append(MessageFormat.format("select a.bingrenid,a.xingming,a.xingbiedm,a.xingbiemc,a.chushengrq,a.menzhencs,a.zhuyuancs,b.jiuzhenywid,b.jiuzhenywlxdm,b.zuzhijgid,b.zuzhijgmc,b.jiuzhenrq,b.jiuzhenksid,b.jiuzhenksmc,b.binglijlid from {0} a inner join (select c1.bingrenid,c1.binglijlid,c1.jiuzhenid as jiuzhenywid,''1'' as jiuzhenywlxdm,c1.zuzhijgid,c1.zuzhijgmc,c1.jilunr,c2.jiuzhenrq,c2.jiuzhenksid,c2.jiuzhenksmc from {1} c1 inner join {3} c2 on c1.zuzhijgid =c2.zuzhijgid and c1.jiuzhenid=c2.id union select c3.bingrenid,c3.binglijlid,c3.zhuyuanjzid as jiuzhenywid,''3'' as jiuzhenywlxdm,c3.zuzhijgid,c3.zuzhijgmc,c3.jilunr,c4.ruyuansj as jiuzhenrq,c4.dangqianksid as jiuzhenksid,c4.dangqianksmc as jiuzhenksmc from {2} c3 inner join {4} c4 on c3.zuzhijgid =c3.zuzhijgid and c3.zhuyuanjzid =c4.id) b on a.bingrenid=b.bingrenid where ", formatBiaoMingByBXX("SC_LC_BINGRENYLSJ", biaoXinXiList), formatBiaoMingByBXX("BL_MZ_BINGLIJLTEXT", biaoXinXiList), formatBiaoMingByBXX("BL_WS_JILUTEXT", biaoXinXiList), formatBiaoMingByBXX("JZ_MZ_JIUZHENXX", biaoXinXiList), formatBiaoMingByBXX("JZ_ZY_JIUZHENXX", biaoXinXiList)));
+        if (StringUtils.isBlank(chaXunSQL)) {
+            builder.append(" b.jilunr like '%").append(guanJianZi).append("%'");
+        } else {
+            builder.append(MessageFormat.format(" exists(select 1 from ({0}) ll0 where ll0.bingrenid=a.bingrenid)", chaXunSQL));
+        }
+        return builder.toString();
+    }
 
     @Override
     public List<BingLiXQXXDto> getBingLiXQ(BingLiXQDto bingLiXQDto) throws YuanChengException {

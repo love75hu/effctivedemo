@@ -27,13 +27,19 @@ public class BingLiSCDTO {
     @Schema(description = "住院次数")
     private Integer zhuYuanCS;
     @Schema(description = "就诊ID")
-    private String jiuZhenID;
+    private String jiuZhenYWID;
     @Schema(description = "就诊业务类型")
-    private String jiuZhenYWLX;
+    private String jiuZhenYWLXDM;
     @Schema(description = "组织机构ID")
     private String zuZhiJGID;
     @Schema(description = "组织机构名称")
     private String zuZhiJGMC;
+    @Schema(description = "就诊日期")
+    private Date jiuZhenRQ;
+    @Schema(description = "就诊科室ID")
+    private String jiuZhenKSID;
+    @Schema(description = "就诊科室名称")
+    private String jiuZhenKSMC;
     @Schema(description = "病历记录ID")
     private String bingLiJLID;
 }

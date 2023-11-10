@@ -10,8 +10,6 @@ import cn.mediinfo.grus.shujuzx.dto.result.BingLiXQDTO;
 import cn.mediinfo.grus.shujuzx.dto.result.BingRenJBXXDTO;
 import cn.mediinfo.grus.shujuzx.dto.result.QueryResultDTO;
 import cn.mediinfo.grus.shujuzx.request.result.BingLiXXQRequest;
-import cn.mediinfo.grus.shujuzx.request.result.BingLiXXQueryCountRequest;
-import cn.mediinfo.grus.shujuzx.request.result.BingLiXXQueryPageRequest;
 import cn.mediinfo.grus.shujuzx.service.FangAnService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -36,15 +34,15 @@ public class FangAnResultController {
 
     @Operation(summary = "病历查询")
     @GetMapping("/bl/list")
-    public MsfResponse<List<BingRenJBXXDTO>> listBLXX(@Validated BingLiXXQueryPageRequest request) {
-        return MsfResponse.success();
+    public MsfResponse<List<BingRenJBXXDTO>> listBLXX(@NotBlank(message="方案查询历史id不能为空") @RequestParam String fangAnCXLSId, @RequestParam(required = false,defaultValue = "1") Integer pageIndex,  @RequestParam(required = false,defaultValue = "10") Integer pageSize) throws TongYongYWException, YuanChengException {
+        return MsfResponse.success(fangAnService.getBinRenJBXXList(fangAnCXLSId,pageIndex,pageSize));
     }
 
 
     @Operation(summary = "病历查询总数")
     @GetMapping("/bl/count")
-    public MsfResponse<Long> countBLXX(@RequestBody @Validated BingLiXXQueryCountRequest request) {
-        return MsfResponse.success();
+    public MsfResponse<Long> countBLXX(@NotBlank(message="方案查询历史id不能为空") @RequestParam String fangAnCXLSId) throws TongYongYWException, YuanChengException {
+        return MsfResponse.success(fangAnService.getBinRenJBXXCount(fangAnCXLSId));
     }
 
 //    @Operation(summary = "查询病历详情")

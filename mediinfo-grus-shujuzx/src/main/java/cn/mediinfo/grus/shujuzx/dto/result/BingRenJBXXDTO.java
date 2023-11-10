@@ -14,8 +14,8 @@ import java.util.List;
 @Schema(description = "病人基本信息")
 public class BingRenJBXXDTO {
 
-    @Schema(description = "id")
-    private String id;
+    @Schema(description = "病人ID")
+    private String bingRenID;
 
     @Schema(description = "姓名")
     private String xingMing;
@@ -28,7 +28,6 @@ public class BingRenJBXXDTO {
 
     @Schema(description = "出生日期")
     private Date chuShengRQ;
-
 
     @Schema(description = "门诊就诊次数")
     private Integer mzJiuZhenNum;

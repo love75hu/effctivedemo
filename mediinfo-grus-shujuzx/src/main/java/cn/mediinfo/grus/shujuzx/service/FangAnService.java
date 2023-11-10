@@ -6,8 +6,8 @@ import cn.mediinfo.grus.shujuzx.common.fangan.condition.FangAnTreeNode;
 import cn.mediinfo.grus.shujuzx.dto.bihuanlcs.BingLiXQDto;
 import cn.mediinfo.grus.shujuzx.dto.bihuanlcs.BingLiXQXXDto;
 import cn.mediinfo.grus.shujuzx.dto.fangan.FangAnByFACXLSDTO;
-import cn.mediinfo.grus.shujuzx.dto.fangan.HuanZheBLXXDTO;
 import cn.mediinfo.grus.shujuzx.dto.fangan.FangAnQueryDTO;
+import cn.mediinfo.grus.shujuzx.dto.result.BingRenJBXXDTO;
 import cn.mediinfo.grus.shujuzx.request.fangan.FangAnSC;
 import cn.mediinfo.grus.shujuzx.request.fangan.FangAnXXSaveRequest;
 import cn.mediinfo.grus.shujuzx.request.fangan.FangAnXXUpdateRequest;
@@ -74,13 +74,22 @@ public interface FangAnService {
 
     /**
      * 获取方案患者信息
+     *
      * @param fangAnCXLSId
      * @param pageIndex
      * @param pageSize
      * @return
      * @throws TongYongYWException
      */
-    List<HuanZheBLXXDTO> getFangAnHZXXList(String fangAnCXLSId, Integer pageIndex, Integer pageSize) throws TongYongYWException, YuanChengException;
+    List<BingRenJBXXDTO> getBinRenJBXXList(String fangAnCXLSId, Integer pageIndex, Integer pageSize) throws TongYongYWException, YuanChengException;
+
+    /**
+     * 获取方案患者信息数量
+     * @param fangAnCXLSId
+     * @return
+     * @throws TongYongYWException
+     */
+    Long getBinRenJBXXCount(String fangAnCXLSId) throws TongYongYWException, YuanChengException;
 
     List<BingLiXQXXDto> getBingLiXQ(BingLiXQDto bingLiXQDto) throws YuanChengException;
 }

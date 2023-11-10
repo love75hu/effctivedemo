@@ -22,10 +22,7 @@ import cn.mediinfo.lyra.extension.service.impl.LyraIdentityServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -247,10 +244,10 @@ public class ShiTuMXServiceImpl implements ShiTuMXService {
      */
     @Override
     public List<SchemaTable> getFangAnSCZD(List<ShuJuSTDto> shuJuSTDto) throws WeiZhaoDSJException {
-        var shiTUIDXX = shuJuSTDto.stream().map(ShuJuSTDto::getShiTuID);
-        Set<String> shiTuIds = shiTUIDXX.collect(java.util.stream.Collectors.toSet());
+        var shiTUIDXX = shuJuSTDto.stream().map(ShuJuSTDto::getShiTuID).collect(Collectors.toList());
+        Set<String> shiTuIds = new HashSet<>(shiTUIDXX);
         var shiTuXXList = shiTuXXRepository.findByShiTuIDIn(shiTuIds);//视图信息
-        var shiTuMXZDList  =  shiTuMXRepository.getShiTuMXSJ(shiTUIDXX.toList(),null,null);//视图明细信息
+        var shiTuMXZDList  =  shiTuMXRepository.getShiTuMXSJ(shiTUIDXX,null,null);//视图明细信息
         //公共接口入参组装
         List<LingChuangJSPZDto> lingChuangJSPZDtos = new ArrayList<>();
         //视图信息分组 数据来源ID 数据来源类型DM

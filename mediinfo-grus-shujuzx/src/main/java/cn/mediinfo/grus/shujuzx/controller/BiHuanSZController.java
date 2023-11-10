@@ -92,9 +92,9 @@ public class BiHuanSZController {
 
     @Operation(summary = "闭环设置复制")
     @PostMapping("biHuanSZFZ")
-    public MsfResponse<String> biHuanSZFZ(@RequestParam  String biHuanID,@RequestParam String zuZhiJGID,@RequestParam String zuZhiJGMC)
+    public MsfResponse<String> biHuanSZFZ(@RequestBody  @Validated BiHuanSZFZDto biHuanSZFZDto)
     {
-        return MsfResponse.success(jiBenXXService.biHuanSZFZ(biHuanID,zuZhiJGID,zuZhiJGMC));
+        return MsfResponse.success(jiBenXXService.biHuanSZFZ(biHuanSZFZDto.getBiHuanID(),biHuanSZFZDto.getZuZhiJGID(),biHuanSZFZDto.getZuZhiJGMC()));
     }
     @Operation(summary = "闭环设置删除")
     @DeleteMapping("biHuanSZSC")

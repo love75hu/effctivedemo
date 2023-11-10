@@ -38,6 +38,10 @@ public class RuCanXXServiceImpl implements RuCanXXService {
     {
         return  ruCanXXRepository.asQuerydsl().where(s -> s.biHuanID.eq(biHuanID)).select(RuCanXXDto.class).fetch();
     }
+    public List<SC_BH_RuCanXXModel> getRuCanXX(String biHuanID)
+    {
+        return ruCanXXRepository.asQuerydsl().where(n->n.biHuanID.eq(biHuanID)).fetch();
+    }
 
 
     /**
@@ -56,4 +60,10 @@ public class RuCanXXServiceImpl implements RuCanXXService {
         }));
         return true;
     }
+    public Boolean addFuZhiRCXX(List<SC_BH_RuCanXXModel> canXXModels)
+    {
+     ruCanXXRepository.insertAll(canXXModels);
+     return true;
+    }
+
 }

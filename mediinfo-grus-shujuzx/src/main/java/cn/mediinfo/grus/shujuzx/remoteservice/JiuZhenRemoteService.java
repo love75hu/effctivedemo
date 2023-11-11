@@ -1,10 +1,7 @@
 package cn.mediinfo.grus.shujuzx.remoteservice;
 
 import cn.mediinfo.cyan.msf.core.response.MsfResponse;
-import cn.mediinfo.grus.shujuzx.remotedto.JiuZhenXXs.BinRenJZCSTJDto;
-import cn.mediinfo.grus.shujuzx.remotedto.JiuZhenXXs.JZ_LC_JiuZhenSLRso;
-import cn.mediinfo.grus.shujuzx.remotedto.JiuZhenXXs.JiuZhenIDYWLXIDRso;
-import cn.mediinfo.grus.shujuzx.remotedto.JiuZhenXXs.ZhuYuanMZJZXXRso;
+import cn.mediinfo.grus.shujuzx.remotedto.JiuZhenXXs.*;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,9 +33,9 @@ public interface JiuZhenRemoteService {
     @GetMapping("/api/v1.0/JiuZhen/getZuYuanMZJZXX")
     MsfResponse<List<ZhuYuanMZJZXXRso>> getZuYuanMZJZXX(@SpringQueryMap List<JiuZhenIDYWLXIDRso> jiuZhenIDYWLXIDS);
 
-
-
-
-
-
+    /**
+     * 获取病人基本信息for主索引详情
+     */
+    @GetMapping("/api/v1.0/JiuZhen/GetBingRenJBXXByBRID")
+    MsfResponse<BingRenZSYXXRso> GetBingRenJBXXByBRID(@SpringQueryMap String bingRenID);
 }

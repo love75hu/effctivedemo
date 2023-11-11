@@ -1,6 +1,7 @@
 package cn.mediinfo.grus.shujuzx.service;
 
 import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
+import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
 import cn.mediinfo.grus.shujuzx.dto.shujuzxzsys.*;
 
 import java.text.ParseException;
@@ -20,7 +21,7 @@ public interface ZhuSuoYGLService {
      * @return
      * @throws TongYongYWException 通用异常
      */
-    ZhuSuoYXQDto getZhuSuoYXQ(String bingRenID, String chaXunMSDM) throws TongYongYWException, ParseException, NoSuchFieldException, IllegalAccessException;
+    ZhuSuoYXQDto getZhuSuoYXQ(String bingRenID, String chaXunMSDM) throws TongYongYWException, ParseException, NoSuchFieldException, IllegalAccessException, YuanChengException;
 
     /**
      * 获取主索引管理数量

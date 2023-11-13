@@ -146,4 +146,23 @@ public class WenDangPZServiceImpl implements WenDangPZService {
         sc_zd_wenDangMBRepository.save(wenDangMB);
         return true;
     }
+
+    /**
+     * 根据id移除单个指标
+     */
+    @Override
+    public Boolean zuoFeiWenDangPZ(String id) throws TongYongYWException {
+        var wenDangPZ = sc_zd_wenDangRepository.findById(id).orElseGet(() -> null);
+        if (wenDangPZ == null) {
+            throw new TongYongYWException("查无此数据！");
+        }
+        sc_zd_wenDangRepository.deleteById(id);
+
+        var wenDangPZMB = sc_zd_wenDangMBRepository.asQuerydsl().where(s -> s.wenDangID.eq(wenDangPZ.getWenDangID())).select(SC_ZD_WenDangMBModel.class).fetchFirst();
+        if (wenDangPZMB == null) {
+            throw new TongYongYWException("查无此数据！");
+        }
+        sc_zd_wenDangMBRepository.deleteById(wenDangPZMB.getId());
+        return true;
+    }
 }

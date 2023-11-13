@@ -7,6 +7,7 @@ import cn.mediinfo.grus.shujuzx.dto.wenDang.*;
 import cn.mediinfo.grus.shujuzx.service.WenDangPZService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
@@ -27,6 +28,7 @@ import java.util.List;
 @Validated
 public class WenDangPZController {
 
+    public static final String GET_WEN_DANG_MBXX = "GetWenDangMBXX";
     private final WenDangPZService wenDangPZService;
 
     public WenDangPZController(WenDangPZService wenDangPZService) {
@@ -68,7 +70,7 @@ public class WenDangPZController {
      */
     @Operation(summary = "编辑文档配置")
     @PostMapping("UpDateWenDangPZ")
-    public MsfResponse<Boolean> UpDateWenDangPZ(@RequestBody SC_ZD_WenDangUpDateDto wenDangUpDateDto) throws TongYongYWException {
+    public MsfResponse<Boolean> upDateWenDangPZ(@RequestBody SC_ZD_WenDangUpDateDto wenDangUpDateDto) throws TongYongYWException {
         if (!StringUtils.hasText(wenDangUpDateDto.getId()) || !StringUtils.hasText(wenDangUpDateDto.getWenDangID()) || !StringUtils.hasText(wenDangUpDateDto.getWenDangMC())) {
             return MsfResponse.fail(XiTongResponseCode.CANSHUYC, "主键ID，文档ID，文档名称不可为空！");
         }
@@ -79,19 +81,19 @@ public class WenDangPZController {
      * 根据文档ID获取模板内容
      */
     @Operation(summary = "根据文档ID获取模板内容")
-    @GetMapping("GetWenDangMBXX")
+    @GetMapping(GET_WEN_DANG_MBXX)
     public MsfResponse<SC_ZD_WenDangMBXMLDto> getWenDangMBXX(@RequestParam(required = false) String wenDangID) throws TongYongYWException {
         SC_ZD_WenDangMBDto Dto = wenDangPZService.getWenDangMBXX(wenDangID);
         //Xml字符串清空换行符
         String XmlStr = Dto.getMuBanNR().replaceAll("\\r|\\n", "");
         //XML字符串转Document类型
-        Document document = StrToDoc(XmlStr);
+        Document document = strToDoc(XmlStr);
         //判断是否转成功
         if (document == null) {
             return MsfResponse.fail(XiTongResponseCode.CANSHUYC, "xml格式错误！");
         }
         //XML转实体
-        List<XML_JieDian> jieDianList = XmlToDto(document.getDocumentElement());
+        List<XML_JieDian> jieDianList = xmlToDto(document.getDocumentElement());
         //定义返回类型
         SC_ZD_WenDangMBXMLDto xmlDto = new SC_ZD_WenDangMBXMLDto();
         xmlDto.setId(Dto.getId());
@@ -104,7 +106,7 @@ public class WenDangPZController {
      */
     @Operation(summary = "修改模板内容（文档配置编辑提交）")
     @PostMapping("UpDateWenDangMBXX")
-    public MsfResponse<Boolean> UpDateWenDangMBXX(@RequestBody SC_ZD_WenDangMBXMLDto Dto) throws TongYongYWException {
+    public MsfResponse<Boolean> upDateWenDangMBXX(@RequestBody SC_ZD_WenDangMBXMLDto Dto) throws TongYongYWException {
         if (!StringUtils.hasText(Dto.getId())) {
             return MsfResponse.fail(XiTongResponseCode.CANSHUYC, "主键ID不可为空！");
         }
@@ -118,7 +120,7 @@ public class WenDangPZController {
     /**
      * XML字符串转Document
      */
-    public static Document StrToDoc(String xmlString) {
+    public static Document strToDoc(String xmlString) {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newDefaultInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
@@ -131,7 +133,7 @@ public class WenDangPZController {
     /**
      * XML转换成实体类
      */
-    public static List<XML_JieDian> XmlToDto(Node node) {
+    public static List<XML_JieDian> xmlToDto(Node node) {
         List<XML_JieDian> Temp = new ArrayList<>();
         if (node.getNodeType() == Node.ELEMENT_NODE) {
             //转类型
@@ -171,7 +173,7 @@ public class WenDangPZController {
             NodeList childNodes = element.getChildNodes();
             List<XML_JieDian> tempJieDian = new ArrayList<>();
             for (int i = 0; i < childNodes.getLength(); i++) {
-                List<XML_JieDian> JieDianTemp = XmlToDto(childNodes.item(i));
+                List<XML_JieDian> JieDianTemp = xmlToDto(childNodes.item(i));
                 tempJieDian.addAll(JieDianTemp);
             }
             jieDian.setJieDianList(tempJieDian);
@@ -215,5 +217,14 @@ public class WenDangPZController {
 
         }
         return XmlStr.toString();
+    }
+
+    /**
+     * 根据id作废文档配置
+     */
+    @DeleteMapping("ZuoFeiWenDangPZ")
+    @Operation(summary = "根据id作废文档配置")
+    public MsfResponse<Boolean> zuoFeiWenDangPZ(@NotEmpty(message = "id不能为空") @RequestParam String id) throws TongYongYWException{
+        return MsfResponse.success(wenDangPZService.zuoFeiWenDangPZ(id));
     }
 }

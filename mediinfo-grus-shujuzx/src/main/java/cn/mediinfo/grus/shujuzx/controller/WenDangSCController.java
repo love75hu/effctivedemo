@@ -2,7 +2,7 @@ package cn.mediinfo.grus.shujuzx.controller;
 import cn.hutool.core.collection.ListUtil;
 import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 import cn.mediinfo.cyan.msf.core.response.MsfResponse;
-import cn.mediinfo.grus.shujuzx.dto.cda.dangan.DA_GA_JiBenXXDto;
+import cn.mediinfo.grus.shujuzx.dto.cda.gongwei.DA_GA_JiBenXXDto;
 import cn.mediinfo.grus.shujuzx.dto.wendangjls.SC_GW_JiLuXXCreateDto;
 import cn.mediinfo.grus.shujuzx.dto.wendangjls.SC_GW_JiLuXXSCDto;
 import cn.mediinfo.grus.shujuzx.dto.wendangnrs.SC_GW_JiLuNRDto;
@@ -20,8 +20,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -42,7 +40,6 @@ public class WenDangSCController implements  BeanFactoryAware {
     @PostMapping("shengChengWDXML")
     public MsfResponse<Long> shengChengWDXML(SC_GW_JiLuXXSCDto dto) throws JAXBException, TongYongYWException {
         String DocType="B0001";
-
         ICDADocService cdaProc = beanFactory.getBean(DocType, ICDADocService.class);
         cdaProc.GetData();
         List<SC_GW_JiLuXXCreateDto> jiLuXXCreateDtoList= ListUtil.toList();
@@ -93,7 +90,6 @@ public class WenDangSCController implements  BeanFactoryAware {
 
     private String assembleDictionaryDoc(ICDADocService cdaProc) throws JAXBException {
         if (cdaProc == null) return  "";
-        cdaProc.AssembleData();
         cdaProc.GeneDOC();
         return  cdaProc.getXml();
     }

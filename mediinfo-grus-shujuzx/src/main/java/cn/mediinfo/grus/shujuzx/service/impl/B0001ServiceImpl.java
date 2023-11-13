@@ -1,20 +1,32 @@
 package cn.mediinfo.grus.shujuzx.service.impl;
+import cn.mediinfo.cyan.msf.core.util.StringUtil;
 import cn.mediinfo.grus.shujuzx.constant.ComponentTypeConstant;
-import cn.mediinfo.grus.shujuzx.dto.cda.dangan.DA_GA_JiBenXXDto;
+import cn.mediinfo.grus.shujuzx.dto.cda.gongwei.DA_GA_BaoLuShiDto;
+import cn.mediinfo.grus.shujuzx.dto.cda.gongwei.DA_GA_GuoMinShiDto;
+import cn.mediinfo.grus.shujuzx.dto.cda.gongwei.DA_GA_JiBenXXDto;
 import cn.mediinfo.grus.shujuzx.hl7.*;
+import cn.mediinfo.grus.shujuzx.remoteservice.GongWeiRemoteService;
 import org.springframework.stereotype.Service;
 import java.math.BigInteger;
+import java.util.List;
+
 @Service("B0001")
 public  class B0001ServiceImpl extends CDADocBase  {
     public DA_GA_JiBenXXDto jiBenXXDto;
-    public  void DoGetData()
-    {
+    private final GongWeiRemoteService gongWeiRemoteService;
+    public   ObjectFactory objectFactory;
+    //过敏史
+    public List<DA_GA_GuoMinShiDto> guoMinShiList;
+    //暴露史
+    public List<DA_GA_BaoLuShiDto> baoLuShiList;
 
+    public B0001ServiceImpl(GongWeiRemoteService gongWeiRemoteService){
+        this.gongWeiRemoteService=gongWeiRemoteService;
     }
 
-    public  void DoAssembleData()
+    public  void DoGetData()
     {
-
+        jiBenXXDto= gongWeiRemoteService.getB0001Data(this.mpiList).getData();
     }
 
     public  void DoGenHead()  {
@@ -27,36 +39,44 @@ public  class B0001ServiceImpl extends CDADocBase  {
         PatientRole.getClassCode().add("PAT");
         var ii=new II();
         PatientRole.getId().add(ii);
-        ii.setExtension("");
+        ii.setExtension(jiBenXXDto.getJianKangDABH());//健康档案编号
         ii.setRoot("2.16.156.10011.1.2");
-        
+
         //家庭地址
         var ad=new AD();
         ad.getUse().add("H");
+        objectFactory.createAD();
+        AdxpHouseNumber houseNumber=new AdxpHouseNumber();
+        houseNumber.setLanguage("wwwww");
+        ad.getContent().add(houseNumber.toString());
        // ad.getUse()..add(0,"13131414");
         PatientRole.getAddr().add(ad);
-       // PatientRole.getAddr().
 
         //电话号码
         var tel=new TEL();
-        tel.setValue("");
+        tel.setValue(jiBenXXDto.getDianHuaHM());
         PatientRole.getTelecom().add(tel);
         //
         POCDMT000040Patient patient=new POCDMT000040Patient();
         patient.getClassCode().add("PSN");
         patient.setDeterminerCode("INSTANCE");
         II ii2=new II();
-        ii2.setExtension("ID420106201101011919");
+        ii2.setExtension(jiBenXXDto.getZhengJianHM());//证件号码
         ii2.setRoot("2.16.156.10011.1.3");
         patient.setId(ii2);
 
         PN pn=new PN();
-        pn.getContent().add("wy");
+        pn.getContent().add(jiBenXXDto.getXingMing());//姓名
         patient.getName().add(pn);
         //性别
         CE ce=new CE();
         ce.setCode("0");
         ce.setDisplayName("未知的性别");
+        if (!StringUtil.notHasText(jiBenXXDto.getXingBieDM())  && !StringUtil.notHasText(jiBenXXDto.getXingBieMC()))
+        {
+            ce.setCode(jiBenXXDto.getXingBieDM());
+            ce.setDisplayName(jiBenXXDto.getXingBieMC());
+        }
         ce.setCodeSystem("2.16.156.10011.2.3.3.4");
         ce.setCodeSystemName("生理性别代码表(GB/T 2261.1)");
         patient.setAdministrativeGenderCode(ce);

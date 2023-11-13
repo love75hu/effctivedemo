@@ -207,7 +207,7 @@ class JiBenXXServiceImpl implements JiBenXXService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public String biHuanSZFZ(String biHuanID, String zuZhiJGID, String zuZhiJGMC) {
-            String newBiHuanID=stringGenerator.Create();
+
         SC_BH_JiBenXXModel jiBenXXModel = jIBENXXRepository.asQuerydsl()
                 .where(n -> n.biHuanID.eq(biHuanID))
                 .where(n->n.zuZhiJGID.eq(zuZhiJGID)).fetchFirst();
@@ -216,7 +216,7 @@ class JiBenXXServiceImpl implements JiBenXXService {
         jiBenXXModel.setId(null);
         jiBenXXModel.setZuZhiJGID(zuZhiJGID);
         jiBenXXModel.setZuZhiJGMC(zuZhiJGMC);
-        jiBenXXModel.setBiHuanID(newBiHuanID);
+        jiBenXXModel.setBiHuanID(newbiHuanID);
         jiBenXXModel.setBiHuanMC(newbiHuanMc);
         jIBENXXRepository.save(jiBenXXModel);
         List<SC_BH_JieDianXXModel> jieDianXXList = jieDianXXRepository.asQuerydsl()

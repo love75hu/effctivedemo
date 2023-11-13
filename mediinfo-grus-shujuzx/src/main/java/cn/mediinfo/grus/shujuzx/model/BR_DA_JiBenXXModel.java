@@ -204,18 +204,6 @@ public class BR_DA_JiBenXXModel extends StringMTEntity {
    private String jianDangRXM;
    @Column(columnDefinition = "建档时间")
    private Date jianDangSJ;
-   @Column(columnDefinition = "合并状态代码0-无合并；1-合并后主数据；2-被合并数据")
-   private String heBingZTDM;
-   @Column(columnDefinition = "合并状态名称")
-   private String heBingZTMC;
-   @Column(columnDefinition = "最大相似度(0-100)")
-   private Integer zuiDaXSD;
-   @Column(columnDefinition = "合并数")
-   private Integer heBingShu;
-   @Column(columnDefinition = "相似数")
-   private Integer xiangSiShu;
-   @Column(columnDefinition = "第三方病人ID")
-   private String diSanFBRID;
 
    private String zuZhiJGID;
 

@@ -1,5 +1,6 @@
 package cn.mediinfo.grus.shujuzx.dto.shitumx;
 
+import cn.mediinfo.grus.shujuzx.dto.zonghecx.GuanLianTJZD;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -39,6 +40,8 @@ public class ShiTuZDMXDto {
     private String shuJuYLBMC;
     @Schema(description = "值域列表")
     private List<ZhiYuDto> zhiYuList;
+    @Schema(description = "关联条件字段列表")
+    private List<GuanLianTJZD> guanLianTJZDList;
     @Schema(description = "字段长度")
     private String ziDuanCD;
     @Schema(description = "精度")

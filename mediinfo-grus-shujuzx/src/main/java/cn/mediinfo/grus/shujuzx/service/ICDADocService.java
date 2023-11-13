@@ -8,13 +8,9 @@ public interface ICDADocService {
 
     public  String WenDangID = null;
     /// <summary>
-    /// 获取数据
+    /// 鑾峰彇鏁版嵁
     /// </summary>
     void GetData();
-    /// <summary>
-    /// 组装数据
-    /// </summary>
-    void AssembleData();
     void GeneDOC();
     String getXml() throws JAXBException;
 

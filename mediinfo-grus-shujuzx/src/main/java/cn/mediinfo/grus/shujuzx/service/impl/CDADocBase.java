@@ -8,6 +8,7 @@ import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
 
 import java.io.StringWriter;
+import java.util.List;
 import java.util.UUID;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -18,28 +19,19 @@ public abstract class CDADocBase implements ICDADocService {
     /// </summary>
     public abstract void DoGetData();
     /// <summary>
-    /// 组装数据
-    /// </summary>
-    public abstract void DoAssembleData();
-    /// <summary>
     /// 根据获取数据生成文档
     /// </summary>
     public abstract void DoGenDoc();
-    public String WenDangID;
-    public String Title;
+    public String wenDangID;
+    public String title;
+    public List<String> mpiList;
     public POCDMT000040ClinicalDocument clinicalDOC = new POCDMT000040ClinicalDocument();
     public void GetData()
     {
         this.DoGetData();
     }
 
-    /// <summary>
-    ///
-    /// </summary>
-    public void AssembleData()
-    {
-        this.DoAssembleData();
-    }
+
     public void GeneDOC()
     {
         GeneGy();

@@ -79,7 +79,7 @@ public class BiHuanSZController {
 
     @Operation(summary = "根据ID获取闭环节点信息")
     @GetMapping("getBiHuanSZXXByBiHuanID")
-    public MsfResponse<List<BiHuanSZXXDto>> getBiHuanSZXXBybiHuanID(@NotEmpty(message = "闭环ID不能为空") String biHuanID)
+    public MsfResponse<List<BiHuanSZXXDto>> getBiHuanSZXXByBiHuanID(@NotEmpty(message = "闭环ID不能为空") String biHuanID)
     {
         return MsfResponse.success(jieDianXXService.getBiHuanSZXXBybiHuanID(biHuanID));
     }

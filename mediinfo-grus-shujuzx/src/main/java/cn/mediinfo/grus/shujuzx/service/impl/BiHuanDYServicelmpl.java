@@ -1,25 +1,20 @@
 package cn.mediinfo.grus.shujuzx.service.impl;
 
-import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
 import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
 import cn.mediinfo.cyan.msf.core.util.CollectionUtil;
 import cn.mediinfo.cyan.msf.core.util.MapUtils;
 import cn.mediinfo.cyan.msf.stringgenerator.StringGenerator;
-import cn.mediinfo.grus.shujuzx.constant.ShuJuZXConstant;
 import cn.mediinfo.grus.shujuzx.dto.JieDianGL.KeXuanZDDto;
 import cn.mediinfo.grus.shujuzx.dto.bihuandy.SC_BH_DiaoYongPZAddDto;
 import cn.mediinfo.grus.shujuzx.dto.bihuandy.SC_BH_DiaoYongPZDto;
 import cn.mediinfo.grus.shujuzx.dto.bihuandy.SC_BH_DiaoYongPZUpdateDto;
 import cn.mediinfo.grus.shujuzx.dto.bihuandy.ShiTuMXBHPZDto;
 import cn.mediinfo.grus.shujuzx.dto.bihuangl.SC_BH_ShiTuXXDto;
-import cn.mediinfo.grus.shujuzx.dto.bihuanjdszs.SC_ZD_BiHuanJDDto;
 import cn.mediinfo.grus.shujuzx.dto.shitumx.LingChuangJSPZDto;
 import cn.mediinfo.grus.shujuzx.dto.shitumx.ShiTuZDMXDto;
 import cn.mediinfo.grus.shujuzx.dto.shitumx.ShuJuJMXZDDto;
-import cn.mediinfo.grus.shujuzx.model.QSC_BH_DiaoYongPZModel;
 import cn.mediinfo.grus.shujuzx.model.SC_BH_DiaoYongPZModel;
-import cn.mediinfo.grus.shujuzx.model.SC_ZD_BiHuanJDModel;
 import cn.mediinfo.grus.shujuzx.remotedto.GongYong.LingChuangJSPZZDXXRso;
 import cn.mediinfo.grus.shujuzx.remoteservice.GongYongRemoteService;
 import cn.mediinfo.grus.shujuzx.repository.SC_BH_DiaoYongPZRepository;
@@ -28,7 +23,6 @@ import cn.mediinfo.grus.shujuzx.repository.SC_BH_ShiTuXXRepository;
 import cn.mediinfo.grus.shujuzx.service.BiHuanDYService;
 import cn.mediinfo.lyra.extension.service.LyraIdentityService;
 import cn.mediinfo.lyra.extension.service.SequenceService;
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
 
@@ -74,6 +68,7 @@ public class BiHuanDYServicelmpl implements BiHuanDYService {
         if (shiTuMXs.isEmpty())
             return new ArrayList<>();
         List<LingChuangJSPZDto> lingChuangJSPZDtos = new ArrayList<>();
+        //构建远程服务入参
         for (SC_BH_ShiTuXXDto shiTuXX : shiTuXXs) {
             LingChuangJSPZDto lingChuangJSPZDto = new LingChuangJSPZDto();
             lingChuangJSPZDto.setShuJuLYID(shiTuXX.getShuJuLYID());
@@ -85,7 +80,8 @@ public class BiHuanDYServicelmpl implements BiHuanDYService {
                 return shuJuJMXZDDto;
             }).toList();
             if (!shuJuJMXZDs.isEmpty()) {
-                var existShiTuXXDto = lingChuangJSPZDtos.stream().filter((x -> x.getShuJuLYID().equals(shiTuXX.getShuJuLYID()))).findFirst().orElse(null);
+                //根据视图来源ID和视图来源类型代码组装数据
+                var existShiTuXXDto = lingChuangJSPZDtos.stream().filter((x -> x.getShuJuLYID().equals(shiTuXX.getShuJuLYID()) && x.getShuJuLYLXDM().equals(shiTuXX.getShuJuLYLXDM()))).findFirst().orElse(null);
                 if (existShiTuXXDto != null) {
                     var existShiTuMXDtos = existShiTuXXDto.getShuJuJMXZDDtos();
                     var quanBuShiTuMXs = Stream.concat(existShiTuMXDtos.stream(), shuJuJMXZDs.stream()).toList();
@@ -105,6 +101,7 @@ public class BiHuanDYServicelmpl implements BiHuanDYService {
         List<ShiTuMXBHPZDto> results = new ArrayList<>();
         for (SC_BH_ShiTuXXDto shiTuXX : shiTuXXs) {
             var cunZaiJSPZ = lingChuangJSPZZDList.stream().filter(t -> t.getShuJuLYID().equals(shiTuXX.getShuJuLYID())).findFirst().orElse(null);
+            //根据视图来源ID组装数据给前端
             if (cunZaiJSPZ != null) {
                 var cunZaiZDBMs = shiTuMXs.stream().filter(x -> Objects.equals(x.getShiTuID(), shiTuXX.getShiTuID())).map(KeXuanZDDto::getZiDuanBM).toList();
                 List<ShiTuZDMXDto> gongGongZDMXs = cunZaiJSPZ.getShiTuMXZDDtos().stream().filter(x -> cunZaiZDBMs.contains(x.getZiDuanBM())).toList();
@@ -143,18 +140,17 @@ public class BiHuanDYServicelmpl implements BiHuanDYService {
     }
 
     @Override
-    public SC_BH_DiaoYongPZDto addBiHuanPZ(SC_BH_DiaoYongPZAddDto addDto)  {
-        var diaoYongPZID = _stringGenerator.Create();
+    public SC_BH_DiaoYongPZDto addBiHuanPZ(SC_BH_DiaoYongPZAddDto addDto) {
         var entity = MapUtils.copyProperties(addDto, SC_BH_DiaoYongPZModel::new);
-        entity.setZuZhiJGID(ShuJuZXConstant.TONGYONG_JGID);
-        entity.setZuZhiJGMC(ShuJuZXConstant.TONGYONG_JGMC);
-        sc_bh_diaoYongPZRepository.save(entity);
+        entity.setZuZhiJGID(_lyraIdentityService.getJiGouID());
+        entity.setZuZhiJGMC(_lyraIdentityService.getJiGouMC());
+        sc_bh_diaoYongPZRepository.insert(entity);
         return MapUtils.copyProperties(entity, SC_BH_DiaoYongPZDto::new);
     }
 
     @Override
     public SC_BH_DiaoYongPZDto updateBiHuanPZ(SC_BH_DiaoYongPZUpdateDto updateDto) throws WeiZhaoDSJException {
-        QSC_BH_DiaoYongPZModel diaoYongPZ = QSC_BH_DiaoYongPZModel.sC_BH_DiaoYongPZModel;
+        //QSC_BH_DiaoYongPZModel diaoYongPZ = QSC_BH_DiaoYongPZModel.sC_BH_DiaoYongPZModel;
         var entity = sc_bh_diaoYongPZRepository.findById(updateDto.getId()).orElse(null);
         if (entity == null)
             throw new WeiZhaoDSJException("调用配置数据不存在!");

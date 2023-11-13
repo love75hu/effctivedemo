@@ -1,11 +1,12 @@
 package cn.mediinfo.grus.shujuzx.service.impl;
 import cn.mediinfo.grus.shujuzx.constant.ComponentTypeConstant;
+import cn.mediinfo.grus.shujuzx.dto.cda.dangan.DA_GA_JiBenXXDto;
 import cn.mediinfo.grus.shujuzx.hl7.*;
 import org.springframework.stereotype.Service;
 import java.math.BigInteger;
 @Service("B0001")
 public  class B0001ServiceImpl extends CDADocBase  {
-
+    public DA_GA_JiBenXXDto jiBenXXDto;
     public  void DoGetData()
     {
 
@@ -21,7 +22,6 @@ public  class B0001ServiceImpl extends CDADocBase  {
         target.setContextControlCode("OP");
         target.getTypeCode().add("RCT");
         clinicalDOC.getRecordTarget().add(target);
-
         POCDMT000040PatientRole PatientRole=new POCDMT000040PatientRole();
 
         PatientRole.getClassCode().add("PAT");
@@ -29,9 +29,7 @@ public  class B0001ServiceImpl extends CDADocBase  {
         PatientRole.getId().add(ii);
         ii.setExtension("");
         ii.setRoot("2.16.156.10011.1.2");
-
-
-
+        
         //家庭地址
         var ad=new AD();
         ad.getUse().add("H");

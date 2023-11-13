@@ -3,31 +3,33 @@ package cn.mediinfo.grus.shujuzx.service.impl;
 import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
 import cn.mediinfo.cyan.msf.core.util.BeanUtil;
 import cn.mediinfo.cyan.msf.core.util.CollectionUtil;
-import cn.mediinfo.cyan.msf.core.util.MapUtils;
-import cn.mediinfo.grus.shujuzx.dto.bihuansz.BiHuanZZJGDto;
 import cn.mediinfo.grus.shujuzx.dto.shitumx.*;
+import cn.mediinfo.grus.shujuzx.dto.zonghecx.GuanLianTJZD;
+import cn.mediinfo.grus.shujuzx.model.SC_CX_ShiTuMXGXModel;
 import cn.mediinfo.grus.shujuzx.model.SC_CX_ShiTuMXModel;
 import cn.mediinfo.grus.shujuzx.model.SC_CX_ShiTuXXModel;
 import cn.mediinfo.grus.shujuzx.remotedto.GongYong.LingChuangJSPZZDXXRso;
 import cn.mediinfo.grus.shujuzx.remoteservice.GongYongRemoteService;
+import cn.mediinfo.grus.shujuzx.repository.SC_CX_ShiTuMXGXRepository;
 import cn.mediinfo.grus.shujuzx.repository.SC_CX_ShiTuMXRepository;
 import cn.mediinfo.grus.shujuzx.repository.SC_CX_ShiTuXXRepository;
 import cn.mediinfo.grus.shujuzx.service.LinChuangJSSCXXZService;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+
+import java.util.*;
 import java.util.stream.Stream;
 
 @Service
 public class LinChuangJSSCXXZServiceImpl implements LinChuangJSSCXXZService {
     private final SC_CX_ShiTuXXRepository sc_cx_shiTuXXRepository;
     private final SC_CX_ShiTuMXRepository sc_cx_shiTuMXRepository;
+    private final SC_CX_ShiTuMXGXRepository sc_cx_shiTuMXGXRepository;
     private final GongYongRemoteService gongYongRemoteService;
-    public LinChuangJSSCXXZServiceImpl(SC_CX_ShiTuXXRepository sc_cx_shiTuXXRepository, SC_CX_ShiTuMXRepository sc_cx_shiTuMXRepository, GongYongRemoteService gongYongRemoteService) {
+    public LinChuangJSSCXXZServiceImpl(SC_CX_ShiTuXXRepository sc_cx_shiTuXXRepository, SC_CX_ShiTuMXRepository sc_cx_shiTuMXRepository, SC_CX_ShiTuMXGXRepository sc_cx_shiTuMXGXRepository, GongYongRemoteService gongYongRemoteService) {
         this.sc_cx_shiTuXXRepository = sc_cx_shiTuXXRepository;
         this.sc_cx_shiTuMXRepository = sc_cx_shiTuMXRepository;
+        this.sc_cx_shiTuMXGXRepository = sc_cx_shiTuMXGXRepository;
         this.gongYongRemoteService = gongYongRemoteService;
     }
     /**
@@ -44,6 +46,9 @@ public class LinChuangJSSCXXZServiceImpl implements LinChuangJSSCXXZService {
         List<String> shiTuIDs = shiTuXXList.stream().map(SC_CX_ShiTuXXModel::getShiTuID).toList();
         //获取视图明细数据
         List<SC_CX_ShiTuMXModel> shiTuMXList = sc_cx_shiTuMXRepository.getShiTuMXSJ(shiTuIDs,jieKouLX,likeQuery);
+        Set<String> setShiTuIDs = new HashSet<>(shiTuIDs);
+        //获取视图明细关联字段
+        List<GuanLianTJZD> shiTuMXGXList = sc_cx_shiTuMXGXRepository.findByShiTuMXGXIDIn(setShiTuIDs);
         if (shiTuMXList.isEmpty()){
             return new ArrayList<>();
         }
@@ -94,6 +99,8 @@ public class LinChuangJSSCXXZServiceImpl implements LinChuangJSSCXXZService {
                     for ( ShiTuZDMXDto zdmxDto : gongGongZDMX) {
                         zdmxDto.setShiTuID(e.getShiTuID());
                         zdmxDto.setShiTuMC(e.getShiTuMC());
+                        var guanLianZDMXList = shiTuMXGXList.stream().filter(t-> Objects.equals(t.getShiTuID(), e.getShiTuID()) && Objects.equals(t.getZiDuanBM(), zdmxDto.getZiDuanBM())).toList();
+                        zdmxDto.setGuanLianTJZDList(guanLianZDMXList);
                     }
                     var copyGongGongZDMX = BeanUtil.copyListProperties(gongGongZDMX.stream().toList(), ShiTuZDMXDto::new);
                     var cunZaiDto = resultlist.stream().filter(t->t.getFuLeiID().equals(e.getFuLeiID())).findFirst().orElse(null);

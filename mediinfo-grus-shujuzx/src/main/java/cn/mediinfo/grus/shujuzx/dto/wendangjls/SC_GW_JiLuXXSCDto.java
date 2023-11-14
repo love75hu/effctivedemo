@@ -11,7 +11,7 @@ public class SC_GW_JiLuXXSCDto {
      * mpilist
      */
     @Schema(description = "mpiList")
-    private List<String> bingRenIDList;
+    private List<String> mpiList;
     /**
      * 文档信息列表
      */
@@ -21,7 +21,7 @@ public class SC_GW_JiLuXXSCDto {
      * 文档类型
      */
     @Schema(description = "文档类型")
-    private  String wenDangLX;
+    private  String wenDangID;
 
     /**
      * 数据来源代码

@@ -247,7 +247,7 @@ public class ShiTuMXServiceImpl implements ShiTuMXService {
         var shiTUIDXX = shuJuSTDto.stream().map(ShuJuSTDto::getShiTuID).collect(Collectors.toList());
         Set<String> shiTuIds = new HashSet<>(shiTUIDXX);
         var shiTuXXList = shiTuXXRepository.findByShiTuIDIn(shiTuIds);//视图信息
-        var shiTuMXZDList  =  shiTuMXRepository.getShiTuMXSJ(shiTUIDXX,null,null);//视图明细信息
+        var shiTuMXZDList  =  shiTuMXRepository.getShiTuMXSJ(shiTUIDXX,-1,null);//视图明细信息
         //公共接口入参组装
         List<LingChuangJSPZDto> lingChuangJSPZDtos = new ArrayList<>();
         //视图信息分组 数据来源ID 数据来源类型DM

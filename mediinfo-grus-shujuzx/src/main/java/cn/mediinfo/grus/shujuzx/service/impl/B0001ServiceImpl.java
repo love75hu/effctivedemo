@@ -6,6 +6,7 @@ import cn.mediinfo.grus.shujuzx.dto.cda.gongwei.DA_GA_GuoMinShiDto;
 import cn.mediinfo.grus.shujuzx.dto.cda.gongwei.DA_GA_JiBenXXDto;
 import cn.mediinfo.grus.shujuzx.hl7.*;
 import cn.mediinfo.grus.shujuzx.remoteservice.GongWeiRemoteService;
+import com.nimbusds.jose.shaded.gson.Gson;
 import org.springframework.stereotype.Service;
 import java.math.BigInteger;
 import java.util.List;
@@ -13,20 +14,19 @@ import java.util.List;
 @Service("B0001")
 public  class B0001ServiceImpl extends CDADocBase  {
     public DA_GA_JiBenXXDto jiBenXXDto;
-    private final GongWeiRemoteService gongWeiRemoteService;
-    public   ObjectFactory objectFactory;
+    private final GongWeiRemoteService _gongWeiRemoteService;
     //过敏史
     public List<DA_GA_GuoMinShiDto> guoMinShiList;
     //暴露史
     public List<DA_GA_BaoLuShiDto> baoLuShiList;
 
     public B0001ServiceImpl(GongWeiRemoteService gongWeiRemoteService){
-        this.gongWeiRemoteService=gongWeiRemoteService;
+        this._gongWeiRemoteService=gongWeiRemoteService;
     }
 
     public  void DoGetData()
     {
-        jiBenXXDto= gongWeiRemoteService.getB0001Data(this.mpiList).getData();
+        jiBenXXDto= _gongWeiRemoteService.getB0001Data(getMPIList()).getData();
     }
 
     public  void DoGenHead()  {
@@ -45,12 +45,14 @@ public  class B0001ServiceImpl extends CDADocBase  {
         //家庭地址
         var ad=new AD();
         ad.getUse().add("H");
-        objectFactory.createAD();
+
         AdxpHouseNumber houseNumber=new AdxpHouseNumber();
-        houseNumber.setLanguage("wwwww");
+        houseNumber.setCompression(CompressionAlgorithm.ZL);
+// 创建一个Gson对象
+        Gson gson = new Gson();
         ad.getContent().add(houseNumber.toString());
-       // ad.getUse()..add(0,"13131414");
         PatientRole.getAddr().add(ad);
+
 
         //电话号码
         var tel=new TEL();

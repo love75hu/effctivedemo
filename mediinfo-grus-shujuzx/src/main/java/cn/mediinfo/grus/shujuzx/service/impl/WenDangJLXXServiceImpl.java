@@ -42,9 +42,9 @@ public class WenDangJLXXServiceImpl implements WenDangJLXXService
             throw new TongYongYWException("文档信息不能为空！");
         }
         //删除之前的文档
-        var del_jiLuIDList= sc_gw_jiLuXXRepository.asQuerydsl().whereIn(t -> t.bingRenID, dto.getBingRenIDList()).select(p->p.id).fetch().stream().toList();
+        var del_jiLuIDList= sc_gw_jiLuXXRepository.asQuerydsl().whereIn(t -> t.bingRenID, dto.getMpiList()).select(p->p.id).fetch().stream().toList();
         sc_gw_jiLuNRRepository.asDeleteDsl().whereIn(t->t.wenDangJLID,del_jiLuIDList).execute();
-        sc_gw_jiLuXXRepository.asDeleteDsl().whereIn(t -> t.bingRenID, dto.getBingRenIDList()).execute();
+        sc_gw_jiLuXXRepository.asDeleteDsl().whereIn(t -> t.bingRenID, dto.getMpiList()).execute();
         //保存新的文档
         List<SC_GW_JiLuXXModel> jiLuXXModelList= ListUtil.toList();
         List<SC_GW_JiLuNRModel> jiLuNRModelList= ListUtil.toList();

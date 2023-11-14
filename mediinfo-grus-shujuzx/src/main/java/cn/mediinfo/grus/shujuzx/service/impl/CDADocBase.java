@@ -22,9 +22,21 @@ public abstract class CDADocBase implements ICDADocService {
     /// 根据获取数据生成文档
     /// </summary>
     public abstract void DoGenDoc();
-    public String wenDangID;
     public String title;
-    public List<String> mpiList;
+    public String wenDangID;
+    List<String> mpiList=null;
+    public void setMPIList(List<String> mpi) {
+      this.mpiList=mpi;
+    }
+    public List<String> getMPIList() {
+        return  this.mpiList;
+    }
+    public void setTitle(String title) {
+        this.title=title;
+    }
+    public String getTitle() {
+        return  this.title;
+    }
     public POCDMT000040ClinicalDocument clinicalDOC = new POCDMT000040ClinicalDocument();
     public void GetData()
     {
@@ -59,7 +71,7 @@ public abstract class CDADocBase implements ICDADocService {
         CE ce=new CE();
         ce.setCodeSystem("2.16.156.10011.2.4");
         ce.setCodeSystemName("卫生信息共享文档规范编码体系");
-        ce.setCode(WenDangID);
+        ce.setCode(this.wenDangID);
         clinicalDOC.setCode(ce);
 
         //生成时间
@@ -67,7 +79,7 @@ public abstract class CDADocBase implements ICDADocService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
         String formattedDateTime = now.format(formatter);
         ST st=new ST();
-        st.setLanguage(Title);
+        st.setLanguage(this.title);
         clinicalDOC.setTitle(st);
         TS ts=new TS();
         ts.setValue(formattedDateTime);
@@ -181,13 +193,9 @@ public abstract class CDADocBase implements ICDADocService {
         Marshaller marshaller = context.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FRAGMENT, true);
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-
         StringWriter stringWriter = new StringWriter();
         marshaller.marshal(clinicalDOC, stringWriter);
-
         return stringWriter.toString();
-
-
     }
 
 }

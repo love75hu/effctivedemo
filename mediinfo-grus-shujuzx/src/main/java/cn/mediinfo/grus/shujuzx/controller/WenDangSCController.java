@@ -2,10 +2,12 @@ package cn.mediinfo.grus.shujuzx.controller;
 import cn.hutool.core.collection.ListUtil;
 import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 import cn.mediinfo.cyan.msf.core.response.MsfResponse;
+import cn.mediinfo.grus.shujuzx.dto.cda.gongwei.DA_GA_BaoLuShiDto;
 import cn.mediinfo.grus.shujuzx.dto.cda.gongwei.DA_GA_JiBenXXDto;
 import cn.mediinfo.grus.shujuzx.dto.wendangjls.SC_GW_JiLuXXCreateDto;
 import cn.mediinfo.grus.shujuzx.dto.wendangjls.SC_GW_JiLuXXSCDto;
 import cn.mediinfo.grus.shujuzx.dto.wendangnrs.SC_GW_JiLuNRDto;
+import cn.mediinfo.grus.shujuzx.remoteservice.GongWeiRemoteService;
 import cn.mediinfo.grus.shujuzx.service.ICDADocService;
 import cn.mediinfo.grus.shujuzx.service.WenDangJLXXService;
 import cn.mediinfo.grus.shujuzx.service.impl.B0001ServiceImpl;
@@ -18,6 +20,7 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
@@ -30,23 +33,28 @@ import java.util.List;
 public class WenDangSCController implements  BeanFactoryAware {
     private BeanFactory beanFactory;
     private final WenDangJLXXService wenDangJLXXService;
-    public WenDangSCController(WenDangJLXXService wenDangJLXXService) {
+    private final GongWeiRemoteService _gongWeiRemoteService;
+    public WenDangSCController(WenDangJLXXService wenDangJLXXService,GongWeiRemoteService gongWeiRemoteService) {
         this.wenDangJLXXService=wenDangJLXXService;
+        this._gongWeiRemoteService=gongWeiRemoteService;
     }
-    /*
 
-     */
+
     @Operation(summary = "生成共享文档")
     @PostMapping("shengChengWDXML")
-    public MsfResponse<Long> shengChengWDXML(SC_GW_JiLuXXSCDto dto) throws JAXBException, TongYongYWException {
-        String DocType="B0001";
-        ICDADocService cdaProc = beanFactory.getBean(DocType, ICDADocService.class);
+    public MsfResponse<Long> shengChengWDXML(@RequestBody SC_GW_JiLuXXSCDto dto) throws JAXBException, TongYongYWException {
+        if(dto.getMpiList().isEmpty())
+        {
+            throw  new TongYongYWException("参数mpilist不能为空");
+        }
+        ICDADocService cdaProc = beanFactory.getBean(dto.getWenDangID(), ICDADocService.class);
+        cdaProc.setMPIList(dto.getMpiList());
+        cdaProc.setTitle("个人健康基本信息");
         cdaProc.GetData();
         List<SC_GW_JiLuXXCreateDto> jiLuXXCreateDtoList= ListUtil.toList();
-        switch (dto.getWenDangLX()) {
+        switch (dto.getWenDangID()) {
             case "B0001":
                 B0001ServiceImpl B0001 = (B0001ServiceImpl) cdaProc;
-                var a=B0001.jiBenXXDto;
                 SC_GW_JiLuXXCreateDto jiLuXXCreateDto=genJianKangDACdaXml(cdaProc,B0001.jiBenXXDto);
                 jiLuXXCreateDto.setYeWuSJ(B0001.jiBenXXDto.getJianDangSJ());
                 jiLuXXCreateDto.setYeWuZJID(B0001.jiBenXXDto.getId());
@@ -91,6 +99,7 @@ public class WenDangSCController implements  BeanFactoryAware {
     private String assembleDictionaryDoc(ICDADocService cdaProc) throws JAXBException {
         if (cdaProc == null) return  "";
         cdaProc.GeneDOC();
+        var xml=cdaProc.getXml();
         return  cdaProc.getXml();
     }
 

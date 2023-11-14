@@ -5,6 +5,8 @@ import cn.mediinfo.grus.shujuzx.dto.cda.gongwei.DA_GA_JiBenXXDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -12,7 +14,6 @@ import java.util.List;
 public interface GongWeiRemoteService {
 
     @GetMapping("api/v1.0/GeRenDA/GetGeAnJBXX")
-    MsfResponse<DA_GA_JiBenXXDto> getB0001Data(@SpringQueryMap List<String> mpiList);
-
+    MsfResponse<DA_GA_JiBenXXDto> getB0001Data(@RequestParam List<String> mpiList);
 }
 

@@ -8,6 +8,7 @@ import cn.mediinfo.grus.shujuzx.dto.bihuanlcs.BingLiXQXXDto;
 import cn.mediinfo.grus.shujuzx.dto.fangan.FangAnByFACXLSDTO;
 import cn.mediinfo.grus.shujuzx.dto.fangan.FangAnQueryDTO;
 import cn.mediinfo.grus.shujuzx.dto.result.BingRenJBXXDTO;
+import cn.mediinfo.grus.shujuzx.dto.result.QueryResultDTO;
 import cn.mediinfo.grus.shujuzx.request.fangan.FangAnSC;
 import cn.mediinfo.grus.shujuzx.request.fangan.FangAnXXSaveRequest;
 import cn.mediinfo.grus.shujuzx.request.fangan.FangAnXXUpdateRequest;
@@ -65,12 +66,25 @@ public interface FangAnService {
 
     /**
      * 获取结果列表总数
+     *
      * @param fangAnCXLSId
      * @param mergeType
      * @return
      * @throws TongYongYWException
      */
     Long getFangAnJGCount(String fangAnCXLSId, Integer mergeType) throws TongYongYWException;
+
+    /**
+     * 获取方案查询结果
+     *
+     * @param fangAnCXLSId
+     * @param mergeType
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     * @throws TongYongYWException
+     */
+    List<List<QueryResultDTO>> getFangAnJGList(String fangAnCXLSId, Integer mergeType, Integer pageIndex, Integer pageSize) throws TongYongYWException;
 
     /**
      * 获取方案患者信息

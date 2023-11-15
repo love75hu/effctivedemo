@@ -11,6 +11,10 @@ import lombok.ToString;
 @Setter
 @ToString
 public class FangAnSCFieldDTO {
+    public FangAnSCFieldDTO(String id,String ziDuanBM){
+        this.id=id;
+        this.ziDuanBM=ziDuanBM;
+    }
 
     /**
      * id

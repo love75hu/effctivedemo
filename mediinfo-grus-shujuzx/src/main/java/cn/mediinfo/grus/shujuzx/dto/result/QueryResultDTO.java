@@ -10,13 +10,25 @@ import lombok.ToString;
 @ToString
 @Schema(description = "结果列表")
 public class QueryResultDTO {
+    public QueryResultDTO(){
 
-    @Schema(description = "字段名")
-    private String key;
+    }
 
-    @Schema(description = "字段显示名称/值")
-    private Object text;
+    public QueryResultDTO(String ziDuanDM,String ziDuanMC,Object ziDuanZhi){
+        this.ziDuanDM=ziDuanDM;
+        this.ziDuanMC=ziDuanMC;
+        this.ziDuanZhi=ziDuanZhi;
+    }
 
-    @Schema(description = "0-展示字段，1-标签,2-链接")
-    private Integer type;
+    @Schema(description = "字段代码")
+    private String ziDuanDM;
+
+    @Schema(description = "字段名称")
+    private String ziDuanMC;
+
+    @Schema(description = "字段值")
+    private Object ziDuanZhi;
+
+    /*@Schema(description = "0-展示字段，1-标签,2-链接")
+    private Integer type;*/
 }

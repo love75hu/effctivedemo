@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
@@ -74,12 +75,17 @@ class ShiTuXXServiceImpl implements ShiTuXXService {
         List<LinChuangJSSTDtoTree> linChuangJSSTDtoTrees= BeanUtil.copyListProperties(shiTuXXList, LinChuangJSSTDtoTree::new);
         List<LinChuangJSSTDtoTree> linChuangJSSTDtoTreeList=new ArrayList<>();
         //获取根节点
-        for(LinChuangJSSTDtoTree linChuangJSSTDtoTree :linChuangJSSTDtoTrees.stream().filter(s->s.getFuLeiID().equals(fuLeiID)).toList())
+        for(LinChuangJSSTDtoTree linChuangJSSTDtoTree :linChuangJSSTDtoTrees.stream()
+                .filter(s->s.getFuLeiID().equals(fuLeiID))
+                .sorted(Comparator.comparing(LinChuangJSSTDtoTree::getShunXuHao))
+                .toList())
         {
             linChuangJSSTDtoTree.setChildren(
                     BeanUtil.copyListProperties(
                     linChuangJSSTDtoTrees.stream().filter(s->
-                            s.getFuLeiID().equals(linChuangJSSTDtoTree.getId())).toList(),LinChuangJSSTDtoTree::new,(a,b)->{
+                            s.getFuLeiID().equals(linChuangJSSTDtoTree.getId()))
+                            .sorted(Comparator.comparing(LinChuangJSSTDtoTree::getShunXuHao))
+                            .toList(),LinChuangJSSTDtoTree::new,(a,b)->{
                         b.setFuLeiID(a.getShiTuID());
                         b.setFuLeiMC(a.getShiTuMC());
                     }

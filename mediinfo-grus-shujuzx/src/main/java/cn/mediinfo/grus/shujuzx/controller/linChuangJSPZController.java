@@ -152,14 +152,14 @@ public class linChuangJSPZController {
     }
 
     @Operation(summary = "作废视图分类")
-    @PutMapping("zuoFeiShiTFL")
-    public  MsfResponse<Boolean> zuoFeiShiTFL(@RequestParam @NotEmpty(message = "id不能为空") String id) throws WeiZhaoDSJException {
+    @DeleteMapping("zuoFeiShiTFL")
+    public  MsfResponse<Boolean> zuoFeiShiTFL(@NotEmpty(message = "id不能为空")  @RequestParam String id) throws WeiZhaoDSJException {
         return MsfResponse.success(shiTuXXService.zuoFeiShiTuFL(id));
     }
 
     @Operation(summary = "作废视图明细")
-    @PutMapping("zuoFeiShiTMX")
-    public MsfResponse<Boolean> zuoFeiShiTMX(@RequestParam @NotEmpty(message = "id不能为空")  String id) throws WeiZhaoDSJException {
+    @DeleteMapping("zuoFeiShiTMX")
+    public MsfResponse<Boolean> zuoFeiShiTMX( @NotEmpty(message = "id不能为空")   @RequestParam String id) throws WeiZhaoDSJException {
         return MsfResponse.success(shiTuMXService.zuoFeiShiTMX(id));
     }
 }

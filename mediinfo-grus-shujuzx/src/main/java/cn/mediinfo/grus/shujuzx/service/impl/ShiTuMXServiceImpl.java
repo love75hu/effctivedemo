@@ -133,16 +133,24 @@ public class ShiTuMXServiceImpl implements ShiTuMXService {
      */
     @Override
     public Boolean addShiTuMX(AddShiTuMXDto addShiTuMXDto) throws WeiZhaoDSJException, MsfResponseException {
+
+        List<String> addziDuanBM = addShiTuMXDto.getZiDuanXXList().stream().map(ZiDuanXXListDto::getZiDuanBM).collect(Collectors.toList());
+        List<SC_CX_ShiTuMXModel> shiTuMxList= shiTuMXRepository.asQuerydsl()
+                .where(n -> n.shiTuID.eq(addShiTuMXDto.getShiTuID()))
+                .where(n -> n.ziDuanBM.in(addziDuanBM)).fetch();
+
         List<SC_CX_ShiTuMXModel> shiTuMXModels=new ArrayList<>();
         //赋值
         addShiTuMXDto.getZiDuanXXList().forEach(s->{
-            SC_CX_ShiTuMXModel shiTuMXModel=new SC_CX_ShiTuMXModel();
-            shiTuMXModel.setShiTuID(addShiTuMXDto.getShiTuID());
-            shiTuMXModel.setShiTuMC(addShiTuMXDto.getShiTuMC());
-            shiTuMXModel.setZuZhiJGID(ShuJuZXConstant.TONGYONG_JGID);
-            shiTuMXModel.setZuZhiJGMC(ShuJuZXConstant.TONGYONG_JGMC);
-            BeanUtil.copyProperties(s,shiTuMXModel);
-            shiTuMXModels.add(shiTuMXModel);
+            if (shiTuMxList.stream().noneMatch(n->n.getZiDuanBM().equals(s.getZiDuanBM()))) {
+                SC_CX_ShiTuMXModel shiTuMXModel = new SC_CX_ShiTuMXModel();
+                shiTuMXModel.setShiTuID(addShiTuMXDto.getShiTuID());
+                shiTuMXModel.setShiTuMC(addShiTuMXDto.getShiTuMC());
+                shiTuMXModel.setZuZhiJGID(ShuJuZXConstant.TONGYONG_JGID);
+                shiTuMXModel.setZuZhiJGMC(ShuJuZXConstant.TONGYONG_JGMC);
+                BeanUtil.copyProperties(s, shiTuMXModel);
+                shiTuMXModels.add(shiTuMXModel);
+            }
         });
         //更新视图明细
         shiTuMXRepository.saveAll(shiTuMXModels);
@@ -228,7 +236,7 @@ public class ShiTuMXServiceImpl implements ShiTuMXService {
 
     @Override
     public Boolean updateShiTuMX(UpdateShiTuMXDto updateShiTuMXDto) throws WeiZhaoDSJException {
-        SC_CX_ShiTuMXDto shiTuMXByID = getShiTuMXByID(updateShiTuMXDto.getId());
+        SC_CX_ShiTuMXModel shiTuMXByID = shiTuMXRepository.findById(updateShiTuMXDto.getId()).orElse(new SC_CX_ShiTuMXModel());
         shiTuMXByID.setZiDuanMC(updateShiTuMXDto.getZiDuanMC());
         shiTuMXByID.setTiaoJianBZ(updateShiTuMXDto.getTianJianBZ());
         shiTuMXByID.setShuChuBZ(updateShiTuMXDto.getShuChuBZ());

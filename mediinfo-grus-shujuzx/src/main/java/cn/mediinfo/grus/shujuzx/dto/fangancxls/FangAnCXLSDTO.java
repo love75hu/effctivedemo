@@ -1,6 +1,7 @@
 package cn.mediinfo.grus.shujuzx.dto.fangancxls;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -34,4 +35,8 @@ public class FangAnCXLSDTO {
     private String chaXunRID;
     @Schema(description = "查询人姓名")
     private String chaXunRXM;
+    @Column(columnDefinition = "查询条件;JSON字符串")
+    private String chaXunTJ;
+    @Column(columnDefinition = "查询输出：JSON字符串")
+    private String chaXunSC;
 }

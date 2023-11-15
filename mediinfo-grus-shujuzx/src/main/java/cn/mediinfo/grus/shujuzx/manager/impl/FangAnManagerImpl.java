@@ -102,8 +102,8 @@ public class FangAnManagerImpl implements FangAnManager {
             return saveFangAn(request, sql);
         }
 
-        String zuZhiJGID = Optional.ofNullable(lyraIdentityService.getJiGouID()).orElse(ShuJuZXConstant.TONGYONG_JGID);
-        String zuZhiJGMC = Optional.ofNullable(lyraIdentityService.getJiGouMC()).orElse(ShuJuZXConstant.TONGYONG_JGMC);
+        String zuZhiJGID = lyraIdentityService.getJiGouID();
+        String zuZhiJGMC = lyraIdentityService.getJiGouMC();
 
         //检索方案信息
         SC_CX_FangAnXXModel fangAnXXModel = new SC_CX_FangAnXXModel();

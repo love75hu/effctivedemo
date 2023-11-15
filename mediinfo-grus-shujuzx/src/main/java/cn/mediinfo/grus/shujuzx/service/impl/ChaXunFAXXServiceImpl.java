@@ -1,10 +1,8 @@
 package cn.mediinfo.grus.shujuzx.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.mediinfo.cyan.msf.core.util.BeanUtil;
-import cn.mediinfo.cyan.msf.core.util.CollectorUtil;
-import cn.mediinfo.cyan.msf.core.util.MapUtils;
-import cn.mediinfo.cyan.msf.core.util.StringUtil;
+import cn.hutool.core.util.ObjectUtil;
+import cn.mediinfo.cyan.msf.core.util.*;
 import cn.mediinfo.grus.shujuzx.constant.ShuJuZXConstant;
 import cn.mediinfo.grus.shujuzx.dto.chaxunfaxx.FangAnCXLSDto;
 import cn.mediinfo.grus.shujuzx.dto.chaxunfaxx.FangAnXXDto;
@@ -89,10 +87,16 @@ public class ChaXunFAXXServiceImpl implements ChaXunFAXXService {
         }
         SC_CX_FangAnCXLSModel model = new SC_CX_FangAnCXLSModel();
         MapUtils.mergeProperties(request, model);
-        model.setZuZhiJGID(Optional.ofNullable(lyraIdentityService.getJiGouID()).orElse(ShuJuZXConstant.TONGYONG_JGID));
-        model.setZuZhiJGMC(Optional.ofNullable(lyraIdentityService.getJiGouMC()).orElse(ShuJuZXConstant.TONGYONG_JGMC));
+        model.setZuZhiJGID(lyraIdentityService.getJiGouID());
+        model.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
         model.setChaXunLXDM(chaXunLXDM);
         model.setChaXunLXMC(chaXunLXMC);
+        if(ObjectUtil.isNotEmpty(request.getRoot())){
+            model.setChaXunTJ(JsonUtil.getBeanToJson(request.getRoot()));
+        }
+        if(CollUtil.isNotEmpty(request.getFangAnSCList())){
+            model.setChaXunSC(JsonUtil.getBeanToJson(request.getFangAnSCList()));
+        }
         if (chaXunLXDM.equals("1")) {
             model.setChaXunSQL(sql);
         }

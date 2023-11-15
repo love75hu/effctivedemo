@@ -34,4 +34,7 @@ public class FangAnSCDTO {
 
     @Schema(description = "模式")
     private String moShi;
+
+    @Schema(description = "别名")
+    private String bieMing;
 }

@@ -21,7 +21,7 @@ public class LinChuangJSSTDtoTree {
     @Schema(description = "父类名称")
     private String fuLeiMC ;
     @Schema(description = "顺序号")
-    private String shunXuHao  ;
+    private Integer shunXuHao  ;
     @Schema(description = "末级标志")
     private Integer moJiBZ ;
     private List<LinChuangJSSTDtoTree> children ;

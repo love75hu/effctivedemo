@@ -20,7 +20,7 @@ public interface BiHuanSTJDXXService {
 
     Boolean addBiHuanSTJD(BiHuanSTJDDto dto) throws WeiZhaoDSJException;
 
-    List<GuanLianJDDto> getGuanLianJDXX(String shiTuID);
+    List<GuanLianJDDto> getGuanLianJDXX(String shiTuID,String jieDianID);
 
     List<BiHuanJDXXListDto> getBiHuanJDXXList(String shiTuID,
                                               String biHuanLXDM,

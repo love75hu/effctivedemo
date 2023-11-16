@@ -209,8 +209,10 @@ public class YeWuZDController {
     @GetMapping("GetShuJuYZYList")
     public MsfResponse<List<SC_ZD_ShuJuYZYDto>> getShuJuYZYList(@RequestParam(required = false) String zuZhiJGID,
                                                                 @RequestParam String shuJuYLBID,
-                                                                @RequestParam(required = false) String likeQuery) throws WeiZhaoDSJException {
-        return MsfResponse.success(shuJuYZYService.getShuJuYZYList(zuZhiJGID, shuJuYLBID, likeQuery, 1, 10));
+                                                                @RequestParam(required = false) String likeQuery,
+                                                                @RequestParam(required = false) Integer pageIndex,
+                                                                @RequestParam(required = false) Integer pageSize) throws WeiZhaoDSJException {
+        return MsfResponse.success(shuJuYZYService.getShuJuYZYList(zuZhiJGID, shuJuYLBID, likeQuery, pageIndex, pageSize));
     }
 
     /**
@@ -226,6 +228,6 @@ public class YeWuZDController {
     public MsfResponse<Long> getShuJuYZYCount(@RequestParam (required = false) String zuZhiJGID,
                                               @RequestParam String shuJuYLBID,
                                               @RequestParam(required = false) String likeQuery) throws WeiZhaoDSJException {
-        return MsfResponse.success(shuJuYZYService.getShuJuYZYCount(zuZhiJGID, shuJuYLBID, likeQuery, 1, 10));
+        return MsfResponse.success(shuJuYZYService.getShuJuYZYCount(zuZhiJGID, shuJuYLBID, likeQuery));
     }
 }

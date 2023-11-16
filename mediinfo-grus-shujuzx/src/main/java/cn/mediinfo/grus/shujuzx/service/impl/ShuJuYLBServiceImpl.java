@@ -163,7 +163,8 @@ public class ShuJuYLBServiceImpl implements ShuJuYLBService {
                                 .or(x.shuJuYLBID.contains(likeQuery))
                                 .or(x.shuRuMa1.toLowerCase().contains(likeQuery.toLowerCase()))
                                 .or(x.shuRuMa2.toLowerCase().contains(likeQuery.toLowerCase()))
-                                .or(x.shuRuMa3.toLowerCase().contains(likeQuery.toLowerCase()))).orderBy(x -> x.shuJuYLBID.asc()).fetchPage(pageIndex,pageSize);
+                                .or(x.shuRuMa3.toLowerCase().contains(likeQuery.toLowerCase())))
+                .orderBy(x -> x.shuJuYLBID.asc()).fetchPage(pageIndex,pageSize);
 
         return MapUtils.copyListProperties(entityList, SC_ZD_ShuJuYLBDto::new);
     }

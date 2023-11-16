@@ -26,7 +26,7 @@ public abstract class CDADocBase implements ICDADocService {
     /// 根据获取数据生成文档
     /// </summary>
     public abstract void DoGenDoc();
-    public String title;
+    public String wenDangMC;
     public String wenDangID;
     List<String> mpiList=null;
     public void setMPIList(List<String> mpi) {
@@ -35,11 +35,17 @@ public abstract class CDADocBase implements ICDADocService {
     public List<String> getMPIList() {
         return  this.mpiList;
     }
-    public void setTitle(String title) {
-        this.title=title;
+    public void setWenDangMC(String wenDangMC) {
+        this.wenDangMC=wenDangMC;
     }
-    public String getTitle() {
-        return  this.title;
+    public String getWenDangMC() {
+        return  this.wenDangMC;
+    }
+    public void setWenDangID(String wenDangID) {
+        this.wenDangID=wenDangID;
+    }
+    public String getWenDangID() {
+        return  this.wenDangID;
     }
     public POCDMT000040ClinicalDocument clinicalDOC = new POCDMT000040ClinicalDocument();
     public void GetData()
@@ -83,7 +89,7 @@ public abstract class CDADocBase implements ICDADocService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
         String formattedDateTime = now.format(formatter);
         ST st=new ST();
-        st.setLanguage(this.title);
+        st.setLanguage(this.wenDangMC);
         clinicalDOC.setTitle(st);
         TS ts=new TS();
         ts.setValue(formattedDateTime);

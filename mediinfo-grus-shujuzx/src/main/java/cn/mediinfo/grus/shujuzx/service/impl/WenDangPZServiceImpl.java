@@ -165,4 +165,17 @@ public class WenDangPZServiceImpl implements WenDangPZService {
         sc_zd_wenDangMBRepository.deleteById(wenDangPZMB.getId());
         return true;
     }
+
+    /**
+     * 根据文档ID获取模板内容
+     */
+    @Override
+    public SC_ZD_WenDangDto getWenDangXXByWDID(String wenDangID) throws TongYongYWException {
+        var wenDangXX = sc_zd_wenDangRepository.asQuerydsl().where(s -> s.wenDangID.eq(wenDangID)).select(SC_ZD_WenDangDto.class).fetchFirst();
+        if (wenDangXX == null) {
+            throw new TongYongYWException("暂未找到该文档！");
+        }
+        return wenDangXX;
+    }
+
 }

@@ -14,10 +14,12 @@ public interface ICDADocService {
     void GeneDOC();
     String getXml() throws JAXBException;
     List<String> mpiList=null;
-    String title=null;
+    String wenDangMC=null;
+    String wenDangID=null;
     void setMPIList(List<String> mpiList);
     List<String> getMPIList();
-    void setTitle(String title);
-    String getTitle() ;
-
+    void setWenDangMC(String wenDangMC);
+    String getWenDangMC() ;
+    void  setWenDangID(String wenDangID);
+    String getWenDangID() ;
 }

@@ -240,13 +240,11 @@ public class ShuJuYZYServiceImpl implements ShuJuYZYService {
      * @param zuZhiJGID
      * @param shuJuYLBID
      * @param likeQuery
-     * @param pageIndex
-     * @param pageSize
      * @return
      * @throws WeiZhaoDSJException
      */
     @Override
-    public long getShuJuYZYCount(String zuZhiJGID, String shuJuYLBID, String likeQuery, Integer pageIndex, Integer pageSize) throws WeiZhaoDSJException {
+    public long getShuJuYZYCount(String zuZhiJGID, String shuJuYLBID, String likeQuery) throws WeiZhaoDSJException {
         QSC_ZD_ShuJuYLBModel shuJuYLB = QSC_ZD_ShuJuYLBModel.sC_ZD_ShuJuYLBModel;
         var factoryLB = new JPAQueryFactory(sc_zd_shuJuYLBRepository.getEntityManager());
         var queryLB = factoryLB.select(shuJuYLB).from(shuJuYLB).where(shuJuYLB.shuJuYLBID.eq(shuJuYLBID));

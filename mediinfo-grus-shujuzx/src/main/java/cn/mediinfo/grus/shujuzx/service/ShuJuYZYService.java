@@ -82,12 +82,10 @@ public interface ShuJuYZYService {
      * @param zuZhiJGID
      * @param shuJuYLBID
      * @param likeQuery
-     * @param pageIndex
-     * @param pageSize
      * @return
      * @throws WeiZhaoDSJException
      */
-    long getShuJuYZYCount(String zuZhiJGID, String shuJuYLBID, String likeQuery, Integer pageIndex, Integer pageSize) throws WeiZhaoDSJException;
+    long getShuJuYZYCount(String zuZhiJGID, String shuJuYLBID, String likeQuery) throws WeiZhaoDSJException;
 
 
 }

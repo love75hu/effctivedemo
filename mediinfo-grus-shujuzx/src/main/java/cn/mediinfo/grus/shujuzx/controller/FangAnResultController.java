@@ -69,7 +69,7 @@ public class FangAnResultController {
         return MsfResponse.success(fangAnService.getFangAnJGCount(fangAnCXLSId,mergeType));
     }
     @Operation(summary = "查询病历详情")
-    @PostMapping("getBingLiXQ")
+    @PostMapping("/getBingLiXQ")
     public MsfResponse<List<BingLiXQXXDto>> getBingLiXQ(@RequestBody BingLiXQDto bingLiXQDto) throws YuanChengException {
         return MsfResponse.success(fangAnService.getBingLiXQ(bingLiXQDto));
     }

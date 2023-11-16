@@ -7,10 +7,11 @@ import cn.mediinfo.cyan.msf.stringgenerator.StringGenerator;
 import cn.mediinfo.grus.shujuzx.dto.JieDianGL.BiHuanSTXXDto;
 import cn.mediinfo.grus.shujuzx.dto.JieDianGL.BiHuanSTXXTree;
 import cn.mediinfo.grus.shujuzx.dto.bihuangl.SC_BH_ShiTuXXDto;
+import cn.mediinfo.grus.shujuzx.dto.shujuyzys.SC_ZD_ShuJuYZYDto;
 import cn.mediinfo.grus.shujuzx.model.SC_BH_ShiTuXXModel;
-import cn.mediinfo.grus.shujuzx.model.SC_CX_ShiTuXXModel;
 import cn.mediinfo.grus.shujuzx.repository.SC_BH_ShiTuXXRepository;
 import cn.mediinfo.grus.shujuzx.service.BIHuanSTXXService;
+import cn.mediinfo.grus.shujuzx.service.ShuJuYZYService;
 import cn.mediinfo.lyra.extension.service.LyraIdentityService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,12 +29,14 @@ public class BIHuanSTXXServiceImpl implements BIHuanSTXXService {
     private final SC_BH_ShiTuXXRepository shiTuXXRepository;
     private final LyraIdentityService lyraIdentityService;
     private final  BiHuanSTMXServiceImpl biHuanSTMXService;
+    private final ShuJuYZYService shuJuYZYService;
 
-    public BIHuanSTXXServiceImpl(StringGenerator stringGenerator, SC_BH_ShiTuXXRepository shiTuXXRepository, LyraIdentityService lyraIdentityService, BiHuanSTMXServiceImpl biHuanSTMXService) {
+    public BIHuanSTXXServiceImpl(StringGenerator stringGenerator, SC_BH_ShiTuXXRepository shiTuXXRepository, LyraIdentityService lyraIdentityService, BiHuanSTMXServiceImpl biHuanSTMXService, ShuJuYZYService shuJuYZYService) {
         this.stringGenerator = stringGenerator;
         this.shiTuXXRepository = shiTuXXRepository;
         this.lyraIdentityService = lyraIdentityService;
         this.biHuanSTMXService = biHuanSTMXService;
+        this.shuJuYZYService = shuJuYZYService;
     }
 
     /**
@@ -51,15 +54,19 @@ public class BIHuanSTXXServiceImpl implements BIHuanSTXXService {
      */
     @Override
     public List<BiHuanSTXXTree> getBiHuanSTXXTree(String likeQuery) {
+
+        List<SC_ZD_ShuJuYZYDto> shuJuYZYList = shuJuYZYService.getShuJuYZYListByLBID("SC0013");
+
         List<SC_BH_ShiTuXXDto> shiTuXXList = shiTuXXRepository.getShiTuXXList(likeQuery);
         List<String> collect = shiTuXXList.stream().map(x -> x.getBiHuanLXDM()).distinct().collect(Collectors.toList());
         List<BiHuanSTXXTree> biHuanSTXXTrees = new ArrayList<>();
-        for (var s:collect)
+        for (var s:shuJuYZYList)
         {
-            SC_BH_ShiTuXXDto scBhShiTuXXDto = shiTuXXList.stream().filter(x -> x.getBiHuanLXDM().equals(s)).findFirst().orElse(new SC_BH_ShiTuXXDto());
-            BiHuanSTXXTree biHuanSTXXTree = BeanUtil.copyProperties(scBhShiTuXXDto, BiHuanSTXXTree::new);
+            BiHuanSTXXTree biHuanSTXXTree=new BiHuanSTXXTree();
+            biHuanSTXXTree.setShiTuLXDM(s.getBiaoZhunDM());
+            biHuanSTXXTree.setBiHuanLXMC(s.getZhiYuMC());
             biHuanSTXXTree.setChildren(BeanUtil.copyListProperties(shiTuXXList.stream()
-                    .filter(x->x.getBiHuanLXDM().equals(s)).collect(Collectors.toList()),BiHuanSTXXTree::new));
+                    .filter(x->x.getBiHuanLXDM().equals(s.getBiaoZhunDM())).collect(Collectors.toList()),BiHuanSTXXTree::new));
            biHuanSTXXTrees.add(biHuanSTXXTree);
         }
         return biHuanSTXXTrees;

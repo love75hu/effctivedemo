@@ -23,4 +23,5 @@ public interface WenDangPZService {
     Boolean UpDateWenDangMBXX(String id, String xmlStr) throws TongYongYWException;
 
     Boolean zuoFeiWenDangPZ(String id) throws TongYongYWException;
+    SC_ZD_WenDangDto getWenDangXXByWDID(String wenDangID) throws TongYongYWException;
 }

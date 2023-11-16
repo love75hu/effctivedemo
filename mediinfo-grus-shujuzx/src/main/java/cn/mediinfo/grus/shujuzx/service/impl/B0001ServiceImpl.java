@@ -327,7 +327,6 @@ public  class B0001ServiceImpl extends CDADocBase  {
 
         //遗传病史章节
         POCDMT000040Component3 componentYCBS=new POCDMT000040Component3();
-       // var componentYCBS = clinicalDOC.Component.AsStructuredBody.Component.Append();
         this.createYiChuanBS(componentYCBS);
         structuredBody.getComponent().add(componentYCBS);
 

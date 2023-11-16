@@ -2,15 +2,17 @@ package cn.mediinfo.grus.shujuzx.controller;
 import cn.hutool.core.collection.ListUtil;
 import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 import cn.mediinfo.cyan.msf.core.response.MsfResponse;
-import cn.mediinfo.grus.shujuzx.dto.cda.gongwei.DA_GA_BaoLuShiDto;
+import cn.mediinfo.grus.shujuzx.constant.WenDangSJLYConstant;
+import cn.mediinfo.grus.shujuzx.constant.YaSuoFSConstant;
 import cn.mediinfo.grus.shujuzx.dto.cda.gongwei.DA_GA_JiBenXXDto;
 import cn.mediinfo.grus.shujuzx.dto.wendangjls.SC_GW_JiLuXXCreateDto;
 import cn.mediinfo.grus.shujuzx.dto.wendangjls.SC_GW_JiLuXXSCDto;
 import cn.mediinfo.grus.shujuzx.dto.wendangnrs.SC_GW_JiLuNRDto;
-import cn.mediinfo.grus.shujuzx.remoteservice.GongWeiRemoteService;
 import cn.mediinfo.grus.shujuzx.service.ICDADocService;
 import cn.mediinfo.grus.shujuzx.service.WenDangJLXXService;
+import cn.mediinfo.grus.shujuzx.service.WenDangPZService;
 import cn.mediinfo.grus.shujuzx.service.impl.B0001ServiceImpl;
+import cn.mediinfo.grus.shujuzx.utils.GZIPUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.xml.bind.JAXBException;
@@ -35,10 +37,10 @@ import java.util.List;
 public class WenDangSCController implements  BeanFactoryAware {
     private BeanFactory beanFactory;
     private final WenDangJLXXService wenDangJLXXService;
-    private final GongWeiRemoteService _gongWeiRemoteService;
-    public WenDangSCController(WenDangJLXXService wenDangJLXXService,GongWeiRemoteService gongWeiRemoteService) {
+    private final WenDangPZService wenDangPZService;
+    public WenDangSCController(WenDangJLXXService wenDangJLXXService,WenDangPZService wenDangPZService) {
         this.wenDangJLXXService=wenDangJLXXService;
-        this._gongWeiRemoteService=gongWeiRemoteService;
+        this.wenDangPZService = wenDangPZService;
     }
 
 
@@ -49,9 +51,12 @@ public class WenDangSCController implements  BeanFactoryAware {
         {
             throw  new TongYongYWException("参数mpilist不能为空");
         }
+        //获取文档配置
+        var wenDangXX=wenDangPZService.getWenDangXXByWDID(dto.getWenDangID());
         ICDADocService cdaProc = beanFactory.getBean(dto.getWenDangID(), ICDADocService.class);
         cdaProc.setMPIList(dto.getMpiList());
-        cdaProc.setTitle("个人健康基本信息");
+        cdaProc.setWenDangMC(wenDangXX.getWenDangMC());
+        cdaProc.setWenDangID(dto.getWenDangID());
         cdaProc.GetData();
         List<SC_GW_JiLuXXCreateDto> jiLuXXCreateDtoList= ListUtil.toList();
         switch (dto.getWenDangID()) {
@@ -77,27 +82,23 @@ public class WenDangSCController implements  BeanFactoryAware {
         jiLuXXCreateDto.setXingBieMC(jiBenXX.getXingBieMC());//性别名称
         jiLuXXCreateDto.setBingRenID(jiBenXX.getMPI());//病人id
         jiLuXXCreateDto.setXingMing(jiBenXX.getXingMing());//姓名
-        jiLuXXCreateDto.setXingMing(jiBenXX.getXingMing());//姓名
         jiLuXXCreateDto.setZhengJianLXDM(jiBenXX.getZhengJianLBDM());//证件类别
         jiLuXXCreateDto.setZhengJianLXMC(jiBenXX.getZhengJianLBMC());//证件类别名称
         jiLuXXCreateDto.setZhengJianHM(jiBenXX.getZhengJianHM());//证件号码
-        jiLuXXCreateDto.setZhengJianLXDM(jiBenXX.getZhengJianLBDM());//证件类别
-        jiLuXXCreateDto.setShuJuLYDM("");//数据来源代码
-        jiLuXXCreateDto.setShuJuLYMC("");//数据来源名称
-
+        jiLuXXCreateDto.setShuJuLYDM(WenDangSJLYConstant.SHOUDONG);//数据来源代码
+        jiLuXXCreateDto.setShuJuLYMC(WenDangSJLYConstant.SHOUDONGMC);//数据来源名称
+        jiLuXXCreateDto.setWenDangID(cdaProc.getWenDangID());
+        jiLuXXCreateDto.setWenDangMC(cdaProc.getWenDangMC());
         jiLuXXCreateDto.setYeWuSJ(yeWuSJ);
         jiLuXXCreateDto.setYeWuZJID(yeWuZJID);
-
         SC_GW_JiLuNRDto jiLuNRDto=new SC_GW_JiLuNRDto();
-        jiLuNRDto.setWenDangID("");
-        jiLuNRDto.setWenDangMC("");
-        jiLuNRDto.setNeiRong(assembleDictionaryDoc(cdaProc));
-        jiLuNRDto.setYaSuoFSDM("");//压缩方式
-        jiLuNRDto.setYaSuoFSMC("");//压缩方式
+        jiLuNRDto.setWenDangID(cdaProc.getWenDangID());
+        jiLuNRDto.setWenDangMC(cdaProc.getWenDangMC());
+        jiLuNRDto.setNeiRong(GZIPUtils.compressData(assembleDictionaryDoc(cdaProc)));
+        jiLuNRDto.setYaSuoFSDM(YaSuoFSConstant.zip);//压缩方式
+        jiLuNRDto.setYaSuoFSMC(YaSuoFSConstant.zip_mc);
         jiLuXXCreateDto.setJiLuNRDto(jiLuNRDto);
         return  jiLuXXCreateDto;
-
-
     }
 
     private String assembleDictionaryDoc(ICDADocService cdaProc) throws JAXBException {

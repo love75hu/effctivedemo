@@ -3,10 +3,7 @@ package cn.mediinfo.grus.shujuzx.service;
 import cn.mediinfo.cyan.msf.core.exception.MsfResponseException;
 import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
-import cn.mediinfo.grus.shujuzx.dto.bihuansz.AddBiHuanSZXXDto;
-import cn.mediinfo.grus.shujuzx.dto.bihuansz.BiHuanSZXFDto;
-import cn.mediinfo.grus.shujuzx.dto.bihuansz.BiHuanSZXXDto;
-import cn.mediinfo.grus.shujuzx.dto.bihuansz.SC_BH_JieDianXXDto;
+import cn.mediinfo.grus.shujuzx.dto.bihuansz.*;
 import jakarta.validation.constraints.NotEmpty;
 
 import java.util.List;
@@ -20,5 +17,7 @@ public interface JieDianXXService {
     String addBiHuanSZXX(AddBiHuanSZXXDto dto);
 
     List<BiHuanSZXXDto>  getBiHuanSZXXBybiHuanID( String biHuanID);
+
+    List<JieDianSXXXDto>  getJieDianSXXX(String biHuanID,String jieDianID);
 
 }

@@ -3,13 +3,11 @@ package cn.mediinfo.grus.shujuzx.controller;
 import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
 import cn.mediinfo.cyan.msf.core.response.MsfResponse;
-import cn.mediinfo.grus.shujuzx.dto.JieDianGL.JieDianNRDto;
+import cn.mediinfo.cyan.msf.core.util.BeanUtil;
+import cn.mediinfo.grus.shujuzx.dto.JieDianGL.BiHuanSTZDDto;
 import cn.mediinfo.grus.shujuzx.dto.JieDianGL.KeXuanZDDto;
 import cn.mediinfo.grus.shujuzx.dto.bihuansz.*;
-import cn.mediinfo.grus.shujuzx.service.BiHuanSTJDMXService;
-import cn.mediinfo.grus.shujuzx.service.BiHuanSTMXService;
-import cn.mediinfo.grus.shujuzx.service.JiBenXXService;
-import cn.mediinfo.grus.shujuzx.service.JieDianXXService;
+import cn.mediinfo.grus.shujuzx.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotEmpty;
@@ -35,12 +33,15 @@ public class BiHuanSZController {
 
     private final JieDianXXService jieDianXXService;
 
+    private final RuCanXXService ruChanXXService;
 
-    public BiHuanSZController(JiBenXXService jiBenXXService, BiHuanSTMXService biHuanSTMXService, BiHuanSTJDMXService biHuanSTJDMXService, JieDianXXService jieDianXXService) {
+
+    public BiHuanSZController(JiBenXXService jiBenXXService, BiHuanSTMXService biHuanSTMXService, BiHuanSTJDMXService biHuanSTJDMXService, JieDianXXService jieDianXXService, RuCanXXService ruChanXXService) {
         this.jiBenXXService = jiBenXXService;
         this.biHuanSTMXService = biHuanSTMXService;
         this.biHuanSTJDMXService = biHuanSTJDMXService;
         this.jieDianXXService = jieDianXXService;
+        this.ruChanXXService = ruChanXXService;
     }
 
     @Operation(summary = "获取闭环信息")
@@ -63,11 +64,11 @@ public class BiHuanSZController {
         return MsfResponse.success(biHuanSTMXService.getRuChanZDXX(biHuanLXDM));
     }
 
-    @Operation(summary = "获取节点下失效字段")
+    @Operation(summary = "获取节点时效字段")
     @GetMapping("getShiTuJDMXByJieDianID")
-    public MsfResponse<List<JieDianNRDto>> getShiTuJDMXByJieDianID(String jieDianID)
+    public MsfResponse<List<JieDianSXXXDto>> getShiTuJDMXByJieDianID(@NotEmpty(message = "闭环ID不能为空")String biHuanID,String jieDianID)
     {
-        return MsfResponse.success(biHuanSTJDMXService.getShiTuJDMXByJieDianID(jieDianID));
+        return MsfResponse.success(jieDianXXService.getJieDianSXXX(biHuanID,jieDianID));
     }
 
     @Operation(summary = "添加闭环设置信息")
@@ -116,6 +117,15 @@ public class BiHuanSZController {
     {
         return MsfResponse.success(jiBenXXService.getBiHuanXXBYID(biHuanID));
     }
+
+
+    @Operation(summary = "获取闭环视图视图入参字段")
+    @GetMapping("getBiHuanSTRCZD")
+    public MsfResponse<List<BiHuanSTZDDto>> getBiHuanSTRCZD(@NotEmpty(message = "闭环id不能为空") String biHuanID)
+    {
+        return MsfResponse.success(BeanUtil.copyListProperties(ruChanXXService.getRuCanXX(biHuanID),BiHuanSTZDDto::new) );
+    }
+
 
 
 

@@ -21,6 +21,9 @@ public class FangAnCXZDFZDto {
     @Schema(description = "字段值数量")
     private Integer ziDuanZhiCount;
 
+    @Schema(description = "字段顺序")
+    private Integer ziDuanSXH;
+
     @Schema(description = "字段值")
     private List<Object> ziDuanZhiList;
 }

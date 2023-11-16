@@ -1,6 +1,7 @@
 package cn.mediinfo.grus.shujuzx.controller;
 
 import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
+import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
 import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
 import cn.mediinfo.cyan.msf.core.response.MsfResponse;
 import cn.mediinfo.grus.shujuzx.dto.bihuanlcs.BingLiXQDto;
@@ -53,7 +54,7 @@ public class FangAnResultController {
 
     @Operation(summary = "查询历史方案")
     @GetMapping("/getFangAnCXLS")
-    public MsfResponse<FangAnByFACXLSDTO> getFangAnCXLS(@NotBlank(message="方案查询历史id不能为空") @RequestParam String fangAnCXLSId) throws TongYongYWException {
+    public MsfResponse<FangAnByFACXLSDTO> getFangAnCXLS(@NotBlank(message="方案查询历史id不能为空") @RequestParam String fangAnCXLSId) throws TongYongYWException, WeiZhaoDSJException {
         return MsfResponse.success(fangAnService.getFangAnCXLS(fangAnCXLSId));
     }
 

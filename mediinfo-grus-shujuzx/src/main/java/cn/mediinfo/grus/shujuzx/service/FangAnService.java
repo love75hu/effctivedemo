@@ -1,6 +1,7 @@
 package cn.mediinfo.grus.shujuzx.service;
 
 import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
+import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
 import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
 import cn.mediinfo.grus.shujuzx.common.fangan.condition.FangAnTreeNode;
 import cn.mediinfo.grus.shujuzx.dto.bihuanlcs.BingLiXQDto;
@@ -32,7 +33,7 @@ public interface FangAnService {
      * @return
      * @throws YuanChengException
      */
-    FangAnQueryDTO getFangAnXX(String id) throws TongYongYWException;
+    FangAnQueryDTO getFangAnXX(String id) throws TongYongYWException, WeiZhaoDSJException;
 
     /**
      * 根据方案查询历史获取方案信息
@@ -40,7 +41,7 @@ public interface FangAnService {
      * @return
      * @throws TongYongYWException
      */
-    FangAnByFACXLSDTO getFangAnCXLS(String fangAnCXLSId) throws TongYongYWException;
+    FangAnByFACXLSDTO getFangAnCXLS(String fangAnCXLSId) throws TongYongYWException, WeiZhaoDSJException;
 
     /**
      * 更新方案

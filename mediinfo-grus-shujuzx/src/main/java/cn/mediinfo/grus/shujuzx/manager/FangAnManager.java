@@ -1,6 +1,7 @@
 package cn.mediinfo.grus.shujuzx.manager;
 
 import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
+import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
 import cn.mediinfo.grus.shujuzx.dto.fangan.FangAnQueryDTO;
 import cn.mediinfo.grus.shujuzx.request.fangan.FangAnXXSaveRequest;
 import cn.mediinfo.grus.shujuzx.request.fangan.FangAnXXUpdateRequest;
@@ -14,7 +15,7 @@ public interface FangAnManager {
      * @return
      * @throws TongYongYWException
      */
-    FangAnQueryDTO getFangAnXXByID(String id) throws TongYongYWException;
+    FangAnQueryDTO getFangAnXXByID(String id) throws TongYongYWException, WeiZhaoDSJException;
 
     /**
      * 根据方案ID获取方案信息
@@ -23,7 +24,7 @@ public interface FangAnManager {
      * @return
      * @throws TongYongYWException
      */
-    FangAnQueryDTO getFangAnXXByFAID(String fangAnId) throws TongYongYWException;
+    FangAnQueryDTO getFangAnXXByFAID(String fangAnId) throws TongYongYWException, WeiZhaoDSJException;
 
     /**
      * 保存方案

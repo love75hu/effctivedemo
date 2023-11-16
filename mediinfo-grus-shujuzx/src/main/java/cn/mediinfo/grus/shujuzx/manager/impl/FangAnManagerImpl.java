@@ -2,12 +2,15 @@ package cn.mediinfo.grus.shujuzx.manager.impl;
 
 import cn.hutool.core.collection.ListUtil;
 import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
+import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
 import cn.mediinfo.cyan.msf.core.util.*;
 import cn.mediinfo.cyan.msf.tenant.orm.entity.StringMTEntity;
 import cn.mediinfo.grus.shujuzx.common.fangan.condition.FangAnTreeNode;
 import cn.mediinfo.grus.shujuzx.constant.ShuJuZXConstant;
 import cn.mediinfo.grus.shujuzx.dto.fangan.FangAnQueryDTO;
 import cn.mediinfo.grus.shujuzx.dto.fangan.FangAnSCDTO;
+import cn.mediinfo.grus.shujuzx.dto.shitumx.SchemaTable;
+import cn.mediinfo.grus.shujuzx.dto.shitumx.ShuJuSTDto;
 import cn.mediinfo.grus.shujuzx.manager.FangAnManager;
 import cn.mediinfo.grus.shujuzx.model.SC_CX_FangAnNRModel;
 import cn.mediinfo.grus.shujuzx.model.SC_CX_FangAnSCModel;
@@ -17,6 +20,7 @@ import cn.mediinfo.grus.shujuzx.repository.SC_CX_FangAnSCRepository;
 import cn.mediinfo.grus.shujuzx.repository.SC_CX_FangAnXXRepository;
 import cn.mediinfo.grus.shujuzx.request.fangan.FangAnXXSaveRequest;
 import cn.mediinfo.grus.shujuzx.request.fangan.FangAnXXUpdateRequest;
+import cn.mediinfo.grus.shujuzx.service.ShiTuMXService;
 import cn.mediinfo.lyra.extension.service.LyraIdentityService;
 import cn.mediinfo.lyra.extension.service.SequenceService;
 import org.apache.commons.collections4.CollectionUtils;
@@ -26,6 +30,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -46,6 +51,9 @@ public class FangAnManagerImpl implements FangAnManager {
     @Autowired
     private SC_CX_FangAnSCRepository fangAnSCRepository;
 
+    @Autowired
+    private ShiTuMXService shiTuMXService;
+
     /**
      * 根据方案主键ID获取方案信息
      *
@@ -54,7 +62,7 @@ public class FangAnManagerImpl implements FangAnManager {
      * @throws TongYongYWException
      */
     @Override
-    public FangAnQueryDTO getFangAnXXByID(String id) throws TongYongYWException {
+    public FangAnQueryDTO getFangAnXXByID(String id) throws TongYongYWException, WeiZhaoDSJException {
         SC_CX_FangAnXXModel fangAnXX = fangAnXXRepository.findById(id).orElse(null);
         if (fangAnXX==null) {
             throw new TongYongYWException("方案不存在！");
@@ -73,7 +81,7 @@ public class FangAnManagerImpl implements FangAnManager {
      * @throws TongYongYWException
      */
     @Override
-    public FangAnQueryDTO getFangAnXXByFAID(String fangAnId) throws TongYongYWException {
+    public FangAnQueryDTO getFangAnXXByFAID(String fangAnId) throws TongYongYWException, WeiZhaoDSJException {
         SC_CX_FangAnXXModel fangAnXX = fangAnXXRepository.findByFangAnID(fangAnId);
         if (ObjectUtils.isEmpty(fangAnXX)) {
             throw new TongYongYWException("方案不存在！");
@@ -197,16 +205,28 @@ public class FangAnManagerImpl implements FangAnManager {
      * @param fangAnId
      * @param result
      */
-    private void zuZhuangFAXX(String fangAnId,FangAnQueryDTO result)
-    {
+    private void zuZhuangFAXX(String fangAnId,FangAnQueryDTO result) throws WeiZhaoDSJException {
         SC_CX_FangAnNRModel fangAnNR = fangAnNRRepository.findByFangAnID(fangAnId);
         if (ObjectUtils.isNotEmpty(fangAnNR) && StringUtil.hasText(fangAnNR.getChaXunTJ())) {
             result.setRoot(JsonUtil.getJsonToBean(fangAnNR.getChaXunTJ(), FangAnTreeNode.class));
         }
         //装载输出字段信息
         List<SC_CX_FangAnSCModel> fangAnSCModelList = fangAnSCRepository.findByFangAnID(fangAnId);
+        List<ShuJuSTDto> shuJuSTList= fangAnSCModelList.stream().filter(p->"1".equals(p.getZhiBiaoLXDM())).collect(Collectors.groupingBy(SC_CX_FangAnSCModel::getZhiBiaoFLID)).entrySet().stream().map(p->{
+            ShuJuSTDto shuJuST=new ShuJuSTDto();
+            shuJuST.setShiTuID(p.getKey());
+            shuJuST.setZiDuanBM(p.getValue().stream().map(SC_CX_FangAnSCModel::getZhiBiaoID).distinct().collect(Collectors.toList()));
+            return  shuJuST;
+        }).toList();
+        List<SchemaTable> schemaTableList=shiTuMXService.getFangAnSCZD(shuJuSTList);
+
         List<FangAnSCDTO> fangAnSCList = MapUtils.copyListProperties(fangAnSCModelList, FangAnSCDTO::new, (a, b) -> {
-            //TODO 获取表名和模式名
+            SchemaTable schemaTable =schemaTableList.stream().filter(p->p.getShuJuJMXZDDtos().stream().anyMatch(q-> Objects.equals(a.getZhiBiaoID().toLowerCase(),q.getZiDuanBM().toLowerCase()))).findFirst().orElse(null);
+            if(schemaTable!=null){
+                b.setMoShi(schemaTable.getMoShi());
+                b.setBiaoMing(schemaTable.getBiaoMing());
+            }
         });
+        result.setFangAnSCList(fangAnSCList);
     }
 }

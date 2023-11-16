@@ -18,6 +18,9 @@ public class FangAnCXSTFZDto {
     @Schema(description = "视图主键数量")
     private Integer shiTuZJCount;
 
+    @Schema(description = "视图顺序号")
+    private Integer shiTuSXH;
+
     @Schema(description = "方案查询视图主键分组")
     private List<FangAnCXSTZJFZDto> fangAnCXSTZJFZList;
 }

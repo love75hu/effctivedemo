@@ -1,7 +1,7 @@
 //
-// ´ËÎÄ¼şÊÇÓÉ Eclipse Implementation of JAXB v4.0.3 Éú³ÉµÄ
-// Çë·ÃÎÊ https://eclipse-ee4j.github.io/jaxb-ri 
-// ÔÚÖØĞÂ±àÒëÔ´Ä£Ê½Ê±, ¶Ô´ËÎÄ¼şµÄËùÓĞĞŞ¸Ä¶¼½«¶ªÊ§¡£
+// æ­¤æ–‡ä»¶æ˜¯ç”± Eclipse Implementation of JAXB v4.0.3 ç”Ÿæˆçš„
+// è¯·è®¿é—® https://eclipse-ee4j.github.io/jaxb-ri 
+// åœ¨é‡æ–°ç¼–è¯‘æºæ¨¡å¼æ—¶, å¯¹æ­¤æ–‡ä»¶çš„æ‰€æœ‰ä¿®æ”¹éƒ½å°†ä¸¢å¤±ã€‚
 //
 
 
@@ -14,9 +14,9 @@ import jakarta.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>RTO_PQ_PQ complex typeµÄ Java Àà¡£
+ * <p>RTO_PQ_PQ complex typeçš„ Java ç±»ã€‚
  * 
- * <p>ÒÔÏÂÄ£Ê½Æ¬¶ÎÖ¸¶¨°üº¬ÔÚ´ËÀàÖĞµÄÔ¤ÆÚÄÚÈİ¡£
+ * <p>ä»¥ä¸‹æ¨¡å¼ç‰‡æ®µæŒ‡å®šåŒ…å«åœ¨æ­¤ç±»ä¸­çš„é¢„æœŸå†…å®¹ã€‚
  * 
  * <pre>{@code
  * <complexType name="RTO_PQ_PQ">
@@ -48,7 +48,7 @@ public class RTOPQPQ
     protected PQ denominator;
 
     /**
-     * »ñÈ¡numeratorÊôĞÔµÄÖµ¡£
+     * è·å–numeratorå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -60,7 +60,7 @@ public class RTOPQPQ
     }
 
     /**
-     * ÉèÖÃnumeratorÊôĞÔµÄÖµ¡£
+     * è®¾ç½®numeratorå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -72,7 +72,7 @@ public class RTOPQPQ
     }
 
     /**
-     * »ñÈ¡denominatorÊôĞÔµÄÖµ¡£
+     * è·å–denominatorå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -84,7 +84,7 @@ public class RTOPQPQ
     }
 
     /**
-     * ÉèÖÃdenominatorÊôĞÔµÄÖµ¡£
+     * è®¾ç½®denominatorå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is

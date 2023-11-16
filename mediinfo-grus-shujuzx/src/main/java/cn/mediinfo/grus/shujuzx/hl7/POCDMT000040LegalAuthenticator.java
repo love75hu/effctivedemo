@@ -1,7 +1,7 @@
 //
-// ´ËÎÄ¼şÊÇÓÉ Eclipse Implementation of JAXB v4.0.3 Éú³ÉµÄ
-// Çë·ÃÎÊ https://eclipse-ee4j.github.io/jaxb-ri 
-// ÔÚÖØĞÂ±àÒëÔ´Ä£Ê½Ê±, ¶Ô´ËÎÄ¼şµÄËùÓĞĞŞ¸Ä¶¼½«¶ªÊ§¡£
+// æ­¤æ–‡ä»¶æ˜¯ç”± Eclipse Implementation of JAXB v4.0.3 ç”Ÿæˆçš„
+// è¯·è®¿é—® https://eclipse-ee4j.github.io/jaxb-ri 
+// åœ¨é‡æ–°ç¼–è¯‘æºæ¨¡å¼æ—¶, å¯¹æ­¤æ–‡ä»¶çš„æ‰€æœ‰ä¿®æ”¹éƒ½å°†ä¸¢å¤±ã€‚
 //
 
 
@@ -17,9 +17,9 @@ import jakarta.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>POCD_MT000040.LegalAuthenticator complex typeµÄ Java Àà¡£
+ * <p>POCD_MT000040.LegalAuthenticator complex typeçš„ Java ç±»ã€‚
  * 
- * <p>ÒÔÏÂÄ£Ê½Æ¬¶ÎÖ¸¶¨°üº¬ÔÚ´ËÀàÖĞµÄÔ¤ÆÚÄÚÈİ¡£
+ * <p>ä»¥ä¸‹æ¨¡å¼ç‰‡æ®µæŒ‡å®šåŒ…å«åœ¨æ­¤ç±»ä¸­çš„é¢„æœŸå†…å®¹ã€‚
  * 
  * <pre>{@code
  * <complexType name="POCD_MT000040.LegalAuthenticator">
@@ -102,7 +102,7 @@ public class POCDMT000040LegalAuthenticator {
     }
 
     /**
-     * »ñÈ¡typeIdÊôĞÔµÄÖµ¡£
+     * è·å–typeIdå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -114,7 +114,7 @@ public class POCDMT000040LegalAuthenticator {
     }
 
     /**
-     * ÉèÖÃtypeIdÊôĞÔµÄÖµ¡£
+     * è®¾ç½®typeIdå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -157,7 +157,7 @@ public class POCDMT000040LegalAuthenticator {
     }
 
     /**
-     * »ñÈ¡timeÊôĞÔµÄÖµ¡£
+     * è·å–timeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -169,7 +169,7 @@ public class POCDMT000040LegalAuthenticator {
     }
 
     /**
-     * ÉèÖÃtimeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®timeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -181,7 +181,7 @@ public class POCDMT000040LegalAuthenticator {
     }
 
     /**
-     * »ñÈ¡signatureCodeÊôĞÔµÄÖµ¡£
+     * è·å–signatureCodeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -193,7 +193,7 @@ public class POCDMT000040LegalAuthenticator {
     }
 
     /**
-     * ÉèÖÃsignatureCodeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®signatureCodeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -205,7 +205,7 @@ public class POCDMT000040LegalAuthenticator {
     }
 
     /**
-     * »ñÈ¡assignedEntityÊôĞÔµÄÖµ¡£
+     * è·å–assignedEntityå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -217,7 +217,7 @@ public class POCDMT000040LegalAuthenticator {
     }
 
     /**
-     * ÉèÖÃassignedEntityÊôĞÔµÄÖµ¡£
+     * è®¾ç½®assignedEntityå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -291,7 +291,7 @@ public class POCDMT000040LegalAuthenticator {
     }
 
     /**
-     * »ñÈ¡contextControlCodeÊôĞÔµÄÖµ¡£
+     * è·å–contextControlCodeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -307,7 +307,7 @@ public class POCDMT000040LegalAuthenticator {
     }
 
     /**
-     * ÉèÖÃcontextControlCodeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®contextControlCodeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is

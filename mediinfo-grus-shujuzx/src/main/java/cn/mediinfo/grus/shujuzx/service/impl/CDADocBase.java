@@ -1,5 +1,7 @@
 package cn.mediinfo.grus.shujuzx.service.impl;
 
+import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.date.DateUtil;
 import cn.mediinfo.grus.shujuzx.hl7.*;
 import cn.mediinfo.grus.shujuzx.service.ICDADocService;
 import io.micrometer.common.util.StringUtils;
@@ -8,6 +10,8 @@ import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
 
 import java.io.StringWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.time.LocalDateTime;
@@ -97,8 +101,7 @@ public abstract class CDADocBase implements ICDADocService {
         clinicalDOC.setVersionNumber(new INT());
     }
 
-    public  void DoGenHead()
-    {
+    public  void DoGenHead()  {
 
     }
 
@@ -116,29 +119,6 @@ public abstract class CDADocBase implements ICDADocService {
         section.setText(new StrucDocText());
         component3.setSection(section);
         return component3;
-    }
-
-    public POCDMT000040Component4 AppendComponent(POCDMT000040Organizer entry, String code , String displayName)
-    {
-        POCDMT000040Component4 component4=new POCDMT000040Component4();
-        POCDMT000040Observation observation=new POCDMT000040Observation();
-        observation.getClassCode().set(0,"OBS");
-        observation.setMoodCode(XActMoodDocumentObservation.EVN);
-        CD cd=new CD();
-        cd.setCode("DE04.50.001.00");
-        cd.setCodeSystem("2.16.156.10011.2.2.1");
-        cd.setCodeSystem("2.16.156.10011.2.3.1.85");
-        cd.setCodeSystemName("卫生信息数据元目录");
-        observation.setCode(cd);
-        CD cd1=new CD();
-        cd.setCode("1");
-        cd.setDisplayName("A型");
-        cd.setCodeSystem("2.16.156.10011.2.3.1.85");
-        cd.setCodeSystemName("ABO血型代码表");
-        observation.getValue().set(0,cd);
-        component4.setObservation(observation);
-        entry.getComponent().add(component4);
-        return component4;
     }
 
     public POCDMT000040Observation appendOrganizerObservation_B0001(POCDMT000040Organizer organizer, String code, String displayName,
@@ -187,6 +167,95 @@ public abstract class CDADocBase implements ICDADocService {
         return cd;
     }
 
+    public POCDMT000040Observation appendObservation(POCDMT000040Component3 component, String code, String displayName)
+    {
+        var section=component.getSection();
+        POCDMT000040Entry entry=new POCDMT000040Entry();
+        POCDMT000040Observation pocdmt000040Observation=new POCDMT000040Observation();
+        pocdmt000040Observation.getClassCode().add("OBS");
+        pocdmt000040Observation.setMoodCode(XActMoodDocumentObservation.EVN);
+        CD cd=new CD();
+        cd.setCode("");
+        cd.setDisplayName("");
+        cd.setCodeSystem("2.16.156.10011.2.2.1");
+        cd.setCodeSystemName("卫生信息数据元目录");
+        pocdmt000040Observation.setCode(cd);
+        entry.setObservation(pocdmt000040Observation);
+        section.getEntry().add(entry);
+        component.setSection(section);
+        return entry.getObservation();
+    }
+
+    public POCDMT000040Observation appendOrganizerObservation(POCDMT000040Organizer organizer, String code, String displayName)
+    {
+        POCDMT000040Component4 component4=new POCDMT000040Component4();
+        component4.setTypeCode(ActRelationshipHasComponent.COMP);
+        POCDMT000040Observation observation=new POCDMT000040Observation();
+        observation.setMoodCode(XActMoodDocumentObservation.EVN);
+        observation.getClassCode().add("OBS");
+        CD cd=new CD();
+        cd.setCode("");
+        cd.setDisplayName("");
+        cd.setCodeSystem("2.16.156.10011.2.2.1");
+        cd.setCodeSystemName("卫生信息数据元目录");
+        observation.setCode(cd);
+        component4.setObservation(observation);
+        organizer.getComponent().add(component4);
+        return component4.getObservation();
+    }
+
+    public POCDMT000040EntryRelationship appendObservationRelationship(POCDMT000040Observation entry, String code, String displayName)
+    {
+
+        POCDMT000040EntryRelationship pocdmt000040EntryRelationship=new POCDMT000040EntryRelationship();
+        pocdmt000040EntryRelationship.setTypeCode(XActRelationshipEntryRelationship.COMP);
+        POCDMT000040Observation pocdmt000040Observation=new POCDMT000040Observation();
+        pocdmt000040Observation.getClassCode().add("OBS");
+        pocdmt000040Observation.setMoodCode(XActMoodDocumentObservation.EVN);
+        CD cd=new CD();
+        cd.setCode("");
+        cd.setDisplayName("");
+        cd.setCodeSystem("2.16.156.10011.2.2.1");
+        cd.setCodeSystemName("卫生信息数据元目录");
+        pocdmt000040Observation.setCode(cd);
+
+        pocdmt000040EntryRelationship.setObservation(pocdmt000040Observation);
+        entry.getEntryRelationship().add(pocdmt000040EntryRelationship);
+
+        return pocdmt000040EntryRelationship;
+    }
+
+    public BL newBL(boolean boolvalue)
+    {
+        BL bl=new BL();
+        bl.setValue(boolvalue);
+        return bl;
+    }
+
+    /// <summary>
+    /// -作为空的默认值
+    /// </summary>
+    /// <param name="text"></param>
+    /// <returns></returns>
+    public ST newST(String text)
+    {
+        var st = new ST();
+        st.setLanguage(text);
+        return st;
+    }
+
+    public POCDMT000040Organizer appendOrganizer(POCDMT000040Component3 component, String displayName,XActClassDocumentEntryOrganizer classCode)
+    {
+        POCDMT000040Entry entry=new POCDMT000040Entry();
+        POCDMT000040Organizer organizer=new POCDMT000040Organizer();
+        organizer.setClassCode(classCode);
+        organizer.getMoodCode().add("EVN");
+        organizer.setStatusCode(new CS());
+        entry.setOrganizer(organizer);
+        component.getSection().getEntry().add(entry);
+        return entry.getOrganizer();
+    }
+
     public  String getXml () throws JAXBException {
 
         JAXBContext context = JAXBContext.newInstance(clinicalDOC.getClass());
@@ -197,5 +266,24 @@ public abstract class CDADocBase implements ICDADocService {
         marshaller.marshal(clinicalDOC, stringWriter);
         return stringWriter.toString();
     }
+
+    /*
+      时间转换
+     */
+    public String dateTimeToString(Date dateTime, int format)
+    {
+        if(format==1)
+        {
+            return dateTime == null ? "19000000" : DateUtil.format(dateTime, DatePattern.PURE_DATE_PATTERN);
+        }
+        else if(format == 3) {
+
+            return dateTime == null ? "190000000000" :  DateUtil.format(dateTime, DatePattern.PURE_DATETIME_PATTERN);
+        }
+        else{
+            return dateTime == null ? "19000000000000" :  DateUtil.format(dateTime, DatePattern.PURE_DATETIME_PATTERN);
+        }
+    }
+
 
 }

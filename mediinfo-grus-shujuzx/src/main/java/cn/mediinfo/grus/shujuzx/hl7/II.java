@@ -1,7 +1,7 @@
 //
-// ´ËÎÄ¼şÊÇÓÉ Eclipse Implementation of JAXB v4.0.3 Éú³ÉµÄ
-// Çë·ÃÎÊ https://eclipse-ee4j.github.io/jaxb-ri 
-// ÔÚÖØĞÂ±àÒëÔ´Ä£Ê½Ê±, ¶Ô´ËÎÄ¼şµÄËùÓĞĞŞ¸Ä¶¼½«¶ªÊ§¡£
+// æ­¤æ–‡ä»¶æ˜¯ç”± Eclipse Implementation of JAXB v4.0.3 ç”Ÿæˆçš„
+// è¯·è®¿é—® https://eclipse-ee4j.github.io/jaxb-ri 
+// åœ¨é‡æ–°ç¼–è¯‘æºæ¨¡å¼æ—¶, å¯¹æ­¤æ–‡ä»¶çš„æ‰€æœ‰ä¿®æ”¹éƒ½å°†ä¸¢å¤±ã€‚
 //
 
 
@@ -23,9 +23,9 @@ import jakarta.xml.bind.annotation.XmlType;
  *             identifiers are defined based on ISO object identifiers.
  *          
  * 
- * <p>II complex typeµÄ Java Àà¡£
+ * <p>II complex typeçš„ Java ç±»ã€‚
  * 
- * <p>ÒÔÏÂÄ£Ê½Æ¬¶ÎÖ¸¶¨°üº¬ÔÚ´ËÀàÖĞµÄÔ¤ÆÚÄÚÈİ¡£
+ * <p>ä»¥ä¸‹æ¨¡å¼ç‰‡æ®µæŒ‡å®šåŒ…å«åœ¨æ­¤ç±»ä¸­çš„é¢„æœŸå†…å®¹ã€‚
  * 
  * <pre>{@code
  * <complexType name="II">
@@ -61,7 +61,7 @@ public class II
     protected Boolean displayable;
 
     /**
-     * »ñÈ¡rootÊôĞÔµÄÖµ¡£
+     * è·å–rootå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -73,7 +73,7 @@ public class II
     }
 
     /**
-     * ÉèÖÃrootÊôĞÔµÄÖµ¡£
+     * è®¾ç½®rootå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -85,7 +85,7 @@ public class II
     }
 
     /**
-     * »ñÈ¡extensionÊôĞÔµÄÖµ¡£
+     * è·å–extensionå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -97,7 +97,7 @@ public class II
     }
 
     /**
-     * ÉèÖÃextensionÊôĞÔµÄÖµ¡£
+     * è®¾ç½®extensionå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -109,7 +109,7 @@ public class II
     }
 
     /**
-     * »ñÈ¡assigningAuthorityNameÊôĞÔµÄÖµ¡£
+     * è·å–assigningAuthorityNameå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -121,7 +121,7 @@ public class II
     }
 
     /**
-     * ÉèÖÃassigningAuthorityNameÊôĞÔµÄÖµ¡£
+     * è®¾ç½®assigningAuthorityNameå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -133,7 +133,7 @@ public class II
     }
 
     /**
-     * »ñÈ¡displayableÊôĞÔµÄÖµ¡£
+     * è·å–displayableå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -145,7 +145,7 @@ public class II
     }
 
     /**
-     * ÉèÖÃdisplayableÊôĞÔµÄÖµ¡£
+     * è®¾ç½®displayableå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is

@@ -1,7 +1,7 @@
 //
-// ´ËÎÄ¼şÊÇÓÉ Eclipse Implementation of JAXB v4.0.3 Éú³ÉµÄ
-// Çë·ÃÎÊ https://eclipse-ee4j.github.io/jaxb-ri 
-// ÔÚÖØĞÂ±àÒëÔ´Ä£Ê½Ê±, ¶Ô´ËÎÄ¼şµÄËùÓĞĞŞ¸Ä¶¼½«¶ªÊ§¡£
+// æ­¤æ–‡ä»¶æ˜¯ç”± Eclipse Implementation of JAXB v4.0.3 ç”Ÿæˆçš„
+// è¯·è®¿é—® https://eclipse-ee4j.github.io/jaxb-ri 
+// åœ¨é‡æ–°ç¼–è¯‘æºæ¨¡å¼æ—¶, å¯¹æ­¤æ–‡ä»¶çš„æ‰€æœ‰ä¿®æ”¹éƒ½å°†ä¸¢å¤±ã€‚
 //
 
 
@@ -17,9 +17,9 @@ import jakarta.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>POCD_MT000040.EncompassingEncounter complex typeµÄ Java Àà¡£
+ * <p>POCD_MT000040.EncompassingEncounter complex typeçš„ Java ç±»ã€‚
  * 
- * <p>ÒÔÏÂÄ£Ê½Æ¬¶ÎÖ¸¶¨°üº¬ÔÚ´ËÀàÖĞµÄÔ¤ÆÚÄÚÈİ¡£
+ * <p>ä»¥ä¸‹æ¨¡å¼ç‰‡æ®µæŒ‡å®šåŒ…å«åœ¨æ­¤ç±»ä¸­çš„é¢„æœŸå†…å®¹ã€‚
  * 
  * <pre>{@code
  * <complexType name="POCD_MT000040.EncompassingEncounter">
@@ -112,7 +112,7 @@ public class POCDMT000040EncompassingEncounter {
     }
 
     /**
-     * »ñÈ¡typeIdÊôĞÔµÄÖµ¡£
+     * è·å–typeIdå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -124,7 +124,7 @@ public class POCDMT000040EncompassingEncounter {
     }
 
     /**
-     * ÉèÖÃtypeIdÊôĞÔµÄÖµ¡£
+     * è®¾ç½®typeIdå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -198,7 +198,7 @@ public class POCDMT000040EncompassingEncounter {
     }
 
     /**
-     * »ñÈ¡codeÊôĞÔµÄÖµ¡£
+     * è·å–codeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -210,7 +210,7 @@ public class POCDMT000040EncompassingEncounter {
     }
 
     /**
-     * ÉèÖÃcodeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®codeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -222,7 +222,7 @@ public class POCDMT000040EncompassingEncounter {
     }
 
     /**
-     * »ñÈ¡effectiveTimeÊôĞÔµÄÖµ¡£
+     * è·å–effectiveTimeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -234,7 +234,7 @@ public class POCDMT000040EncompassingEncounter {
     }
 
     /**
-     * ÉèÖÃeffectiveTimeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®effectiveTimeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -246,7 +246,7 @@ public class POCDMT000040EncompassingEncounter {
     }
 
     /**
-     * »ñÈ¡dischargeDispositionCodeÊôĞÔµÄÖµ¡£
+     * è·å–dischargeDispositionCodeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -258,7 +258,7 @@ public class POCDMT000040EncompassingEncounter {
     }
 
     /**
-     * ÉèÖÃdischargeDispositionCodeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®dischargeDispositionCodeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -270,7 +270,7 @@ public class POCDMT000040EncompassingEncounter {
     }
 
     /**
-     * »ñÈ¡responsiblePartyÊôĞÔµÄÖµ¡£
+     * è·å–responsiblePartyå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -282,7 +282,7 @@ public class POCDMT000040EncompassingEncounter {
     }
 
     /**
-     * ÉèÖÃresponsiblePartyÊôĞÔµÄÖµ¡£
+     * è®¾ç½®responsiblePartyå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -325,7 +325,7 @@ public class POCDMT000040EncompassingEncounter {
     }
 
     /**
-     * »ñÈ¡locationÊôĞÔµÄÖµ¡£
+     * è·å–locationå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -337,7 +337,7 @@ public class POCDMT000040EncompassingEncounter {
     }
 
     /**
-     * ÉèÖÃlocationÊôĞÔµÄÖµ¡£
+     * è®¾ç½®locationå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is

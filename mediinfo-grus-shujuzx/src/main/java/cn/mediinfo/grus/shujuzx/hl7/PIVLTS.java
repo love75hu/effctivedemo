@@ -1,7 +1,7 @@
 //
-// ´ËÎÄ¼şÊÇÓÉ Eclipse Implementation of JAXB v4.0.3 Éú³ÉµÄ
-// Çë·ÃÎÊ https://eclipse-ee4j.github.io/jaxb-ri 
-// ÔÚÖØĞÂ±àÒëÔ´Ä£Ê½Ê±, ¶Ô´ËÎÄ¼şµÄËùÓĞĞŞ¸Ä¶¼½«¶ªÊ§¡£
+// æ­¤æ–‡ä»¶æ˜¯ç”± Eclipse Implementation of JAXB v4.0.3 ç”Ÿæˆçš„
+// è¯·è®¿é—® https://eclipse-ee4j.github.io/jaxb-ri 
+// åœ¨é‡æ–°ç¼–è¯‘æºæ¨¡å¼æ—¶, å¯¹æ­¤æ–‡ä»¶çš„æ‰€æœ‰ä¿®æ”¹éƒ½å°†ä¸¢å¤±ã€‚
 //
 
 
@@ -27,9 +27,9 @@ import jakarta.xml.bind.annotation.XmlType;
  *             this might might still not be legal.
  *          
  * 
- * <p>PIVL_TS complex typeµÄ Java Àà¡£
+ * <p>PIVL_TS complex typeçš„ Java ç±»ã€‚
  * 
- * <p>ÒÔÏÂÄ£Ê½Æ¬¶ÎÖ¸¶¨°üº¬ÔÚ´ËÀàÖĞµÄÔ¤ÆÚÄÚÈİ¡£
+ * <p>ä»¥ä¸‹æ¨¡å¼ç‰‡æ®µæŒ‡å®šåŒ…å«åœ¨æ­¤ç±»ä¸­çš„é¢„æœŸå†…å®¹ã€‚
  * 
  * <pre>{@code
  * <complexType name="PIVL_TS">
@@ -65,7 +65,7 @@ public class PIVLTS
     protected Boolean institutionSpecified;
 
     /**
-     * »ñÈ¡phaseÊôĞÔµÄÖµ¡£
+     * è·å–phaseå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -77,7 +77,7 @@ public class PIVLTS
     }
 
     /**
-     * ÉèÖÃphaseÊôĞÔµÄÖµ¡£
+     * è®¾ç½®phaseå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -89,7 +89,7 @@ public class PIVLTS
     }
 
     /**
-     * »ñÈ¡periodÊôĞÔµÄÖµ¡£
+     * è·å–periodå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -101,7 +101,7 @@ public class PIVLTS
     }
 
     /**
-     * ÉèÖÃperiodÊôĞÔµÄÖµ¡£
+     * è®¾ç½®periodå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -144,7 +144,7 @@ public class PIVLTS
     }
 
     /**
-     * »ñÈ¡institutionSpecifiedÊôĞÔµÄÖµ¡£
+     * è·å–institutionSpecifiedå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -160,7 +160,7 @@ public class PIVLTS
     }
 
     /**
-     * ÉèÖÃinstitutionSpecifiedÊôĞÔµÄÖµ¡£
+     * è®¾ç½®institutionSpecifiedå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is

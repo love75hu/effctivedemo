@@ -1,7 +1,7 @@
 //
-// ´ËÎÄ¼şÊÇÓÉ Eclipse Implementation of JAXB v4.0.3 Éú³ÉµÄ
-// Çë·ÃÎÊ https://eclipse-ee4j.github.io/jaxb-ri 
-// ÔÚÖØĞÂ±àÒëÔ´Ä£Ê½Ê±, ¶Ô´ËÎÄ¼şµÄËùÓĞĞŞ¸Ä¶¼½«¶ªÊ§¡£
+// æ­¤æ–‡ä»¶æ˜¯ç”± Eclipse Implementation of JAXB v4.0.3 ç”Ÿæˆçš„
+// è¯·è®¿é—® https://eclipse-ee4j.github.io/jaxb-ri 
+// åœ¨é‡æ–°ç¼–è¯‘æºæ¨¡å¼æ—¶, å¯¹æ­¤æ–‡ä»¶çš„æ‰€æœ‰ä¿®æ”¹éƒ½å°†ä¸¢å¤±ã€‚
 //
 
 
@@ -16,9 +16,9 @@ import jakarta.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>POCD_MT000040.Patient complex typeµÄ Java Àà¡£
+ * <p>POCD_MT000040.Patient complex typeçš„ Java ç±»ã€‚
  * 
- * <p>ÒÔÏÂÄ£Ê½Æ¬¶ÎÖ¸¶¨°üº¬ÔÚ´ËÀàÖĞµÄÔ¤ÆÚÄÚÈİ¡£
+ * <p>ä»¥ä¸‹æ¨¡å¼ç‰‡æ®µæŒ‡å®šåŒ…å«åœ¨æ­¤ç±»ä¸­çš„é¢„æœŸå†…å®¹ã€‚
  * 
  * <pre>{@code
  * <complexType name="POCD_MT000040.Patient">
@@ -143,7 +143,7 @@ public class POCDMT000040Patient {
     }
 
     /**
-     * »ñÈ¡typeIdÊôĞÔµÄÖµ¡£
+     * è·å–typeIdå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -155,7 +155,7 @@ public class POCDMT000040Patient {
     }
 
     /**
-     * ÉèÖÃtypeIdÊôĞÔµÄÖµ¡£
+     * è®¾ç½®typeIdå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -198,7 +198,7 @@ public class POCDMT000040Patient {
     }
 
     /**
-     * »ñÈ¡idÊôĞÔµÄÖµ¡£
+     * è·å–idå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -210,7 +210,7 @@ public class POCDMT000040Patient {
     }
 
     /**
-     * ÉèÖÃidÊôĞÔµÄÖµ¡£
+     * è®¾ç½®idå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -253,7 +253,7 @@ public class POCDMT000040Patient {
     }
 
     /**
-     * »ñÈ¡administrativeGenderCodeÊôĞÔµÄÖµ¡£
+     * è·å–administrativeGenderCodeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -265,7 +265,7 @@ public class POCDMT000040Patient {
     }
 
     /**
-     * ÉèÖÃadministrativeGenderCodeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®administrativeGenderCodeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -277,7 +277,7 @@ public class POCDMT000040Patient {
     }
 
     /**
-     * »ñÈ¡birthTimeÊôĞÔµÄÖµ¡£
+     * è·å–birthTimeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -289,7 +289,7 @@ public class POCDMT000040Patient {
     }
 
     /**
-     * ÉèÖÃbirthTimeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®birthTimeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -301,7 +301,7 @@ public class POCDMT000040Patient {
     }
 
     /**
-     * »ñÈ¡maritalStatusCodeÊôĞÔµÄÖµ¡£
+     * è·å–maritalStatusCodeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -313,7 +313,7 @@ public class POCDMT000040Patient {
     }
 
     /**
-     * ÉèÖÃmaritalStatusCodeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®maritalStatusCodeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -325,7 +325,7 @@ public class POCDMT000040Patient {
     }
 
     /**
-     * »ñÈ¡religiousAffiliationCodeÊôĞÔµÄÖµ¡£
+     * è·å–religiousAffiliationCodeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -337,7 +337,7 @@ public class POCDMT000040Patient {
     }
 
     /**
-     * ÉèÖÃreligiousAffiliationCodeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®religiousAffiliationCodeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -349,7 +349,7 @@ public class POCDMT000040Patient {
     }
 
     /**
-     * »ñÈ¡raceCodeÊôĞÔµÄÖµ¡£
+     * è·å–raceCodeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -361,7 +361,7 @@ public class POCDMT000040Patient {
     }
 
     /**
-     * ÉèÖÃraceCodeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®raceCodeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -373,7 +373,7 @@ public class POCDMT000040Patient {
     }
 
     /**
-     * »ñÈ¡ethnicGroupCodeÊôĞÔµÄÖµ¡£
+     * è·å–ethnicGroupCodeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -385,7 +385,7 @@ public class POCDMT000040Patient {
     }
 
     /**
-     * ÉèÖÃethnicGroupCodeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®ethnicGroupCodeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -428,7 +428,7 @@ public class POCDMT000040Patient {
     }
 
     /**
-     * »ñÈ¡birthplaceÊôĞÔµÄÖµ¡£
+     * è·å–birthplaceå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -440,7 +440,7 @@ public class POCDMT000040Patient {
     }
 
     /**
-     * ÉèÖÃbirthplaceÊôĞÔµÄÖµ¡£
+     * è®¾ç½®birthplaceå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -452,7 +452,7 @@ public class POCDMT000040Patient {
     }
 
     /**
-     * »ñÈ¡nationalityÊôĞÔµÄÖµ¡£
+     * è·å–nationalityå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -464,7 +464,7 @@ public class POCDMT000040Patient {
     }
 
     /**
-     * ÉèÖÃnationalityÊôĞÔµÄÖµ¡£
+     * è®¾ç½®nationalityå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -476,7 +476,7 @@ public class POCDMT000040Patient {
     }
 
     /**
-     * »ñÈ¡ageÊôĞÔµÄÖµ¡£
+     * è·å–ageå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -488,7 +488,7 @@ public class POCDMT000040Patient {
     }
 
     /**
-     * ÉèÖÃageÊôĞÔµÄÖµ¡£
+     * è®¾ç½®ageå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -500,7 +500,7 @@ public class POCDMT000040Patient {
     }
 
     /**
-     * »ñÈ¡employerOrganizationÊôĞÔµÄÖµ¡£
+     * è·å–employerOrganizationå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -512,7 +512,7 @@ public class POCDMT000040Patient {
     }
 
     /**
-     * ÉèÖÃemployerOrganizationÊôĞÔµÄÖµ¡£
+     * è®¾ç½®employerOrganizationå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -524,7 +524,7 @@ public class POCDMT000040Patient {
     }
 
     /**
-     * »ñÈ¡householdÊôĞÔµÄÖµ¡£
+     * è·å–householdå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -536,7 +536,7 @@ public class POCDMT000040Patient {
     }
 
     /**
-     * ÉèÖÃhouseholdÊôĞÔµÄÖµ¡£
+     * è®¾ç½®householdå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -548,7 +548,7 @@ public class POCDMT000040Patient {
     }
 
     /**
-     * »ñÈ¡nativePlaceÊôĞÔµÄÖµ¡£
+     * è·å–nativePlaceå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -560,7 +560,7 @@ public class POCDMT000040Patient {
     }
 
     /**
-     * ÉèÖÃnativePlaceÊôĞÔµÄÖµ¡£
+     * è®¾ç½®nativePlaceå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -572,7 +572,7 @@ public class POCDMT000040Patient {
     }
 
     /**
-     * »ñÈ¡educationLevelÊôĞÔµÄÖµ¡£
+     * è·å–educationLevelå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -584,7 +584,7 @@ public class POCDMT000040Patient {
     }
 
     /**
-     * ÉèÖÃeducationLevelÊôĞÔµÄÖµ¡£
+     * è®¾ç½®educationLevelå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -596,7 +596,7 @@ public class POCDMT000040Patient {
     }
 
     /**
-     * »ñÈ¡occupationÊôĞÔµÄÖµ¡£
+     * è·å–occupationå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -608,7 +608,7 @@ public class POCDMT000040Patient {
     }
 
     /**
-     * ÉèÖÃoccupationÊôĞÔµÄÖµ¡£
+     * è®¾ç½®occupationå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -713,7 +713,7 @@ public class POCDMT000040Patient {
     }
 
     /**
-     * »ñÈ¡determinerCodeÊôĞÔµÄÖµ¡£
+     * è·å–determinerCodeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -729,7 +729,7 @@ public class POCDMT000040Patient {
     }
 
     /**
-     * ÉèÖÃdeterminerCodeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®determinerCodeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is

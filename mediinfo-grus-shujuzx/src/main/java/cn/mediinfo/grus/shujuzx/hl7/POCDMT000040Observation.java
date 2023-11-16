@@ -1,7 +1,7 @@
 //
-// ´ËÎÄ¼şÊÇÓÉ Eclipse Implementation of JAXB v4.0.3 Éú³ÉµÄ
-// Çë·ÃÎÊ https://eclipse-ee4j.github.io/jaxb-ri 
-// ÔÚÖØĞÂ±àÒëÔ´Ä£Ê½Ê±, ¶Ô´ËÎÄ¼şµÄËùÓĞĞŞ¸Ä¶¼½«¶ªÊ§¡£
+// æ­¤æ–‡ä»¶æ˜¯ç”± Eclipse Implementation of JAXB v4.0.3 ç”Ÿæˆçš„
+// è¯·è®¿é—® https://eclipse-ee4j.github.io/jaxb-ri 
+// åœ¨é‡æ–°ç¼–è¯‘æºæ¨¡å¼æ—¶, å¯¹æ­¤æ–‡ä»¶çš„æ‰€æœ‰ä¿®æ”¹éƒ½å°†ä¸¢å¤±ã€‚
 //
 
 
@@ -17,9 +17,9 @@ import jakarta.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>POCD_MT000040.Observation complex typeµÄ Java Àà¡£
+ * <p>POCD_MT000040.Observation complex typeçš„ Java ç±»ã€‚
  * 
- * <p>ÒÔÏÂÄ£Ê½Æ¬¶ÎÖ¸¶¨°üº¬ÔÚ´ËÀàÖĞµÄÔ¤ÆÚÄÚÈİ¡£
+ * <p>ä»¥ä¸‹æ¨¡å¼ç‰‡æ®µæŒ‡å®šåŒ…å«åœ¨æ­¤ç±»ä¸­çš„é¢„æœŸå†…å®¹ã€‚
  * 
  * <pre>{@code
  * <complexType name="POCD_MT000040.Observation">
@@ -163,7 +163,7 @@ public class POCDMT000040Observation {
     }
 
     /**
-     * »ñÈ¡typeIdÊôĞÔµÄÖµ¡£
+     * è·å–typeIdå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -175,7 +175,7 @@ public class POCDMT000040Observation {
     }
 
     /**
-     * ÉèÖÃtypeIdÊôĞÔµÄÖµ¡£
+     * è®¾ç½®typeIdå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -249,7 +249,7 @@ public class POCDMT000040Observation {
     }
 
     /**
-     * »ñÈ¡codeÊôĞÔµÄÖµ¡£
+     * è·å–codeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -261,7 +261,7 @@ public class POCDMT000040Observation {
     }
 
     /**
-     * ÉèÖÃcodeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®codeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -273,7 +273,7 @@ public class POCDMT000040Observation {
     }
 
     /**
-     * »ñÈ¡derivationExprÊôĞÔµÄÖµ¡£
+     * è·å–derivationExprå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -285,7 +285,7 @@ public class POCDMT000040Observation {
     }
 
     /**
-     * ÉèÖÃderivationExprÊôĞÔµÄÖµ¡£
+     * è®¾ç½®derivationExprå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -297,7 +297,7 @@ public class POCDMT000040Observation {
     }
 
     /**
-     * »ñÈ¡textÊôĞÔµÄÖµ¡£
+     * è·å–textå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -309,7 +309,7 @@ public class POCDMT000040Observation {
     }
 
     /**
-     * ÉèÖÃtextÊôĞÔµÄÖµ¡£
+     * è®¾ç½®textå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -321,7 +321,7 @@ public class POCDMT000040Observation {
     }
 
     /**
-     * »ñÈ¡statusCodeÊôĞÔµÄÖµ¡£
+     * è·å–statusCodeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -333,7 +333,7 @@ public class POCDMT000040Observation {
     }
 
     /**
-     * ÉèÖÃstatusCodeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®statusCodeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -345,7 +345,7 @@ public class POCDMT000040Observation {
     }
 
     /**
-     * »ñÈ¡effectiveTimeÊôĞÔµÄÖµ¡£
+     * è·å–effectiveTimeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -357,7 +357,7 @@ public class POCDMT000040Observation {
     }
 
     /**
-     * ÉèÖÃeffectiveTimeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®effectiveTimeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -369,7 +369,7 @@ public class POCDMT000040Observation {
     }
 
     /**
-     * »ñÈ¡priorityCodeÊôĞÔµÄÖµ¡£
+     * è·å–priorityCodeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -381,7 +381,7 @@ public class POCDMT000040Observation {
     }
 
     /**
-     * ÉèÖÃpriorityCodeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®priorityCodeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -393,7 +393,7 @@ public class POCDMT000040Observation {
     }
 
     /**
-     * »ñÈ¡repeatNumberÊôĞÔµÄÖµ¡£
+     * è·å–repeatNumberå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -405,7 +405,7 @@ public class POCDMT000040Observation {
     }
 
     /**
-     * ÉèÖÃrepeatNumberÊôĞÔµÄÖµ¡£
+     * è®¾ç½®repeatNumberå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -417,7 +417,7 @@ public class POCDMT000040Observation {
     }
 
     /**
-     * »ñÈ¡languageCodeÊôĞÔµÄÖµ¡£
+     * è·å–languageCodeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -429,7 +429,7 @@ public class POCDMT000040Observation {
     }
 
     /**
-     * ÉèÖÃlanguageCodeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®languageCodeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -565,7 +565,7 @@ public class POCDMT000040Observation {
     }
 
     /**
-     * »ñÈ¡subjectÊôĞÔµÄÖµ¡£
+     * è·å–subjectå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -577,7 +577,7 @@ public class POCDMT000040Observation {
     }
 
     /**
-     * ÉèÖÃsubjectÊôĞÔµÄÖµ¡£
+     * è®¾ç½®subjectå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -930,7 +930,7 @@ public class POCDMT000040Observation {
     }
 
     /**
-     * »ñÈ¡moodCodeÊôĞÔµÄÖµ¡£
+     * è·å–moodCodeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -942,7 +942,7 @@ public class POCDMT000040Observation {
     }
 
     /**
-     * ÉèÖÃmoodCodeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®moodCodeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -954,7 +954,7 @@ public class POCDMT000040Observation {
     }
 
     /**
-     * »ñÈ¡negationIndÊôĞÔµÄÖµ¡£
+     * è·å–negationIndå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -966,7 +966,7 @@ public class POCDMT000040Observation {
     }
 
     /**
-     * ÉèÖÃnegationIndÊôĞÔµÄÖµ¡£
+     * è®¾ç½®negationIndå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is

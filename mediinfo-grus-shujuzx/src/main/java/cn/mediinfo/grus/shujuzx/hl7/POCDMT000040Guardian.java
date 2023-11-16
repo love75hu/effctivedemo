@@ -1,7 +1,7 @@
 //
-// ´ËÎÄ¼şÊÇÓÉ Eclipse Implementation of JAXB v4.0.3 Éú³ÉµÄ
-// Çë·ÃÎÊ https://eclipse-ee4j.github.io/jaxb-ri 
-// ÔÚÖØĞÂ±àÒëÔ´Ä£Ê½Ê±, ¶Ô´ËÎÄ¼şµÄËùÓĞĞŞ¸Ä¶¼½«¶ªÊ§¡£
+// æ­¤æ–‡ä»¶æ˜¯ç”± Eclipse Implementation of JAXB v4.0.3 ç”Ÿæˆçš„
+// è¯·è®¿é—® https://eclipse-ee4j.github.io/jaxb-ri 
+// åœ¨é‡æ–°ç¼–è¯‘æºæ¨¡å¼æ—¶, å¯¹æ­¤æ–‡ä»¶çš„æ‰€æœ‰ä¿®æ”¹éƒ½å°†ä¸¢å¤±ã€‚
 //
 
 
@@ -16,9 +16,9 @@ import jakarta.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>POCD_MT000040.Guardian complex typeµÄ Java Àà¡£
+ * <p>POCD_MT000040.Guardian complex typeçš„ Java ç±»ã€‚
  * 
- * <p>ÒÔÏÂÄ£Ê½Æ¬¶ÎÖ¸¶¨°üº¬ÔÚ´ËÀàÖĞµÄÔ¤ÆÚÄÚÈİ¡£
+ * <p>ä»¥ä¸‹æ¨¡å¼ç‰‡æ®µæŒ‡å®šåŒ…å«åœ¨æ­¤ç±»ä¸­çš„é¢„æœŸå†…å®¹ã€‚
  * 
  * <pre>{@code
  * <complexType name="POCD_MT000040.Guardian">
@@ -109,7 +109,7 @@ public class POCDMT000040Guardian {
     }
 
     /**
-     * »ñÈ¡typeIdÊôĞÔµÄÖµ¡£
+     * è·å–typeIdå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -121,7 +121,7 @@ public class POCDMT000040Guardian {
     }
 
     /**
-     * ÉèÖÃtypeIdÊôĞÔµÄÖµ¡£
+     * è®¾ç½®typeIdå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -195,7 +195,7 @@ public class POCDMT000040Guardian {
     }
 
     /**
-     * »ñÈ¡codeÊôĞÔµÄÖµ¡£
+     * è·å–codeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -207,7 +207,7 @@ public class POCDMT000040Guardian {
     }
 
     /**
-     * ÉèÖÃcodeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®codeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -281,7 +281,7 @@ public class POCDMT000040Guardian {
     }
 
     /**
-     * »ñÈ¡birthTimeÊôĞÔµÄÖµ¡£
+     * è·å–birthTimeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -293,7 +293,7 @@ public class POCDMT000040Guardian {
     }
 
     /**
-     * ÉèÖÃbirthTimeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®birthTimeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -305,7 +305,7 @@ public class POCDMT000040Guardian {
     }
 
     /**
-     * »ñÈ¡guardianPersonÊôĞÔµÄÖµ¡£
+     * è·å–guardianPersonå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -317,7 +317,7 @@ public class POCDMT000040Guardian {
     }
 
     /**
-     * ÉèÖÃguardianPersonÊôĞÔµÄÖµ¡£
+     * è®¾ç½®guardianPersonå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -329,7 +329,7 @@ public class POCDMT000040Guardian {
     }
 
     /**
-     * »ñÈ¡guardianOrganizationÊôĞÔµÄÖµ¡£
+     * è·å–guardianOrganizationå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -341,7 +341,7 @@ public class POCDMT000040Guardian {
     }
 
     /**
-     * ÉèÖÃguardianOrganizationÊôĞÔµÄÖµ¡£
+     * è®¾ç½®guardianOrganizationå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is

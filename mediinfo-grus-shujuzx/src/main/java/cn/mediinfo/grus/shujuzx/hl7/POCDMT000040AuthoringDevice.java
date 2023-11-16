@@ -1,7 +1,7 @@
 //
-// ´ËÎÄ¼şÊÇÓÉ Eclipse Implementation of JAXB v4.0.3 Éú³ÉµÄ
-// Çë·ÃÎÊ https://eclipse-ee4j.github.io/jaxb-ri 
-// ÔÚÖØĞÂ±àÒëÔ´Ä£Ê½Ê±, ¶Ô´ËÎÄ¼şµÄËùÓĞĞŞ¸Ä¶¼½«¶ªÊ§¡£
+// æ­¤æ–‡ä»¶æ˜¯ç”± Eclipse Implementation of JAXB v4.0.3 ç”Ÿæˆçš„
+// è¯·è®¿é—® https://eclipse-ee4j.github.io/jaxb-ri 
+// åœ¨é‡æ–°ç¼–è¯‘æºæ¨¡å¼æ—¶, å¯¹æ­¤æ–‡ä»¶çš„æ‰€æœ‰ä¿®æ”¹éƒ½å°†ä¸¢å¤±ã€‚
 //
 
 
@@ -16,9 +16,9 @@ import jakarta.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>POCD_MT000040.AuthoringDevice complex typeµÄ Java Àà¡£
+ * <p>POCD_MT000040.AuthoringDevice complex typeçš„ Java ç±»ã€‚
  * 
- * <p>ÒÔÏÂÄ£Ê½Æ¬¶ÎÖ¸¶¨°üº¬ÔÚ´ËÀàÖĞµÄÔ¤ÆÚÄÚÈİ¡£
+ * <p>ä»¥ä¸‹æ¨¡å¼ç‰‡æ®µæŒ‡å®šåŒ…å«åœ¨æ­¤ç±»ä¸­çš„é¢„æœŸå†…å®¹ã€‚
  * 
  * <pre>{@code
  * <complexType name="POCD_MT000040.AuthoringDevice">
@@ -101,7 +101,7 @@ public class POCDMT000040AuthoringDevice {
     }
 
     /**
-     * »ñÈ¡typeIdÊôĞÔµÄÖµ¡£
+     * è·å–typeIdå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -113,7 +113,7 @@ public class POCDMT000040AuthoringDevice {
     }
 
     /**
-     * ÉèÖÃtypeIdÊôĞÔµÄÖµ¡£
+     * è®¾ç½®typeIdå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -156,7 +156,7 @@ public class POCDMT000040AuthoringDevice {
     }
 
     /**
-     * »ñÈ¡codeÊôĞÔµÄÖµ¡£
+     * è·å–codeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -168,7 +168,7 @@ public class POCDMT000040AuthoringDevice {
     }
 
     /**
-     * ÉèÖÃcodeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®codeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -180,7 +180,7 @@ public class POCDMT000040AuthoringDevice {
     }
 
     /**
-     * »ñÈ¡manufacturerModelNameÊôĞÔµÄÖµ¡£
+     * è·å–manufacturerModelNameå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -192,7 +192,7 @@ public class POCDMT000040AuthoringDevice {
     }
 
     /**
-     * ÉèÖÃmanufacturerModelNameÊôĞÔµÄÖµ¡£
+     * è®¾ç½®manufacturerModelNameå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -204,7 +204,7 @@ public class POCDMT000040AuthoringDevice {
     }
 
     /**
-     * »ñÈ¡softwareNameÊôĞÔµÄÖµ¡£
+     * è·å–softwareNameå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -216,7 +216,7 @@ public class POCDMT000040AuthoringDevice {
     }
 
     /**
-     * ÉèÖÃsoftwareNameÊôĞÔµÄÖµ¡£
+     * è®¾ç½®softwareNameå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -290,7 +290,7 @@ public class POCDMT000040AuthoringDevice {
     }
 
     /**
-     * »ñÈ¡classCodeÊôĞÔµÄÖµ¡£
+     * è·å–classCodeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -306,7 +306,7 @@ public class POCDMT000040AuthoringDevice {
     }
 
     /**
-     * ÉèÖÃclassCodeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®classCodeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -318,7 +318,7 @@ public class POCDMT000040AuthoringDevice {
     }
 
     /**
-     * »ñÈ¡determinerCodeÊôĞÔµÄÖµ¡£
+     * è·å–determinerCodeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -334,7 +334,7 @@ public class POCDMT000040AuthoringDevice {
     }
 
     /**
-     * ÉèÖÃdeterminerCodeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®determinerCodeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is

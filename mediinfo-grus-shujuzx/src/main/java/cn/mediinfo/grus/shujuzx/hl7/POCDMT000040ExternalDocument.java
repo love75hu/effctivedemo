@@ -1,7 +1,7 @@
 //
-// ´ËÎÄ¼şÊÇÓÉ Eclipse Implementation of JAXB v4.0.3 Éú³ÉµÄ
-// Çë·ÃÎÊ https://eclipse-ee4j.github.io/jaxb-ri 
-// ÔÚÖØĞÂ±àÒëÔ´Ä£Ê½Ê±, ¶Ô´ËÎÄ¼şµÄËùÓĞĞŞ¸Ä¶¼½«¶ªÊ§¡£
+// æ­¤æ–‡ä»¶æ˜¯ç”± Eclipse Implementation of JAXB v4.0.3 ç”Ÿæˆçš„
+// è¯·è®¿é—® https://eclipse-ee4j.github.io/jaxb-ri 
+// åœ¨é‡æ–°ç¼–è¯‘æºæ¨¡å¼æ—¶, å¯¹æ­¤æ–‡ä»¶çš„æ‰€æœ‰ä¿®æ”¹éƒ½å°†ä¸¢å¤±ã€‚
 //
 
 
@@ -16,9 +16,9 @@ import jakarta.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>POCD_MT000040.ExternalDocument complex typeµÄ Java Àà¡£
+ * <p>POCD_MT000040.ExternalDocument complex typeçš„ Java ç±»ã€‚
  * 
- * <p>ÒÔÏÂÄ£Ê½Æ¬¶ÎÖ¸¶¨°üº¬ÔÚ´ËÀàÖĞµÄÔ¤ÆÚÄÚÈİ¡£
+ * <p>ä»¥ä¸‹æ¨¡å¼ç‰‡æ®µæŒ‡å®šåŒ…å«åœ¨æ­¤ç±»ä¸­çš„é¢„æœŸå†…å®¹ã€‚
  * 
  * <pre>{@code
  * <complexType name="POCD_MT000040.ExternalDocument">
@@ -104,7 +104,7 @@ public class POCDMT000040ExternalDocument {
     }
 
     /**
-     * »ñÈ¡typeIdÊôĞÔµÄÖµ¡£
+     * è·å–typeIdå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -116,7 +116,7 @@ public class POCDMT000040ExternalDocument {
     }
 
     /**
-     * ÉèÖÃtypeIdÊôĞÔµÄÖµ¡£
+     * è®¾ç½®typeIdå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -190,7 +190,7 @@ public class POCDMT000040ExternalDocument {
     }
 
     /**
-     * »ñÈ¡codeÊôĞÔµÄÖµ¡£
+     * è·å–codeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -202,7 +202,7 @@ public class POCDMT000040ExternalDocument {
     }
 
     /**
-     * ÉèÖÃcodeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®codeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -214,7 +214,7 @@ public class POCDMT000040ExternalDocument {
     }
 
     /**
-     * »ñÈ¡textÊôĞÔµÄÖµ¡£
+     * è·å–textå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -226,7 +226,7 @@ public class POCDMT000040ExternalDocument {
     }
 
     /**
-     * ÉèÖÃtextÊôĞÔµÄÖµ¡£
+     * è®¾ç½®textå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -238,7 +238,7 @@ public class POCDMT000040ExternalDocument {
     }
 
     /**
-     * »ñÈ¡setIdÊôĞÔµÄÖµ¡£
+     * è·å–setIdå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -250,7 +250,7 @@ public class POCDMT000040ExternalDocument {
     }
 
     /**
-     * ÉèÖÃsetIdÊôĞÔµÄÖµ¡£
+     * è®¾ç½®setIdå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -262,7 +262,7 @@ public class POCDMT000040ExternalDocument {
     }
 
     /**
-     * »ñÈ¡versionNumberÊôĞÔµÄÖµ¡£
+     * è·å–versionNumberå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -274,7 +274,7 @@ public class POCDMT000040ExternalDocument {
     }
 
     /**
-     * ÉèÖÃversionNumberÊôĞÔµÄÖµ¡£
+     * è®¾ç½®versionNumberå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -317,7 +317,7 @@ public class POCDMT000040ExternalDocument {
     }
 
     /**
-     * »ñÈ¡classCodeÊôĞÔµÄÖµ¡£
+     * è·å–classCodeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -333,7 +333,7 @@ public class POCDMT000040ExternalDocument {
     }
 
     /**
-     * ÉèÖÃclassCodeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®classCodeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is

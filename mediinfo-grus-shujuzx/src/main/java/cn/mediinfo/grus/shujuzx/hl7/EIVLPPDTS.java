@@ -1,7 +1,7 @@
 //
-// ´ËÎÄ¼şÊÇÓÉ Eclipse Implementation of JAXB v4.0.3 Éú³ÉµÄ
-// Çë·ÃÎÊ https://eclipse-ee4j.github.io/jaxb-ri 
-// ÔÚÖØĞÂ±àÒëÔ´Ä£Ê½Ê±, ¶Ô´ËÎÄ¼şµÄËùÓĞĞŞ¸Ä¶¼½«¶ªÊ§¡£
+// æ­¤æ–‡ä»¶æ˜¯ç”± Eclipse Implementation of JAXB v4.0.3 ç”Ÿæˆçš„
+// è¯·è®¿é—® https://eclipse-ee4j.github.io/jaxb-ri 
+// åœ¨é‡æ–°ç¼–è¯‘æºæ¨¡å¼æ—¶, å¯¹æ­¤æ–‡ä»¶çš„æ‰€æœ‰ä¿®æ”¹éƒ½å°†ä¸¢å¤±ã€‚
 //
 
 
@@ -24,9 +24,9 @@ import jakarta.xml.bind.annotation.XmlType;
  *             this might might still not be legal.
  *          
  * 
- * <p>EIVL_PPD_TS complex typeµÄ Java Àà¡£
+ * <p>EIVL_PPD_TS complex typeçš„ Java ç±»ã€‚
  * 
- * <p>ÒÔÏÂÄ£Ê½Æ¬¶ÎÖ¸¶¨°üº¬ÔÚ´ËÀàÖĞµÄÔ¤ÆÚÄÚÈİ¡£
+ * <p>ä»¥ä¸‹æ¨¡å¼ç‰‡æ®µæŒ‡å®šåŒ…å«åœ¨æ­¤ç±»ä¸­çš„é¢„æœŸå†…å®¹ã€‚
  * 
  * <pre>{@code
  * <complexType name="EIVL_PPD_TS">
@@ -56,7 +56,7 @@ public class EIVLPPDTS
     protected IVLPPDPQ offset;
 
     /**
-     * »ñÈ¡eventÊôĞÔµÄÖµ¡£
+     * è·å–eventå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -68,7 +68,7 @@ public class EIVLPPDTS
     }
 
     /**
-     * ÉèÖÃeventÊôĞÔµÄÖµ¡£
+     * è®¾ç½®eventå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -80,7 +80,7 @@ public class EIVLPPDTS
     }
 
     /**
-     * »ñÈ¡offsetÊôĞÔµÄÖµ¡£
+     * è·å–offsetå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -92,7 +92,7 @@ public class EIVLPPDTS
     }
 
     /**
-     * ÉèÖÃoffsetÊôĞÔµÄÖµ¡£
+     * è®¾ç½®offsetå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is

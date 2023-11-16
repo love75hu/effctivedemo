@@ -1,7 +1,7 @@
 //
-// ´ËÎÄ¼şÊÇÓÉ Eclipse Implementation of JAXB v4.0.3 Éú³ÉµÄ
-// Çë·ÃÎÊ https://eclipse-ee4j.github.io/jaxb-ri 
-// ÔÚÖØĞÂ±àÒëÔ´Ä£Ê½Ê±, ¶Ô´ËÎÄ¼şµÄËùÓĞĞŞ¸Ä¶¼½«¶ªÊ§¡£
+// æ­¤æ–‡ä»¶æ˜¯ç”± Eclipse Implementation of JAXB v4.0.3 ç”Ÿæˆçš„
+// è¯·è®¿é—® https://eclipse-ee4j.github.io/jaxb-ri 
+// åœ¨é‡æ–°ç¼–è¯‘æºæ¨¡å¼æ—¶, å¯¹æ­¤æ–‡ä»¶çš„æ‰€æœ‰ä¿®æ”¹éƒ½å°†ä¸¢å¤±ã€‚
 //
 
 
@@ -16,9 +16,9 @@ import jakarta.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>POCD_MT000040.Criterion complex typeµÄ Java Àà¡£
+ * <p>POCD_MT000040.Criterion complex typeçš„ Java ç±»ã€‚
  * 
- * <p>ÒÔÏÂÄ£Ê½Æ¬¶ÎÖ¸¶¨°üº¬ÔÚ´ËÀàÖĞµÄÔ¤ÆÚÄÚÈİ¡£
+ * <p>ä»¥ä¸‹æ¨¡å¼ç‰‡æ®µæŒ‡å®šåŒ…å«åœ¨æ­¤ç±»ä¸­çš„é¢„æœŸå†…å®¹ã€‚
  * 
  * <pre>{@code
  * <complexType name="POCD_MT000040.Criterion">
@@ -98,7 +98,7 @@ public class POCDMT000040Criterion {
     }
 
     /**
-     * »ñÈ¡typeIdÊôĞÔµÄÖµ¡£
+     * è·å–typeIdå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -110,7 +110,7 @@ public class POCDMT000040Criterion {
     }
 
     /**
-     * ÉèÖÃtypeIdÊôĞÔµÄÖµ¡£
+     * è®¾ç½®typeIdå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -153,7 +153,7 @@ public class POCDMT000040Criterion {
     }
 
     /**
-     * »ñÈ¡codeÊôĞÔµÄÖµ¡£
+     * è·å–codeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -165,7 +165,7 @@ public class POCDMT000040Criterion {
     }
 
     /**
-     * ÉèÖÃcodeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®codeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -177,7 +177,7 @@ public class POCDMT000040Criterion {
     }
 
     /**
-     * »ñÈ¡textÊôĞÔµÄÖµ¡£
+     * è·å–textå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -189,7 +189,7 @@ public class POCDMT000040Criterion {
     }
 
     /**
-     * ÉèÖÃtextÊôĞÔµÄÖµ¡£
+     * è®¾ç½®textå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -201,7 +201,7 @@ public class POCDMT000040Criterion {
     }
 
     /**
-     * »ñÈ¡valueÊôĞÔµÄÖµ¡£
+     * è·å–valueå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -213,7 +213,7 @@ public class POCDMT000040Criterion {
     }
 
     /**
-     * ÉèÖÃvalueÊôĞÔµÄÖµ¡£
+     * è®¾ç½®valueå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is

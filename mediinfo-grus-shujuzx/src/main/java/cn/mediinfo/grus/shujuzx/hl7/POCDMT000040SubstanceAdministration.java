@@ -1,7 +1,7 @@
 //
-// ´ËÎÄ¼şÊÇÓÉ Eclipse Implementation of JAXB v4.0.3 Éú³ÉµÄ
-// Çë·ÃÎÊ https://eclipse-ee4j.github.io/jaxb-ri 
-// ÔÚÖØĞÂ±àÒëÔ´Ä£Ê½Ê±, ¶Ô´ËÎÄ¼şµÄËùÓĞĞŞ¸Ä¶¼½«¶ªÊ§¡£
+// æ­¤æ–‡ä»¶æ˜¯ç”± Eclipse Implementation of JAXB v4.0.3 ç”Ÿæˆçš„
+// è¯·è®¿é—® https://eclipse-ee4j.github.io/jaxb-ri 
+// åœ¨é‡æ–°ç¼–è¯‘æºæ¨¡å¼æ—¶, å¯¹æ­¤æ–‡ä»¶çš„æ‰€æœ‰ä¿®æ”¹éƒ½å°†ä¸¢å¤±ã€‚
 //
 
 
@@ -17,9 +17,9 @@ import jakarta.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>POCD_MT000040.SubstanceAdministration complex typeµÄ Java Àà¡£
+ * <p>POCD_MT000040.SubstanceAdministration complex typeçš„ Java ç±»ã€‚
  * 
- * <p>ÒÔÏÂÄ£Ê½Æ¬¶ÎÖ¸¶¨°üº¬ÔÚ´ËÀàÖĞµÄÔ¤ÆÚÄÚÈİ¡£
+ * <p>ä»¥ä¸‹æ¨¡å¼ç‰‡æ®µæŒ‡å®šåŒ…å«åœ¨æ­¤ç±»ä¸­çš„é¢„æœŸå†…å®¹ã€‚
  * 
  * <pre>{@code
  * <complexType name="POCD_MT000040.SubstanceAdministration">
@@ -163,7 +163,7 @@ public class POCDMT000040SubstanceAdministration {
     }
 
     /**
-     * »ñÈ¡typeIdÊôĞÔµÄÖµ¡£
+     * è·å–typeIdå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -175,7 +175,7 @@ public class POCDMT000040SubstanceAdministration {
     }
 
     /**
-     * ÉèÖÃtypeIdÊôĞÔµÄÖµ¡£
+     * è®¾ç½®typeIdå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -249,7 +249,7 @@ public class POCDMT000040SubstanceAdministration {
     }
 
     /**
-     * »ñÈ¡codeÊôĞÔµÄÖµ¡£
+     * è·å–codeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -261,7 +261,7 @@ public class POCDMT000040SubstanceAdministration {
     }
 
     /**
-     * ÉèÖÃcodeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®codeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -273,7 +273,7 @@ public class POCDMT000040SubstanceAdministration {
     }
 
     /**
-     * »ñÈ¡textÊôĞÔµÄÖµ¡£
+     * è·å–textå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -285,7 +285,7 @@ public class POCDMT000040SubstanceAdministration {
     }
 
     /**
-     * ÉèÖÃtextÊôĞÔµÄÖµ¡£
+     * è®¾ç½®textå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -297,7 +297,7 @@ public class POCDMT000040SubstanceAdministration {
     }
 
     /**
-     * »ñÈ¡statusCodeÊôĞÔµÄÖµ¡£
+     * è·å–statusCodeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -309,7 +309,7 @@ public class POCDMT000040SubstanceAdministration {
     }
 
     /**
-     * ÉèÖÃstatusCodeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®statusCodeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -352,7 +352,7 @@ public class POCDMT000040SubstanceAdministration {
     }
 
     /**
-     * »ñÈ¡priorityCodeÊôĞÔµÄÖµ¡£
+     * è·å–priorityCodeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -364,7 +364,7 @@ public class POCDMT000040SubstanceAdministration {
     }
 
     /**
-     * ÉèÖÃpriorityCodeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®priorityCodeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -376,7 +376,7 @@ public class POCDMT000040SubstanceAdministration {
     }
 
     /**
-     * »ñÈ¡repeatNumberÊôĞÔµÄÖµ¡£
+     * è·å–repeatNumberå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -388,7 +388,7 @@ public class POCDMT000040SubstanceAdministration {
     }
 
     /**
-     * ÉèÖÃrepeatNumberÊôĞÔµÄÖµ¡£
+     * è®¾ç½®repeatNumberå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -400,7 +400,7 @@ public class POCDMT000040SubstanceAdministration {
     }
 
     /**
-     * »ñÈ¡routeCodeÊôĞÔµÄÖµ¡£
+     * è·å–routeCodeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -412,7 +412,7 @@ public class POCDMT000040SubstanceAdministration {
     }
 
     /**
-     * ÉèÖÃrouteCodeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®routeCodeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -455,7 +455,7 @@ public class POCDMT000040SubstanceAdministration {
     }
 
     /**
-     * »ñÈ¡doseQuantityÊôĞÔµÄÖµ¡£
+     * è·å–doseQuantityå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -467,7 +467,7 @@ public class POCDMT000040SubstanceAdministration {
     }
 
     /**
-     * ÉèÖÃdoseQuantityÊôĞÔµÄÖµ¡£
+     * è®¾ç½®doseQuantityå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -479,7 +479,7 @@ public class POCDMT000040SubstanceAdministration {
     }
 
     /**
-     * »ñÈ¡rateQuantityÊôĞÔµÄÖµ¡£
+     * è·å–rateQuantityå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -491,7 +491,7 @@ public class POCDMT000040SubstanceAdministration {
     }
 
     /**
-     * ÉèÖÃrateQuantityÊôĞÔµÄÖµ¡£
+     * è®¾ç½®rateQuantityå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -503,7 +503,7 @@ public class POCDMT000040SubstanceAdministration {
     }
 
     /**
-     * »ñÈ¡maxDoseQuantityÊôĞÔµÄÖµ¡£
+     * è·å–maxDoseQuantityå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -515,7 +515,7 @@ public class POCDMT000040SubstanceAdministration {
     }
 
     /**
-     * ÉèÖÃmaxDoseQuantityÊôĞÔµÄÖµ¡£
+     * è®¾ç½®maxDoseQuantityå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -527,7 +527,7 @@ public class POCDMT000040SubstanceAdministration {
     }
 
     /**
-     * »ñÈ¡administrationUnitCodeÊôĞÔµÄÖµ¡£
+     * è·å–administrationUnitCodeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -539,7 +539,7 @@ public class POCDMT000040SubstanceAdministration {
     }
 
     /**
-     * ÉèÖÃadministrationUnitCodeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®administrationUnitCodeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -551,7 +551,7 @@ public class POCDMT000040SubstanceAdministration {
     }
 
     /**
-     * »ñÈ¡subjectÊôĞÔµÄÖµ¡£
+     * è·å–subjectå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -563,7 +563,7 @@ public class POCDMT000040SubstanceAdministration {
     }
 
     /**
-     * ÉèÖÃsubjectÊôĞÔµÄÖµ¡£
+     * è®¾ç½®subjectå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -606,7 +606,7 @@ public class POCDMT000040SubstanceAdministration {
     }
 
     /**
-     * »ñÈ¡consumableÊôĞÔµÄÖµ¡£
+     * è·å–consumableå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -618,7 +618,7 @@ public class POCDMT000040SubstanceAdministration {
     }
 
     /**
-     * ÉèÖÃconsumableÊôĞÔµÄÖµ¡£
+     * è®¾ç½®consumableå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -909,7 +909,7 @@ public class POCDMT000040SubstanceAdministration {
     }
 
     /**
-     * »ñÈ¡moodCodeÊôĞÔµÄÖµ¡£
+     * è·å–moodCodeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -921,7 +921,7 @@ public class POCDMT000040SubstanceAdministration {
     }
 
     /**
-     * ÉèÖÃmoodCodeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®moodCodeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -933,7 +933,7 @@ public class POCDMT000040SubstanceAdministration {
     }
 
     /**
-     * »ñÈ¡negationIndÊôĞÔµÄÖµ¡£
+     * è·å–negationIndå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -945,7 +945,7 @@ public class POCDMT000040SubstanceAdministration {
     }
 
     /**
-     * ÉèÖÃnegationIndÊôĞÔµÄÖµ¡£
+     * è®¾ç½®negationIndå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is

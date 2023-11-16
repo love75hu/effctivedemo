@@ -1,7 +1,7 @@
 //
-// ´ËÎÄ¼şÊÇÓÉ Eclipse Implementation of JAXB v4.0.3 Éú³ÉµÄ
-// Çë·ÃÎÊ https://eclipse-ee4j.github.io/jaxb-ri 
-// ÔÚÖØĞÂ±àÒëÔ´Ä£Ê½Ê±, ¶Ô´ËÎÄ¼şµÄËùÓĞĞŞ¸Ä¶¼½«¶ªÊ§¡£
+// æ­¤æ–‡ä»¶æ˜¯ç”± Eclipse Implementation of JAXB v4.0.3 ç”Ÿæˆçš„
+// è¯·è®¿é—® https://eclipse-ee4j.github.io/jaxb-ri 
+// åœ¨é‡æ–°ç¼–è¯‘æºæ¨¡å¼æ—¶, å¯¹æ­¤æ–‡ä»¶çš„æ‰€æœ‰ä¿®æ”¹éƒ½å°†ä¸¢å¤±ã€‚
 //
 
 
@@ -14,9 +14,9 @@ import jakarta.xml.bind.annotation.*;
 
 
 /**
- * <p>POCD_MT000040.ClinicalDocument complex typeµÄ Java Àà¡£
+ * <p>POCD_MT000040.ClinicalDocument complex typeçš„ Java ç±»ã€‚
  * 
- * <p>ÒÔÏÂÄ£Ê½Æ¬¶ÎÖ¸¶¨°üº¬ÔÚ´ËÀàÖĞµÄÔ¤ÆÚÄÚÈİ¡£
+ * <p>ä»¥ä¸‹æ¨¡å¼ç‰‡æ®µæŒ‡å®šåŒ…å«åœ¨æ­¤ç±»ä¸­çš„é¢„æœŸå†…å®¹ã€‚
  * 
  * <pre>{@code
  * <complexType name="POCD_MT000040.ClinicalDocument">
@@ -91,7 +91,7 @@ import jakarta.xml.bind.annotation.*;
     "componentOf",
     "component"
 })
-@XmlRootElement(name = "xml")
+@XmlRootElement(name = "ClinicalDocument")
 public class POCDMT000040ClinicalDocument {
 
     protected List<CS> realmCode;
@@ -169,7 +169,7 @@ public class POCDMT000040ClinicalDocument {
     }
 
     /**
-     * »ñÈ¡typeIdÊôĞÔµÄÖµ¡£
+     * è·å–typeIdå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -181,7 +181,7 @@ public class POCDMT000040ClinicalDocument {
     }
 
     /**
-     * ÉèÖÃtypeIdÊôĞÔµÄÖµ¡£
+     * è®¾ç½®typeIdå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -224,7 +224,7 @@ public class POCDMT000040ClinicalDocument {
     }
 
     /**
-     * »ñÈ¡idÊôĞÔµÄÖµ¡£
+     * è·å–idå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -236,7 +236,7 @@ public class POCDMT000040ClinicalDocument {
     }
 
     /**
-     * ÉèÖÃidÊôĞÔµÄÖµ¡£
+     * è®¾ç½®idå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -248,7 +248,7 @@ public class POCDMT000040ClinicalDocument {
     }
 
     /**
-     * »ñÈ¡codeÊôĞÔµÄÖµ¡£
+     * è·å–codeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -260,7 +260,7 @@ public class POCDMT000040ClinicalDocument {
     }
 
     /**
-     * ÉèÖÃcodeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®codeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -272,7 +272,7 @@ public class POCDMT000040ClinicalDocument {
     }
 
     /**
-     * »ñÈ¡titleÊôĞÔµÄÖµ¡£
+     * è·å–titleå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -284,7 +284,7 @@ public class POCDMT000040ClinicalDocument {
     }
 
     /**
-     * ÉèÖÃtitleÊôĞÔµÄÖµ¡£
+     * è®¾ç½®titleå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -296,7 +296,7 @@ public class POCDMT000040ClinicalDocument {
     }
 
     /**
-     * »ñÈ¡effectiveTimeÊôĞÔµÄÖµ¡£
+     * è·å–effectiveTimeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -308,7 +308,7 @@ public class POCDMT000040ClinicalDocument {
     }
 
     /**
-     * ÉèÖÃeffectiveTimeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®effectiveTimeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -320,7 +320,7 @@ public class POCDMT000040ClinicalDocument {
     }
 
     /**
-     * »ñÈ¡confidentialityCodeÊôĞÔµÄÖµ¡£
+     * è·å–confidentialityCodeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -332,7 +332,7 @@ public class POCDMT000040ClinicalDocument {
     }
 
     /**
-     * ÉèÖÃconfidentialityCodeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®confidentialityCodeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -344,7 +344,7 @@ public class POCDMT000040ClinicalDocument {
     }
 
     /**
-     * »ñÈ¡languageCodeÊôĞÔµÄÖµ¡£
+     * è·å–languageCodeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -356,7 +356,7 @@ public class POCDMT000040ClinicalDocument {
     }
 
     /**
-     * ÉèÖÃlanguageCodeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®languageCodeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -368,7 +368,7 @@ public class POCDMT000040ClinicalDocument {
     }
 
     /**
-     * »ñÈ¡setIdÊôĞÔµÄÖµ¡£
+     * è·å–setIdå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -380,7 +380,7 @@ public class POCDMT000040ClinicalDocument {
     }
 
     /**
-     * ÉèÖÃsetIdÊôĞÔµÄÖµ¡£
+     * è®¾ç½®setIdå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -392,7 +392,7 @@ public class POCDMT000040ClinicalDocument {
     }
 
     /**
-     * »ñÈ¡versionNumberÊôĞÔµÄÖµ¡£
+     * è·å–versionNumberå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -404,7 +404,7 @@ public class POCDMT000040ClinicalDocument {
     }
 
     /**
-     * ÉèÖÃversionNumberÊôĞÔµÄÖµ¡£
+     * è®¾ç½®versionNumberå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -416,7 +416,7 @@ public class POCDMT000040ClinicalDocument {
     }
 
     /**
-     * »ñÈ¡copyTimeÊôĞÔµÄÖµ¡£
+     * è·å–copyTimeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -428,7 +428,7 @@ public class POCDMT000040ClinicalDocument {
     }
 
     /**
-     * ÉèÖÃcopyTimeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®copyTimeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -502,7 +502,7 @@ public class POCDMT000040ClinicalDocument {
     }
 
     /**
-     * »ñÈ¡dataEntererÊôĞÔµÄÖµ¡£
+     * è·å–dataEntererå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -514,7 +514,7 @@ public class POCDMT000040ClinicalDocument {
     }
 
     /**
-     * ÉèÖÃdataEntererÊôĞÔµÄÖµ¡£
+     * è®¾ç½®dataEntererå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -557,7 +557,7 @@ public class POCDMT000040ClinicalDocument {
     }
 
     /**
-     * »ñÈ¡custodianÊôĞÔµÄÖµ¡£
+     * è·å–custodianå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -569,7 +569,7 @@ public class POCDMT000040ClinicalDocument {
     }
 
     /**
-     * ÉèÖÃcustodianÊôĞÔµÄÖµ¡£
+     * è®¾ç½®custodianå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -612,7 +612,7 @@ public class POCDMT000040ClinicalDocument {
     }
 
     /**
-     * »ñÈ¡legalAuthenticatorÊôĞÔµÄÖµ¡£
+     * è·å–legalAuthenticatorå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -624,7 +624,7 @@ public class POCDMT000040ClinicalDocument {
     }
 
     /**
-     * ÉèÖÃlegalAuthenticatorÊôĞÔµÄÖµ¡£
+     * è®¾ç½®legalAuthenticatorå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -822,7 +822,7 @@ public class POCDMT000040ClinicalDocument {
     }
 
     /**
-     * »ñÈ¡componentOfÊôĞÔµÄÖµ¡£
+     * è·å–componentOfå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -834,7 +834,7 @@ public class POCDMT000040ClinicalDocument {
     }
 
     /**
-     * ÉèÖÃcomponentOfÊôĞÔµÄÖµ¡£
+     * è®¾ç½®componentOfå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -846,7 +846,7 @@ public class POCDMT000040ClinicalDocument {
     }
 
     /**
-     * »ñÈ¡componentÊôĞÔµÄÖµ¡£
+     * è·å–componentå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -858,7 +858,7 @@ public class POCDMT000040ClinicalDocument {
     }
 
     /**
-     * ÉèÖÃcomponentÊôĞÔµÄÖµ¡£
+     * è®¾ç½®componentå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -901,7 +901,7 @@ public class POCDMT000040ClinicalDocument {
     }
 
     /**
-     * »ñÈ¡classCodeÊôĞÔµÄÖµ¡£
+     * è·å–classCodeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -917,7 +917,7 @@ public class POCDMT000040ClinicalDocument {
     }
 
     /**
-     * ÉèÖÃclassCodeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®classCodeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is

@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -55,9 +57,7 @@ public class WenDangSCController implements  BeanFactoryAware {
         switch (dto.getWenDangID()) {
             case "B0001":
                 B0001ServiceImpl B0001 = (B0001ServiceImpl) cdaProc;
-                SC_GW_JiLuXXCreateDto jiLuXXCreateDto=genJianKangDACdaXml(cdaProc,B0001.jiBenXXDto);
-                jiLuXXCreateDto.setYeWuSJ(B0001.jiBenXXDto.getJianDangSJ());
-                jiLuXXCreateDto.setYeWuZJID(B0001.jiBenXXDto.getId());
+                SC_GW_JiLuXXCreateDto jiLuXXCreateDto=genJianKangDACdaXml(cdaProc,B0001.jiBenXXDto,B0001.jiBenXXDto.getJianDangSJ(),B0001.jiBenXXDto.getId());
                 jiLuXXCreateDtoList.add(jiLuXXCreateDto);
                 break;
             case "B0002":
@@ -65,11 +65,12 @@ public class WenDangSCController implements  BeanFactoryAware {
             default:
                 break;
         }
+        dto.setJiLuXXList(jiLuXXCreateDtoList);
         wenDangJLXXService.addWenDangJLXX(dto);
         return MsfResponse.success(jiLuXXCreateDtoList.stream().count());
     }
 
-    private SC_GW_JiLuXXCreateDto genJianKangDACdaXml(ICDADocService cdaProc,DA_GA_JiBenXXDto jiBenXX) throws JAXBException {
+    private SC_GW_JiLuXXCreateDto genJianKangDACdaXml(ICDADocService cdaProc, DA_GA_JiBenXXDto jiBenXX, Date yeWuSJ, String yeWuZJID) throws JAXBException {
         SC_GW_JiLuXXCreateDto jiLuXXCreateDto=new SC_GW_JiLuXXCreateDto();
         jiLuXXCreateDto.setChuShengRQ(jiBenXX.getChuShengRQ());//出生日期
         jiLuXXCreateDto.setXingBieDM(jiBenXX.getXingBieDM());//性别代码
@@ -84,13 +85,16 @@ public class WenDangSCController implements  BeanFactoryAware {
         jiLuXXCreateDto.setShuJuLYDM("");//数据来源代码
         jiLuXXCreateDto.setShuJuLYMC("");//数据来源名称
 
+        jiLuXXCreateDto.setYeWuSJ(yeWuSJ);
+        jiLuXXCreateDto.setYeWuZJID(yeWuZJID);
+
         SC_GW_JiLuNRDto jiLuNRDto=new SC_GW_JiLuNRDto();
         jiLuNRDto.setWenDangID("");
         jiLuNRDto.setWenDangMC("");
         jiLuNRDto.setNeiRong(assembleDictionaryDoc(cdaProc));
         jiLuNRDto.setYaSuoFSDM("");//压缩方式
         jiLuNRDto.setYaSuoFSMC("");//压缩方式
-
+        jiLuXXCreateDto.setJiLuNRDto(jiLuNRDto);
         return  jiLuXXCreateDto;
 
 

@@ -1,7 +1,7 @@
 //
-// ´ËÎÄ¼şÊÇÓÉ Eclipse Implementation of JAXB v4.0.3 Éú³ÉµÄ
-// Çë·ÃÎÊ https://eclipse-ee4j.github.io/jaxb-ri 
-// ÔÚÖØĞÂ±àÒëÔ´Ä£Ê½Ê±, ¶Ô´ËÎÄ¼şµÄËùÓĞĞŞ¸Ä¶¼½«¶ªÊ§¡£
+// æ­¤æ–‡ä»¶æ˜¯ç”± Eclipse Implementation of JAXB v4.0.3 ç”Ÿæˆçš„
+// è¯·è®¿é—® https://eclipse-ee4j.github.io/jaxb-ri 
+// åœ¨é‡æ–°ç¼–è¯‘æºæ¨¡å¼æ—¶, å¯¹æ­¤æ–‡ä»¶çš„æ‰€æœ‰ä¿®æ”¹éƒ½å°†ä¸¢å¤±ã€‚
 //
 
 
@@ -18,9 +18,9 @@ import jakarta.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>IVL_TS complex typeµÄ Java Àà¡£
+ * <p>IVL_TS complex typeçš„ Java ç±»ã€‚
  * 
- * <p>ÒÔÏÂÄ£Ê½Æ¬¶ÎÖ¸¶¨°üº¬ÔÚ´ËÀàÖĞµÄÔ¤ÆÚÄÚÈİ¡£
+ * <p>ä»¥ä¸‹æ¨¡å¼ç‰‡æ®µæŒ‡å®šåŒ…å«åœ¨æ­¤ç±»ä¸­çš„é¢„æœŸå†…å®¹ã€‚
  * 
  * <pre>{@code
  * <complexType name="IVL_TS">
@@ -68,16 +68,16 @@ public class IVLTS
     protected List<JAXBElement<? extends QTY>> rest;
 
     /**
-     * »ñÈ¡ÄÚÈİÄ£ĞÍµÄÆäÓà²¿·Ö¡£
+     * è·å–å†…å®¹æ¨¡å‹çš„å…¶ä½™éƒ¨åˆ†ã€‚
      * 
      * <p>
-     * ÓÉÓÚÒÔÏÂÔ­Òò, Äú»ñÈ¡µÄÊÇ´Ë "catch-all" ÊôĞÔ: 
-     * ×Ö¶ÎÃû³Æ "High" ÓÉÄ£Ê½µÄÁ½¸ö²»Í¬²¿·ÖÊ¹ÓÃ¡£Çë²ÎÔÄ: 
-     * file:/D:/CDACoreSchemas/coreschemas/datatypes-base.xsdµÄµÚ 1790 ĞĞ
-     * file:/D:/CDACoreSchemas/coreschemas/datatypes-base.xsdµÄµÚ 1781 ĞĞ
+     * ç”±äºä»¥ä¸‹åŸå› , æ‚¨è·å–çš„æ˜¯æ­¤ "catch-all" å±æ€§: 
+     * å­—æ®µåç§° "High" ç”±æ¨¡å¼çš„ä¸¤ä¸ªä¸åŒéƒ¨åˆ†ä½¿ç”¨ã€‚è¯·å‚é˜…: 
+     * file:/D:/CDACoreSchemas/coreschemas/datatypes-base.xsdçš„ç¬¬ 1790 è¡Œ
+     * file:/D:/CDACoreSchemas/coreschemas/datatypes-base.xsdçš„ç¬¬ 1781 è¡Œ
      * <p>
-     * ÒªÇå³ı´ËÊôĞÔ, Çë½«ÊôĞÔ¶¨ÖÆÉèÖÃÓ¦ÓÃÓÚÒÔÏÂÁ½¸öÉùÃ÷
-     * »òÆäÖĞÒ»¸öÒÔ¸ü¸ÄÆäÃû³Æ: 
+     * è¦æ¸…é™¤æ­¤å±æ€§, è¯·å°†å±æ€§å®šåˆ¶è®¾ç½®åº”ç”¨äºä»¥ä¸‹ä¸¤ä¸ªå£°æ˜
+     * æˆ–å…¶ä¸­ä¸€ä¸ªä»¥æ›´æ”¹å…¶åç§°: 
      * Gets the value of the rest property.
      * 
      * <p>

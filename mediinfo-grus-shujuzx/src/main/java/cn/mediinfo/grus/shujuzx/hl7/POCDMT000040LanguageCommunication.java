@@ -1,7 +1,7 @@
 //
-// ´ËÎÄ¼şÊÇÓÉ Eclipse Implementation of JAXB v4.0.3 Éú³ÉµÄ
-// Çë·ÃÎÊ https://eclipse-ee4j.github.io/jaxb-ri 
-// ÔÚÖØĞÂ±àÒëÔ´Ä£Ê½Ê±, ¶Ô´ËÎÄ¼şµÄËùÓĞĞŞ¸Ä¶¼½«¶ªÊ§¡£
+// æ­¤æ–‡ä»¶æ˜¯ç”± Eclipse Implementation of JAXB v4.0.3 ç”Ÿæˆçš„
+// è¯·è®¿é—® https://eclipse-ee4j.github.io/jaxb-ri 
+// åœ¨é‡æ–°ç¼–è¯‘æºæ¨¡å¼æ—¶, å¯¹æ­¤æ–‡ä»¶çš„æ‰€æœ‰ä¿®æ”¹éƒ½å°†ä¸¢å¤±ã€‚
 //
 
 
@@ -16,9 +16,9 @@ import jakarta.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>POCD_MT000040.LanguageCommunication complex typeµÄ Java Àà¡£
+ * <p>POCD_MT000040.LanguageCommunication complex typeçš„ Java ç±»ã€‚
  * 
- * <p>ÒÔÏÂÄ£Ê½Æ¬¶ÎÖ¸¶¨°üº¬ÔÚ´ËÀàÖĞµÄÔ¤ÆÚÄÚÈİ¡£
+ * <p>ä»¥ä¸‹æ¨¡å¼ç‰‡æ®µæŒ‡å®šåŒ…å«åœ¨æ­¤ç±»ä¸­çš„é¢„æœŸå†…å®¹ã€‚
  * 
  * <pre>{@code
  * <complexType name="POCD_MT000040.LanguageCommunication">
@@ -95,7 +95,7 @@ public class POCDMT000040LanguageCommunication {
     }
 
     /**
-     * »ñÈ¡typeIdÊôĞÔµÄÖµ¡£
+     * è·å–typeIdå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -107,7 +107,7 @@ public class POCDMT000040LanguageCommunication {
     }
 
     /**
-     * ÉèÖÃtypeIdÊôĞÔµÄÖµ¡£
+     * è®¾ç½®typeIdå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -150,7 +150,7 @@ public class POCDMT000040LanguageCommunication {
     }
 
     /**
-     * »ñÈ¡languageCodeÊôĞÔµÄÖµ¡£
+     * è·å–languageCodeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -162,7 +162,7 @@ public class POCDMT000040LanguageCommunication {
     }
 
     /**
-     * ÉèÖÃlanguageCodeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®languageCodeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -174,7 +174,7 @@ public class POCDMT000040LanguageCommunication {
     }
 
     /**
-     * »ñÈ¡modeCodeÊôĞÔµÄÖµ¡£
+     * è·å–modeCodeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -186,7 +186,7 @@ public class POCDMT000040LanguageCommunication {
     }
 
     /**
-     * ÉèÖÃmodeCodeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®modeCodeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -198,7 +198,7 @@ public class POCDMT000040LanguageCommunication {
     }
 
     /**
-     * »ñÈ¡proficiencyLevelCodeÊôĞÔµÄÖµ¡£
+     * è·å–proficiencyLevelCodeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -210,7 +210,7 @@ public class POCDMT000040LanguageCommunication {
     }
 
     /**
-     * ÉèÖÃproficiencyLevelCodeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®proficiencyLevelCodeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -222,7 +222,7 @@ public class POCDMT000040LanguageCommunication {
     }
 
     /**
-     * »ñÈ¡preferenceIndÊôĞÔµÄÖµ¡£
+     * è·å–preferenceIndå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -234,7 +234,7 @@ public class POCDMT000040LanguageCommunication {
     }
 
     /**
-     * ÉèÖÃpreferenceIndÊôĞÔµÄÖµ¡£
+     * è®¾ç½®preferenceIndå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is

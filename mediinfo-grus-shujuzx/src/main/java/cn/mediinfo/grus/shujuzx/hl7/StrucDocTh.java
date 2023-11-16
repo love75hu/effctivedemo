@@ -1,7 +1,7 @@
 //
-// ´ËÎÄ¼şÊÇÓÉ Eclipse Implementation of JAXB v4.0.3 Éú³ÉµÄ
-// Çë·ÃÎÊ https://eclipse-ee4j.github.io/jaxb-ri 
-// ÔÚÖØĞÂ±àÒëÔ´Ä£Ê½Ê±, ¶Ô´ËÎÄ¼şµÄËùÓĞĞŞ¸Ä¶¼½«¶ªÊ§¡£
+// æ­¤æ–‡ä»¶æ˜¯ç”± Eclipse Implementation of JAXB v4.0.3 ç”Ÿæˆçš„
+// è¯·è®¿é—® https://eclipse-ee4j.github.io/jaxb-ri 
+// åœ¨é‡æ–°ç¼–è¯‘æºæ¨¡å¼æ—¶, å¯¹æ­¤æ–‡ä»¶çš„æ‰€æœ‰ä¿®æ”¹éƒ½å°†ä¸¢å¤±ã€‚
 //
 
 
@@ -26,9 +26,9 @@ import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 
 /**
- * <p>StrucDoc.Th complex typeµÄ Java Àà¡£
+ * <p>StrucDoc.Th complex typeçš„ Java ç±»ã€‚
  * 
- * <p>ÒÔÏÂÄ£Ê½Æ¬¶ÎÖ¸¶¨°üº¬ÔÚ´ËÀàÖĞµÄÔ¤ÆÚÄÚÈİ¡£
+ * <p>ä»¥ä¸‹æ¨¡å¼ç‰‡æ®µæŒ‡å®šåŒ…å«åœ¨æ­¤ç±»ä¸­çš„é¢„æœŸå†…å®¹ã€‚
  * 
  * <pre>{@code
  * <complexType name="StrucDoc.Th">
@@ -188,7 +188,7 @@ public class StrucDocTh {
     }
 
     /**
-     * »ñÈ¡idÊôĞÔµÄÖµ¡£
+     * è·å–idå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -200,7 +200,7 @@ public class StrucDocTh {
     }
 
     /**
-     * ÉèÖÃidÊôĞÔµÄÖµ¡£
+     * è®¾ç½®idå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -212,7 +212,7 @@ public class StrucDocTh {
     }
 
     /**
-     * »ñÈ¡languageÊôĞÔµÄÖµ¡£
+     * è·å–languageå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -224,7 +224,7 @@ public class StrucDocTh {
     }
 
     /**
-     * ÉèÖÃlanguageÊôĞÔµÄÖµ¡£
+     * è®¾ç½®languageå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -267,7 +267,7 @@ public class StrucDocTh {
     }
 
     /**
-     * »ñÈ¡abbrÊôĞÔµÄÖµ¡£
+     * è·å–abbrå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -279,7 +279,7 @@ public class StrucDocTh {
     }
 
     /**
-     * ÉèÖÃabbrÊôĞÔµÄÖµ¡£
+     * è®¾ç½®abbrå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -291,7 +291,7 @@ public class StrucDocTh {
     }
 
     /**
-     * »ñÈ¡axisÊôĞÔµÄÖµ¡£
+     * è·å–axiså±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -303,7 +303,7 @@ public class StrucDocTh {
     }
 
     /**
-     * ÉèÖÃaxisÊôĞÔµÄÖµ¡£
+     * è®¾ç½®axiså±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -346,7 +346,7 @@ public class StrucDocTh {
     }
 
     /**
-     * »ñÈ¡scopeÊôĞÔµÄÖµ¡£
+     * è·å–scopeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -358,7 +358,7 @@ public class StrucDocTh {
     }
 
     /**
-     * ÉèÖÃscopeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®scopeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -370,7 +370,7 @@ public class StrucDocTh {
     }
 
     /**
-     * »ñÈ¡rowspanÊôĞÔµÄÖµ¡£
+     * è·å–rowspanå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -386,7 +386,7 @@ public class StrucDocTh {
     }
 
     /**
-     * ÉèÖÃrowspanÊôĞÔµÄÖµ¡£
+     * è®¾ç½®rowspanå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -398,7 +398,7 @@ public class StrucDocTh {
     }
 
     /**
-     * »ñÈ¡colspanÊôĞÔµÄÖµ¡£
+     * è·å–colspanå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -414,7 +414,7 @@ public class StrucDocTh {
     }
 
     /**
-     * ÉèÖÃcolspanÊôĞÔµÄÖµ¡£
+     * è®¾ç½®colspanå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -426,7 +426,7 @@ public class StrucDocTh {
     }
 
     /**
-     * »ñÈ¡alignÊôĞÔµÄÖµ¡£
+     * è·å–alignå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -438,7 +438,7 @@ public class StrucDocTh {
     }
 
     /**
-     * ÉèÖÃalignÊôĞÔµÄÖµ¡£
+     * è®¾ç½®alignå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -450,7 +450,7 @@ public class StrucDocTh {
     }
 
     /**
-     * »ñÈ¡charÊôĞÔµÄÖµ¡£
+     * è·å–charå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -462,7 +462,7 @@ public class StrucDocTh {
     }
 
     /**
-     * ÉèÖÃcharÊôĞÔµÄÖµ¡£
+     * è®¾ç½®charå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -474,7 +474,7 @@ public class StrucDocTh {
     }
 
     /**
-     * »ñÈ¡charoffÊôĞÔµÄÖµ¡£
+     * è·å–charoffå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -486,7 +486,7 @@ public class StrucDocTh {
     }
 
     /**
-     * ÉèÖÃcharoffÊôĞÔµÄÖµ¡£
+     * è®¾ç½®charoffå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -498,7 +498,7 @@ public class StrucDocTh {
     }
 
     /**
-     * »ñÈ¡valignÊôĞÔµÄÖµ¡£
+     * è·å–valignå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -510,7 +510,7 @@ public class StrucDocTh {
     }
 
     /**
-     * ÉèÖÃvalignÊôĞÔµÄÖµ¡£
+     * è®¾ç½®valignå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is

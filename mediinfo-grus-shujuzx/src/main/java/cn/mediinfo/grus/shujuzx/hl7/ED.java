@@ -1,7 +1,7 @@
 //
-// ´ËÎÄ¼şÊÇÓÉ Eclipse Implementation of JAXB v4.0.3 Éú³ÉµÄ
-// Çë·ÃÎÊ https://eclipse-ee4j.github.io/jaxb-ri 
-// ÔÚÖØĞÂ±àÒëÔ´Ä£Ê½Ê±, ¶Ô´ËÎÄ¼şµÄËùÓĞĞŞ¸Ä¶¼½«¶ªÊ§¡£
+// æ­¤æ–‡ä»¶æ˜¯ç”± Eclipse Implementation of JAXB v4.0.3 ç”Ÿæˆçš„
+// è¯·è®¿é—® https://eclipse-ee4j.github.io/jaxb-ri 
+// åœ¨é‡æ–°ç¼–è¯‘æºæ¨¡å¼æ—¶, å¯¹æ­¤æ–‡ä»¶çš„æ‰€æœ‰ä¿®æ”¹éƒ½å°†ä¸¢å¤±ã€‚
 //
 
 
@@ -30,9 +30,9 @@ import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  *             when the ED media type is text/plain.
  *          
  * 
- * <p>ED complex typeµÄ Java Àà¡£
+ * <p>ED complex typeçš„ Java ç±»ã€‚
  * 
- * <p>ÒÔÏÂÄ£Ê½Æ¬¶ÎÖ¸¶¨°üº¬ÔÚ´ËÀàÖĞµÄÔ¤ÆÚÄÚÈİ¡£
+ * <p>ä»¥ä¸‹æ¨¡å¼ç‰‡æ®µæŒ‡å®šåŒ…å«åœ¨æ­¤ç±»ä¸­çš„é¢„æœŸå†…å®¹ã€‚
  * 
  * <pre>{@code
  * <complexType name="ED">
@@ -83,7 +83,7 @@ public class ED
     protected IntegrityCheckAlgorithm integrityCheckAlgorithm;
 
     /**
-     * »ñÈ¡referenceÊôĞÔµÄÖµ¡£
+     * è·å–referenceå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -95,7 +95,7 @@ public class ED
     }
 
     /**
-     * ÉèÖÃreferenceÊôĞÔµÄÖµ¡£
+     * è®¾ç½®referenceå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -107,7 +107,7 @@ public class ED
     }
 
     /**
-     * »ñÈ¡thumbnailÊôĞÔµÄÖµ¡£
+     * è·å–thumbnailå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -119,7 +119,7 @@ public class ED
     }
 
     /**
-     * ÉèÖÃthumbnailÊôĞÔµÄÖµ¡£
+     * è®¾ç½®thumbnailå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -131,7 +131,7 @@ public class ED
     }
 
     /**
-     * »ñÈ¡mediaTypeÊôĞÔµÄÖµ¡£
+     * è·å–mediaTypeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -147,7 +147,7 @@ public class ED
     }
 
     /**
-     * ÉèÖÃmediaTypeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®mediaTypeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -159,7 +159,7 @@ public class ED
     }
 
     /**
-     * »ñÈ¡languageÊôĞÔµÄÖµ¡£
+     * è·å–languageå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -171,7 +171,7 @@ public class ED
     }
 
     /**
-     * ÉèÖÃlanguageÊôĞÔµÄÖµ¡£
+     * è®¾ç½®languageå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -183,7 +183,7 @@ public class ED
     }
 
     /**
-     * »ñÈ¡compressionÊôĞÔµÄÖµ¡£
+     * è·å–compressionå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -195,7 +195,7 @@ public class ED
     }
 
     /**
-     * ÉèÖÃcompressionÊôĞÔµÄÖµ¡£
+     * è®¾ç½®compressionå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -207,7 +207,7 @@ public class ED
     }
 
     /**
-     * »ñÈ¡integrityCheckÊôĞÔµÄÖµ¡£
+     * è·å–integrityCheckå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -218,7 +218,7 @@ public class ED
     }
 
     /**
-     * ÉèÖÃintegrityCheckÊôĞÔµÄÖµ¡£
+     * è®¾ç½®integrityCheckå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -229,7 +229,7 @@ public class ED
     }
 
     /**
-     * »ñÈ¡integrityCheckAlgorithmÊôĞÔµÄÖµ¡£
+     * è·å–integrityCheckAlgorithmå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -245,7 +245,7 @@ public class ED
     }
 
     /**
-     * ÉèÖÃintegrityCheckAlgorithmÊôĞÔµÄÖµ¡£
+     * è®¾ç½®integrityCheckAlgorithmå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is

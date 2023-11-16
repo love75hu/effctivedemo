@@ -1,7 +1,7 @@
 //
-// ´ËÎÄ¼şÊÇÓÉ Eclipse Implementation of JAXB v4.0.3 Éú³ÉµÄ
-// Çë·ÃÎÊ https://eclipse-ee4j.github.io/jaxb-ri 
-// ÔÚÖØĞÂ±àÒëÔ´Ä£Ê½Ê±, ¶Ô´ËÎÄ¼şµÄËùÓĞĞŞ¸Ä¶¼½«¶ªÊ§¡£
+// æ­¤æ–‡ä»¶æ˜¯ç”± Eclipse Implementation of JAXB v4.0.3 ç”Ÿæˆçš„
+// è¯·è®¿é—® https://eclipse-ee4j.github.io/jaxb-ri 
+// åœ¨é‡æ–°ç¼–è¯‘æºæ¨¡å¼æ—¶, å¯¹æ­¤æ–‡ä»¶çš„æ‰€æœ‰ä¿®æ”¹éƒ½å°†ä¸¢å¤±ã€‚
 //
 
 
@@ -28,9 +28,9 @@ import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  *             reason why currency units are not physical units.
  *          
  * 
- * <p>MO complex typeµÄ Java Àà¡£
+ * <p>MO complex typeçš„ Java ç±»ã€‚
  * 
- * <p>ÒÔÏÂÄ£Ê½Æ¬¶ÎÖ¸¶¨°üº¬ÔÚ´ËÀàÖĞµÄÔ¤ÆÚÄÚÈİ¡£
+ * <p>ä»¥ä¸‹æ¨¡å¼ç‰‡æ®µæŒ‡å®šåŒ…å«åœ¨æ­¤ç±»ä¸­çš„é¢„æœŸå†…å®¹ã€‚
  * 
  * <pre>{@code
  * <complexType name="MO">
@@ -62,7 +62,7 @@ public class MO
     protected String currency;
 
     /**
-     * »ñÈ¡valueÊôĞÔµÄÖµ¡£
+     * è·å–valueå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -74,7 +74,7 @@ public class MO
     }
 
     /**
-     * ÉèÖÃvalueÊôĞÔµÄÖµ¡£
+     * è®¾ç½®valueå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -86,7 +86,7 @@ public class MO
     }
 
     /**
-     * »ñÈ¡currencyÊôĞÔµÄÖµ¡£
+     * è·å–currencyå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -98,7 +98,7 @@ public class MO
     }
 
     /**
-     * ÉèÖÃcurrencyÊôĞÔµÄÖµ¡£
+     * è®¾ç½®currencyå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is

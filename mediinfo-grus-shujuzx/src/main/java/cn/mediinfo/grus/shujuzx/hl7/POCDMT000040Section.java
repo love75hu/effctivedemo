@@ -1,7 +1,7 @@
 //
-// ´ËÎÄ¼şÊÇÓÉ Eclipse Implementation of JAXB v4.0.3 Éú³ÉµÄ
-// Çë·ÃÎÊ https://eclipse-ee4j.github.io/jaxb-ri 
-// ÔÚÖØĞÂ±àÒëÔ´Ä£Ê½Ê±, ¶Ô´ËÎÄ¼şµÄËùÓĞĞŞ¸Ä¶¼½«¶ªÊ§¡£
+// æ­¤æ–‡ä»¶æ˜¯ç”± Eclipse Implementation of JAXB v4.0.3 ç”Ÿæˆçš„
+// è¯·è®¿é—® https://eclipse-ee4j.github.io/jaxb-ri 
+// åœ¨é‡æ–°ç¼–è¯‘æºæ¨¡å¼æ—¶, å¯¹æ­¤æ–‡ä»¶çš„æ‰€æœ‰ä¿®æ”¹éƒ½å°†ä¸¢å¤±ã€‚
 //
 
 
@@ -16,9 +16,9 @@ import jakarta.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>POCD_MT000040.Section complex typeµÄ Java Àà¡£
+ * <p>POCD_MT000040.Section complex typeçš„ Java ç±»ã€‚
  * 
- * <p>ÒÔÏÂÄ£Ê½Æ¬¶ÎÖ¸¶¨°üº¬ÔÚ´ËÀàÖĞµÄÔ¤ÆÚÄÚÈİ¡£
+ * <p>ä»¥ä¸‹æ¨¡å¼ç‰‡æ®µæŒ‡å®šåŒ…å«åœ¨æ­¤ç±»ä¸­çš„é¢„æœŸå†…å®¹ã€‚
  * 
  * <pre>{@code
  * <complexType name="POCD_MT000040.Section">
@@ -122,7 +122,7 @@ public class POCDMT000040Section {
     }
 
     /**
-     * »ñÈ¡typeIdÊôĞÔµÄÖµ¡£
+     * è·å–typeIdå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -134,7 +134,7 @@ public class POCDMT000040Section {
     }
 
     /**
-     * ÉèÖÃtypeIdÊôĞÔµÄÖµ¡£
+     * è®¾ç½®typeIdå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -177,7 +177,7 @@ public class POCDMT000040Section {
     }
 
     /**
-     * »ñÈ¡idÊôĞÔµÄÖµ¡£
+     * è·å–idå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -189,7 +189,7 @@ public class POCDMT000040Section {
     }
 
     /**
-     * ÉèÖÃidÊôĞÔµÄÖµ¡£
+     * è®¾ç½®idå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -201,7 +201,7 @@ public class POCDMT000040Section {
     }
 
     /**
-     * »ñÈ¡codeÊôĞÔµÄÖµ¡£
+     * è·å–codeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -213,7 +213,7 @@ public class POCDMT000040Section {
     }
 
     /**
-     * ÉèÖÃcodeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®codeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -225,7 +225,7 @@ public class POCDMT000040Section {
     }
 
     /**
-     * »ñÈ¡titleÊôĞÔµÄÖµ¡£
+     * è·å–titleå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -237,7 +237,7 @@ public class POCDMT000040Section {
     }
 
     /**
-     * ÉèÖÃtitleÊôĞÔµÄÖµ¡£
+     * è®¾ç½®titleå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -249,7 +249,7 @@ public class POCDMT000040Section {
     }
 
     /**
-     * »ñÈ¡textÊôĞÔµÄÖµ¡£
+     * è·å–textå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -261,7 +261,7 @@ public class POCDMT000040Section {
     }
 
     /**
-     * ÉèÖÃtextÊôĞÔµÄÖµ¡£
+     * è®¾ç½®textå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -273,7 +273,7 @@ public class POCDMT000040Section {
     }
 
     /**
-     * »ñÈ¡confidentialityCodeÊôĞÔµÄÖµ¡£
+     * è·å–confidentialityCodeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -285,7 +285,7 @@ public class POCDMT000040Section {
     }
 
     /**
-     * ÉèÖÃconfidentialityCodeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®confidentialityCodeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -297,7 +297,7 @@ public class POCDMT000040Section {
     }
 
     /**
-     * »ñÈ¡languageCodeÊôĞÔµÄÖµ¡£
+     * è·å–languageCodeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -309,7 +309,7 @@ public class POCDMT000040Section {
     }
 
     /**
-     * ÉèÖÃlanguageCodeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®languageCodeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -321,7 +321,7 @@ public class POCDMT000040Section {
     }
 
     /**
-     * »ñÈ¡subjectÊôĞÔµÄÖµ¡£
+     * è·å–subjectå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -333,7 +333,7 @@ public class POCDMT000040Section {
     }
 
     /**
-     * ÉèÖÃsubjectÊôĞÔµÄÖµ¡£
+     * è®¾ç½®subjectå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is

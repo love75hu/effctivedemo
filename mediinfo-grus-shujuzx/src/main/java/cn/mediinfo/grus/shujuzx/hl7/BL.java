@@ -1,7 +1,7 @@
 //
-// ´ËÎÄ¼şÊÇÓÉ Eclipse Implementation of JAXB v4.0.3 Éú³ÉµÄ
-// Çë·ÃÎÊ https://eclipse-ee4j.github.io/jaxb-ri 
-// ÔÚÖØĞÂ±àÒëÔ´Ä£Ê½Ê±, ¶Ô´ËÎÄ¼şµÄËùÓĞĞŞ¸Ä¶¼½«¶ªÊ§¡£
+// æ­¤æ–‡ä»¶æ˜¯ç”± Eclipse Implementation of JAXB v4.0.3 ç”Ÿæˆçš„
+// è¯·è®¿é—® https://eclipse-ee4j.github.io/jaxb-ri 
+// åœ¨é‡æ–°ç¼–è¯‘æºæ¨¡å¼æ—¶, å¯¹æ­¤æ–‡ä»¶çš„æ‰€æœ‰ä¿®æ”¹éƒ½å°†ä¸¢å¤±ã€‚
 //
 
 
@@ -20,9 +20,9 @@ import jakarta.xml.bind.annotation.XmlType;
  *             false, or, as any other value may be NULL.
  *          
  * 
- * <p>BL complex typeµÄ Java Àà¡£
+ * <p>BL complex typeçš„ Java ç±»ã€‚
  * 
- * <p>ÒÔÏÂÄ£Ê½Æ¬¶ÎÖ¸¶¨°üº¬ÔÚ´ËÀàÖĞµÄÔ¤ÆÚÄÚÈİ¡£
+ * <p>ä»¥ä¸‹æ¨¡å¼ç‰‡æ®µæŒ‡å®šåŒ…å«åœ¨æ­¤ç±»ä¸­çš„é¢„æœŸå†…å®¹ã€‚
  * 
  * <pre>{@code
  * <complexType name="BL">
@@ -46,7 +46,7 @@ public class BL
     protected Boolean value;
 
     /**
-     * »ñÈ¡valueÊôĞÔµÄÖµ¡£
+     * è·å–valueå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -58,7 +58,7 @@ public class BL
     }
 
     /**
-     * ÉèÖÃvalueÊôĞÔµÄÖµ¡£
+     * è®¾ç½®valueå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is

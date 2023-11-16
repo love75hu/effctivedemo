@@ -1,7 +1,7 @@
 //
-// ´ËÎÄ¼şÊÇÓÉ Eclipse Implementation of JAXB v4.0.3 Éú³ÉµÄ
-// Çë·ÃÎÊ https://eclipse-ee4j.github.io/jaxb-ri 
-// ÔÚÖØĞÂ±àÒëÔ´Ä£Ê½Ê±, ¶Ô´ËÎÄ¼şµÄËùÓĞĞŞ¸Ä¶¼½«¶ªÊ§¡£
+// æ­¤æ–‡ä»¶æ˜¯ç”± Eclipse Implementation of JAXB v4.0.3 ç”Ÿæˆçš„
+// è¯·è®¿é—® https://eclipse-ee4j.github.io/jaxb-ri 
+// åœ¨é‡æ–°ç¼–è¯‘æºæ¨¡å¼æ—¶, å¯¹æ­¤æ–‡ä»¶çš„æ‰€æœ‰ä¿®æ”¹éƒ½å°†ä¸¢å¤±ã€‚
 //
 
 
@@ -16,9 +16,9 @@ import jakarta.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>GLIST_TS complex typeµÄ Java Àà¡£
+ * <p>GLIST_TS complex typeçš„ Java ç±»ã€‚
  * 
- * <p>ÒÔÏÂÄ£Ê½Æ¬¶ÎÖ¸¶¨°üº¬ÔÚ´ËÀàÖĞµÄÔ¤ÆÚÄÚÈİ¡£
+ * <p>ä»¥ä¸‹æ¨¡å¼ç‰‡æ®µæŒ‡å®šåŒ…å«åœ¨æ­¤ç±»ä¸­çš„é¢„æœŸå†…å®¹ã€‚
  * 
  * <pre>{@code
  * <complexType name="GLIST_TS">
@@ -56,7 +56,7 @@ public class GLISTTS
     protected BigInteger denominator;
 
     /**
-     * »ñÈ¡headÊôĞÔµÄÖµ¡£
+     * è·å–headå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -68,7 +68,7 @@ public class GLISTTS
     }
 
     /**
-     * ÉèÖÃheadÊôĞÔµÄÖµ¡£
+     * è®¾ç½®headå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -80,7 +80,7 @@ public class GLISTTS
     }
 
     /**
-     * »ñÈ¡incrementÊôĞÔµÄÖµ¡£
+     * è·å–incrementå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -92,7 +92,7 @@ public class GLISTTS
     }
 
     /**
-     * ÉèÖÃincrementÊôĞÔµÄÖµ¡£
+     * è®¾ç½®incrementå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -104,7 +104,7 @@ public class GLISTTS
     }
 
     /**
-     * »ñÈ¡periodÊôĞÔµÄÖµ¡£
+     * è·å–periodå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -116,7 +116,7 @@ public class GLISTTS
     }
 
     /**
-     * ÉèÖÃperiodÊôĞÔµÄÖµ¡£
+     * è®¾ç½®periodå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -128,7 +128,7 @@ public class GLISTTS
     }
 
     /**
-     * »ñÈ¡denominatorÊôĞÔµÄÖµ¡£
+     * è·å–denominatorå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -140,7 +140,7 @@ public class GLISTTS
     }
 
     /**
-     * ÉèÖÃdenominatorÊôĞÔµÄÖµ¡£
+     * è®¾ç½®denominatorå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is

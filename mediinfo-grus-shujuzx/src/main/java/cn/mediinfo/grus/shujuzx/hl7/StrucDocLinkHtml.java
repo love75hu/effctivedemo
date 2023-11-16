@@ -1,7 +1,7 @@
 //
-// ´ËÎÄ¼şÊÇÓÉ Eclipse Implementation of JAXB v4.0.3 Éú³ÉµÄ
-// Çë·ÃÎÊ https://eclipse-ee4j.github.io/jaxb-ri 
-// ÔÚÖØĞÂ±àÒëÔ´Ä£Ê½Ê±, ¶Ô´ËÎÄ¼şµÄËùÓĞĞŞ¸Ä¶¼½«¶ªÊ§¡£
+// æ­¤æ–‡ä»¶æ˜¯ç”± Eclipse Implementation of JAXB v4.0.3 ç”Ÿæˆçš„
+// è¯·è®¿é—® https://eclipse-ee4j.github.io/jaxb-ri 
+// åœ¨é‡æ–°ç¼–è¯‘æºæ¨¡å¼æ—¶, å¯¹æ­¤æ–‡ä»¶çš„æ‰€æœ‰ä¿®æ”¹éƒ½å°†ä¸¢å¤±ã€‚
 //
 
 
@@ -25,9 +25,9 @@ import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 
 /**
- * <p>StrucDoc.LinkHtml complex typeµÄ Java Àà¡£
+ * <p>StrucDoc.LinkHtml complex typeçš„ Java ç±»ã€‚
  * 
- * <p>ÒÔÏÂÄ£Ê½Æ¬¶ÎÖ¸¶¨°üº¬ÔÚ´ËÀàÖĞµÄÔ¤ÆÚÄÚÈİ¡£
+ * <p>ä»¥ä¸‹æ¨¡å¼ç‰‡æ®µæŒ‡å®šåŒ…å«åœ¨æ­¤ç±»ä¸­çš„é¢„æœŸå†…å®¹ã€‚
  * 
  * <pre>{@code
  * <complexType name="StrucDoc.LinkHtml">
@@ -121,7 +121,7 @@ public class StrucDocLinkHtml {
     }
 
     /**
-     * »ñÈ¡nameÊôĞÔµÄÖµ¡£
+     * è·å–nameå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -133,7 +133,7 @@ public class StrucDocLinkHtml {
     }
 
     /**
-     * ÉèÖÃnameÊôĞÔµÄÖµ¡£
+     * è®¾ç½®nameå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -145,7 +145,7 @@ public class StrucDocLinkHtml {
     }
 
     /**
-     * »ñÈ¡hrefÊôĞÔµÄÖµ¡£
+     * è·å–hrefå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -157,7 +157,7 @@ public class StrucDocLinkHtml {
     }
 
     /**
-     * ÉèÖÃhrefÊôĞÔµÄÖµ¡£
+     * è®¾ç½®hrefå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -169,7 +169,7 @@ public class StrucDocLinkHtml {
     }
 
     /**
-     * »ñÈ¡relÊôĞÔµÄÖµ¡£
+     * è·å–relå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -181,7 +181,7 @@ public class StrucDocLinkHtml {
     }
 
     /**
-     * ÉèÖÃrelÊôĞÔµÄÖµ¡£
+     * è®¾ç½®relå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -193,7 +193,7 @@ public class StrucDocLinkHtml {
     }
 
     /**
-     * »ñÈ¡revÊôĞÔµÄÖµ¡£
+     * è·å–revå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -205,7 +205,7 @@ public class StrucDocLinkHtml {
     }
 
     /**
-     * ÉèÖÃrevÊôĞÔµÄÖµ¡£
+     * è®¾ç½®revå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -217,7 +217,7 @@ public class StrucDocLinkHtml {
     }
 
     /**
-     * »ñÈ¡titleÊôĞÔµÄÖµ¡£
+     * è·å–titleå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -229,7 +229,7 @@ public class StrucDocLinkHtml {
     }
 
     /**
-     * ÉèÖÃtitleÊôĞÔµÄÖµ¡£
+     * è®¾ç½®titleå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -241,7 +241,7 @@ public class StrucDocLinkHtml {
     }
 
     /**
-     * »ñÈ¡idÊôĞÔµÄÖµ¡£
+     * è·å–idå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -253,7 +253,7 @@ public class StrucDocLinkHtml {
     }
 
     /**
-     * ÉèÖÃidÊôĞÔµÄÖµ¡£
+     * è®¾ç½®idå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -265,7 +265,7 @@ public class StrucDocLinkHtml {
     }
 
     /**
-     * »ñÈ¡languageÊôĞÔµÄÖµ¡£
+     * è·å–languageå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -277,7 +277,7 @@ public class StrucDocLinkHtml {
     }
 
     /**
-     * ÉèÖÃlanguageÊôĞÔµÄÖµ¡£
+     * è®¾ç½®languageå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is

@@ -1,7 +1,7 @@
 //
-// ´ËÎÄ¼şÊÇÓÉ Eclipse Implementation of JAXB v4.0.3 Éú³ÉµÄ
-// Çë·ÃÎÊ https://eclipse-ee4j.github.io/jaxb-ri 
-// ÔÚÖØĞÂ±àÒëÔ´Ä£Ê½Ê±, ¶Ô´ËÎÄ¼şµÄËùÓĞĞŞ¸Ä¶¼½«¶ªÊ§¡£
+// æ­¤æ–‡ä»¶æ˜¯ç”± Eclipse Implementation of JAXB v4.0.3 ç”Ÿæˆçš„
+// è¯·è®¿é—® https://eclipse-ee4j.github.io/jaxb-ri 
+// åœ¨é‡æ–°ç¼–è¯‘æºæ¨¡å¼æ—¶, å¯¹æ­¤æ–‡ä»¶çš„æ‰€æœ‰ä¿®æ”¹éƒ½å°†ä¸¢å¤±ã€‚
 //
 
 
@@ -16,9 +16,9 @@ import jakarta.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>POCD_MT000040.EntryRelationship complex typeµÄ Java Àà¡£
+ * <p>POCD_MT000040.EntryRelationship complex typeçš„ Java ç±»ã€‚
  * 
- * <p>ÒÔÏÂÄ£Ê½Æ¬¶ÎÖ¸¶¨°üº¬ÔÚ´ËÀàÖĞµÄÔ¤ÆÚÄÚÈİ¡£
+ * <p>ä»¥ä¸‹æ¨¡å¼ç‰‡æ®µæŒ‡å®šåŒ…å«åœ¨æ­¤ç±»ä¸­çš„é¢„æœŸå†…å®¹ã€‚
  * 
  * <pre>{@code
  * <complexType name="POCD_MT000040.EntryRelationship">
@@ -130,7 +130,7 @@ public class POCDMT000040EntryRelationship {
     }
 
     /**
-     * »ñÈ¡typeIdÊôĞÔµÄÖµ¡£
+     * è·å–typeIdå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -142,7 +142,7 @@ public class POCDMT000040EntryRelationship {
     }
 
     /**
-     * ÉèÖÃtypeIdÊôĞÔµÄÖµ¡£
+     * è®¾ç½®typeIdå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -185,7 +185,7 @@ public class POCDMT000040EntryRelationship {
     }
 
     /**
-     * »ñÈ¡sequenceNumberÊôĞÔµÄÖµ¡£
+     * è·å–sequenceNumberå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -197,7 +197,7 @@ public class POCDMT000040EntryRelationship {
     }
 
     /**
-     * ÉèÖÃsequenceNumberÊôĞÔµÄÖµ¡£
+     * è®¾ç½®sequenceNumberå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -209,7 +209,7 @@ public class POCDMT000040EntryRelationship {
     }
 
     /**
-     * »ñÈ¡seperatableIndÊôĞÔµÄÖµ¡£
+     * è·å–seperatableIndå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -221,7 +221,7 @@ public class POCDMT000040EntryRelationship {
     }
 
     /**
-     * ÉèÖÃseperatableIndÊôĞÔµÄÖµ¡£
+     * è®¾ç½®seperatableIndå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -233,7 +233,7 @@ public class POCDMT000040EntryRelationship {
     }
 
     /**
-     * »ñÈ¡actÊôĞÔµÄÖµ¡£
+     * è·å–actå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -245,7 +245,7 @@ public class POCDMT000040EntryRelationship {
     }
 
     /**
-     * ÉèÖÃactÊôĞÔµÄÖµ¡£
+     * è®¾ç½®actå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -257,7 +257,7 @@ public class POCDMT000040EntryRelationship {
     }
 
     /**
-     * »ñÈ¡encounterÊôĞÔµÄÖµ¡£
+     * è·å–encounterå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -269,7 +269,7 @@ public class POCDMT000040EntryRelationship {
     }
 
     /**
-     * ÉèÖÃencounterÊôĞÔµÄÖµ¡£
+     * è®¾ç½®encounterå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -281,7 +281,7 @@ public class POCDMT000040EntryRelationship {
     }
 
     /**
-     * »ñÈ¡observationÊôĞÔµÄÖµ¡£
+     * è·å–observationå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -293,7 +293,7 @@ public class POCDMT000040EntryRelationship {
     }
 
     /**
-     * ÉèÖÃobservationÊôĞÔµÄÖµ¡£
+     * è®¾ç½®observationå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -305,7 +305,7 @@ public class POCDMT000040EntryRelationship {
     }
 
     /**
-     * »ñÈ¡observationMediaÊôĞÔµÄÖµ¡£
+     * è·å–observationMediaå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -317,7 +317,7 @@ public class POCDMT000040EntryRelationship {
     }
 
     /**
-     * ÉèÖÃobservationMediaÊôĞÔµÄÖµ¡£
+     * è®¾ç½®observationMediaå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -329,7 +329,7 @@ public class POCDMT000040EntryRelationship {
     }
 
     /**
-     * »ñÈ¡organizerÊôĞÔµÄÖµ¡£
+     * è·å–organizerå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -341,7 +341,7 @@ public class POCDMT000040EntryRelationship {
     }
 
     /**
-     * ÉèÖÃorganizerÊôĞÔµÄÖµ¡£
+     * è®¾ç½®organizerå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -353,7 +353,7 @@ public class POCDMT000040EntryRelationship {
     }
 
     /**
-     * »ñÈ¡procedureÊôĞÔµÄÖµ¡£
+     * è·å–procedureå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -365,7 +365,7 @@ public class POCDMT000040EntryRelationship {
     }
 
     /**
-     * ÉèÖÃprocedureÊôĞÔµÄÖµ¡£
+     * è®¾ç½®procedureå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -377,7 +377,7 @@ public class POCDMT000040EntryRelationship {
     }
 
     /**
-     * »ñÈ¡regionOfInterestÊôĞÔµÄÖµ¡£
+     * è·å–regionOfInterestå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -389,7 +389,7 @@ public class POCDMT000040EntryRelationship {
     }
 
     /**
-     * ÉèÖÃregionOfInterestÊôĞÔµÄÖµ¡£
+     * è®¾ç½®regionOfInterestå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -401,7 +401,7 @@ public class POCDMT000040EntryRelationship {
     }
 
     /**
-     * »ñÈ¡substanceAdministrationÊôĞÔµÄÖµ¡£
+     * è·å–substanceAdministrationå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -413,7 +413,7 @@ public class POCDMT000040EntryRelationship {
     }
 
     /**
-     * ÉèÖÃsubstanceAdministrationÊôĞÔµÄÖµ¡£
+     * è®¾ç½®substanceAdministrationå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -425,7 +425,7 @@ public class POCDMT000040EntryRelationship {
     }
 
     /**
-     * »ñÈ¡supplyÊôĞÔµÄÖµ¡£
+     * è·å–supplyå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -437,7 +437,7 @@ public class POCDMT000040EntryRelationship {
     }
 
     /**
-     * ÉèÖÃsupplyÊôĞÔµÄÖµ¡£
+     * è®¾ç½®supplyå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -480,7 +480,7 @@ public class POCDMT000040EntryRelationship {
     }
 
     /**
-     * »ñÈ¡typeCodeÊôĞÔµÄÖµ¡£
+     * è·å–typeCodeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -492,7 +492,7 @@ public class POCDMT000040EntryRelationship {
     }
 
     /**
-     * ÉèÖÃtypeCodeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®typeCodeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -504,7 +504,7 @@ public class POCDMT000040EntryRelationship {
     }
 
     /**
-     * »ñÈ¡inversionIndÊôĞÔµÄÖµ¡£
+     * è·å–inversionIndå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -516,7 +516,7 @@ public class POCDMT000040EntryRelationship {
     }
 
     /**
-     * ÉèÖÃinversionIndÊôĞÔµÄÖµ¡£
+     * è®¾ç½®inversionIndå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -528,7 +528,7 @@ public class POCDMT000040EntryRelationship {
     }
 
     /**
-     * »ñÈ¡contextConductionIndÊôĞÔµÄÖµ¡£
+     * è·å–contextConductionIndå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -544,7 +544,7 @@ public class POCDMT000040EntryRelationship {
     }
 
     /**
-     * ÉèÖÃcontextConductionIndÊôĞÔµÄÖµ¡£
+     * è®¾ç½®contextConductionIndå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -556,7 +556,7 @@ public class POCDMT000040EntryRelationship {
     }
 
     /**
-     * »ñÈ¡negationIndÊôĞÔµÄÖµ¡£
+     * è·å–negationIndå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -568,7 +568,7 @@ public class POCDMT000040EntryRelationship {
     }
 
     /**
-     * ÉèÖÃnegationIndÊôĞÔµÄÖµ¡£
+     * è®¾ç½®negationIndå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is

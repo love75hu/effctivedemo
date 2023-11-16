@@ -1,7 +1,7 @@
 //
-// ´ËÎÄ¼şÊÇÓÉ Eclipse Implementation of JAXB v4.0.3 Éú³ÉµÄ
-// Çë·ÃÎÊ https://eclipse-ee4j.github.io/jaxb-ri 
-// ÔÚÖØĞÂ±àÒëÔ´Ä£Ê½Ê±, ¶Ô´ËÎÄ¼şµÄËùÓĞĞŞ¸Ä¶¼½«¶ªÊ§¡£
+// æ­¤æ–‡ä»¶æ˜¯ç”± Eclipse Implementation of JAXB v4.0.3 ç”Ÿæˆçš„
+// è¯·è®¿é—® https://eclipse-ee4j.github.io/jaxb-ri 
+// åœ¨é‡æ–°ç¼–è¯‘æºæ¨¡å¼æ—¶, å¯¹æ­¤æ–‡ä»¶çš„æ‰€æœ‰ä¿®æ”¹éƒ½å°†ä¸¢å¤±ã€‚
 //
 
 
@@ -16,9 +16,9 @@ import jakarta.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>POCD_MT000040.ManufacturedProduct complex typeµÄ Java Àà¡£
+ * <p>POCD_MT000040.ManufacturedProduct complex typeçš„ Java ç±»ã€‚
  * 
- * <p>ÒÔÏÂÄ£Ê½Æ¬¶ÎÖ¸¶¨°üº¬ÔÚ´ËÀàÖĞµÄÔ¤ÆÚÄÚÈİ¡£
+ * <p>ä»¥ä¸‹æ¨¡å¼ç‰‡æ®µæŒ‡å®šåŒ…å«åœ¨æ­¤ç±»ä¸­çš„é¢„æœŸå†…å®¹ã€‚
  * 
  * <pre>{@code
  * <complexType name="POCD_MT000040.ManufacturedProduct">
@@ -100,7 +100,7 @@ public class POCDMT000040ManufacturedProduct {
     }
 
     /**
-     * »ñÈ¡typeIdÊôĞÔµÄÖµ¡£
+     * è·å–typeIdå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -112,7 +112,7 @@ public class POCDMT000040ManufacturedProduct {
     }
 
     /**
-     * ÉèÖÃtypeIdÊôĞÔµÄÖµ¡£
+     * è®¾ç½®typeIdå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -186,7 +186,7 @@ public class POCDMT000040ManufacturedProduct {
     }
 
     /**
-     * »ñÈ¡manufacturedLabeledDrugÊôĞÔµÄÖµ¡£
+     * è·å–manufacturedLabeledDrugå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -198,7 +198,7 @@ public class POCDMT000040ManufacturedProduct {
     }
 
     /**
-     * ÉèÖÃmanufacturedLabeledDrugÊôĞÔµÄÖµ¡£
+     * è®¾ç½®manufacturedLabeledDrugå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -210,7 +210,7 @@ public class POCDMT000040ManufacturedProduct {
     }
 
     /**
-     * »ñÈ¡manufacturedMaterialÊôĞÔµÄÖµ¡£
+     * è·å–manufacturedMaterialå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -222,7 +222,7 @@ public class POCDMT000040ManufacturedProduct {
     }
 
     /**
-     * ÉèÖÃmanufacturedMaterialÊôĞÔµÄÖµ¡£
+     * è®¾ç½®manufacturedMaterialå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -234,7 +234,7 @@ public class POCDMT000040ManufacturedProduct {
     }
 
     /**
-     * »ñÈ¡manufacturerOrganizationÊôĞÔµÄÖµ¡£
+     * è·å–manufacturerOrganizationå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -246,7 +246,7 @@ public class POCDMT000040ManufacturedProduct {
     }
 
     /**
-     * ÉèÖÃmanufacturerOrganizationÊôĞÔµÄÖµ¡£
+     * è®¾ç½®manufacturerOrganizationå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -289,7 +289,7 @@ public class POCDMT000040ManufacturedProduct {
     }
 
     /**
-     * »ñÈ¡classCodeÊôĞÔµÄÖµ¡£
+     * è·å–classCodeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -305,7 +305,7 @@ public class POCDMT000040ManufacturedProduct {
     }
 
     /**
-     * ÉèÖÃclassCodeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®classCodeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is

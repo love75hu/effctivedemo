@@ -1,7 +1,7 @@
 //
-// ´ËÎÄ¼şÊÇÓÉ Eclipse Implementation of JAXB v4.0.3 Éú³ÉµÄ
-// Çë·ÃÎÊ https://eclipse-ee4j.github.io/jaxb-ri 
-// ÔÚÖØĞÂ±àÒëÔ´Ä£Ê½Ê±, ¶Ô´ËÎÄ¼şµÄËùÓĞĞŞ¸Ä¶¼½«¶ªÊ§¡£
+// æ­¤æ–‡ä»¶æ˜¯ç”± Eclipse Implementation of JAXB v4.0.3 ç”Ÿæˆçš„
+// è¯·è®¿é—® https://eclipse-ee4j.github.io/jaxb-ri 
+// åœ¨é‡æ–°ç¼–è¯‘æºæ¨¡å¼æ—¶, å¯¹æ­¤æ–‡ä»¶çš„æ‰€æœ‰ä¿®æ”¹éƒ½å°†ä¸¢å¤±ã€‚
 //
 
 
@@ -22,9 +22,9 @@ import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  *             code is often a local code.
  *          
  * 
- * <p>SC complex typeµÄ Java Àà¡£
+ * <p>SC complex typeçš„ Java ç±»ã€‚
  * 
- * <p>ÒÔÏÂÄ£Ê½Æ¬¶ÎÖ¸¶¨°üº¬ÔÚ´ËÀàÖĞµÄÔ¤ÆÚÄÚÈİ¡£
+ * <p>ä»¥ä¸‹æ¨¡å¼ç‰‡æ®µæŒ‡å®šåŒ…å«åœ¨æ­¤ç±»ä¸­çš„é¢„æœŸå†…å®¹ã€‚
  * 
  * <pre>{@code
  * <complexType name="SC">
@@ -61,7 +61,7 @@ public class SC
     protected String displayName;
 
     /**
-     * »ñÈ¡codeÊôĞÔµÄÖµ¡£
+     * è·å–codeå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -73,7 +73,7 @@ public class SC
     }
 
     /**
-     * ÉèÖÃcodeÊôĞÔµÄÖµ¡£
+     * è®¾ç½®codeå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -85,7 +85,7 @@ public class SC
     }
 
     /**
-     * »ñÈ¡codeSystemÊôĞÔµÄÖµ¡£
+     * è·å–codeSystemå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -97,7 +97,7 @@ public class SC
     }
 
     /**
-     * ÉèÖÃcodeSystemÊôĞÔµÄÖµ¡£
+     * è®¾ç½®codeSystemå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -109,7 +109,7 @@ public class SC
     }
 
     /**
-     * »ñÈ¡codeSystemNameÊôĞÔµÄÖµ¡£
+     * è·å–codeSystemNameå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -121,7 +121,7 @@ public class SC
     }
 
     /**
-     * ÉèÖÃcodeSystemNameÊôĞÔµÄÖµ¡£
+     * è®¾ç½®codeSystemNameå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -133,7 +133,7 @@ public class SC
     }
 
     /**
-     * »ñÈ¡codeSystemVersionÊôĞÔµÄÖµ¡£
+     * è·å–codeSystemVersionå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -145,7 +145,7 @@ public class SC
     }
 
     /**
-     * ÉèÖÃcodeSystemVersionÊôĞÔµÄÖµ¡£
+     * è®¾ç½®codeSystemVersionå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -157,7 +157,7 @@ public class SC
     }
 
     /**
-     * »ñÈ¡displayNameÊôĞÔµÄÖµ¡£
+     * è·å–displayNameå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -169,7 +169,7 @@ public class SC
     }
 
     /**
-     * ÉèÖÃdisplayNameÊôĞÔµÄÖµ¡£
+     * è®¾ç½®displayNameå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is

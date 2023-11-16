@@ -1,7 +1,7 @@
 //
-// ´ËÎÄ¼şÊÇÓÉ Eclipse Implementation of JAXB v4.0.3 Éú³ÉµÄ
-// Çë·ÃÎÊ https://eclipse-ee4j.github.io/jaxb-ri 
-// ÔÚÖØĞÂ±àÒëÔ´Ä£Ê½Ê±, ¶Ô´ËÎÄ¼şµÄËùÓĞĞŞ¸Ä¶¼½«¶ªÊ§¡£
+// æ­¤æ–‡ä»¶æ˜¯ç”± Eclipse Implementation of JAXB v4.0.3 ç”Ÿæˆçš„
+// è¯·è®¿é—® https://eclipse-ee4j.github.io/jaxb-ri 
+// åœ¨é‡æ–°ç¼–è¯‘æºæ¨¡å¼æ—¶, å¯¹æ­¤æ–‡ä»¶çš„æ‰€æœ‰ä¿®æ”¹éƒ½å°†ä¸¢å¤±ã€‚
 //
 
 
@@ -20,9 +20,9 @@ import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 
 /**
- * <p>StrucDoc.Colgroup complex typeµÄ Java Àà¡£
+ * <p>StrucDoc.Colgroup complex typeçš„ Java ç±»ã€‚
  * 
- * <p>ÒÔÏÂÄ£Ê½Æ¬¶ÎÖ¸¶¨°üº¬ÔÚ´ËÀàÖĞµÄÔ¤ÆÚÄÚÈİ¡£
+ * <p>ä»¥ä¸‹æ¨¡å¼ç‰‡æ®µæŒ‡å®šåŒ…å«åœ¨æ­¤ç±»ä¸­çš„é¢„æœŸå†…å®¹ã€‚
  * 
  * <pre>{@code
  * <complexType name="StrucDoc.Colgroup">
@@ -132,7 +132,7 @@ public class StrucDocColgroup {
     }
 
     /**
-     * »ñÈ¡idÊôĞÔµÄÖµ¡£
+     * è·å–idå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -144,7 +144,7 @@ public class StrucDocColgroup {
     }
 
     /**
-     * ÉèÖÃidÊôĞÔµÄÖµ¡£
+     * è®¾ç½®idå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -156,7 +156,7 @@ public class StrucDocColgroup {
     }
 
     /**
-     * »ñÈ¡languageÊôĞÔµÄÖµ¡£
+     * è·å–languageå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -168,7 +168,7 @@ public class StrucDocColgroup {
     }
 
     /**
-     * ÉèÖÃlanguageÊôĞÔµÄÖµ¡£
+     * è®¾ç½®languageå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -211,7 +211,7 @@ public class StrucDocColgroup {
     }
 
     /**
-     * »ñÈ¡spanÊôĞÔµÄÖµ¡£
+     * è·å–spanå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -227,7 +227,7 @@ public class StrucDocColgroup {
     }
 
     /**
-     * ÉèÖÃspanÊôĞÔµÄÖµ¡£
+     * è®¾ç½®spanå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -239,7 +239,7 @@ public class StrucDocColgroup {
     }
 
     /**
-     * »ñÈ¡widthÊôĞÔµÄÖµ¡£
+     * è·å–widthå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -251,7 +251,7 @@ public class StrucDocColgroup {
     }
 
     /**
-     * ÉèÖÃwidthÊôĞÔµÄÖµ¡£
+     * è®¾ç½®widthå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -263,7 +263,7 @@ public class StrucDocColgroup {
     }
 
     /**
-     * »ñÈ¡alignÊôĞÔµÄÖµ¡£
+     * è·å–alignå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -275,7 +275,7 @@ public class StrucDocColgroup {
     }
 
     /**
-     * ÉèÖÃalignÊôĞÔµÄÖµ¡£
+     * è®¾ç½®alignå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -287,7 +287,7 @@ public class StrucDocColgroup {
     }
 
     /**
-     * »ñÈ¡charÊôĞÔµÄÖµ¡£
+     * è·å–charå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -299,7 +299,7 @@ public class StrucDocColgroup {
     }
 
     /**
-     * ÉèÖÃcharÊôĞÔµÄÖµ¡£
+     * è®¾ç½®charå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -311,7 +311,7 @@ public class StrucDocColgroup {
     }
 
     /**
-     * »ñÈ¡charoffÊôĞÔµÄÖµ¡£
+     * è·å–charoffå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -323,7 +323,7 @@ public class StrucDocColgroup {
     }
 
     /**
-     * ÉèÖÃcharoffÊôĞÔµÄÖµ¡£
+     * è®¾ç½®charoffå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is
@@ -335,7 +335,7 @@ public class StrucDocColgroup {
     }
 
     /**
-     * »ñÈ¡valignÊôĞÔµÄÖµ¡£
+     * è·å–valignå±æ€§çš„å€¼ã€‚
      * 
      * @return
      *     possible object is
@@ -347,7 +347,7 @@ public class StrucDocColgroup {
     }
 
     /**
-     * ÉèÖÃvalignÊôĞÔµÄÖµ¡£
+     * è®¾ç½®valignå±æ€§çš„å€¼ã€‚
      * 
      * @param value
      *     allowed object is

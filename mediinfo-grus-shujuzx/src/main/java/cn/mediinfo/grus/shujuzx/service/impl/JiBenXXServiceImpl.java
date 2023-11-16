@@ -3,19 +3,19 @@ package cn.mediinfo.grus.shujuzx.service.impl;
 import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
 import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
-import cn.mediinfo.cyan.msf.core.response.MsfResponse;
 import cn.mediinfo.cyan.msf.core.util.AssertUtil;
 import cn.mediinfo.cyan.msf.core.util.BeanUtil;
 import cn.mediinfo.cyan.msf.core.util.StringUtil;
 import cn.mediinfo.cyan.msf.stringgenerator.StringGenerator;
 import cn.mediinfo.grus.shujuzx.dto.bihuansz.*;
+import cn.mediinfo.grus.shujuzx.dto.shujuyzys.SC_ZD_ShuJuYZYDto;
 import cn.mediinfo.grus.shujuzx.model.*;
 import cn.mediinfo.grus.shujuzx.remotedto.GongYong.JG_ZZ_JiGouXXRso;
 import cn.mediinfo.grus.shujuzx.remoteservice.DiZuoRemoteService;
 import cn.mediinfo.grus.shujuzx.repository.*;
 import cn.mediinfo.grus.shujuzx.service.JiBenXXService;
+import cn.mediinfo.grus.shujuzx.service.ShuJuYZYService;
 import cn.mediinfo.lyra.extension.service.LyraIdentityService;
-import jdk.jfr.Timestamp;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,8 +43,10 @@ class JiBenXXServiceImpl implements JiBenXXService {
 
     private final RuCanXXServiceImpl ruCanXXService;
 
+    private final ShuJuYZYService shuJuYZYService;
 
-    public JiBenXXServiceImpl(SC_BH_JIBENXXRepository jIBENXXRepository, LyraIdentityService lyraIdentityService, SC_BH_JieDianXXRepository jieDianXXRepository, SC_BH_JieDianSXRepository jieDianSXRepository, SC_BH_ZiBiHXXRepository ziBiHXXRepository, SC_BH_ZiBiHXSLRepository ziBiHXSLRepository, StringGenerator stringGenerator, DiZuoRemoteService diZuoRemoteService, RuCanXXServiceImpl ruCanXXService) {
+
+    public JiBenXXServiceImpl(SC_BH_JIBENXXRepository jIBENXXRepository, LyraIdentityService lyraIdentityService, SC_BH_JieDianXXRepository jieDianXXRepository, SC_BH_JieDianSXRepository jieDianSXRepository, SC_BH_ZiBiHXXRepository ziBiHXXRepository, SC_BH_ZiBiHXSLRepository ziBiHXSLRepository, StringGenerator stringGenerator, DiZuoRemoteService diZuoRemoteService, RuCanXXServiceImpl ruCanXXService, ShuJuYZYService shuJuYZYService) {
         this.jIBENXXRepository = jIBENXXRepository;
         this.lyraIdentityService = lyraIdentityService;
         this.jieDianXXRepository = jieDianXXRepository;
@@ -54,6 +56,7 @@ class JiBenXXServiceImpl implements JiBenXXService {
         this.stringGenerator = stringGenerator;
         this.diZuoRemoteService = diZuoRemoteService;
         this.ruCanXXService = ruCanXXService;
+        this.shuJuYZYService = shuJuYZYService;
     }
 
     /**
@@ -71,19 +74,18 @@ class JiBenXXServiceImpl implements JiBenXXService {
      */
     @Override
     public List<BiHuanJBXXTreeDto> getBiHuanJBXXTree(String zuZhiJGID, String likeQuery) {
+        List<SC_ZD_ShuJuYZYDto> shuJuYZYList = shuJuYZYService.getShuJuYZYListByLBID("SC0013");
         List<SC_BH_JIBENXXDto> jIBENXXList = jIBENXXRepository.getJIBENXXList(zuZhiJGID,likeQuery);
-        List<String> biHuanLXDMs = jIBENXXList.stream().map(x -> x.getBiHuanLXDM()).distinct().collect(Collectors.toList());
         List<BiHuanJBXXTreeDto> biHuanJBXXTreeDtos=new ArrayList<>();
-         for(var a:biHuanLXDMs)
+         for(var a:shuJuYZYList)
          {
-             SC_BH_JIBENXXDto scBhJibenxxDto = jIBENXXList.stream().filter(x -> x.getBiHuanLXDM().equals(a)).findFirst().orElse(new SC_BH_JIBENXXDto());
-             BiHuanJBXXTreeDto biHuanJBXXTreeDto = BeanUtil.copyProperties(scBhJibenxxDto, BiHuanJBXXTreeDto::new);
-             biHuanJBXXTreeDto.setLabel(scBhJibenxxDto.getBiHuanLXMC());
+             BiHuanJBXXTreeDto biHuanJBXXTreeDto = new BiHuanJBXXTreeDto();
+             biHuanJBXXTreeDto.setLabel(a.getZhiYuMC());
              biHuanJBXXTreeDto.setBiHuanID("");
              biHuanJBXXTreeDto.setBiHuanMC("");
              biHuanJBXXTreeDto.setId("");
 
-             biHuanJBXXTreeDto.setChildren(BeanUtil.copyListProperties(jIBENXXList.stream().filter(x -> x.getBiHuanLXDM().equals(a)).collect(Collectors.toList()),BiHuanJBXXTreeDto::new,(p,s)->{
+             biHuanJBXXTreeDto.setChildren(BeanUtil.copyListProperties(jIBENXXList.stream().filter(x -> x.getBiHuanLXDM().equals(a.getBiaoZhunDM())).collect(Collectors.toList()),BiHuanJBXXTreeDto::new,(p,s)->{
                     s.setLabel(s.getBiHuanMC());
              }));
              biHuanJBXXTreeDtos.add(biHuanJBXXTreeDto);

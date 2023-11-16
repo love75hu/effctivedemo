@@ -2,7 +2,7 @@ package cn.mediinfo.grus.shujuzx.service.impl;
 
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
-import cn.mediinfo.grus.shujuzx.hl7.*;
+import cn.mediinfo.grus.shujuzx.hl7.cda.*;
 import cn.mediinfo.grus.shujuzx.service.ICDADocService;
 import io.micrometer.common.util.StringUtils;
 import jakarta.xml.bind.JAXBContext;
@@ -10,7 +10,6 @@ import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
 
 import java.io.StringWriter;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;

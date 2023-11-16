@@ -2,7 +2,7 @@ package cn.mediinfo.grus.shujuzx.service.impl;
 import cn.mediinfo.cyan.msf.core.util.StringUtil;
 import cn.mediinfo.grus.shujuzx.constant.ComponentTypeConstant;
 import cn.mediinfo.grus.shujuzx.dto.cda.gongwei.*;
-import cn.mediinfo.grus.shujuzx.hl7.*;
+import cn.mediinfo.grus.shujuzx.hl7.cda.*;
 import cn.mediinfo.grus.shujuzx.remoteservice.GongWeiRemoteService;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBElement;

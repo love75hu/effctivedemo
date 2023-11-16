@@ -3,6 +3,7 @@ package cn.mediinfo.grus.shujuzx.service.impl;
 import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
 import cn.mediinfo.cyan.msf.core.util.AssertUtil;
 import cn.mediinfo.cyan.msf.core.util.BeanUtil;
+import cn.mediinfo.cyan.msf.core.util.StringUtil;
 import cn.mediinfo.cyan.msf.stringgenerator.StringGenerator;
 import cn.mediinfo.grus.shujuzx.dto.JieDianGL.*;
 import cn.mediinfo.grus.shujuzx.dto.bihuangl.SC_BH_ShiTuJDGXDto;
@@ -112,8 +113,10 @@ public class BiHuanSTJDXXServiceImpl implements BiHuanSTJDXXService {
     }
 
     @Override
-    public List<GuanLianJDDto> getGuanLianJDXX(String shiTuID) {
-        return shiTuJDXXRepository.asQuerydsl().where(n->n.shiTuID.eq(shiTuID)).select(GuanLianJDDto.class).fetch();
+    public List<GuanLianJDDto> getGuanLianJDXX(String shiTuID,String jieDianID) {
+        return shiTuJDXXRepository.asQuerydsl()
+                .where(n->n.shiTuID.eq(shiTuID))
+                .whereIf(StringUtil.hasText(jieDianID),n->n.jieDianID.ne(jieDianID)).select(GuanLianJDDto.class).fetch();
     }
 
     /**

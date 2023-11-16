@@ -176,18 +176,20 @@ public class BiHuanSTMXServiceImpl implements BiHuanSTMXService {
 
         for (var s:shiTUZDXX)
         {
-            SC_CX_ShiTuMXByIdDto sc_cx_shiTuZDMXDto=new SC_CX_ShiTuMXByIdDto();
-            sc_cx_shiTuZDMXDto.setZiDuanMC(s.getZiDuanMC());
-            sc_cx_shiTuZDMXDto.setZiDuanBM(s.getZiDuanBM());
-            sc_cx_shiTuZDMXDto.setShiTuID(s.getShiTuID());
-            sc_cx_shiTuZDMXDto.setShiTuMC(s.getShiTuMC());
-            shiTuZDMXDtoList.add(sc_cx_shiTuZDMXDto);
+            SC_CX_ShiTuMXByIdDto shiTuZDMXDto;
+            shiTuZDMXDto = new SC_CX_ShiTuMXByIdDto();
+            shiTuZDMXDto.setZiDuanMC(s.getZiDuanMC());
+            shiTuZDMXDto.setZiDuanBM(s.getZiDuanBM());
+            shiTuZDMXDto.setShiTuID(s.getShiTuID());
+            shiTuZDMXDto.setShiTuMC(s.getShiTuMC());
+            shiTuZDMXDtoList.add(shiTuZDMXDto);
         }
         shiTuXXListDto1.setShiTuMXDto(shiTuZDMXDtoList);
         shiTuXXListDto.add(shiTuXXListDto1);
         List<FieldDTO> shiTuList = gongYongRemoteService.getShiTuZDXXList(shiTuXXListDto).getData("获取功能服务字段信息失败");
 
-        return BeanUtil.copyListProperties(shiTuList, ShiJianXXDto::new);
+        //3为类型为字典的字段
+        return BeanUtil.copyListProperties(shiTuList.stream().filter(n->n.getShuJuZLXDM().equals("3")).collect(Collectors.toList()), ShiJianXXDto::new);
     }
 
     @Override

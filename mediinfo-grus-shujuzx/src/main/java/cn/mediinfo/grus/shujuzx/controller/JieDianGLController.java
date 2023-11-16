@@ -120,9 +120,9 @@ public class JieDianGLController {
     }
     @Operation(summary = "获取关系节点")
     @GetMapping("getGuanLianJDXX")
-    public MsfResponse<List<GuanLianJDDto>> getGuanLianJDXX(@NotEmpty(message = "视图id")  String shiTuID)
+    public MsfResponse<List<GuanLianJDDto>> getGuanLianJDXX(@NotEmpty(message = "视图id")  String shiTuID,  String jieDianID)
     {
-        return MsfResponse.success(biHuanSTJDXXService.getGuanLianJDXX(shiTuID));
+        return MsfResponse.success(biHuanSTJDXXService.getGuanLianJDXX(shiTuID,shiTuID));
     }
     @Operation(summary = "获取视图字段接口")
     @GetMapping("getShiTUZDXX")

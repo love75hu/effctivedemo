@@ -58,7 +58,6 @@ public class BIHuanSTXXServiceImpl implements BIHuanSTXXService {
         List<SC_ZD_ShuJuYZYDto> shuJuYZYList = shuJuYZYService.getShuJuYZYListByLBID("SC0013");
 
         List<SC_BH_ShiTuXXDto> shiTuXXList = shiTuXXRepository.getShiTuXXList(likeQuery);
-        List<String> collect = shiTuXXList.stream().map(x -> x.getBiHuanLXDM()).distinct().collect(Collectors.toList());
         List<BiHuanSTXXTree> biHuanSTXXTrees = new ArrayList<>();
         for (var s:shuJuYZYList)
         {

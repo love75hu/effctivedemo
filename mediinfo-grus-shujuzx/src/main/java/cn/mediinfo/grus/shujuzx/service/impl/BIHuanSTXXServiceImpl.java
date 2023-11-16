@@ -63,7 +63,7 @@ public class BIHuanSTXXServiceImpl implements BIHuanSTXXService {
         for (var s:shuJuYZYList)
         {
             BiHuanSTXXTree biHuanSTXXTree=new BiHuanSTXXTree();
-            biHuanSTXXTree.setShiTuLXDM(s.getBiaoZhunDM());
+            biHuanSTXXTree.setBiHuanLXDM(s.getBiaoZhunDM());
             biHuanSTXXTree.setBiHuanLXMC(s.getZhiYuMC());
             biHuanSTXXTree.setChildren(BeanUtil.copyListProperties(shiTuXXList.stream()
                     .filter(x->x.getBiHuanLXDM().equals(s.getBiaoZhunDM())).collect(Collectors.toList()),BiHuanSTXXTree::new));

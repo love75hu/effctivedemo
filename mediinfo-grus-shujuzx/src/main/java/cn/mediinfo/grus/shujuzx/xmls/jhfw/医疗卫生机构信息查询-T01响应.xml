@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<OrganizationQueryResponse>
+  <totalCount value="1"/>
+  <from value="0"/>
+  <count value="10"/>
+  <organization>
+    <statusCode value="New"/>
+    <classCode>
+      <coding>
+        <code value="@JiGouDJDM@"/>
+        <display value="@JiGouDJMC@"/>
+        <system value="2.16.156.10011.1.4"/>
+      </coding>
+    </classCode>
+    <identifier>
+      <system value="2.16.156.10011.1.5"/>
+      <value value="@YiLiaoJGDM@"/>
+    </identifier>
+    <name value="@YiLiaoJGMC@"/>
+    <healthcareFacilityTypeCode>
+      <text value=""/>
+    </healthcareFacilityTypeCode>
+    <address>
+      <use value="0"/>
+      <type value="0"/>
+      <text value="@XiangXiDZ@"/>
+      <administrativeDivision value="@DiZhiSFDM@"/>
+      <country value="中国"/>
+      <state value="@DiZhiSFMC@"/>
+      <city value="@DiZhiSDQMC@"/>
+      <district value="@DiZhiXQMC@"/>
+      <town value="@DiZhiXZJDMC@"/>
+      <street value="@DiZhiQT@"/>
+      <houseNumber value=""/>
+      <postalCode value="@YouBian@"/>
+    </address>
+    <telecom>
+      <value value="@LianXiDH@"/>
+    </telecom>
+    <effectiveTime value="@DateTime@"/>
+  </organization>
+</OrganizationQueryResponse>

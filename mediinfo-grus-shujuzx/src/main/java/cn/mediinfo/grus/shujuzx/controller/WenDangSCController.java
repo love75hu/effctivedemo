@@ -11,7 +11,7 @@ import cn.mediinfo.grus.shujuzx.dto.wendangnrs.SC_GW_JiLuNRDto;
 import cn.mediinfo.grus.shujuzx.service.ICDADocService;
 import cn.mediinfo.grus.shujuzx.service.WenDangJLXXService;
 import cn.mediinfo.grus.shujuzx.service.WenDangPZService;
-import cn.mediinfo.grus.shujuzx.service.impl.B0001ServiceImpl;
+import cn.mediinfo.grus.shujuzx.service.impl.cda.B0001ServiceImpl;
 import cn.mediinfo.grus.shujuzx.utils.GZIPUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

@@ -118,8 +118,13 @@ public class BiHuanSTMXServiceImpl implements BiHuanSTMXService {
     @Override
     public Boolean saveBiHuanSTJDMX(SaveBiHuanSTJDMXDto dto) throws WeiZhaoDSJException {
         SC_BH_ShiTuMXModel scBhShiTuMXModel = shiTuMXRepository.findById(dto.getId()).orElse(null);
-        AssertUtil.checkWeiZhaoDSJ(scBhShiTuMXModel != null, "未获取到数据");
-        BeanUtil.copyProperties(dto,scBhShiTuMXModel);
+        if (scBhShiTuMXModel==null)
+        {
+            throw new WeiZhaoDSJException("未找到异常");
+        }
+        scBhShiTuMXModel.setRuCanBZ(dto.getRuCanBZ());
+        scBhShiTuMXModel.setTiaoJianBZ(dto.getTiaoJianBZ());
+        scBhShiTuMXModel.setZiDuanMC(dto.getZiDuanMC());
         shiTuMXRepository.save(scBhShiTuMXModel);
         return true;
     }

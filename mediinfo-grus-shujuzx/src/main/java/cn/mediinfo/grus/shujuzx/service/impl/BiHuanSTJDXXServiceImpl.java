@@ -116,7 +116,9 @@ public class BiHuanSTJDXXServiceImpl implements BiHuanSTJDXXService {
     public List<GuanLianJDDto> getGuanLianJDXX(String shiTuID,String jieDianID) {
         return shiTuJDXXRepository.asQuerydsl()
                 .where(n->n.shiTuID.eq(shiTuID))
-                .whereIf(StringUtil.hasText(jieDianID),n->n.jieDianID.ne(jieDianID)).select(GuanLianJDDto.class).fetch();
+                .whereIf(StringUtil.hasText(jieDianID),n->n.jieDianID.ne(jieDianID))
+                .orderBy(n->n.shunXuHao.asc())
+                .select(GuanLianJDDto.class).fetch();
     }
 
     /**

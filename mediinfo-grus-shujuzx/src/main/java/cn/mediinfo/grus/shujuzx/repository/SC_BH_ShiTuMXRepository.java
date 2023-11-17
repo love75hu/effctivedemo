@@ -24,6 +24,7 @@ public interface SC_BH_ShiTuMXRepository extends MsfJpaRepository<QSC_BH_ShiTuMX
                 .whereIf(StringUtil.hasText(ziDuanMC), e -> e.ziDuanMC.contains(ziDuanMC))
                 .whereIf(chaXunLXDM.equals(1), e -> e.tiaoJianBZ.eq(1))
                 .whereIf(chaXunLXDM.equals(2),e->e.ruCanBZ.eq(1))
+                .orderBy(n->n.chuangJianSJ.desc())
                 .select(BiHuanSTZDDto.class)
                 .fetchPage(pageIndex,pageSize);
     }

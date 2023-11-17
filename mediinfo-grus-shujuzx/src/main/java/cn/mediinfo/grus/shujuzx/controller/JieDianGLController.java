@@ -26,8 +26,7 @@ import java.util.List;
  */
 @RestController
 @Tag(name = "JieDianGLController", description = "闭环管理-节点管理")
-@ApiVersion("v1.0")
-@RequestMapping({"api/v/{version}/JieDianGL", "api/v1/JieDianGL"})
+@RequestMapping({"api/v1.0/JieDianGL", "api/v1/JieDianGL"})
 @Slf4j
 @Validated
 public class JieDianGLController {

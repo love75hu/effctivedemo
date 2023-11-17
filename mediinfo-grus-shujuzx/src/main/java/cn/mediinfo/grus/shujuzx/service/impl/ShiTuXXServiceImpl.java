@@ -153,7 +153,7 @@ class ShiTuXXServiceImpl implements ShiTuXXService {
     var shiTuXXModel= BeanUtil.copyProperties(dto,SC_CX_ShiTuXXModel::new);
         shiTuXXModel.setZuZhiJGMC(ShuJuZXConstant.TONGYONG_JGMC);
         shiTuXXModel.setZuZhiJGID(ShuJuZXConstant.TONGYONG_JGID);
-        shiTuXXModel.setShunXuHao(dto.getShunXuHao()==null?shiTuXXRepository.getMaxShunXuHaoByFuLeiID(dto.getFuLeiID())+1:dto.getShunXuHao()); //todo
+        shiTuXXModel.setShunXuHao(dto.getShunXuHao()==null?shiTuXXRepository.getMaxShunXuHaoByFuLeiID(dto.getFuLeiID())+1:dto.getShunXuHao());
         //保存返回id
         SC_CX_ShiTuXXModel save = shiTuXXRepository.insert(shiTuXXModel);
         return save.getId();
@@ -167,10 +167,13 @@ class ShiTuXXServiceImpl implements ShiTuXXService {
 
         //获取视图信息
         SC_CX_ShiTuXXModel scCxShiTuXXModel = shiTuXXRepository.findById(dto.getId()).orElse(null);
-        AssertUtil.checkTongYongYW(scCxShiTuXXModel!=null, "未找到");
+        if (scCxShiTuXXModel==null) {
+            throw new TongYongYWException("未获取到数据");
+        }
         BeanUtil.copyProperties(dto,scCxShiTuXXModel);
         //更新
         shiTuXXRepository.save(scCxShiTuXXModel);
+
         return true;
     }
 
@@ -195,8 +198,6 @@ class ShiTuXXServiceImpl implements ShiTuXXService {
      */
     @Override
     public Boolean zuoFeiShiTuFL(String id) throws WeiZhaoDSJException {
-       // getShiTuXXByID(id); todo  作废 联动
-
         shiTuXXRepository.deleteById(id);
         return true;
     }

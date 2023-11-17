@@ -29,17 +29,14 @@ public class BiHuanSZController {
 
     private final BiHuanSTMXService biHuanSTMXService;
 
-    private final BiHuanSTJDMXService biHuanSTJDMXService;
-
     private final JieDianXXService jieDianXXService;
 
     private final RuCanXXService ruChanXXService;
 
 
-    public BiHuanSZController(JiBenXXService jiBenXXService, BiHuanSTMXService biHuanSTMXService, BiHuanSTJDMXService biHuanSTJDMXService, JieDianXXService jieDianXXService, RuCanXXService ruChanXXService) {
+    public BiHuanSZController(JiBenXXService jiBenXXService, BiHuanSTMXService biHuanSTMXService, JieDianXXService jieDianXXService, RuCanXXService ruChanXXService) {
         this.jiBenXXService = jiBenXXService;
         this.biHuanSTMXService = biHuanSTMXService;
-        this.biHuanSTJDMXService = biHuanSTJDMXService;
         this.jieDianXXService = jieDianXXService;
         this.ruChanXXService = ruChanXXService;
     }

@@ -13,4 +13,5 @@ public interface SC_BH_ZiBiHXXRepository extends MsfJpaRepository<QSC_BH_ZiBiHXX
  {
      return asQuerydsl().where(n->n.biHuanID.in(biHuanID)).fetch();
  }
+ List<SC_BH_ZiBiHXXModel> findByBiHuanIDAndZuZhiJGIDAndZuZhiJGMC(String biHuanID,String zuZhiJGID,String zuZhiJGMC);
 }

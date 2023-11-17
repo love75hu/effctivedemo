@@ -2,13 +2,16 @@ package cn.mediinfo.grus.shujuzx.service.impl;
 
 import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
 import cn.mediinfo.cyan.msf.core.util.AssertUtil;
+import cn.mediinfo.cyan.msf.core.util.BeanUtil;
 import cn.mediinfo.grus.shujuzx.dto.JieDianGL.GuanLianJDDto;
 import cn.mediinfo.grus.shujuzx.dto.bihuangl.SC_BH_ShiTuJDGXDto;
 import cn.mediinfo.grus.shujuzx.model.SC_BH_ShiTuJDGXModel;
 import cn.mediinfo.grus.shujuzx.repository.SC_BH_ShiTuJDGXRepository;
 import cn.mediinfo.grus.shujuzx.service.BiHuanSTJDGXService;
 import cn.mediinfo.lyra.extension.service.LyraIdentityService;
+import io.micrometer.core.instrument.binder.BaseUnits;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,22 +29,18 @@ public class BiHuanSTJDGXServiceImpl implements BiHuanSTJDGXService {
         this.lyraIdentityService = lyraIdentityService;
     }
     @Override
-    public SC_BH_ShiTuJDGXDto getShiTuJDGXByID(String id) throws WeiZhaoDSJException {
-        var result= shiTuJDGXRepository.asQuerydsl().where(s->s.id.eq(id)).select(SC_BH_ShiTuJDGXDto.class).fetchFirst();
-        AssertUtil.checkWeiZhaoDSJ(result != null, "未获取到数据");
-        return result;
-    }
-    @Override
     public List<GuanLianJDDto> getGuanLianJDXX(String shiTuID) {
         return  shiTuJDGXRepository.getGuanLianJDXX(shiTuID);
     }
     @Override
     public List<SC_BH_ShiTuJDGXDto> getGuanLianJDXXs(List<String> jieDianID)
     {
-        return shiTuJDGXRepository.asQuerydsl().where(s->s.jieDianID.in(jieDianID)).select(SC_BH_ShiTuJDGXDto.class).fetch();
+        var jieDianXX = shiTuJDGXRepository.findByJieDianIDIn(jieDianID);
+        if (CollectionUtils.isEmpty(jieDianXX)) {
+            return new ArrayList<>();
+        }
+        return BeanUtil.copyListProperties(jieDianXX, SC_BH_ShiTuJDGXDto::new);
     }
-
-
     @Override
     public Boolean addGuanLianJDXX(List<GuanLianJDDto> guanLianJDDtos,String shiTuID,
                                    String shiTuMC,String jieDianID,String jieDianMC)

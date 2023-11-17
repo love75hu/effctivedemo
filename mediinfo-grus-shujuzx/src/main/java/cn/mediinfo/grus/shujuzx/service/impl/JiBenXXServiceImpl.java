@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
  */
 @Service
 class JiBenXXServiceImpl implements JiBenXXService {
-    private final SC_BH_JIBENXXRepository jIBENXXRepository;
+    private final SC_BH_JiBenXXRepository jiBenXXRepository;
     private final LyraIdentityService lyraIdentityService;
 
     private final SC_BH_JieDianXXRepository jieDianXXRepository;
@@ -46,8 +46,8 @@ class JiBenXXServiceImpl implements JiBenXXService {
     private final ShuJuYZYService shuJuYZYService;
 
 
-    public JiBenXXServiceImpl(SC_BH_JIBENXXRepository jIBENXXRepository, LyraIdentityService lyraIdentityService, SC_BH_JieDianXXRepository jieDianXXRepository, SC_BH_JieDianSXRepository jieDianSXRepository, SC_BH_ZiBiHXXRepository ziBiHXXRepository, SC_BH_ZiBiHXSLRepository ziBiHXSLRepository, StringGenerator stringGenerator, DiZuoRemoteService diZuoRemoteService, RuCanXXServiceImpl ruCanXXService, ShuJuYZYService shuJuYZYService) {
-        this.jIBENXXRepository = jIBENXXRepository;
+    public JiBenXXServiceImpl(SC_BH_JiBenXXRepository jiBenXXRepository, LyraIdentityService lyraIdentityService, SC_BH_JieDianXXRepository jieDianXXRepository, SC_BH_JieDianSXRepository jieDianSXRepository, SC_BH_ZiBiHXXRepository ziBiHXXRepository, SC_BH_ZiBiHXSLRepository ziBiHXSLRepository, StringGenerator stringGenerator, DiZuoRemoteService diZuoRemoteService, RuCanXXServiceImpl ruCanXXService, ShuJuYZYService shuJuYZYService) {
+        this.jiBenXXRepository = jiBenXXRepository;
         this.lyraIdentityService = lyraIdentityService;
         this.jieDianXXRepository = jieDianXXRepository;
         this.jieDianSXRepository = jieDianSXRepository;
@@ -64,9 +64,7 @@ class JiBenXXServiceImpl implements JiBenXXService {
      */
     @Override
     public SC_BH_JIBENXXDto getJIBENXXByID(String id) throws WeiZhaoDSJException {
-        var result = jIBENXXRepository.asQuerydsl().where(s -> s.id.eq(id)).select(SC_BH_JIBENXXDto.class).fetchFirst();
-        AssertUtil.checkWeiZhaoDSJ(result != null, "未获取到数据");
-        return result;
+        return BeanUtil.copyProperties(jiBenXXRepository.findById(id).orElseThrow(() -> new WeiZhaoDSJException("未获取到数据")),SC_BH_JIBENXXDto.class);
     }
 
     /**
@@ -75,7 +73,7 @@ class JiBenXXServiceImpl implements JiBenXXService {
     @Override
     public List<BiHuanJBXXTreeDto> getBiHuanJBXXTree(String zuZhiJGID, String likeQuery) {
         List<SC_ZD_ShuJuYZYDto> shuJuYZYList = shuJuYZYService.getShuJuYZYListByLBID("SC0013");
-        List<SC_BH_JIBENXXDto> jIBENXXList = jIBENXXRepository.getJIBENXXList(zuZhiJGID,likeQuery);
+        List<SC_BH_JIBENXXDto> jIBENXXList = jiBenXXRepository.getJIBENXXList(zuZhiJGID,likeQuery);
         List<BiHuanJBXXTreeDto> biHuanJBXXTreeDtos=new ArrayList<>();
          for(var a:shuJuYZYList)
          {
@@ -102,7 +100,7 @@ class JiBenXXServiceImpl implements JiBenXXService {
         shiTuMXModel.setZuZhiJGMC("通用");
         shiTuMXModel.setZuZhiJGID("0");
         ruCanXXService.addRuCanXX(dto.getRuCanXXDtoList(),dto.getBiHuanLXDM(),dto.getBiHuanLXMC(),biHuanID,dto.getBiHuanMC());
-        jIBENXXRepository.save(shiTuMXModel);
+        jiBenXXRepository.insert(shiTuMXModel);
         return true;
     }
     /**
@@ -128,8 +126,8 @@ class JiBenXXServiceImpl implements JiBenXXService {
 
         List<String> jiGouid=xiaFaJGIdGList.stream().map(BiHuanZZJGDto::getZuZhiJGID).collect(Collectors.toList());
 
-            List<SC_BH_JiBenXXModel> jiBenTYX = jIBENXXRepository.jiBenTYX();
-            List<SC_BH_JiBenXXModel> jiBenJGX = jIBENXXRepository.jiBenJGX(jiGouid);
+            List<SC_BH_JiBenXXModel> jiBenTYX = jiBenXXRepository.jiBenTYX();
+            List<SC_BH_JiBenXXModel> jiBenJGX = jiBenXXRepository.jiBenJGX(jiGouid);
             //闭环设置基本信息
             List<SC_BH_JiBenXXModel> jiBenXXList=new ArrayList<>();
 
@@ -194,7 +192,7 @@ class JiBenXXServiceImpl implements JiBenXXService {
                 });
             }
 
-            jIBENXXRepository.insertAll(jiBenXXList);
+            jiBenXXRepository.insertAll(jiBenXXList);
             jieDianXXRepository.insertAll(addjieDianXXList);
             jieDianSXRepository.insertAll(addjieDianSXList);
             ziBiHXXRepository.insertAll(addziBiHXX);
@@ -210,9 +208,8 @@ class JiBenXXServiceImpl implements JiBenXXService {
     @Transactional(rollbackFor = Exception.class)
     public String biHuanSZFZ(String biHuanID, String zuZhiJGID, String zuZhiJGMC) {
 
-        SC_BH_JiBenXXModel jiBenXXModel = jIBENXXRepository.asQuerydsl()
-                .where(n -> n.biHuanID.eq(biHuanID))
-                .where(n->n.zuZhiJGID.eq(zuZhiJGID)).fetchFirst();
+        SC_BH_JiBenXXModel jiBenXXModel = jiBenXXRepository.findFirstByBiHuanIDAndZuZhiJGID(biHuanID,zuZhiJGID);
+
         String newbiHuanID= stringGenerator.Create();
         String newbiHuanMc =StringUtil.concat (jiBenXXModel.getBiHuanMC(),"(-副本)");
         jiBenXXModel.setId(null);
@@ -220,11 +217,8 @@ class JiBenXXServiceImpl implements JiBenXXService {
         jiBenXXModel.setZuZhiJGMC(zuZhiJGMC);
         jiBenXXModel.setBiHuanID(newbiHuanID);
         jiBenXXModel.setBiHuanMC(newbiHuanMc);
-        jIBENXXRepository.save(jiBenXXModel);
-        List<SC_BH_JieDianXXModel> jieDianXXList = jieDianXXRepository.asQuerydsl()
-                .where(n -> n.biHuanID.eq(biHuanID))
-                .where(n->n.zuZhiJGID.eq(zuZhiJGID))
-                .where(n->n.zuZhiJGMC.eq(zuZhiJGMC)).fetch();
+        jiBenXXRepository.save(jiBenXXModel);
+        List<SC_BH_JieDianXXModel> jieDianXXList = jieDianXXRepository.findByBiHuanIDAndZuZhiJGIDAndZuZhiJGMC(biHuanID,zuZhiJGID,zuZhiJGMC);
 List<SC_BH_JieDianXXModel> addjieDianXXList=new ArrayList<>();
         jieDianXXList.forEach(a->{
             a.setId(null);
@@ -247,10 +241,7 @@ List<SC_BH_JieDianXXModel> addjieDianXXList=new ArrayList<>();
         ruCanXXService.addFuZhiRCXX(ruCanXXModels);
 
         jieDianXXRepository.insertAll(addjieDianXXList);
-        List<SC_BH_JieDianSXModel> jieDianSXList = jieDianSXRepository.asQuerydsl()
-                .where(n -> n.biHuanID.eq(biHuanID))
-                .where(n->n.zuZhiJGID.eq(zuZhiJGID))
-                .where(n->n.zuZhiJGMC.eq(zuZhiJGMC)).fetch();
+        List<SC_BH_JieDianSXModel> jieDianSXList = jieDianSXRepository.findByBiHuanIDAndZuZhiJGIDAndZuZhiJGMC(biHuanID,zuZhiJGID,zuZhiJGMC);
         List<SC_BH_JieDianSXModel> addjieDianSXList=new ArrayList<>();
         jieDianSXList.forEach(a->{
             a.setId(null);
@@ -261,10 +252,7 @@ List<SC_BH_JieDianXXModel> addjieDianXXList=new ArrayList<>();
             addjieDianSXList.add(a);
         });
         jieDianSXRepository.insertAll(addjieDianSXList);
-        List<SC_BH_ZiBiHXXModel> ziBiHXXList = ziBiHXXRepository.asQuerydsl()
-                .where(n -> n.biHuanID.eq(biHuanID))
-                .where(n->n.zuZhiJGID.eq(zuZhiJGID))
-                .where(n->n.zuZhiJGMC.eq(zuZhiJGMC)).fetch();
+        List<SC_BH_ZiBiHXXModel> ziBiHXXList = ziBiHXXRepository.findByBiHuanIDAndZuZhiJGIDAndZuZhiJGMC(biHuanID,zuZhiJGID,zuZhiJGMC);
         List<SC_BH_ZiBiHXXModel> addziBiHXX=new ArrayList<>();
         ziBiHXXList.forEach(a->{
             a.setId(null);
@@ -275,10 +263,7 @@ List<SC_BH_JieDianXXModel> addjieDianXXList=new ArrayList<>();
             addziBiHXX.add(a);
         });
         ziBiHXXRepository.insertAll(addziBiHXX);
-        List<SC_BH_ZiBiHXSLModel> ziBiHXSLList = ziBiHXSLRepository.asQuerydsl()
-                .where(n -> n.biHuanID.eq(biHuanID))
-                .where(n->n.zuZhiJGID.eq(zuZhiJGID))
-                .where(n->n.zuZhiJGMC.eq(zuZhiJGMC)).fetch();
+        List<SC_BH_ZiBiHXSLModel> ziBiHXSLList = ziBiHXSLRepository.findByBiHuanIDAndZuZhiJGIDAndZuZhiJGMC(biHuanID,zuZhiJGID,zuZhiJGMC);
         List<SC_BH_ZiBiHXSLModel> addziBiHXSL=new ArrayList<>();
         ziBiHXSLList.forEach(a->{
             a.setId(null);
@@ -296,7 +281,7 @@ List<SC_BH_JieDianXXModel> addjieDianXXList=new ArrayList<>();
      */
     @Override
     public Boolean biHuanSZSC(String biHuanID) {
-        jIBENXXRepository.asDeleteDsl().where(n->n.biHuanID.eq(biHuanID)).execute();
+        jiBenXXRepository.asDeleteDsl().where(n->n.biHuanID.eq(biHuanID)).execute();
         jieDianXXRepository.asDeleteDsl().where(n->n.biHuanID.eq(biHuanID)).execute();
         jieDianSXRepository.asDeleteDsl().where(n->n.biHuanID.eq(biHuanID)).execute();
         ziBiHXXRepository.asDeleteDsl().where(n->n.biHuanID.eq(biHuanID)).execute();
@@ -308,16 +293,17 @@ List<SC_BH_JieDianXXModel> addjieDianXXList=new ArrayList<>();
      */
     @Override
     public Boolean biHuanSZQY(String biHuanID,Integer qiyongBZ) {
-        jIBENXXRepository.asUpdateDsl().where(n->n.biHuanID.eq(biHuanID)).set(n->n.qiYongBZ,qiyongBZ).execute();
+        jiBenXXRepository.asUpdateDsl().where(n->n.biHuanID.eq(biHuanID)).set(n->n.qiYongBZ,qiyongBZ).execute();
         return true;
     }
 
+    /**
+     * 获取闭环信息
+     */
     @Override
     public BiHuanXXDto getBiHuanXXBYID(String biHuanID) {
-
-       var biHuanXX=BeanUtil.copyProperties( jIBENXXRepository.asQuerydsl().where(n->n.biHuanID.eq(biHuanID)).fetchFirst(),BiHuanXXDto.class);;
+       var biHuanXX=BeanUtil.copyProperties( jiBenXXRepository.findFirstByBiHuanID(biHuanID),BiHuanXXDto.class);;
         biHuanXX.setRuCanXXDtos(ruCanXXService.getRuCanXXByBiHuanID(biHuanID));
-
         return biHuanXX;
     }
     /**
@@ -327,7 +313,7 @@ List<SC_BH_JieDianXXModel> addjieDianXXList=new ArrayList<>();
      */
     @Override
     public List<SC_BH_JIBENXXDto> getBiHuanJBXXList(String likeQuery) {
-        return jIBENXXRepository.getJIBENXXList(likeQuery);
+        return jiBenXXRepository.getJIBENXXList(likeQuery);
     }
 
 }

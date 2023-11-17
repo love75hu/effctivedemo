@@ -24,26 +24,16 @@ public class RuCanXXServiceImpl implements RuCanXXService {
         this.ruCanXXRepository = ruCanXXRepository;
     }
 
-    /**
-     * 根据ID获取闭环入参信息     *     * @param id     * @return
-     */
-    @Override
-    public SC_BH_RuCanXXDto getRuCanXXByID(String id) throws WeiZhaoDSJException {
-        var result = ruCanXXRepository.asQuerydsl().where(s -> s.id.eq(id)).select(SC_BH_RuCanXXDto.class).fetchFirst();
-        AssertUtil.checkWeiZhaoDSJ(result != null, "未获取到数据");
-        return result;
-    }
     @Override
     public List<RuCanXXDto> getRuCanXXByBiHuanID(String biHuanID)
     {
-        return  ruCanXXRepository.asQuerydsl().where(s -> s.biHuanID.eq(biHuanID)).select(RuCanXXDto.class).fetch();
+        return BeanUtil.copyListProperties(ruCanXXRepository.findByBiHuanID(biHuanID),RuCanXXDto::new);
     }
+    @Override
     public List<SC_BH_RuCanXXModel> getRuCanXX(String biHuanID)
     {
-        return ruCanXXRepository.asQuerydsl().where(n->n.biHuanID.eq(biHuanID)).fetch();
+        return ruCanXXRepository.findByBiHuanID(biHuanID);
     }
-
-
     /**
      * 新增闭环入参信息
      */

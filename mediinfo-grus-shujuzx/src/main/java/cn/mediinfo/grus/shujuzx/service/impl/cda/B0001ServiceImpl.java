@@ -1,4 +1,4 @@
-package cn.mediinfo.grus.shujuzx.service.impl;
+package cn.mediinfo.grus.shujuzx.service.impl.cda;
 import cn.mediinfo.cyan.msf.core.util.StringUtil;
 import cn.mediinfo.grus.shujuzx.constant.ComponentTypeConstant;
 import cn.mediinfo.grus.shujuzx.dto.cda.gongwei.*;
@@ -21,7 +21,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Service("B0001")
-public  class B0001ServiceImpl extends CDADocBase  {
+public  class B0001ServiceImpl extends CDAJCServiceImpl {
     public DA_GA_JiBenXXDto jiBenXXDto;
     private final GongWeiRemoteService _gongWeiRemoteService;
     //过敏史

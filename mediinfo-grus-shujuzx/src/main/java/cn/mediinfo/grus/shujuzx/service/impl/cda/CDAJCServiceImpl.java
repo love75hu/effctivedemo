@@ -1,4 +1,5 @@
-package cn.mediinfo.grus.shujuzx.service.impl;
+
+package cn.mediinfo.grus.shujuzx.service.impl.cda;
 
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
@@ -8,7 +9,6 @@ import io.micrometer.common.util.StringUtils;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
-
 import java.io.StringWriter;
 import java.util.Date;
 import java.util.List;
@@ -16,7 +16,7 @@ import java.util.UUID;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public abstract class CDADocBase implements ICDADocService {
+public abstract class CDAJCServiceImpl implements ICDADocService {
     /// <summary>
     /// 获取数据
     /// </summary>
@@ -29,7 +29,7 @@ public abstract class CDADocBase implements ICDADocService {
     public String wenDangID;
     List<String> mpiList=null;
     public void setMPIList(List<String> mpi) {
-      this.mpiList=mpi;
+        this.mpiList=mpi;
     }
     public List<String> getMPIList() {
         return  this.mpiList;
@@ -127,7 +127,7 @@ public abstract class CDADocBase implements ICDADocService {
     }
 
     public POCDMT000040Observation appendOrganizerObservation_B0001(POCDMT000040Organizer organizer, String code, String displayName,
-                                                         String codeSystem, String codeSystemName)
+                                                                    String codeSystem, String codeSystemName)
     {
         if (StringUtils.isNotEmpty(codeSystem)) {
             codeSystem="2.16.156.10011.2.2.1";
@@ -165,10 +165,10 @@ public abstract class CDADocBase implements ICDADocService {
         cd.setCodeSystem(codeSystem);
         cd.setCodeSystemName("");
         // var cda_ShuJuYZY = _sysDataCache.GetShuJuYZYForNewCD(codeSystem, code);
-       // cd.Code = cda_ShuJuYZY?.Code?.Replace("?","+");//存在ICD10中的+读取后变成特殊符号“?”
-       // cd.DisplayName = cda_ShuJuYZY?.DisplayName;
-       // cd.CodeSystem = codeSystem;
-       // cd.CodeSystemName = cda_ShuJuYZY?.CodeSystemName;
+        // cd.Code = cda_ShuJuYZY?.Code?.Replace("?","+");//存在ICD10中的+读取后变成特殊符号“?”
+        // cd.DisplayName = cda_ShuJuYZY?.DisplayName;
+        // cd.CodeSystem = codeSystem;
+        // cd.CodeSystemName = cda_ShuJuYZY?.CodeSystemName;
         return cd;
     }
 

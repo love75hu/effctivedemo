@@ -3,6 +3,7 @@ package cn.mediinfo.grus.shujuzx.controller;
 import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
 import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
 import cn.mediinfo.cyan.msf.core.response.MsfResponse;
+import cn.mediinfo.cyan.msf.web.apiversion.ApiVersion;
 import cn.mediinfo.grus.shujuzx.dto.JieDianGL.*;
 import cn.mediinfo.grus.shujuzx.dto.bihuangl.SC_BH_ShiTuXXDto;
 import cn.mediinfo.grus.shujuzx.dto.bihuansz.KeXuanJDDto;
@@ -25,7 +26,8 @@ import java.util.List;
  */
 @RestController
 @Tag(name = "JieDianGLController", description = "闭环管理-节点管理")
-@RequestMapping({"api/v1.0/JieDianGL", "api/v1/JieDianGL"})
+@ApiVersion("v1.0")
+@RequestMapping({"api/v/{version}/JieDianGL", "api/v1/JieDianGL"})
 @Slf4j
 @Validated
 public class JieDianGLController {
@@ -122,7 +124,7 @@ public class JieDianGLController {
     @GetMapping("getGuanLianJDXX")
     public MsfResponse<List<GuanLianJDDto>> getGuanLianJDXX(@NotEmpty(message = "视图id")  String shiTuID,  String jieDianID)
     {
-        return MsfResponse.success(biHuanSTJDXXService.getGuanLianJDXX(shiTuID,shiTuID));
+        return MsfResponse.success(biHuanSTJDXXService.getGuanLianJDXX(shiTuID,jieDianID));
     }
     @Operation(summary = "获取视图字段接口")
     @GetMapping("getShiTUZDXX")

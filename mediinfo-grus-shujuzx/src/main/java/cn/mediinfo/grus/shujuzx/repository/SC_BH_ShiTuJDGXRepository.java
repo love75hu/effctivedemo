@@ -15,4 +15,9 @@ public interface SC_BH_ShiTuJDGXRepository extends MsfJpaRepository<QSC_BH_ShiTu
     {
         return this.asQuerydsl().where(n->n.shiTuID.eq(shiTuID)).select(GuanLianJDDto.class).fetch();
     }
+
+
+    List<SC_BH_ShiTuJDGXModel> findByJieDianIDIn(List<String> jieDianID);
+
+
 }

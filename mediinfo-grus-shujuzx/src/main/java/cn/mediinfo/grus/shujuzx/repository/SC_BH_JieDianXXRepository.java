@@ -14,4 +14,6 @@ default List<SC_BH_JieDianXXModel> jieDianXXList(List<String> biHuanID)
 {
     return asQuerydsl().where(n->n.biHuanID.in(biHuanID)).fetch();
 }
+
+    List<SC_BH_JieDianXXModel> findByBiHuanIDAndZuZhiJGIDAndZuZhiJGMC(String biHuanID,String zuZhiJGID,String zuZhiJGMC);
 }

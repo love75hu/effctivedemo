@@ -31,6 +31,7 @@ public interface SC_CX_ShiTuMXRepository extends MsfJpaRepository<QSC_CX_ShiTuMX
                 .whereIf(StringUtil.hasText(likeQuery), e -> e.ziDuanMC.contains(likeQuery))
                 .whereIf(chaXunLX.equals(1), e -> e.tiaoJianBZ.eq(1))
                 .whereIf(chaXunLX.equals(2),e->e.shuChuBZ.eq(1))
+                .orderBy(n->n.chuangJianSJ.asc())
                 .select(ShiTuMXListDto.class)
                 .fetchPage(pageIndex,pageSize);
     }
@@ -46,6 +47,7 @@ public interface SC_CX_ShiTuMXRepository extends MsfJpaRepository<QSC_CX_ShiTuMX
                 .whereIf(StringUtil.hasText(likeQuery), e -> e.ziDuanMC.contains(likeQuery))
                 .whereIf(chaXunLX.equals(1), e -> e.tiaoJianBZ.eq(1))
                 .whereIf(chaXunLX.equals(2),e->e.shuChuBZ.eq(1))
+                .orderBy(n->n.chuangJianSJ.asc())
                 .select(ShiTuMXListDto.class)
                 .fetchPage(pageIndex,pageSize);
     }

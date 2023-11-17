@@ -4,6 +4,7 @@ import cn.mediinfo.cyan.msf.core.response.MsfResponse;
 import cn.mediinfo.grus.shujuzx.remotedto.GongYong.JG_ZZ_JiGouXXRso;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -11,4 +12,7 @@ import java.util.List;
 public interface DiZuoRemoteService {
     @GetMapping("/api/v1.0/ZuZhiXX/GetJiGouXXAllList")
     MsfResponse<List<JG_ZZ_JiGouXXRso>> getJiGouXXAllList();
+
+    @GetMapping("/api/v1.0/ZuZhiXX/GetZuZhiJGByJGDM")
+    MsfResponse<JG_ZZ_JiGouXXRso> getZuZhiJGByJGDM(@RequestParam(required = false) String zuZhiJGDM);
 }

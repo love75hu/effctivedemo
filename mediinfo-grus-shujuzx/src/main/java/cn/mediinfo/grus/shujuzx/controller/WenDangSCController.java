@@ -5,6 +5,7 @@ import cn.mediinfo.cyan.msf.core.response.MsfResponse;
 import cn.mediinfo.grus.shujuzx.constant.WenDangSJLYConstant;
 import cn.mediinfo.grus.shujuzx.constant.YaSuoFSConstant;
 import cn.mediinfo.grus.shujuzx.dto.cda.gongwei.DA_GA_JiBenXXDto;
+import cn.mediinfo.grus.shujuzx.dto.wenDang.SC_ZD_WenDangDto;
 import cn.mediinfo.grus.shujuzx.dto.wendangjls.SC_GW_JiLuXXCreateDto;
 import cn.mediinfo.grus.shujuzx.dto.wendangjls.SC_GW_JiLuXXSCDto;
 import cn.mediinfo.grus.shujuzx.dto.wendangnrs.SC_GW_JiLuNRDto;
@@ -17,9 +18,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.xml.bind.JAXBException;
 import lombok.extern.slf4j.Slf4j;
+import org.jsoup.internal.StringUtil;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -42,8 +45,7 @@ public class WenDangSCController implements  BeanFactoryAware {
         this.wenDangJLXXService=wenDangJLXXService;
         this.wenDangPZService = wenDangPZService;
     }
-
-
+    
     @Operation(summary = "生成共享文档")
     @PostMapping("shengChengWDXML")
     public MsfResponse<Long> shengChengWDXML(@RequestBody SC_GW_JiLuXXSCDto dto) throws JAXBException, TongYongYWException {
@@ -91,6 +93,7 @@ public class WenDangSCController implements  BeanFactoryAware {
         jiLuXXCreateDto.setWenDangMC(cdaProc.getWenDangMC());
         jiLuXXCreateDto.setYeWuSJ(yeWuSJ);
         jiLuXXCreateDto.setYeWuZJID(yeWuZJID);
+        jiLuXXCreateDto.setShengChengSJ(new Date());
         SC_GW_JiLuNRDto jiLuNRDto=new SC_GW_JiLuNRDto();
         jiLuNRDto.setWenDangID(cdaProc.getWenDangID());
         jiLuNRDto.setWenDangMC(cdaProc.getWenDangMC());

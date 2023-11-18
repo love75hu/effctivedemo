@@ -1,6 +1,9 @@
 package cn.mediinfo.grus.shujuzx.dto.cda.gongwei;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -86,6 +89,8 @@ public class DA_GA_JiBenXXDto {
     /**
      * 出生日期
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+08:00")
     @Schema(description = "出生日期")
     private Date chuShengRQ;
 
@@ -555,6 +560,8 @@ public class DA_GA_JiBenXXDto {
      * 建档时间
      */
     @Schema(description = "建档时间")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+08:00")
     private Date jianDangSJ;
 
     /**
@@ -602,6 +609,8 @@ public class DA_GA_JiBenXXDto {
     /**
      * 签约时间
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+08:00")
     @Schema(description = "签约时间")
     private Date qianYueSJ;
 

@@ -1,5 +1,6 @@
 package cn.mediinfo.grus.shujuzx.dto.bihuanlcs;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.util.Date;
@@ -27,6 +28,10 @@ public class BingLiXQXXDto {
      * 就诊时间
      */
     private String jiuZhenJS;
+    /**
+     * 就诊业务类型
+     */
+    private String jiuZhenYWLX;
     /**
      * 病历记录text
      */

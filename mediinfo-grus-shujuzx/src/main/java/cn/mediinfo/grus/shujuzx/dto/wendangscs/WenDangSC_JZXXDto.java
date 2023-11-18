@@ -1,5 +1,6 @@
 package cn.mediinfo.grus.shujuzx.dto.wendangscs;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -16,6 +17,7 @@ public class WenDangSC_JZXXDto {
     /**
      *就诊日期
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     @Schema(description = "就诊日期")
     private Date jiuZhenRQ;
 

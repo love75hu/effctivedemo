@@ -26,7 +26,7 @@ public class BingLiXQXXDto {
     /**
      * 就诊时间
      */
-    private Date jiuZhenJS;
+    private String jiuZhenJS;
     /**
      * 病历记录text
      */

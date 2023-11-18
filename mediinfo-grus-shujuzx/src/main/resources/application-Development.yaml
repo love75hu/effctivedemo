@@ -69,7 +69,7 @@ mediinfo:
       mediinfo-grus-huanzhe-query: "http://localhost:46111"
       mediinfo-lyra-gongyong: "http://172.19.80.10:31003"
       mediinfo-lyra-dizuo: "http://172.19.80.10:31003"
-      mediinfo-grus-linchuang-query: "http://mediinfo-grus-linchuang-query"
+      mediinfo-grus-linchuang-query: "http://172.19.80.10:31003"
       mediinfo-grus-gongwei-query: "http://172.19.80.10:31003"
   sequence:
     provider: redis

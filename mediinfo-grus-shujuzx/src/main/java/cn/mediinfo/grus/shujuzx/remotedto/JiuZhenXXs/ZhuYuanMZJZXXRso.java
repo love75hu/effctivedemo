@@ -38,7 +38,7 @@ public class ZhuYuanMZJZXXRso {
      *就诊时间
      */
     @Schema(description = "就诊时间")
-    private Date jiuZhenJS;
+    private String jiuZhenJS;
 
     @Schema(description = "就诊业务类型")
     private String jiuZhenYWLX;

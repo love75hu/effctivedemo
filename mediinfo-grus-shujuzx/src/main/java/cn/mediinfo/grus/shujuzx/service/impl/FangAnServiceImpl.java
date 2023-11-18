@@ -1295,6 +1295,7 @@ public class FangAnServiceImpl implements FangAnService {
             bingLiXQXXDto.setJiuZhenJS(j.getJiuZhenJS());
             bingLiXQXXDto.setZhuZhiJGMC(j.getZuZhiJGMC());
             bingLiXQXXDto.setZhuZhiJGID(j.getZuZhiJGID());
+            bingLiXQXXDto.setJiuZhenYWLX(j.getJiuZhenYWLX());
 
             List<JiuluTextRso> jiluTest = jiuluTextRsos.stream().filter(n -> n.getJiuZhenID().equals(j.getId()) && n.getJiuZhenYWLX().equals(j.getJiuZhenYWLX())).toList();
             bingLiXQXXDto.setJiuluTextDtoList(BeanUtil.copyToList(jiluTest, JiuluTextDto.class));

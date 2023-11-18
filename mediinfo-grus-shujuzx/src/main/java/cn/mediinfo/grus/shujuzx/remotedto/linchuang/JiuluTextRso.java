@@ -17,7 +17,7 @@ public class JiuluTextRso {
     /**
      * 病历时间
      */
-    private Date bingliSJ;
+    private String bingliSJ;
     /**
      * id
      */

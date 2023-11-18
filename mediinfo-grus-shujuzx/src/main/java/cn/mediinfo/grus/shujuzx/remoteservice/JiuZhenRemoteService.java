@@ -10,6 +10,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
@@ -34,8 +35,8 @@ public interface JiuZhenRemoteService {
     /**
      * 获取就诊信息
      */
-    @GetMapping("/api/v1.0/JiuZhen/getZuYuanMZJZXX")
-    MsfResponse<List<ZhuYuanMZJZXXRso>> getZuYuanMZJZXX(@SpringQueryMap List<JiuZhenIDYWLXIDRso> jiuZhenIDYWLXIDS);
+    @PostMapping("/api/v1.0/JiuZhen/getZuYuanMZJZXX")
+    MsfResponse<List<ZhuYuanMZJZXXRso>> getZuYuanMZJZXX(@RequestBody List<JiuZhenIDYWLXIDRso> jiuZhenIDYWLXIDS);
 
     /**
      * 获取病人基本信息for主索引详情

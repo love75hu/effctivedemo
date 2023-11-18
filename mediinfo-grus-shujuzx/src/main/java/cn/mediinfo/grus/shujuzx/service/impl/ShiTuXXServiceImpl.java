@@ -153,6 +153,7 @@ class ShiTuXXServiceImpl implements ShiTuXXService {
     var shiTuXXModel= BeanUtil.copyProperties(dto,SC_CX_ShiTuXXModel::new);
         shiTuXXModel.setZuZhiJGMC(ShuJuZXConstant.TONGYONG_JGMC);
         shiTuXXModel.setZuZhiJGID(ShuJuZXConstant.TONGYONG_JGID);
+        shiTuXXModel.setMoJiBZ(1);
         shiTuXXModel.setShunXuHao(dto.getShunXuHao()==null?shiTuXXRepository.getMaxShunXuHaoByFuLeiID(dto.getFuLeiID())+1:dto.getShunXuHao());
         //保存返回id
         SC_CX_ShiTuXXModel save = shiTuXXRepository.save(shiTuXXModel);

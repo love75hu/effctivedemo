@@ -193,7 +193,15 @@ public class BiHuanSTMXServiceImpl implements BiHuanSTMXService {
         shiTuXXListDto.add(shiTuXXListDto1);
         List<FieldDTO> shiTuList = gongYongRemoteService.getShiTuZDXXList(shiTuXXListDto).getData("获取功能服务字段信息失败");
 
+//        List<FieldDTO> getShiTuLists = shiTuList.stream().filter(n -> n.getShuJuZLXDM().equals("3")).collect(Collectors.toList());
+//        shiTuXXListDto.forEach(n->{
+//            n.getShiTuMXDto().forEach(s->{
+//                getShiTuLists.stream().filter(n->n.getId().equals(s))
+//            });
+//        });
+//
         //3为类型为字典的字段
+
         return BeanUtil.copyListProperties(shiTuList.stream().filter(n->n.getShuJuZLXDM().equals("3")).collect(Collectors.toList()), ShiJianXXDto::new);
     }
 

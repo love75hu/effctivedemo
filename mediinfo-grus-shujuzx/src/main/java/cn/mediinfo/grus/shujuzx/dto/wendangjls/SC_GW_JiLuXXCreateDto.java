@@ -2,9 +2,11 @@ package cn.mediinfo.grus.shujuzx.dto.wendangjls;
 
 import cn.mediinfo.grus.shujuzx.dto.wenDang.SC_ZD_WenDangDto;
 import cn.mediinfo.grus.shujuzx.dto.wendangnrs.SC_GW_JiLuNRDto;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 import java.util.List;

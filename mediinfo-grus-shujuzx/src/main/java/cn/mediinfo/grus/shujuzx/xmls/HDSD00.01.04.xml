@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<BasicDataset>
+<DataSet code="HDSD00.01.04" displayName="儿童健康检查" codeSystem="WS365-2011" codeSystemName="城乡居民健康档案基本数据集"/>
+
+
+<HDSD00.01.001 dataelementName="城乡居民健康档案编号" value="@ERTONGWYBS@"/>
+
+<HDSD00.01.290 dataelementName="儿童健康检查记录表单编号" value="@JILUBH@"/>
+<HDSD00.01.002 dataelementName="本人姓名" value="@ERTONGXM@"/>
+<HDSD00.01.291 dataelementName="身长(cm)" value="@SHENCHANG@"/>
+<HDSD00.01.292 dataelementName="年龄别身高评价结果代码" code="@NIANLINGBSGPJ@" displayName="@NIANLINGBSGPJMC@" codeSystem="2.16.156.10011.2.3.1.144" codeSystemName="儿童生长发育评价结果代码表"/>
+<HDSD00.01.056 dataelementName="体重(kg)" value="@TIZHONG@"/>
+<HDSD00.01.293 dataelementName="年龄别体重评价结果代码" code="@NIANLINGBTZPJ@" displayName="@NIANLINGBTZPJMC@" codeSystem="2.16.156.10011.2.3.1.144" codeSystemName="儿童生长发育评价结果代码表"/>
+<HDSD00.01.294 dataelementName="体格发育评价代码" code="@TIGEFYPJDM@" displayName="@TIGEFYPJMC@" codeSystem="2.16.156.10011.2.3.1.74" codeSystemName="儿童体格发育评价代码"/>
+<HDSD00.01.295 dataelementName="头围(cm)" value="@TOUWEI@"/>
+<HDSD00.01.296 dataelementName="儿童面色代码" code="@MIANSE@" displayName="@MIANSEMC@" codeSystem="2.16.156.10011.2.3.1.62" codeSystemName="儿童面色代码表"/>
+<HDSD00.01.297 dataelementName="皮肤检查异常标志" value="@PIFUYCBZ@"/>
+<HDSD00.01.298 dataelementName="前囟闭合标志" value="@QIANXINBHBZ@"/>
+
+<HDSD00.01.253 dataelementName="前囟横径(cm)" value="@QIANXINHJ@"/>
+<HDSD00.01.254 dataelementName="前囟纵径(cm)" value="@QIANXINZJ@"/>
+<HDSD00.01.272 dataelementName="颈部包块标志" value="@JINBUBKNZ@"/>
+<HDSD00.01.256 dataelementName="眼外观检查异常标志" value="@YANWAIGYCBZ@"/>
+<HDSD00.01.091 dataelementName="左眼裸眼远视力值" value="@ZUOYANLYYSLZ@"/>
+<HDSD00.01.092 dataelementName="右眼裸眼远视力值" value="@YOUYANLYYSLZ@"/>
+<HDSD00.01.093 dataelementName="左眼矫正远视力值" value="@ZUOYANJZYSLZ@"/>
+<HDSD00.01.094 dataelementName="右眼矫正远视力值" value="@YOUYANJZYSLZ@"/>
+<HDSD00.01.258 dataelementName="耳外观检查异常标志" value="@ERWAIGYCBZ@"/>
+<HDSD00.01.241 dataelementName="新生儿听力筛查结果代码" code="@XINSHENGETLSCQKDM@" displayName="@XINSHENGETLSCQKMC@" codeSystem="2.16.156.10011.2.3.2.15" codeSystemName="新生儿听力筛查结果代码表"/>
+<HDSD00.01.262 dataelementName="口腔检查异常标志" value="@KOUQIANGYCBZ@"/>
+<HDSD00.01.299 dataelementName="出牙数(颗)" value="@CHUYAS@"/>
+<HDSD00.01.300 dataelementName="龋齿数(颗)" value="@QUCHIS@"/>
+
+
+<HDSD00.01.264 dataelementName="肺部听诊异常标志" value="@XINFEITZYCBZ@"/>
+<HDSD00.01.266 dataelementName="心脏听诊异常标志" value="@XINFEITZYCBZ@"/>
+<HDSD00.01.268 dataelementName="腹部触诊异常标志" value="@FUBUYCBZ@"/>
+<HDSD00.01.301 dataelementName="脐带脱落标志" value="@QIDAITLBZ@"/>
+<HDSD00.01.280 dataelementName="脐带检查结果代码" code="@QIDAIJCJGDM@" displayName="@QIDAIJCJGMC@" codeSystem="2.16.156.10011.2.3.1.73" codeSystemName="脐带检查结果代码表"/>
+
+
+<HDSD00.01.302 dataelementName="脐疝标志" value="@QISHANBZ@"/>
+<HDSD00.01.270 dataelementName="四肢活动度异常标志" value="@SIZHIYCBZ@"/>
+<HDSD00.01.303 dataelementName="步态异常标志" value="@BUTAIYCBZ@"/>
+<HDSD00.01.304 dataelementName="可疑佝偻病症状代码" code="@KEYIGLBZZDM@" displayName="@KEYIGLBZZXS@" codeSystem="2.16.156.10011.2.3.1.75" codeSystemName="可疑佝偻病症状代码表"/>
+<HDSD00.01.305 dataelementName="可疑佝偻病体症代码" code="@KEYIGLBTZDM@" displayName="@KEYIGLBTZXS@" codeSystem="2.16.156.10011.2.3.1.76" codeSystemName="可疑佝偻病体征代码表"/>
+<HDSD00.01.274 dataelementName="肛门检查异常标志" value="@GANGMENYCBZ@"/>
+<HDSD00.01.276 dataelementName="外生殖器检查异常标志" value="@WAISHENGZQYCBZ@"/>
+<HDSD00.01.136 dataelementName="血红蛋白值(g/L)" value="@XUEHONGDB@"/>
+
+
+<HDSD00.01.316 dataelementName="户外活动时长(d)" value="@HUWAIHDSC@"/>
+<HDSD00.01.317 dataelementName="服用维生素D名称" value="@WEISHENGSDYPMC@"/>
+<HDSD00.01.318 dataelementName="服用维生素D剂量(IU/d)" value="@FUYONGWSSDJL@"/>
+<HDSD00.01.319 dataelementName="儿童发育评估通过标志" value="@ERTONGFYPGTGBZ@"/>
+<HDSD00.01.320 dataelementName="两次随访间患病标志" value="@LIANGCISFJHBBZ@"/>
+
+
+<HDSD00.01.321 dataelementName="两次随访间患肺炎住院次数" value="@LIANGCISFJHFYZYCS@"/>
+<HDSD00.01.322 dataelementName="两次随访间患腹泻住院次数" value="@LIANGCISFJHFXZYCS@"/>
+<HDSD00.01.323 dataelementName="两次随访间因外伤住院次数" value="@LIANGCISFJYWSZYCS@"/>
+<HDSD00.01.324 dataelementName="两次随访间患其他疾病情况" value="@LIANGCISFJHBXS@"/>
+<HDSD00.01.281 dataelementName="转诊标志" value="@ZHUANZHEN@"/>
+<HDSD00.01.282 dataelementName="转入医疗机构名称" value="@JIGOU@"/>
+<HDSD00.01.283 dataelementName="转入机构科室名称" value="@KESHI@"/>
+<HDSD00.01.284 dataelementName="转诊原因" value="@YUANYIN@"/>
+<HDSD00.01.328 dataelementName="儿童健康指导类别代码" code="@BAOJIANZDLBDM@" displayName="@BAOJIANZDLBMC@" codeSystem="2.16.156.10011.2.3.1.193" codeSystemName="儿童健康指导类别代码表"/>
+<HDSD00.01.329 dataelementName="随访日期" value="@SUIFANGRQ@"/>
+<HDSD00.01.330 dataelementName="随访医师姓名" value="@SUIFANGYSXM@"/>
+
+<HDSD00.01.483 dataelementName="下次随访日期" value="@YUYUERQ@"/>
+
+
+
+</BasicDataset>

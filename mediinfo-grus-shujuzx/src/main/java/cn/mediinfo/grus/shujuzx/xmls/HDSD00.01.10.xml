@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<BasicDataset>
+<DataSet code="HDSD00.01.10" displayName="职业病报告" codeSystem="WS365-2011" codeSystemName="城乡居民健康档案基本数据集"/>
+
+
+<HDSD00.01.001 dataelementName="城乡居民健康档案编号" value="@JUMINBH@"/>
+<HDSD00.01.002 dataelementName="本人姓名" value="@HUANZHEXM@"/>
+<HDSD00.01.422 dataelementName="职业病报告卡编号" value="@ZHIYEBBGKH@"/>
+<HDSD00.01.003 dataelementName="性别代码" code="@XINGBIEDM@" displayName="@XINGBIEMC@" codeSystem="2.16.156.10011.2.3.3.4" codeSystemName="生理性别代码表(GB/T 2261.1)"/>
+<HDSD00.01.004 dataelementName="出生日期" value="@CHUSHENGRQ@"/>
+<HDSD00.01.005 dataelementName="身份证件类别代码" code="@ZHENGJIANLXDM@" displayName="@ZHENGJIANLXMC@" codeSystem="2.16.156.10011.2.3.1.1" codeSystemName="身份证件类别代码表"/>
+<HDSD00.01.006 dataelementName="身份证件号码" value="@SHENFENZH@"/>
+
+<HDSD00.01.423 dataelementName="行政区划代码" code="@XINGZHENGQHDM@" displayName="@XINGZHENGQHMC@" codeSystem="2.16.156.10011.2.3.3.2" codeSystemName="中华人民共和国县级及县级以上行政区划代码表(GB/T 2260)"/>
+<HDSD00.01.225 dataelementName="现住地址-省(自治区、直辖市)" value="@JUZHUDZSHENG@"/>
+<HDSD00.01.226 dataelementName="现住地址-市(地区、州)" value="@JUZHUDZSHI@"/>
+<HDSD00.01.227 dataelementName="现住地址-县(区)" value="@JUZHUDZQ@"/>
+<HDSD00.01.228 dataelementName="现住地址-乡(镇、街道办事处)" value="@JUZHUDZJD@"/>
+<HDSD00.01.229 dataelementName="现住地址-村(街、路、弄等)" value="@JUZHUDZSQ@"/>
+<HDSD00.01.230 dataelementName="现住地址-门牌号码" value="@JUZHUDZMPH@"/>
+<HDSD00.01.376 dataelementName="户籍地址-省(自治区、直辖市)" value="@HUJIDZSHENG@"/>
+<HDSD00.01.377 dataelementName="户籍地址-市(地区、州)" value="@HUJIDZSHI@"/>
+<HDSD00.01.378 dataelementName="户籍地址-县(区)" value="@HUJIDZQ@"/>
+<HDSD00.01.379 dataelementName="户籍地址-乡(镇、街道办事处)" value="@HUJIDZJD@"/>
+<HDSD00.01.380 dataelementName="户籍地址-村(街、路、弄等)" value="@HUJIDZSQ@"/>
+<HDSD00.01.381 dataelementName="户籍地址-门牌号码" value="@HUJIDZMPH@"/>
+<HDSD00.01.400 dataelementName="工作单位地址-省(自治区、直辖市)" value="@GONGZUODZ_SHENG@"/>
+<HDSD00.01.401 dataelementName="工作单位地址-市(地区、州)" value="@GONGZUODZ_SHI@"/>
+<HDSD00.01.402 dataelementName="工作单位地址-县(区)" value="@GONGZUODZ_XIAN@"/>
+<HDSD00.01.403 dataelementName="工作单位地址-乡(镇、街道办事处)" value="@GONGZUODZ_ZHEN@"/>
+<HDSD00.01.404 dataelementName="工作单位地址-村(街、路、弄等)" value="@GONGZUODZ_CUN@"/>
+<HDSD00.01.405 dataelementName="工作单位地址-门牌号码" value="@GONGZUODZ_MPH@"/>
+<HDSD00.01.424 dataelementName="邮政编码" value="@YOUZHENGBM@"/>
+
+<HDSD00.01.008 dataelementName="本人电话号码" value="@BENRENDH@"/>
+<HDSD00.01.374 dataelementName="家人电话号码" value="@JIARENDH@"/>
+<HDSD00.01.375 dataelementName="工作单位电话号码" value="@GONGZUODWDH@"/>
+<HDSD00.01.015 dataelementName="学历代码" code="@XUELIDM@" displayName="@XUELIMC@" codeSystem="2.16.156.10011.2.3.3.6" codeSystemName="学历代码表(GB/T 4658)"/>
+<HDSD00.01.007 dataelementName="工作单位名称" value="@GONGZUODMC@"/>
+
+<HDSD00.01.425 dataelementName="从事职业工种描述" value="@CONGSHIZYMS@"/>
+<HDSD00.01.426 dataelementName="受照史" value="@SHOUZHAOS@"/>
+<HDSD00.01.427 dataelementName="职业照射种类代码" code="@ZHIYEZSZLDM@" displayName="@ZHIYEZSZLMC@" codeSystem="2.16.156.10011.2.3.1.29" codeSystemName="职业照射种类代码表"/>
+<HDSD00.01.428 dataelementName="开始从事放射工作日期" value="@KAISHICSFSRQ@"/>
+<HDSD00.01.429 dataelementName="开始接尘日期" value="@KAISHIJCRQ@"/>
+<HDSD00.01.430 dataelementName="实际接害工龄(a)" value="@SHIJISHGL@"/>
+<HDSD00.01.431 dataelementName="放射工龄(a)" value="@FANGSHEGL@"/>
+<HDSD00.01.432 dataelementName="累积受照时长(h/a)" value="@LEIJISZSC@"/>
+<HDSD00.01.433 dataelementName="受照日期" value="@SHOUZHAORQ@"/>
+
+<HDSD00.01.408 dataelementName="首次出现症状日期" value="@SHOUCIZZRQ@"/>
+<HDSD00.01.434 dataelementName="受照剂量(Gy)" value="@SHOUZHAOJL@"/>
+<HDSD00.01.435 dataelementName="受照类型代码" code="@SHOUZHAOLXDM@" displayName="@SHOUZHAOLXMC@" codeSystem="2.16.156.10011.2.3.2.23" codeSystemName="受照类型代码表"/>
+<HDSD00.01.436 dataelementName="受照原因代码" code="@SHOUZHAOYYDM@" displayName="@SHOUZHAOYYMC@" codeSystem="2.16.156.10011.2.3.1.30" codeSystemName="受照原因代码表"/>
+<HDSD00.01.437 dataelementName="职业病种类代码" code="@ZHIYEBZLDM@" displayName="@ZHIYEBZLMC@" codeSystem="2.16.156.10011.2.3.4.2" codeSystemName="职业类别代码表"/>
+<HDSD00.01.438 dataelementName="尘肺类别代码" code="@CHENFEILBDM@" displayName="@CHENFEILBMC@" codeSystem="2.16.156.10011.2.3.4.3" codeSystemName="尘肺类别代码表(卫监发[2002]108号《职业病目录》)"/>
+<HDSD00.01.439 dataelementName="尘肺期别代码" code="@CHENFEIQBDM@" displayName="@CHENFEIQBMC@" codeSystem="2.16.156.10011.2.3.2.24" codeSystemName="尘肺期别代码表"/>
+<HDSD00.01.440 dataelementName="职业病名称代码" code="@ZHIYEBDM@" displayName="@ZHIYEBMC@" codeSystem="2.16.156.10011.2.3.3.11" codeSystemName="ICD-10"/>
+<HDSD00.01.441 dataelementName="职业病伤残等级代码" code="@ZHIYEBSCDJDM@" displayName="@ZHIYEBSCDJMC@" codeSystem="2.16.156.10011.2.3.1.142" codeSystemName="劳动能力评定分级代码表"/>
+<HDSD00.01.442 dataelementName="职业病转归代码" code="@BINGQINGZGDM@" displayName="@BINGQINGZGMC@" codeSystem="2.16.156.10011.2.3.1.148" codeSystemName="病情转归代码表"/>
+<HDSD00.01.443 dataelementName="职业性放射性疾病代码" code="@ZHIYEXFSJBDM@" codeSystem="2.16.156.10011.2.3.3.9"  codeSystemName="职业性放射性疾病处理情况代码表"/>
+<HDSD00.01.444 dataelementName="放射性疾病的分度代码" code="@ZHIYEXFSFDDM@" displayName="@ZHIYEXFSFDMC@" codeSystem="2.16.156.10011.2.3.1.132" codeSystemName="放射性疾病的分度代码表"/>
+<HDSD00.01.445 dataelementName="放射性疾病的分期代码" code="@ZHIYEXFSFQDM@" displayName="@ZHIYEXFSFQMC@" codeSystem="2.16.156.10011.2.3.1.133" codeSystemName="放射性疾病的分期代码表"/>
+<HDSD00.01.446 dataelementName="尘肺合并肺结核的标志" value="@CHENFEIHBFJHBZ@"/>
+<HDSD00.01.447 dataelementName="职业性放射性疾病处理类别代码" code="@ZHIYEXFSJBCLLBDM@" displayName="@ZHIYEXFSJBCLLBNC@" codeSystem="2.16.156.10011.2.3.1.181" codeSystemName="职业性放射性疾病处理情况代码表"/>
+
+
+<HDSD00.01.448 dataelementName="死亡日期时间" value="@SIWANGSJ@"/>
+<HDSD00.01.449 dataelementName="根本死因代码" code="@GENBENSWYYDM@" displayName="@GENBENSWYYMC@" codeSystem="2.16.156.10011.2.3.3.11" codeSystemName="ICD-10"/>
+<HDSD00.01.450 dataelementName="诊断机构名称" value="@ZHENDUANJGMC@"/>
+<HDSD00.01.451 dataelementName="诊断日期时间" value="@ZHENDUANRQ@"/>
+<HDSD00.01.452 dataelementName="诊断医师姓名" value="@ZHENDUANYSXM@"/>
+<HDSD00.01.419 dataelementName="填报机构名称" value="@TIANBAOJGMC@"/>
+<HDSD00.01.453 dataelementName="填报人姓名" value="TIANBAORXM"/>
+<HDSD00.01.454 dataelementName="填报日期时间" value="TIANBAORQ" />
+</BasicDataset>

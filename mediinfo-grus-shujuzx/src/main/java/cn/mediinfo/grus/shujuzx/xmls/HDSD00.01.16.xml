@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<BasicDataset>
+  <DataSet code="HDSD00.01.16" displayName="住院摘要信息" codeSystem="WS365-2011" codeSystemName="城乡居民健康档案基本数据集"/>
+
+
+  <HDSD00.01.001 dataelementName="城乡居民健康档案编号" value="@GERENBH@"/>
+
+  <HDSD00.01.002 dataelementName="本人姓名" value="@HUANZHEXM@"/>
+  <HDSD00.01.571 dataelementName="病案号" value="@BINGANH@"/>
+  <HDSD00.01.003 dataelementName="性别代码" code="@XINGBIEDM@" displayName="@XINGBIEMC@" codeSystem="2.16.156.10011.2.3.3.4" codeSystemName="生理性别代码表(GB/T 2261.1)"/>
+  <HDSD00.01.004 dataelementName="出生日期" value="@CHUSHENGRQ@"/>
+  <HDSD00.01.005 dataelementName="身份证件类别代码" code="@ZHENGJIANLXDM@" displayName="@ZHENGJIANLXMC@" codeSystem="2.16.156.10011.2.3.1.1" codeSystemName="身份证件类别代码表"/>
+  <HDSD00.01.006 dataelementName="身份证件号码" value="@SHENFENZH@"/>
+  <HDSD00.01.017 dataelementName="婚姻状况代码" code="@HUNYINQK@" displayName="@HUNYINMC@" codeSystem="2.16.156.10011.2.3.3.5" codeSystemName="婚姻状况代码表(GB/T 2261.2)"/>
+
+  <HDSD00.01.572 dataelementName="住院机构名称" value="@YILIAOJGMC@"/>
+  <HDSD00.01.573 dataelementName="住院机构代码" value="@YILIAOJGDM@"/>
+  <HDSD00.01.574 dataelementName="入院科室名称" value="@RUYUANKSMC@"/>
+  <HDSD00.01.575 dataelementName="入院日期时间" value="@RUYUANSJ@"/>
+  <HDSD00.01.576 dataelementName="住院原因代码" code="@ZHUYUANYYDM@" displayName="@ZHUYUANYYMC@" codeSystem="2.16.156.10011.2.3.1.188" codeSystemName="住院原因代码表"/>
+
+  <HDSD00.01.046 dataelementName="症状代码" code="@RUYUANZZDM@" displayName="@RUYUANZZMC@" codeSystem="2.16.156.10011.2.3.3.11" codeSystemName="ICD-10"/>
+  <HDSD00.01.047 dataelementName="症状名称" value="@RUYUANZZMC@"/>
+  <HDSD00.01.456 dataelementName="发病日期时间" value="@FABINGSJ@"/>
+  <HDSD00.01.542 dataelementName="症状持续时间(min)" value="@CHIXUSJ@"/>
+
+  <HDSD00.01.543 dataelementName="检查(检验)类别" value="@JIANYANJCLB@"/>
+  <HDSD00.01.544 dataelementName="检查(检验)项目名称" value="@JYJCXMDM@"/>
+  <HDSD00.01.548 dataelementName="检查(检验)项目代码" value="@JYJCXMMC@"/>
+  <HDSD00.01.545 dataelementName="检查(检验)结果代码" code="@JYJCJGDM@" displayName="@JYJCJGMC@" codeSystem="2.16.156.10011.2.3.2.38" codeSystemName="检查/检验结果代码表"/>
+  <HDSD00.01.546 dataelementName="检查(检验)定量结果" value="@JYJCJGMC@"/>
+  <HDSD00.01.547 dataelementName="检查(检验)计量单位" value="@JYJCJLDW@"/>
+
+  <HDSD00.01.577 dataelementName="入院诊断名称" value="@RUYUANZDMC@"/>
+  <HDSD00.01.578 dataelementName="入院诊断代码" code="@RUYUANZZDM@" displayName="@RUYUANZZMC@" codeSystem="2.16.156.10011.2.3.3.11" codeSystemName="ICD-10"/>
+  <HDSD00.01.579 dataelementName="会诊记录编号" value="@HUIZHENJLBH@"/>
+  <HDSD00.01.580 dataelementName="会诊所在医疗机构名称" value="@HUIZHENSZJGMC@"/>
+  <HDSD00.01.581 dataelementName="会诊所在医疗卫生机构代码" value="@HUIZHENSZJGDM@"/>
+  <HDSD00.01.582 dataelementName="会诊日期" value="@HUIZHENRQ@"/>
+  <HDSD00.01.583 dataelementName="会诊原因" value="@HUIZHENYY@"/>
+  <HDSD00.01.584 dataelementName="会诊意见" value="@HUIZHENYJ@"/>
+  <HDSD00.01.585 dataelementName="会诊医师姓名" value="@HUIZHENYSXM@"/>
+
+  <HDSD00.01.044 dataelementName="责任医师姓名" value="@ZHUYUANZRYSMC@"/>
+  <HDSD00.01.516 dataelementName="确诊日期" value="@ZHUYUANJLRQ@"/>
+
+  <HDSD00.01.586 dataelementName="住院者传染病标志" value="@ZHUYUANCRXBZ@"/>
+  <HDSD00.01.587 dataelementName="住院者疾病状态代码" code="@ZHUYUANJBZT@" displayName="@ZHUYUANJBZTMC@" codeSystem="2.16.156.10011.2.3.1.100" codeSystemName="住院者疾病状态代码表"/>
+
+
+  <HDSD00.01.193 dataelementName="中药类别代码" code="@ZHONGYAOLBDM@" displayName="@ZHONGYAOLBMC@" codeSystem="2.16.156.10011.2.3.1.157" codeSystemName="中药使用类别代码表"/>
+  <HDSD00.01.194 dataelementName="药物名称" value="@YAOPINMC@"/>
+  <HDSD00.01.195 dataelementName="药物使用频率" value="@YONGYAOPC@"/>
+  <HDSD00.01.196 dataelementName="药物使用剂量单位" value="@DANCIJLDW@"/>
+  <HDSD00.01.197 dataelementName="药物使用次剂量" value="@DANCISYSL@"/>
+  <HDSD00.01.198 dataelementName="药物使用总剂量" value="@YAOWUSYZJL@"/>
+  <HDSD00.01.199 dataelementName="药物使用途径代码" code="@YONGYAOTJDM@" displayName="@YONGYAOTJMC@" codeSystem="2.16.156.10011.2.3.1.158" codeSystemName="用药途径代码表"/>
+
+  <HDSD00.01.553 dataelementName="药物类型" value="@LEIXINGMC@"/>
+  <HDSD00.01.554 dataelementName="药物剂型代码" code="@JIXINGDM@" displayName="@JIXINGMC@" codeSystem="2.16.156.10011.2.3.1.211" codeSystemName="药物剂型代码表"/>
+  <HDSD00.01.555 dataelementName="用药天数" value="@YONGYAOTS@"/>
+
+  <HDSD00.01.588 dataelementName="用药停止日期时间" value="@YIZHUZZSJ@"/>
+  <HDSD00.01.556 dataelementName="手术(操作)名称" value="@SHOUSHUCZMC@"/>
+  <HDSD00.01.557 dataelementName="手术(操作)代码" code="@SHOUSHUCZBM@" displayName="@SHOUSHUCZMC@" codeSystem="2.16.156.10011.2.3.3.12" codeSystemName="手术(操作)代码表(ICD-9-CM)"/>
+  <HDSD00.01.026 dataelementName="手术/操作日期时间" value="@SHOUSHUKSSJ@"/>
+  <HDSD00.01.589 dataelementName="麻醉方法名称" value="@MAZUIFSMS@"/>
+  <HDSD00.01.590 dataelementName="麻醉方法代码" code="@MAZUIFSBM@" displayName="@MAZUIFSMS@" codeSystem="2.16.156.10011.2.3.1.159" codeSystemName="麻醉方法代码表"/>
+  <HDSD00.01.558 dataelementName="其他医学处置" value="@QITAYXCZ@"/>
+
+  <HDSD00.01.281 dataelementName="转诊标志" value="@ZHUANZHENZRBZ@"/>
+  <HDSD00.01.282 dataelementName="转入医疗机构名称" value="@ZHUANRUJGMC@"/>
+  <HDSD00.01.283 dataelementName="转入机构科室名称" value="@ZHUANZHENKSMC@"/>
+  <HDSD00.01.284 dataelementName="转诊原因" value="@ZHUANZHENYY@"/>
+
+  <HDSD00.01.559 dataelementName="转出医疗机构名称" value="@ZHUANCHUJGMC@"/>
+  <HDSD00.01.560 dataelementName="转出医疗机构代码" value="@ZHUANCHUJGDM@"/>
+  <HDSD00.01.561 dataelementName="转入医疗机构名称" value="@ZHUANRUJGMC@"/>
+  <HDSD00.01.562 dataelementName="转入医疗机构代码" value="@ZHUANRUJGDM@"/>
+  <HDSD00.01.563 dataelementName="转诊标志" value="@ZHUANZHENZRBZ@"/>
+  <HDSD00.01.564 dataelementName="转诊日期" value="@CHUYUANSJ@"/>
+  <HDSD00.01.565 dataelementName="治疗方案" value="@ZHENZHIJG@"/>
+  <HDSD00.01.533 dataelementName="康复措施指导" value="@KANGFUCSZD@"/>
+
+  <HDSD00.01.591 dataelementName="出院诊断名称" value="@CHUYUANZDMC@"/>
+  <HDSD00.01.592 dataelementName="出院诊断代码" code="@CHUYUANZDDM@" displayName="@CHUYUANZDMC@" codeSystem="2.16.156.10011.2.3.3.11" codeSystemName="ICD-10"/>
+  <HDSD00.01.593 dataelementName="治疗结果代码" code="@ZHUYUANZLJGDM@" displayName="@ZHUYUANZLJGMC@" codeSystem="2.16.156.10011.2.3.1.148" codeSystemName="病情转归代码表"/>
+
+  <HDSD00.01.185 dataelementName="出院日期" value="@CHUYUANSJ@"/>
+  <HDSD00.01.448 dataelementName="死亡日期时间" value="@SIWANGSJ@"/>
+  <HDSD00.01.449 dataelementName="根本死因代码" code="@GENBENSYDM@" displayName="@GENBENSYDM@" codeSystem="2.16.156.10011.2.3.3.11" codeSystemName="ICD-10"/>
+
+  <HDSD00.01.594 dataelementName="住院费用分类名称" value="@FEIYONGLBMC@"/>
+  <HDSD00.01.595 dataelementName="住院费用分类代码" code="@FEIYONGLBDM@" displayName="@FEIYONGLBMC@" codeSystem="2.16.156.10011.2.3.1.269" CodeSystemName=""/>
+  <HDSD00.01.596 dataelementName="住院费用金额(元)" value="@XIANGMUJE@"/>
+  <HDSD00.01.569 dataelementName="医疗付款方式代码" code="@YILIAOBXLB@" displayName="@YILIAOBXLBMC@" codeSystem="2.16.156.10011.2.3.1.197" codeSystemName="医疗费用来源类别代码表"/>
+  <HDSD00.01.597 dataelementName="住院费用结算方式代码" code="@FUFEIFSDM@" displayName="@FUFEIFSMC@" codeSystem="2.16.156.10011.2.3.1.198" codeSystemName="医疗费用结算方式代码表"/>
+
+
+
+</BasicDataset>

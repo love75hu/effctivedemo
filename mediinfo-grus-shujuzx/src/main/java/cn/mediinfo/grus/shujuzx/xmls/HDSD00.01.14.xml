@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<BasicDataset>
+<DataSet code="HDSD00.01.14" displayName="重性精神疾病患者管理" codeSystem="WS365-2011" codeSystemName="城乡居民健康档案基本数据集"/>
+
+
+<HDSD00.01.001 dataelementName="城乡居民健康档案编号" value="@JUMINBH@"/>
+
+<HDSD00.01.492 dataelementName="重性精神疾病患者个人信息补充表编号" value="@SUIFANGBH@"/>
+<HDSD00.01.493 dataelementName="重性精神疾病患者随访服务记录表编号" value="@DENGJIBH@"/>
+
+<HDSD00.01.372 dataelementName="监护人姓名" value="@JIANHURXM@"/>
+<HDSD00.01.373 dataelementName="监护人与本人关系代码" code="@YUHUANZGXDM@" displayName="@YUHUANZGXMC@" codeSystem="2.16.156.10011.2.3.3.8" codeSystemName="家庭关系代码表(GB/T 4761)"/>
+
+<HDSD00.01.494 dataelementName="监护人地址-省(自治区、直辖市)" value="@JUZHUDZSHENG@"/>
+<HDSD00.01.495 dataelementName="监护人地址-市(地区、州)" value="@JUZHUDZSHI@"/>
+<HDSD00.01.496 dataelementName="监护人地址-县(区)" value="@JUZHUDZQ@"/>
+<HDSD00.01.497 dataelementName="监护人地址-乡(镇、街道办事处)" value="@JUZHUDZJD@"/>
+<HDSD00.01.498 dataelementName="监护人地址-村(街、路、弄等)" value="@JUZHUDZSQ@"/>
+<HDSD00.01.499 dataelementName="监护人地址-门牌号码" value="@JUZHUDZMPH@"/>
+<HDSD00.01.500 dataelementName="监护人电话类别" value="@JIANHURDHLB@"/>
+<HDSD00.01.501 dataelementName="监护人地电话号码" value="@JIANHURLXDH@"/>
+
+<HDSD00.01.502 dataelementName="居委会名称" value="@XIAQUJWHMC@"/>
+<HDSD00.01.503 dataelementName="居委会联系人姓名" value="@XIAQUJWHLXR@"/>
+<HDSD00.01.504 dataelementName="居委会联系人电话类别" value="@XIAQUJWHDHLB@"/>
+<HDSD00.01.505 dataelementName="居委会联系人电话号码" value="@XIAQUJWHLXDH@"/>
+
+<HDSD00.01.044 dataelementName="责任医师" value="@QIANZIRXM@"/>
+
+<HDSD00.01.506 dataelementName="知情同意管理标志" value="@ZHIQINGTYGLBZ@"/>
+<HDSD00.01.507 dataelementName="知情同意管签字人姓名" value="@ZHIQINGTYRXM@"/>
+<HDSD00.01.508 dataelementName="知情同意签字日期" value="@ZHIQINGRTYRQ@"/>
+<HDSD00.01.509 dataelementName="重症精神疾病患者首次发病年龄(岁)" value="@FABINGNL@"/>
+
+<HDSD00.01.510 dataelementName="精神症状代码" code="@QUEZHENZDDM@" displayName="@QUEZHENZDMC@" codeSystem="2.16.156.10011.2.3.1.49" codeSystemName="精神症状代码表"/>
+<HDSD00.01.511 dataelementName="既往门诊治疗情况代码" code="@ZHILIAOQKDM@" displayName="@ZHILIAOQKMC@" codeSystem="2.16.156.10011.2.3.2.63" codeSystemName="既往门诊治疗情况代码表"/>
+<HDSD00.01.512 dataelementName="首次抗精神病药治疗日期" value="@SHOUCIKJSBYZLRQ@"/>
+<HDSD00.01.513 dataelementName="既往精神专科住院次数(次)" value="@ZHUYUANCS@"/>
+<HDSD00.01.514 dataelementName="重性精神疾病名称代码" code="@ZHONGZHENGJBDM@" displayName="@ZHONGZHENGJBMC@" codeSystem="2.16.156.10011.2.3.1.135" codeSystemName="重性精神疾病名称代码表"/>
+<HDSD00.01.515 dataelementName="确诊医疗机构名称" value="@QUEZHENYY@"/>
+<HDSD00.01.516 dataelementName="确诊日期" value="@QUEZHENRQ@"/>
+<HDSD00.01.517 dataelementName="既往治疗效果类别代码" code="@ZHILIAOXGDM@" displayName="@ZHILIAOXGMC@" codeSystem="2.16.156.10011.2.3.1.148" codeSystemName="病情转归代码表"/>
+<HDSD00.01.518 dataelementName="患病对家庭社会的影响类别代码" code="@HUANZHEDJTSQYXDM@" displayName="@HUANZHEDJTSQYXMC@" codeSystem="2.16.156.10011.2.3.1.24" codeSystemName="患重性精神疾病对家庭社会的影响代码表"/>
+<HDSD00.01.519 dataelementName="患病都家庭社会的影响次数(次)" value="@HUANBINGYXCS@"/>
+<HDSD00.01.520 dataelementName="关锁情况代码" code="@GUANSUOQKDM@" displayName="@GUANSUOQKMC@" codeSystem="2.16.156.10011.2.3.2.30" codeSystemName="关锁情况代码表"/>
+<HDSD00.01.521 dataelementName="经济状况代码" code="@JINGJIZKDM@" displayName="@JINGJIZKMC@" codeSystem="2.16.156.10011.2.3.2.31" codeSystemName="经济状况代码表"/>
+<HDSD00.01.522 dataelementName="专科医生意见" value="@ZHUANKEYSYJ@"/>
+
+<HDSD00.01.453 dataelementName="填报人姓名" value="@DENGJIRXM@"/>
+<HDSD00.01.421 dataelementName="填报日期" value="@DENGJIRQ@"/>
+<HDSD00.01.466 dataelementName="本次随访日期" value="@SUIFANGRQ@"/>
+<HDSD00.01.002 dataelementName="本人姓名" value="@HUANZHEXM@"/>
+
+<HDSD00.01.523 dataelementName="危险性分级代码" code="@WEIXIANXFJDM@" displayName="@WEIXIANXFJMC@" codeSystem="2.16.156.10011.2.3.1.151" codeSystemName="重性精神疾病患者危险性分级代码表"/>
+<HDSD00.01.524 dataelementName="自知力评价结果代码" code="@ZIZHILIPJJGDM@" displayName="@ZIZHILIPJJGMC@" codeSystem="2.16.156.10011.2.3.2.32" codeSystemName="自知力评价结果代码表"/>
+<HDSD00.01.525 dataelementName="睡眠情况代码" code="@SHUIMIANZKDM@" displayName="@SHUIMIANZKMC@" codeSystem="2.16.156.10011.2.3.2.33" codeSystemName="睡眠情况代码表"/>
+<HDSD00.01.526 dataelementName="饮食情况代码" code="@YINSHIQKDM@" displayName="@YINSHIQKMC@" codeSystem="2.16.156.10011.2.3.2.34" codeSystemName="饮食情况代码表"/>
+<HDSD00.01.527 dataelementName="社会功能情况分类代码" code="@SHEHUIGNFLDM@" displayName="@SHEHUIGNFLMC@" codeSystem="2.16.156.10011.2.3.1.141" codeSystemName="重性精神疾病患者社会功能情况分类代码表"/>
+<HDSD00.01.528 dataelementName="社会功能情况评价代码" code="@SHEHUIGNPJDM@" displayName="@SHEHUIGNPJMC@" codeSystem="2.16.156.10011.2.3.2.35" codeSystemName="社会功能情况评价代码表"/>
+<HDSD00.01.529 dataelementName="住院情况代码" code="@ZHUYUANQK@" displayName="@ZHUYUANQKMC@" codeSystem="2.16.156.10011.2.3.2.36" codeSystemName="住院情况代码表"/>
+
+<HDSD00.01.530 dataelementName="末次出院日期" value="@ZHUYUANRQ@"/>
+<HDSD00.01.531 dataelementName="辅助检查标志" value="@FUZHUJCBZ@"/>
+
+<HDSD00.01.478 dataelementName="辅助检查项目" value="@FUZHUJCMC@"/>
+<HDSD00.01.460 dataelementName="辅助检查结果" value="@FUZHUJCJG@"/>
+<HDSD00.01.479 dataelementName="检查(测)人员姓名" value="@JIANCHARYXM@"/>
+<HDSD00.01.045 dataelementName="检查(测)日期" value="@JIANCHARQ@"/>
+<HDSD00.01.200 dataelementName="服药依从性代码" code="@FUYAOYCXDM@" displayName="@FUYAOYCXMC@" codeSystem="2.16.156.10011.2.3.2.12" codeSystemName="服药依从性代码表"/>
+
+<HDSD00.01.480 dataelementName="药物不良反应标志" value="@YAOWUBLFYBZ@"/>
+<HDSD00.01.481 dataelementName="药物不良反应描述" value="@YAOWUBLFYMS@"/>
+<HDSD00.01.281 dataelementName="转诊标志" value="@ZHUANZHENBZ@"/>
+<HDSD00.01.282 dataelementName="转入医疗机构名称" value="@ZHUANRUYLJGMC@"/>
+<HDSD00.01.283 dataelementName="转入机构科室名称" value="@ZHUANRUJGKSMC@"/>
+<HDSD00.01.284 dataelementName="转诊原因" value="@ZHUANZHENYY@"/>
+
+<HDSD00.01.193 dataelementName="中药类别代码" code="@ZHONGYAOLBDM@" displayName="@ZHONGYAOLBMC@" codeSystem="2.16.156.10011.2.3.1.157" codeSystemName="中药使用类别代码表"/>
+<HDSD00.01.194 dataelementName="药物名称" value="@YAOWUMC@"/>
+<HDSD00.01.195 dataelementName="药物使用频率" value="@YAOWUSYPL@"/>
+<HDSD00.01.196 dataelementName="药物使用剂量单位" value="@YAOWUSYJLDW@"/>
+<HDSD00.01.197 dataelementName="药物使用次剂量" value="@YAOWUSYJL@"/>
+<HDSD00.01.198 dataelementName="药物使用总剂量" value="@YAOWUSYZJL@"/>
+<HDSD00.01.199 dataelementName="药物使用途径代码" code="@YAOWUSYTJDM@" displayName="@YAOWUSYTJMC@" codeSystem="2.16.156.10011.2.3.1.158" codeSystemName="用药途径代码表"/>
+
+<HDSD00.01.532 dataelementName="精神康复措施代码" code="@KANGFUCS@" displayName="@KANGFUCSMC@" codeSystem="2.16.156.10011.2.3.1.185" codeSystemName="精神康复措施代码表"/>
+<HDSD00.01.533 dataelementName="康复措施指导" value="@KANGFUCSZD@"/>
+<HDSD00.01.534 dataelementName="重性精神疾病患者访到标志" value="@ZHONGXINGJSBFDBZ@"/>
+<HDSD00.01.535 dataelementName="重性精神疾病患者随访评价结果代码" code="@SUIFANGPJJGDM@" displayName="@SUIFANGPJJGMC@" codeSystem="2.16.156.10011.2.3.2.37" codeSystemName="重性精神疾病患者随访评价结果代码表"/>
+
+<HDSD00.01.483 dataelementName="下次随访日期" value="@XIACISFRQ@"/>
+<HDSD00.01.330 dataelementName="随访医生姓名" value="@SUIFANGYSXM@"/>
+
+
+
+</BasicDataset>

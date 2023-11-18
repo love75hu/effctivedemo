@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<BasicDataset>
+<DataSet code="HDSD00.01.13" displayName="2型糖尿病患者随访" codeSystem="WS365-2011" codeSystemName="城乡居民健康档案基本数据集"/>
+
+
+<HDSD00.01.001 dataelementName="城乡居民健康档案编号" value="@JUMINBH@"/>
+<HDSD00.01.484 dataelementName="2型糖尿病患者随访服务记录表编号" value="@SUIFANGBH@"/>
+<HDSD00.01.002 dataelementName="本人姓名" value="@HUANZHEXM@"/>
+<HDSD00.01.044 dataelementName="责任医师" value="@SUIFANGYSXM@"/>
+<HDSD00.01.466 dataelementName="本次随访日期" value="@SUIFANGRQ@"/>
+<HDSD00.01.467 dataelementName="随访方式代码" code="@SUIFANGFSDM@" displayName="@SUIFANGFSMC@" />
+
+<HDSD00.01.046 dataelementName="症状代码" code="@ZHENGZHUANGDM@" displayName="@ZHENGZHUANGMS@" codeSystem="2.16.156.10011.2.3.3.11" codeSystemName="ICD-10"/>
+<HDSD00.01.047 dataelementName="症状名称" value="@ZHENGZHUANGMS@"/>
+
+<HDSD00.01.342 dataelementName="收缩压(mmHg)" value="@SHOUSUOY@"/>
+<HDSD00.01.343 dataelementName="舒张压(mmHg)" value="@SHUZHANGY@"/>
+<HDSD00.01.055 dataelementName="身高(cm)" value="@SHENGAO@"/>
+<HDSD00.01.056 dataelementName="体重(kg)" value="@TIZHONG@"/>
+<HDSD00.01.209 dataelementName="目标体重(kg)" value="@TIZHONG@"/>
+<HDSD00.01.058 dataelementName="体重质数" value="@BMI@"/>
+<HDSD00.01.468 dataelementName="目标体重质数" value="@XIACISFTZ@"/>
+
+<HDSD00.01.485 dataelementName="足背动脉搏动标志" value="@ZUBEIDMBDBZ@"/>
+
+<HDSD00.01.469 dataelementName="其他阳性体征" value="@QITAYXTZ@"/>
+<HDSD00.01.071 dataelementName="日吸烟量(支)" value="@RIXIYL@"/>
+<HDSD00.01.470 dataelementName="目标日吸烟量(支)" value="@XIACIRXYL@"/>
+<HDSD00.01.075 dataelementName="日饮酒量(两)" value="@RIYINJL@"/>
+<HDSD00.01.471 dataelementName="目标日饮酒量(两)" value="@XIACIRYJL@"/>
+<HDSD00.01.065 dataelementName="运动频率代码" code="@YUNDONGPLDM@" displayName="@YUNDONGPLMC@" codeSystem="2.16.156.10011.2.3.1.23" codeSystemName="身体活动频率代码表"/>
+<HDSD00.01.472 dataelementName="目标运动频率代码" code="@XIACIZYDCSDM@" displayName="@XIACIZYDCSDMMC@" codeSystem="2.16.156.10011.2.3.1.23" codeSystemName="身体活动频率代码表"/>
+<HDSD00.01.066 dataelementName="运动时长(min)" value="@YUNDONGSC@"/>
+<HDSD00.01.473 dataelementName="目标运动时长(min)" value="@XIACIYDSC@"/>
+
+<HDSD00.01.486 dataelementName="日主食量(g)" value="@RIYINSLZS@"/>
+<HDSD00.01.487 dataelementName="目标日主食量(g)" value="@XIACIRYSLZS@"/>
+
+<HDSD00.01.476 dataelementName="心理调整评价结果代码" code="@XINLIPGDM@" displayName="@XINLIPGMC@" codeSystem="2.16.156.10011.2.3.2.26" codeSystemName="心理调整评价结果代码表"/>
+<HDSD00.01.477 dataelementName="随访遵医行为评价结果代码" code="@SUIFANGZYXWPJ@" displayName="@SUIFANGZYXWPJMC@" codeSystem="2.16.156.10011.2.3.2.27" codeSystemName="随访遵医行为评价结果代码表"/>
+
+<HDSD00.01.148 dataelementName="空腹血糖值(mmol/L)" value="@KONGFUXT@"/>
+<HDSD00.01.149 dataelementName="餐后2小时血糖值(mmol/L)" value="@CANHOUXT@"/>
+<HDSD00.01.153 dataelementName="糖化血红蛋白值(%)" value="@TANGHUAXHDB@"/>
+
+<HDSD00.01.478 dataelementName="辅助检查项目" value="@FUZHUJCMC@"/>
+<HDSD00.01.460 dataelementName="辅助检查结果" value="@FUZHUJCJG@"/>
+<HDSD00.01.479 dataelementName="检查(测)人员姓名" value="@JIANCHARYXM@"/>
+<HDSD00.01.045 dataelementName="检查(测)日期" value="@JIANCHARQ@"/>
+<HDSD00.01.200 dataelementName="服药依从性代码" code="@FUYAOYCXDM@" displayName="@FUYAOYCXMC@" codeSystem="2.16.156.10011.2.3.2.12" codeSystemName="服药依从性代码表"/>
+
+<HDSD00.01.480 dataelementName="药物不良反应标志" value="@YAOWUBLFYBZ@"/>
+<HDSD00.01.481 dataelementName="药物不良反应描述" value="@YAOWUBLFYMS@"/>
+<HDSD00.01.488 dataelementName="低糖反应代码" code="@DIXUETFYPL@" displayName="@DIXUETFYPLMC@" codeSystem="2.16.156.10011.2.3.2.28" codeSystemName="低血糖反应代码表"/>
+
+<HDSD00.01.482 dataelementName="随访评价结果代码" code="@SUIFANGPJJGDM@" displayName="@SUIFANGPJJGMC@" codeSystem="2.16.156.10011.2.3.1.150" codeSystemName="随访评价结果代码表"/>
+<HDSD00.01.193 dataelementName="中药类别代码" code="@ZHONGYAOLBDM@" displayName="@ZHONGYAOLBMC@" codeSystem="2.16.156.10011.2.3.1.157" codeSystemName="中药使用类别代码表"/>
+<HDSD00.01.194 dataelementName="药物名称" value="@YAOWUMC@"/>
+<HDSD00.01.195 dataelementName="药物使用频率" value="@YAOWUSYPL@"/>
+<HDSD00.01.196 dataelementName="药物使用剂量单位" value="@YAOWUSYJLDW@"/>
+<HDSD00.01.197 dataelementName="药物使用次剂量" value="@YAOWUSYJL@"/>
+<HDSD00.01.198 dataelementName="药物使用总剂量" value="@YAOWUSYZJL@"/>
+<HDSD00.01.199 dataelementName="药物使用途径代码" code="@YAOWUSYTJDM@" displayName="@YAOWUSYTJMC@" codeSystem="2.16.156.10011.2.3.1.158" codeSystemName="用药途径代码表"/>
+
+<HDSD00.01.489 dataelementName="胰岛素用药种类" value="@YIDAOSYYZL@"/>
+<HDSD00.01.490 dataelementName="胰岛素用药使用频率(次/d)" value="@YIDAOSYYPL@"/>
+<HDSD00.01.491 dataelementName="胰岛素用药次剂量(U)" value="@YIDAOSYYJL@"/>
+
+<HDSD00.01.282 dataelementName="转入医疗机构名称" value="@ZHUANRUYLJGMC@"/>
+<HDSD00.01.283 dataelementName="转入机构科室名称" value="@ZHUANRUJGKSMC@"/>
+<HDSD00.01.284 dataelementName="转诊原因" value="@ZHUANZHENYY@"/>
+<HDSD00.01.483 dataelementName="下次随访日期" value="@XIACISFRQ@"/>
+<HDSD00.01.330 dataelementName="随访医生姓名" value="@SUIFANGYSXM@"/>
+
+
+</BasicDataset>

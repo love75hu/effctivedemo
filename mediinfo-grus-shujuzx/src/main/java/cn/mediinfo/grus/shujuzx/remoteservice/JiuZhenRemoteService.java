@@ -1,7 +1,11 @@
 package cn.mediinfo.grus.shujuzx.remoteservice;
 
+import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 import cn.mediinfo.cyan.msf.core.response.MsfResponse;
+import cn.mediinfo.grus.shujuzx.dto.wendangscs.WenDangSC_JZXXDto;
+import cn.mediinfo.grus.shujuzx.dto.wendangscs.WenDangSLDto;
 import cn.mediinfo.grus.shujuzx.remotedto.JiuZhenXXs.*;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,4 +42,31 @@ public interface JiuZhenRemoteService {
      */
     @GetMapping("/api/v1.0/JiuZhen/GetBingRenJBXXByBRID")
     MsfResponse<BingRenZSYXXRso> GetBingRenJBXXByBRID(@SpringQueryMap String bingRenID);
+
+    /**
+     * 获取文档生成健康档案列表
+     *
+     */
+    @GetMapping("/api/v1.0/WenDangSC/GetWenDangSCJKDAList")
+    MsfResponse<List<WenDangSLDto>>  GetWenDangSCList(@SpringQueryMap String mpi);
+
+    /**
+     * 根据病人信息获取所有的就诊记录
+     *
+     */
+    @GetMapping("/api/v1.0/JiuZhen/getJiuZhenXXListByBRXX")
+    MsfResponse<List<WenDangSC_JZXXDto>>  getJiuZhenXXListByBRXX(@SpringQueryMap String mpi);
+
+    /**
+     * 根据病人信息获取所有的就诊记录数量
+     *
+     */
+    @GetMapping("/api/v1.0/JiuZhen/getJiuZhenXXCountByBRXX")
+    MsfResponse<Integer>  getJiuZhenXXCountByBRXX(@SpringQueryMap String mpi);
+    /**
+     * 根据mpi获取所有关联mpi
+     *
+     */
+    @GetMapping("/api/v1.0/BingRen/GetGuanLianBRIDs")
+    MsfResponse<List<String>> GetGuanLianBRIDs(@RequestParam String bingRenID);
 }

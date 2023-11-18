@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<BasicDataset>
+<DataSet code="HDSD00.01.02" displayName="健康体检" codeSystem="WS365-2011" codeSystemName="城乡居民健康档案基本数据集"/>
+
+
+<HDSD00.01.001 dataelementName="城乡居民健康档案编号" value="@TIJIANBH@"/>
+<HDSD00.01.002 dataelementName="本人姓名" value="@HUANZHEXM@"/>
+<HDSD00.01.043 dataelementName="健康体检表编号" value="@JIUZHENLSH@"/>
+<HDSD00.01.044 dataelementName="责任医师" value="@ZERENYSXM@"/>
+<HDSD00.01.045 dataelementName="检查(测)日期" value="@TIJIANRQ@"/>
+<HDSD00.01.046 dataelementName="症状代码" code="@ZHENDUANBM@" displayName="@ZHENDUANMC@" codeSystem="2.16.156.10011.2.3.3.11" codeSystemName="ICD-10"/>
+<HDSD00.01.047 dataelementName="症状名称" value="@ZHENDUANMC@"/>
+<HDSD00.01.048 dataelementName="体温(℃)" value="@TIWEN@"/>
+<HDSD00.01.049 dataelementName="脉率(次/min)" value="@MAILV@"/>
+<HDSD00.01.050 dataelementName="呼吸频率(次/min)" value="@HUXIPL@"/>
+
+
+<HDSD00.01.051 dataelementName="左侧收缩压(mmHg)" value="@ZUOCESSY@"/>
+<HDSD00.01.052 dataelementName="左侧舒张压(mmHg)" value="@ZUOCESZY@"/>
+<HDSD00.01.053 dataelementName="右侧收缩压(mmHg)" value="@YOUCESSY@"/>
+<HDSD00.01.054 dataelementName="右侧舒张压(mmHg)" value="@YOUCESZY@"/>
+<HDSD00.01.055 dataelementName="身高(cm)" value="@SHENGAO@"/>
+<HDSD00.01.056 dataelementName="体重(kg)" value="@TIZHONG@"/>
+<HDSD00.01.057 dataelementName="腰围(cm)" value="@YAOWEI@"/>
+<HDSD00.01.058 dataelementName="体重质数" value="@TIZHIZS@"/>
+<HDSD00.01.059 dataelementName="老年人健康状态自我评估代码" code="@LAONIANRJKZTZWPGDM@" displayName="@LAONIANRJKZTZWPGMC@" codeSystem="2.16.156.10011.2.3.1.53" codeSystemName="老年人健康状态自我评估代码表"/>
+<HDSD00.01.060 dataelementName="老年人生活自理能力自我评估代码" code="@LAONIANRSHZLNLZWPGDM@" displayName="@LAONIANRSHZLNLZWPGMC@" codeSystem="2.16.156.10011.2.3.1.54" codeSystemName="老年人生活自理能力自我评估代码表"/>
+
+
+<HDSD00.01.061 dataelementName="老年人认知功能粗筛结果代码" code="@LAONIANRRZGNCSJGDM@" displayName="@LAONIANRRZGNCSJGMC@" codeSystem="2.16.156.10011.2.3.2.3" codeSystemName="认知功能粗筛代码表"/>
+<HDSD00.01.062 dataelementName="老年人认知功能评分" value="@LAONIANRRZGNPF@"/>
+<HDSD00.01.063 dataelementName="老年人情感状态粗筛结果代码" code="@LAONIANRQGZTCSJGDM@" displayName="@LAONIANRQGZTCSJGMMC@" codeSystem="2.16.156.10011.2.3.2.4" codeSystemName="情感状态粗筛代码表"/>
+<HDSD00.01.064 dataelementName="老年人抑郁评分" value="@LAONIANRYYPF@"/>
+<HDSD00.01.065 dataelementName="运动频率代码" code="@TIYUDLPL@" displayName="@TIYUDLPLMS@" codeSystem="2.16.156.10011.2.3.1.23" codeSystemName="身体活动频率代码表"/>
+<HDSD00.01.066 dataelementName="运动时长(min)" value="@MEICIDLSJ@"/>
+<HDSD00.01.067 dataelementName="坚持运动时间(月)" value="@JIANCHIDLSJ@"/>
+<HDSD00.01.068 dataelementName="运动方式说明" value="@DUANLIANFS@"/>
+<HDSD00.01.069 dataelementName="饮食习惯代码" code="@YINSHIXG@" displayName="@YINSHIXGMC@" codeSystem="2.16.156.10011.2.3.1.19" codeSystemName="饮食习惯代码表"/>
+<HDSD00.01.070 dataelementName="吸烟状况代码" code="@XIYANZK@" displayName="@XIYANZKMC@" codeSystem="2.16.156.10011.2.3.2.5" codeSystemName="吸烟状况代码表"/>
+
+
+<HDSD00.01.071 dataelementName="日吸烟量(支)" value="@RIXIYL@"/>
+<HDSD00.01.072 dataelementName="开始吸烟年龄(岁)" value="@XIYANKSNL@"/>
+<HDSD00.01.073 dataelementName="戒烟年龄(岁)" value="@JIEYANNL@"/>
+<HDSD00.01.074 dataelementName="饮酒频率代码" code="@YINJIUZK@" displayName="@YINJIUZKMC@" codeSystem="2.16.156.10011.2.3.1.16" codeSystemName="饮酒频率代码表"/>
+<HDSD00.01.075 dataelementName="日饮酒量(两)" value="@RIYINJL@"/>
+<HDSD00.01.076 dataelementName="戒酒标志" value="@SHIFOUJJ@"/>
+<HDSD00.01.077 dataelementName="戒酒年龄(岁)" value="@JIEJIUNL@"/>
+<HDSD00.01.078 dataelementName="开始饮酒年龄(岁)" value="@YINJIUKSNL@"/>
+<HDSD00.01.079 dataelementName="醉酒标志" value="@JINYINYJ@"/>
+<HDSD00.01.080 dataelementName="饮酒种类代码" code="@YINJIUZLDM@" displayName="@YINJIUZLMC@" codeSystem="2.16.156.10011.2.3.1.17" codeSystemName="饮酒种类代码表"/>
+
+
+<HDSD00.01.081 dataelementName="职业暴露标志" value="@ZHIYEBLBZ@"/>
+<HDSD00.01.082 dataelementName="有危害因素接触职业描述" value="@WEIXIANYSDM@"/>
+<HDSD00.01.083 dataelementName="从事有危害因素职业时长(a)" value=""/>
+<HDSD00.01.084 dataelementName="职业暴露危险因素种类代码" code="@ZHIYEWSYSDM@" displayName="@ZHIYEWSYSMC@" codeSystem="2.16.156.10011.2.3.1.31" codeSystemName="职业病危害因素类别代码表"/>
+<HDSD00.01.085 dataelementName="职业暴露危险因素名称" value="@ZHIYEWSYSMC@"/>
+<HDSD00.01.086 dataelementName="职业防护措施标志" value="@ZHIYEFHCSBZ@"/>
+<HDSD00.01.087 dataelementName="口唇外观检查结果代码" code="@KOUCHENWGLBDM@" displayName="@KOUCHENWGLBMC@" codeSystem="2.16.156.10011.2.3.1.61" codeSystemName="口唇外观代码表"/>
+<HDSD00.01.088 dataelementName="齿列类别代码" code="@CHILIELBDM@" displayName="@CHILIELBMC@" codeSystem="2.16.156.10011.2.3.1.64" codeSystemName="齿列类别代码表"/>
+<HDSD00.01.089 dataelementName="齿列描述" value="@CHILIEMS@"/>
+<HDSD00.01.090 dataelementName="咽部检查结果代码" code="@YANBUJCJGDM@" displayName="@YANBUJCJGMC@" codeSystem="2.16.156.10011.2.3.2.6" codeSystemName="咽部检查结果代码表"/>
+
+
+<HDSD00.01.091 dataelementName="左眼裸眼远视力值" value="@ZUOYANLYSLZ@"/>
+<HDSD00.01.092 dataelementName="右眼裸眼远视力值" value="@ZUOYANJZSLZ@"/>
+<HDSD00.01.093 dataelementName="左眼矫正远视力值" value="@YOUYANLYSLZ@"/>
+<HDSD00.01.094 dataelementName="右眼矫正远视力值" value="@YOUYANJZSLZ@"/>
+<HDSD00.01.095 dataelementName="听力检测结果代码" code="@TINGLIJCJGDM@" displayName="@TINGLIJCJGMC@" codeSystem="2.16.156.10011.2.3.2.7" codeSystemName="听力检测结果代码表"/>
+<HDSD00.01.096 dataelementName="运动功能状态代码" code="@YUNDONGGNZTDM@" displayName="@YUNDONGGNZTMC@" codeSystem="2.16.156.10011.2.3.2.8" codeSystemName="运动功能状态代码表"/>
+<HDSD00.01.097 dataelementName="眼底检查结果异常标志" value="@YANDIJCYCBZ@"/>
+<HDSD00.01.098 dataelementName="眼底检查结果异常描述" value="@YANDIJCYCMS@"/>
+<HDSD00.01.099 dataelementName="皮肤检查结果代码" code="@PIFUJCJGDM@" displayName="@PIFUJCJGMC@" codeSystem="2.16.156.10011.2.3.1.58" codeSystemName="皮肤检查结果代码表"/>
+<HDSD00.01.100 dataelementName="巩膜检查结果代码" code="@GONGMOJCJG@" displayName="@GONGMOJCJGMC@" codeSystem="2.16.156.10011.2.3.1.60" codeSystemName="巩膜检查结果代码表"/>
+
+
+<HDSD00.01.101 dataelementName="淋巴结检查结果代码" code="@LINBAJJCJGDM@" displayName="@LINBAJJCJGMC@" codeSystem="2.16.156.10011.2.3.1.65" codeSystemName="淋巴结检查结果代码表"/>
+<HDSD00.01.102 dataelementName="桶状胸标志" value="@FEIBUTZXBZ@"/>
+<HDSD00.01.103 dataelementName="肺部异常呼吸音标志" value="@FEIBUYCHXYBZ@"/>
+<HDSD00.01.104 dataelementName="肺部异常呼吸音描述" value="@FEIBUYCHXYMS@"/>
+<HDSD00.01.105 dataelementName="肺部罗音标志" value="@FEIBULYBZ@"/>
+<HDSD00.01.106 dataelementName="肺部罗音描述" value="@FEIBULYMS@"/>
+<HDSD00.01.107 dataelementName="心率(次/min)" value="@XINLV@"/>
+<HDSD00.01.108 dataelementName="心率类别代码" code="" displayName="" codeSystem="2.16.156.10011.2.3.2.9" codeSystemName="心律类别代码表"/>
+<HDSD00.01.109 dataelementName="心脏杂音标志" value="@XINZANGZYBZ@"/>
+<HDSD00.01.110 dataelementName="心脏杂音描述" value="@XINZANGZYMS@"/>
+
+
+<HDSD00.01.111 dataelementName="腹部压痛标志" value="@FUBUYTBZ@"/>
+<HDSD00.01.112 dataelementName="腹部压痛描述" value="@FUBUYTMS@"/>
+<HDSD00.01.113 dataelementName="腹部包块标志" value="@FUBUBKBZ@"/>
+<HDSD00.01.114 dataelementName="腹部包块描述" value="@FUBUBKMS@"/>
+<HDSD00.01.115 dataelementName="肝大标志" value="@GANDABZ@"/>
+<HDSD00.01.116 dataelementName="肝大描述" value="@GANDAMS@"/>
+<HDSD00.01.117 dataelementName="脾大标志" value="@PIDABZ@"/>
+<HDSD00.01.118 dataelementName="脾大描述" value="@PIDAMS@"/>
+<HDSD00.01.119 dataelementName="腹部移动性浊音标志" value="@FUBUYDXZYBZ@"/>
+<HDSD00.01.120 dataelementName="腹部移动性浊音描述" value="@FUBUYDXZYMS@"/>
+
+
+<HDSD00.01.121 dataelementName="下肢水肿检查结果代码" code="@XIAZHISZJCJGDM@" displayName="@XIAZHISZJCJGMC@" codeSystem="2.16.156.10011.2.3.1.68" codeSystemName="下肢水肿检查结果代码表"/>
+<HDSD00.01.122 dataelementName="足背动脉搏动代码" code="@ZUBEIDMBDLBDM@" displayName="@ZUBEIDMBDLBMC@" codeSystem="2.16.156.10011.2.3.1.69" codeSystemName="足背动脉搏动代码表"/>
+<HDSD00.01.123 dataelementName="肛门指诊检查结果类别代码" code="@GANGMENZZJCJGLBDM@" displayName="@GANGMENZZJCJGLBMC@" codeSystem="2.16.156.10011.2.3.1.67" codeSystemName="肛门指诊检查结果代码表"/>
+<HDSD00.01.124 dataelementName="乳腺检查结果代码" code="@RUXIANJCJGDM@" displayName="@RUXIANJCJGMC@" codeSystem="2.16.156.10011.2.3.1.66" codeSystemName="乳腺检查结果代码表"/>
+<HDSD00.01.125 dataelementName="外阴异常标志" value="@WAIYINYCBZ@"/>
+<HDSD00.01.126 dataelementName="外阴异常描述" value="@WAIYINYCMS@"/>
+<HDSD00.01.127 dataelementName="阴道异常标志" value="@YINDAOYCBZ@"/>
+<HDSD00.01.128 dataelementName="阴道异常描述" value="@YINDAOYCMS@"/>
+<HDSD00.01.129 dataelementName="宫颈异常标志" value="@GONGJINGYCBZ@"/>
+<HDSD00.01.130 dataelementName="宫颈异常描述" value="@GONGJINGYCMS@"/>
+
+
+<HDSD00.01.131 dataelementName="宫体异常标志" value="@GONGTIYCBZ@"/>
+<HDSD00.01.132 dataelementName="宫体异常描述" value="@GONGTIYCMS@"/>
+<HDSD00.01.133 dataelementName="附件异常标志" value="@FUJIANYCBZ@"/>
+<HDSD00.01.134 dataelementName="附件异常描述" value="@FUJIANYCMS@"/>
+<HDSD00.01.135 dataelementName="其他检查结果" value="@QITAFZJC@"/>
+<HDSD00.01.136 dataelementName="血红蛋白值(g/L)" value="@XUEHONGDBZ@"/>
+<HDSD00.01.137 dataelementName="白细胞计数值(G/L)" value="@BAIXIBJSZ@"/>
+<HDSD00.01.138 dataelementName="血小板计数值(G/L)" value="@XUEXIAOBJSZ@"/>
+<HDSD00.01.139 dataelementName="尿蛋白定性检测结果代码" code="@NIAODANBDXJCJGDM@" displayName="@NIAODANBDXJCJGMC@" codeSystem="2.16.156.10011.2.3.1.95" codeSystemName="尿实验室定性检测结果代码表"/>
+<HDSD00.01.140 dataelementName="尿蛋白定量检测值(mg/24h)" value=""/>
+
+
+<HDSD00.01.141 dataelementName="尿糖定性检测结果代码" code="@NIAODANBDXJCJGDM@" displayName="@NIAODANBDXJCJGMC@" codeSystem="2.16.156.10011.2.3.1.95" codeSystemName="尿实验室定性检测结果代码表"/>
+<HDSD00.01.142 dataelementName="尿糖定量检测值(mmol/L)" value="@NIAOTANGDXJCJGMC@"/>
+<HDSD00.01.143 dataelementName="尿胴体定性检测结果代码" code="@NIAOTONGTDXJCJGDM@" displayName="@NIAOTONGTDXJCJGMC@" codeSystem="2.16.156.10011.2.3.1.95" codeSystemName="尿实验室定性检测结果代码表"/>
+<HDSD00.01.144 dataelementName="尿潜血检测结果代码" code="@NIAOQIANXJJGDM@" displayName="@NIAOQIANXJJGMC@" codeSystem="2.16.156.10011.2.3.1.95" codeSystemName="尿实验室定性检测结果代码表"/>
+<HDSD00.01.145 dataelementName="尿比重" value=""/>
+<HDSD00.01.146 dataelementName="尿液酸碱度" value=""/>
+<HDSD00.01.147 dataelementName="尿微量白蛋白(mg/dL)" value="@NIAOWEILBDB@"/>
+<HDSD00.01.148 dataelementName="空腹血糖值(mmol/L)" value="@KONGFUXTZ@"/>
+<HDSD00.01.149 dataelementName="餐后2小时血糖值(mmol/L)" value=""/>
+<HDSD00.01.150 dataelementName="心电图异常标志" value="@XINDIANTYCBZ@"/>
+
+
+<HDSD00.01.151 dataelementName="心电图异常描述" value="@XINDIANTYCMS@"/>
+<HDSD00.01.152 dataelementName="大便潜血标志" value="@DABIANQXBZ@"/>
+<HDSD00.01.153 dataelementName="糖化血红蛋白值(%)" value="@TANGHUAXHDBZ@"/>
+<HDSD00.01.154 dataelementName="乙型肝炎病毒表面抗原检测结果代码" code="@YIGANGBDBMKYJCJGDM@" displayName="@YIGANGBDBMKYJCJGMC@" codeSystem="2.16.156.10011.2.3.2.10" codeSystemName="乙肝病毒定性检测结果分类代码表"/>
+<HDSD00.01.155 dataelementName="乙型肝炎病毒e抗原检测结果代码" code="@YIGANGBDEKYJCJGDM@" displayName="@YIGANGBDEKYJCJGMC@" codeSystem="2.16.156.10011.2.3.2.10" codeSystemName="乙肝病毒定性检测结果分类代码表"/>
+<HDSD00.01.156 dataelementName="乙型肝炎病毒表面抗体检测结果代码" code="@YIGANGBDBMKTJCJGDM@" displayName="@YIGANGBDBMKTJCJGMC@" codeSystem="2.16.156.10011.2.3.2.10" codeSystemName="乙肝病毒定性检测结果分类代码表"/>
+<HDSD00.01.157 dataelementName="乙型肝炎病毒e抗体检测结果代码" code="@YIGANGBDEKTJCJGDM@" displayName="@YIGANGBDEKTJCJGMC@" codeSystem="2.16.156.10011.2.3.2.10" codeSystemName="乙肝病毒定性检测结果分类代码表"/>
+<HDSD00.01.158 dataelementName="乙型肝炎病毒核心抗体检测结果代码" code="@YIGANGBDHXKTJCJGDM@" displayName="@YIGANGBDHXKTJCJGMC@" codeSystem="2.16.156.10011.2.3.2.10" codeSystemName="乙肝病毒定性检测结果分类代码表"/>
+<HDSD00.01.159 dataelementName="血清谷丙转氨酶值(U/L)" value="@XUEQINGGBZAMZ@"/>
+<HDSD00.01.160 dataelementName="血清谷草转氨酶值(U/L)" value="@XUEQINGGCZAMZ@"/>
+
+
+<HDSD00.01.161 dataelementName="血蛋白浓度(g/L)" value="@BAIDANBND@"/>
+<HDSD00.01.162 dataelementName="总胆红素值(μmol/L)" value="@ZONGDANHSZ@"/>
+<HDSD00.01.163 dataelementName="结合胆红素值(μmol/L)" value="@JIEHEDHSZ@"/>
+<HDSD00.01.164 dataelementName="血肌酐值(μmol/L)" value="@XUEQINGJGZ@"/>
+<HDSD00.01.165 dataelementName="血尿素氨检测值(mmol/L)" value="@XUENIAOSDJCZ@"/>
+<HDSD00.01.166 dataelementName="血钾浓度(mmol/L)" value="@XUEJIAND@"/>
+<HDSD00.01.167 dataelementName="血钠浓度(mmol/L)" value="@XUENAND@"/>
+<HDSD00.01.168 dataelementName="总胆固醇值(mmol/L)" value="@ZONGDANGCZ@"/>
+<HDSD00.01.169 dataelementName="甘油三酯值(mmol/L)" value="@GANYOUSZZ@"/>
+<HDSD00.01.170 dataelementName="血清低密度脂蛋白胆固醇检测值(mmol/L)" value="@XUEQINGDMDZDBDGCJCZ@"/>
+<HDSD00.01.171 dataelementName="血清高密度脂蛋白胆固醇检测值(mmol/L)" value="@XUEQINGGMDZDBDGCJCZ@"/>
+<HDSD00.01.172 dataelementName="癌胚抗原浓度值(μg/L)" value=""/>
+
+<HDSD00.01.173 dataelementName="胸部X线检查异常标志" value="@XIONGBUXXJCYCBZ@"/>
+<HDSD00.01.174 dataelementName="胸部X线检查异常描述" value="@XIONGBUXXJCYCMS@"/>
+<HDSD00.01.175 dataelementName="B超检查异常标志" value="@BCHAOJCYCBZ@"/>
+<HDSD00.01.176 dataelementName="B超检查异常描述" value="@BCHAOJCYCMS@"/>
+<HDSD00.01.177 dataelementName="宫颈涂片异常标志" value="@GONGJINGTPYCBZ@"/>
+<HDSD00.01.178 dataelementName="宫颈涂片异常描述" value="@GONGJINGTPYCMS@"/>
+<HDSD00.01.179 dataelementName="其他辅助检查" value="@QITAFZJC@"/>
+<HDSD00.01.180 dataelementName="中医体质分类代码" code="@TIZHILB@" displayName="@TIZHIMC@" codeSystem="2.16.156.10011.2.3.1.104" codeSystemName="中医体质分类代码表"/>
+
+
+<HDSD00.01.181 dataelementName="中医体质分类判定结果代码" code="" displayName="" codeSystem="2.16.156.10011.2.3.2.11" codeSystemName="中医体质分类判定结果代码表"/>
+<HDSD00.01.182 dataelementName="现在主要健康问题代码" code="" displayName="" codeSystem="2.16.156.10011.2.3.3.11" codeSystemName="ICD-10"/>
+<HDSD00.01.183 dataelementName="入院日期" value="@RUYUANRQ@"/>
+<HDSD00.01.184 dataelementName="入院原因" value="@ZHUYUANYY@"/>
+<HDSD00.01.185 dataelementName="出院日期" value="@CHUYUANRQ@"/>
+<HDSD00.01.186 dataelementName="曾住院医疗机构名称" value="@ZHUYUANZLJGMC@"/>
+<HDSD00.01.187 dataelementName="曾住院病案号" value="@ZHUYUANBAH@"/>
+<HDSD00.01.188 dataelementName="曾建立家庭病床医疗机构名称" value="@JIANCHUANGYLJGMC@"/>
+<HDSD00.01.189 dataelementName="曾建立家庭病床病案号" value="@JIATINGBCBAH@"/>
+<HDSD00.01.190 dataelementName="家庭病床建床日期" value="@JIATINGBCJLRQ@"/>
+
+
+<HDSD00.01.191 dataelementName="家庭病床建床原因" value="@JIATINGBCJLYY@"/>
+<HDSD00.01.192 dataelementName="家庭病床撤床日期" value="@JIATINGBCCXRQ@"/>
+<HDSD00.01.193 dataelementName="中药类别代码" code="" displayName="" codeSystem="2.16.156.10011.2.3.1.157" codeSystemName="中药使用类别代码表"/>
+<HDSD00.01.194 dataelementName="药物名称" value="@YAOWUMC@"/>
+<HDSD00.01.195 dataelementName="药物使用频率" value="@YAOWUYF@"/>
+<HDSD00.01.196 dataelementName="药物使用剂量单位" value="@YONGLIANGDW@"/>
+<HDSD00.01.197 dataelementName="药物使用次剂量" value="@DANCIYL@"/>
+<HDSD00.01.198 dataelementName="药物使用总剂量" value="@YONGYAOZJL@"/>
+<HDSD00.01.199 dataelementName="药物使用途径代码" code="@GEYAOTJDM@" displayName="@GEYAOTJMC@" codeSystem="2.16.156.10011.2.3.1.158" codeSystemName="用药途径代码表"/>
+<HDSD00.01.200 dataelementName="服药依从性代码" code="@FUYAOYCXDM@" displayName="@FUYAOYCXMC@" codeSystem="2.16.156.10011.2.3.2.12" codeSystemName="服药依从性代码表"/>
+
+
+<HDSD00.01.201 dataelementName="疫苗名称代码" code="@YIMIAODM@" displayName="@YIMIAOMC@" codeSystem="2.16.156.10011.2.3.1.210" codeSystemName="疫苗名称代码表"/>
+<HDSD00.01.202 dataelementName="疫苗批号" value="@YIMIAOPH@"/>
+<HDSD00.01.203 dataelementName="疫苗接种日期" value="@YIMIAOJZRQ@"/>
+<HDSD00.01.204 dataelementName="疫苗接种单位名称" value="@JIEZHONGJGMC@"/>
+<HDSD00.01.205 dataelementName="健康评价异常标志" value="@JIANKANGPJBZ@"/>
+<HDSD00.01.206 dataelementName="健康评价异常描述" value="@YICHANGQKMS@"/>
+<HDSD00.01.207 dataelementName="健康指导代码" code="@JIANKANGZDDM@" displayName="@JIANKANGZDMC@" codeSystem="2.16.156.10011.2.3.2.13" codeSystemName="健康指导代码表"/>
+<HDSD00.01.208 dataelementName="危险因素控制建议代码" code="@WEIXIANYSDM@" displayName="@WEIXIANYSMC@" codeSystem="2.16.156.10011.2.3.1.194" codeSystemName="危险因素控制建议代码表"/>
+<HDSD00.01.209 dataelementName="目标体重(kg)" value="@MUBIAOTZ@"/>
+<HDSD00.01.210 dataelementName="建议接种疫苗名称代码" code="@JIANYIJZYMDM@" displayName="@JIANYIJZYMMC@" codeSystem="2.16.156.10011.2.3.1.210" codeSystemName="疫苗名称代码表" />
+
+
+</BasicDataset>

@@ -47,22 +47,22 @@ public interface JiuZhenRemoteService {
      * 获取文档生成健康档案列表
      *
      */
-    @GetMapping("/api/v1.0/WenDangSC/GetWenDangSCJKDAList")
-    MsfResponse<List<WenDangSLDto>>  GetWenDangSCList(@SpringQueryMap String mpi);
+    @PostMapping("/api/v1.0/WenDangSC/GetWenDangSCJKDAList")
+    MsfResponse<List<WenDangSLDto>>  GetWenDangSCList(@RequestParam String mpi);
 
     /**
      * 根据病人信息获取所有的就诊记录
      *
      */
     @GetMapping("/api/v1.0/JiuZhen/getJiuZhenXXListByBRXX")
-    MsfResponse<List<WenDangSC_JZXXDto>>  getJiuZhenXXListByBRXX(@SpringQueryMap String mpi);
+    MsfResponse<List<WenDangSC_JZXXDto>>  getJiuZhenXXListByBRXX(@RequestParam String mpi);
 
     /**
      * 根据病人信息获取所有的就诊记录数量
      *
      */
     @GetMapping("/api/v1.0/JiuZhen/getJiuZhenXXCountByBRXX")
-    MsfResponse<Integer>  getJiuZhenXXCountByBRXX(@SpringQueryMap String mpi);
+    MsfResponse<Integer>  getJiuZhenXXCountByBRXX(@RequestParam String mpi);
     /**
      * 根据mpi获取所有关联mpi
      *

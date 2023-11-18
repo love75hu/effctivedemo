@@ -57,9 +57,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
-import reactor.util.function.Tuple2;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -377,7 +379,7 @@ public class FangAnServiceImpl implements FangAnService {
             return  result;
         }
 
-        //普通行转列 item1 就诊顺序，item2 视图别名，item3 视图顺序，item4 字段代码，item 5 字段名称，item6 字段长度
+        //普通行转列
         Stream<FangAnCXJGFZDto> binRenSXFZStream=bingRenFZList.stream().flatMap(br->br.getFangAnCXJZFZList().stream().flatMap(jz->jz.getFangAnCXSTFZList().stream().flatMap(st->st.getFangAnCXSTZJFZList().stream().flatMap(stzj->stzj.getFangAnCXZDFZList().stream().map(zd-> {
             FangAnCXJGFZDto binRenSXFZ=new FangAnCXJGFZDto();
             binRenSXFZ.setJiuZhenSXH(jz.getShunXuHao());
@@ -650,7 +652,11 @@ public class FangAnServiceImpl implements FangAnService {
         //根据合并方式分页获取关键字段
         String guanJianZD = "bingrenid";
         String guanJianZDSql = MessageFormat.format("select {0} from ({1}) tt group by {0} order by {0} limit {2} offset {3}", guanJianZD, bingLiCXJCSql, pageSize, pageSize * (pageIndex - 1));
-        List<String> bingRenIDList = jdbcTemplate.query(guanJianZDSql, BeanPropertyRowMapper.newInstance(String.class));
+        List<String> bingRenIDList = jdbcTemplate.query(guanJianZDSql, new RowMapper<String>() {
+            public String mapRow(ResultSet rs, int rowNum) throws SQLException {
+                return rs.getString(1);
+            }
+        });
         //获取病历查询结果
         String bingLiCXSql = MessageFormat.format(" {0} and a.bingrenid in (''{1}'') order by a.bingrenid", bingLiCXJCSql, CollUtil.join(bingRenIDList, "','"));
 

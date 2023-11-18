@@ -155,7 +155,7 @@ class ShiTuXXServiceImpl implements ShiTuXXService {
         shiTuXXModel.setZuZhiJGID(ShuJuZXConstant.TONGYONG_JGID);
         shiTuXXModel.setShunXuHao(dto.getShunXuHao()==null?shiTuXXRepository.getMaxShunXuHaoByFuLeiID(dto.getFuLeiID())+1:dto.getShunXuHao());
         //保存返回id
-        SC_CX_ShiTuXXModel save = shiTuXXRepository.insert(shiTuXXModel);
+        SC_CX_ShiTuXXModel save = shiTuXXRepository.save(shiTuXXModel);
         return save.getId();
     }
 

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
+
 @FeignClient(value = "mediinfo-lyra-dizuo", path = "mediinfo-lyra-dizuo")
 public interface DiZuoRemoteService {
     @GetMapping("/api/v1.0/ZuZhiXX/GetJiGouXXAllList")

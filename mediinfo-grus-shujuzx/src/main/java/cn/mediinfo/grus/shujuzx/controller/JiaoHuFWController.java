@@ -65,7 +65,6 @@ public class JiaoHuFWController {
                 actionDM = "OrganizationQuery";//医疗卫生机构信息查询
 
                 //#region 解析入参XML为实体，获取参数
-
                 //XML字符串转Document类型
                 Document document = strToDoc(Message);
                 //判断是否转成功
@@ -90,7 +89,7 @@ public class JiaoHuFWController {
                 //#endregion
 
                 //#region 数据信息转为XML格式出参
-                String luJing = "src/main/java/cn/mediinfo/grus/shujuzx/xmls/jhfw/医疗卫生机构信息查询-T01响应.xml";
+                String luJing = "src/main/java/cn/mediinfo/grus/shujuzx/xmls/jhfw/YiLiaoJGCX_T01_XY.xml";
                 List<String> XmlStrList = Files.readAllLines(Path.of(luJing));
                 StringBuilder xmlStr = new StringBuilder();
                 if (XmlStrList.get(0).contains("<?xml")) {
@@ -400,7 +399,7 @@ public class JiaoHuFWController {
     }
 
     /**
-     * 为空转义 
+     * 为空转义
      */
     public static String IsNull(String obj) {
         if (!StringUtils.hasText(obj)) {

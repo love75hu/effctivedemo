@@ -56,6 +56,7 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -516,7 +517,7 @@ public class FangAnServiceImpl implements FangAnService {
         if (Objects.equals(mergeType, 1)) {
             guanJianZD = "bingrenid";
         }
-        String guanJianZDSql = MessageFormat.format("select {0} from ({1}) tt group by {0} order by {0} limit {2} offset {3}", guanJianZD, fangAnCXLS.getChaXunSQL(), pageSize, pageSize * (pageIndex - 1));
+        String guanJianZDSql = MessageFormat.format("select {0} from ({1}) tt group by {0} order by {0} limit {2,number,#} offset {3,number,#}", guanJianZD, fangAnCXLS.getChaXunSQL(), pageSize, pageSize * (pageIndex - 1));
         log.info("关键字段查询语句：{}", guanJianZDSql);
         List<Map<String, Object>> guanJianZDList = jdbcTemplate.queryForList(guanJianZDSql);
         if (CollUtil.isEmpty(guanJianZDList)) {
@@ -688,7 +689,7 @@ public class FangAnServiceImpl implements FangAnService {
 
         //根据合并方式分页获取关键字段
         String guanJianZD = "bingrenid";
-        String guanJianZDSql = MessageFormat.format("select {0} from ({1}) tt group by {0} order by {0} limit {2} offset {3}", guanJianZD, bingLiCXJCSql, pageSize, pageSize * (pageIndex - 1));
+        String guanJianZDSql = MessageFormat.format("select {0} from ({1}) tt group by {0} order by {0} limit {2,number,#} offset {3,number,#}", guanJianZD, bingLiCXJCSql, pageSize, pageSize * (pageIndex - 1));
         List<String> bingRenIDList = jdbcTemplate.query(guanJianZDSql, new RowMapper<String>() {
             public String mapRow(ResultSet rs, int rowNum) throws SQLException {
                 return rs.getString(1);
@@ -706,6 +707,7 @@ public class FangAnServiceImpl implements FangAnService {
             item.setXingBieDM(String.valueOf(p.getKey().get(2)));
             item.setXingBieMC(String.valueOf(p.getKey().get(3)));
             item.setChuShengRQ((Date) p.getKey().get(4));
+            item.setNianLing(DateUtil.getAge(DateFormatUtils.format((Date) p.getKey().get(4),"yyyy-MM-dd")));
             item.setMzJiuZhenNum((Integer) p.getKey().get(5));
             item.setZhuYuanNum((Integer) p.getKey().get(6));
             List<JiuZhenXXDTO> jiuZhenXXList = p.getValue().stream().collect(Collectors.groupingBy(q -> ListUtil.toList(q.getJiuZhenYWID(), q.getJiuZhenYWLXDM(), q.getZuZhiJGID(), q.getZuZhiJGMC(), q.getJiuZhenRQ(), q.getJiuZhenKSID(), q.getJiuZhenKSMC()))).entrySet().stream().map(q -> {

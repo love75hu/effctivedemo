@@ -116,7 +116,7 @@ public class JieDianGLController {
     }
     @Operation(summary = "获取事件信息接口")
     @GetMapping("getShiJianXX")
-    public MsfResponse<List<ShiJianXXDto>> getShiJianXX(@NotEmpty(message = "id不能为空")  String shiTuID) throws WeiZhaoDSJException, YuanChengException { //BiHuanSTMXService
+    public MsfResponse<List<BiHuanSTSJXXDto>> getShiJianXX(@NotEmpty(message = "id不能为空")  String shiTuID) throws WeiZhaoDSJException, YuanChengException { //BiHuanSTMXService
         return MsfResponse.success(biHuanSTMXService.getShiJianXX(shiTuID));
     }
     @Operation(summary = "获取关系节点")

@@ -5,6 +5,7 @@ import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
 import cn.mediinfo.cyan.msf.core.response.MsfResponse;
 import cn.mediinfo.cyan.msf.core.util.AssertUtil;
 import cn.mediinfo.cyan.msf.core.util.BeanUtil;
+import cn.mediinfo.cyan.msf.core.util.StringUtil;
 import cn.mediinfo.grus.shujuzx.dto.JieDianGL.*;
 import cn.mediinfo.grus.shujuzx.dto.bihuangl.SC_BH_ShiTuMXDto;
 import cn.mediinfo.grus.shujuzx.dto.bihuangl.SC_BH_ShiTuXXDto;
@@ -158,9 +159,8 @@ public class BiHuanSTMXServiceImpl implements BiHuanSTMXService {
      * @return 字段集合
      */
     @Override
-    public List<ShiJianXXDto> getShiJianXX(String shiTuID) throws WeiZhaoDSJException, YuanChengException {
+    public List<BiHuanSTSJXXDto> getShiJianXX(String shiTuID) throws WeiZhaoDSJException, YuanChengException {
         List<KeXuanZDDto> shiTUZDXX = shiTuMXRepository.getShiTUZDXX(shiTuID);
-        SC_BH_ShiTuXXModel scBhShiTuXXModel1 = shiTuXXRepository.asQuerydsl().where(n -> n.shiTuID.eq(shiTuID)).fetchFirst();
 
         SC_BH_ShiTuXXDto scBhShiTuXXModel = shiTuXXRepository.asQuerydsl()
                 .where(n -> n.shiTuID.eq(shiTuID))
@@ -193,16 +193,22 @@ public class BiHuanSTMXServiceImpl implements BiHuanSTMXService {
         shiTuXXListDto.add(shiTuXXListDto1);
         List<FieldDTO> shiTuList = gongYongRemoteService.getShiTuZDXXList(shiTuXXListDto).getData("获取功能服务字段信息失败");
 
-//        List<FieldDTO> getShiTuLists = shiTuList.stream().filter(n -> n.getShuJuZLXDM().equals("3")).collect(Collectors.toList());
-//        shiTuXXListDto.forEach(n->{
-//            n.getShiTuMXDto().forEach(s->{
-//                getShiTuLists.stream().filter(n->n.getId().equals(s))
-//            });
-//        });
-//
-        //3为类型为字典的字段
+        List<BiHuanSTSJXXDto> biHuanSTSJXXDtoList=new ArrayList<>();
+        BiHuanSTSJXXDto biHuanSTSJXXDto=new BiHuanSTSJXXDto();
+        biHuanSTSJXXDto.setShiTuID(scBhShiTuXXModel.getShiTuID());
+        biHuanSTSJXXDto.setShiTuMC(scBhShiTuXXModel.getShiTuMC());
+        var shiTuZDXX=shiTuList.stream().filter(n->n.getShuJuZLXDM().equals("3")).collect(Collectors.toList());
+        List<ShiJianXXDto> shiJianXXDtoList=new ArrayList<>();
+        shiTuZDXX.forEach(n->{
+            ShiJianXXDto shiJianXXDto=new ShiJianXXDto();
+            BeanUtil.copyProperties(n,shiJianXXDto);
+            shiJianXXDto.setZiDuanMC(StringUtil.concat(scBhShiTuXXModel.getShuJuLYMC(),"/",n.getZiDuanMC()) );
+            shiJianXXDtoList.add(shiJianXXDto);
+        });
+        biHuanSTSJXXDto.setChildren(shiJianXXDtoList);
+        biHuanSTSJXXDtoList.add(biHuanSTSJXXDto);
 
-        return BeanUtil.copyListProperties(shiTuList.stream().filter(n->n.getShuJuZLXDM().equals("3")).collect(Collectors.toList()), ShiJianXXDto::new);
+        return biHuanSTSJXXDtoList;
     }
 
     @Override

@@ -30,10 +30,6 @@ public class SC_RZ_FangWenGXWDModel extends StringMTEntity {
    private String fangWenXTID;
    @Column(columnDefinition = "访问系统名称")
    private String fangWenXTMC;
-   @Column(columnDefinition = "查询模式代码【SC0002】")
-   private String chaXunMSDM;
-   @Column(columnDefinition = "查询模式名称")
-   private String chaXunMSMC;
    @Column(columnDefinition = "文档记录ID")
    private String wenDangJLID;
    @Column(columnDefinition = "文档ID")

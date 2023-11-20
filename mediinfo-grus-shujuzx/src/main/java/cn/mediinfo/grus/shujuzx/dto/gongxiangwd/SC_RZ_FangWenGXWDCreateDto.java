@@ -28,12 +28,6 @@ public class SC_RZ_FangWenGXWDCreateDto {
     @Schema(description = "访问系统名称")
     private String fangWenXTMC;
 
-    @Schema(description = "查询模式代码【SC0002】")
-    private String chaXunMSDM;
-
-    @Schema(description = "查询模式名称")
-    private String chaXunMSMC;
-
     @Schema(description = "文档记录ID")
     private String wenDangJLID;
 

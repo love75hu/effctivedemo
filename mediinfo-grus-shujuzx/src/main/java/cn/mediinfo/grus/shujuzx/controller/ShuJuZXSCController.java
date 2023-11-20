@@ -3,10 +3,7 @@ package cn.mediinfo.grus.shujuzx.controller;
 import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 import cn.mediinfo.cyan.msf.core.response.MsfResponse;
 import cn.mediinfo.cyan.msf.core.util.StringUtil;
-import cn.mediinfo.grus.shujuzx.dto.shujuzxscs.SC_SC_ShouCangJMXInDto;
-import cn.mediinfo.grus.shujuzx.dto.shujuzxscs.SC_SC_ShouCangJMXOutDto;
-import cn.mediinfo.grus.shujuzx.dto.shujuzxscs.SC_SC_ShouCangJXXInDto;
-import cn.mediinfo.grus.shujuzx.dto.shujuzxscs.SC_SC_ShouCangJXXOutDto;
+import cn.mediinfo.grus.shujuzx.dto.shujuzxscs.*;
 import cn.mediinfo.grus.shujuzx.service.ShuJuZXWDSCService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,9 +20,9 @@ import java.util.List;
 @Validated
 public class ShuJuZXSCController {
     private final ShuJuZXWDSCService shuJuZXWDSCService;
-    public ShuJuZXSCController(ShuJuZXWDSCService shuJuZXWDSCService)
-    {
-        this.shuJuZXWDSCService=shuJuZXWDSCService;
+
+    public ShuJuZXSCController(ShuJuZXWDSCService shuJuZXWDSCService) {
+        this.shuJuZXWDSCService = shuJuZXWDSCService;
     }
 
     @Operation(summary = "新增收藏夹")
@@ -43,6 +40,12 @@ public class ShuJuZXSCController {
         return MsfResponse.success(shuJuZXWDSCService.addShouCangJMX(shouCangJMXInDto));
     }
 
+    @Operation(summary = "批量新增收藏夹明细")
+    @PostMapping("AddBatchShouCangJMX")
+    public MsfResponse<Integer> addBatchShouCangJMX(@RequestBody SC_SC_ShouCangJMXBatchInDto BatchDto) {
+        return MsfResponse.success(shuJuZXWDSCService.addBatchShouCangJMX(BatchDto));
+    }
+
     @Operation(summary = "更新收藏夹")
     @PutMapping("UpdateShouCangJia")
     public MsfResponse<Integer> updateShouCangJia(@RequestBody SC_SC_ShouCangJXXInDto shouCangJInDto) throws TongYongYWException {
@@ -51,7 +54,7 @@ public class ShuJuZXSCController {
 
     @Operation(summary = "移除某一条收藏夹明细")
     @DeleteMapping("YiChuShouCangJMX")
-    public MsfResponse<Integer> yiChuShouCangJMX(@RequestParam String id){
+    public MsfResponse<Integer> yiChuShouCangJMX(@RequestParam String id) {
         return MsfResponse.success(shuJuZXWDSCService.yiChuShouCangJMX(id));
     }
 
@@ -75,7 +78,7 @@ public class ShuJuZXSCController {
 
     @Operation(summary = "根据收藏夹id和其他查询条件获取收藏夹明细")
     @GetMapping("GetShouCangJMXList")
-    public MsfResponse<List<SC_SC_ShouCangJMXOutDto>> getShouCangJMXList(String likeQuery, @RequestParam String shouCangJID, @RequestParam(required = false,defaultValue = "1") Integer pageIndex,  @RequestParam(required = false,defaultValue = "15") Integer pageSize) {
+    public MsfResponse<List<SC_SC_ShouCangJMXOutDto>> getShouCangJMXList(String likeQuery, @RequestParam String shouCangJID, @RequestParam(required = false, defaultValue = "1") Integer pageIndex, @RequestParam(required = false, defaultValue = "15") Integer pageSize) {
         return MsfResponse.success(shuJuZXWDSCService.getShouCangJMXList(likeQuery, shouCangJID, pageIndex, pageSize));
     }
 }

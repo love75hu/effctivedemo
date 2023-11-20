@@ -1,10 +1,7 @@
 package cn.mediinfo.grus.shujuzx.service;
 
 import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
-import cn.mediinfo.grus.shujuzx.dto.shujuzxscs.SC_SC_ShouCangJMXInDto;
-import cn.mediinfo.grus.shujuzx.dto.shujuzxscs.SC_SC_ShouCangJMXOutDto;
-import cn.mediinfo.grus.shujuzx.dto.shujuzxscs.SC_SC_ShouCangJXXInDto;
-import cn.mediinfo.grus.shujuzx.dto.shujuzxscs.SC_SC_ShouCangJXXOutDto;
+import cn.mediinfo.grus.shujuzx.dto.shujuzxscs.*;
 
 import java.util.List;
 
@@ -24,6 +21,13 @@ public interface ShuJuZXWDSCService {
      * @return
      */
     Integer addShouCangJMX(SC_SC_ShouCangJMXInDto shouCangJMXInDto);
+
+    /**
+     * 批量新增收藏夹明细
+     * @param BatchDto
+     * @return
+     */
+    Integer addBatchShouCangJMX(SC_SC_ShouCangJMXBatchInDto BatchDto);
 
     /**
      * 更新收藏夹

@@ -14,10 +14,18 @@ public class QueryResultDTO {
 
     }
 
-    public QueryResultDTO(String ziDuanDM,String ziDuanMC,Object ziDuanZhi){
-        this.ziDuanDM=ziDuanDM;
-        this.ziDuanMC=ziDuanMC;
-        this.ziDuanZhi=ziDuanZhi;
+    public QueryResultDTO(String ziDuanDM,String ziDuanMC,Object ziDuanZhi) {
+        this.ziDuanDM = ziDuanDM;
+        this.ziDuanMC = ziDuanMC;
+        this.ziDuanZhi = ziDuanZhi;
+        this.type = 0;
+    }
+
+    public QueryResultDTO(String ziDuanDM,String ziDuanMC,Object ziDuanZhi,Integer type) {
+        this.ziDuanDM = ziDuanDM;
+        this.ziDuanMC = ziDuanMC;
+        this.ziDuanZhi = ziDuanZhi;
+        this.type = type;
     }
 
     @Schema(description = "字段代码")
@@ -29,6 +37,6 @@ public class QueryResultDTO {
     @Schema(description = "字段值")
     private Object ziDuanZhi;
 
-    /*@Schema(description = "0-展示字段，1-标签,2-链接")
-    private Integer type;*/
+    @Schema(description = "0-展示字段，1-标签,2-链接")
+    private Integer type;
 }

@@ -5,10 +5,7 @@ import cn.mediinfo.cyan.msf.core.util.MapUtils;
 import cn.mediinfo.cyan.msf.core.util.PageRequestUtil;
 import cn.mediinfo.cyan.msf.core.util.StringUtil;
 import cn.mediinfo.cyan.msf.orm.util.QueryDSLUtils;
-import cn.mediinfo.grus.shujuzx.dto.shujuzxscs.SC_SC_ShouCangJMXInDto;
-import cn.mediinfo.grus.shujuzx.dto.shujuzxscs.SC_SC_ShouCangJMXOutDto;
-import cn.mediinfo.grus.shujuzx.dto.shujuzxscs.SC_SC_ShouCangJXXInDto;
-import cn.mediinfo.grus.shujuzx.dto.shujuzxscs.SC_SC_ShouCangJXXOutDto;
+import cn.mediinfo.grus.shujuzx.dto.shujuzxscs.*;
 import cn.mediinfo.grus.shujuzx.model.*;
 import cn.mediinfo.grus.shujuzx.repository.SC_LC_BingRenYLSJRepository;
 import cn.mediinfo.grus.shujuzx.repository.SC_SC_ShouCangJMXRepository;
@@ -20,10 +17,7 @@ import jakarta.persistence.EntityManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -84,6 +78,56 @@ public class ShuJuZXWDSCServiceImpl implements ShuJuZXWDSCService {
         addModel.setShouCangRXM(lyraIdentityService.getUserName());
         addModel.setShouCangSJ(new Date());
         sc_sc_shouCangJMXRepository.save(addModel);
+        return 1;
+    }
+
+    /**
+     * 批量新增收藏夹明细
+     *
+     * @param BatchDto
+     * @return
+     */
+    @Override
+    public Integer addBatchShouCangJMX(SC_SC_ShouCangJMXBatchInDto BatchDto) {
+        //获取入参的病人list和收藏夹list
+        var bingRenList = BatchDto.getBingRenIDList();
+        var shouCangJList = BatchDto.getShouCangJIDList();
+
+        //获取已经有的收藏夹信息
+        var shouCangJXX = sc_sc_shouCangJMXRepository.findByBingRenIDIn(bingRenList.stream().map(SC_SC_ShouCangJMXBRDto::getBingRenID).toList());
+
+        //处理病人新的收藏夹信息  张三【A,B,C】李四【B,C,D】 收藏夹有：A,B,C,D,E 选择：C,D,E 最后保存完结果为：张三【A,B,C,D,E】李四【B,C,D,E】
+        //病人循环处理
+        //每个病人已经有的不新增，没有的新增
+        List<SC_SC_ShouCangJMXModel> addModelList = new ArrayList<>();
+        bingRenList.forEach(bingrenitem -> {
+            //该病人已经保存的收藏夹信息
+            var existShouCangJIDs = shouCangJXX
+                    .stream()
+                    .filter(x -> x.getBingRenID().equals(bingrenitem.getBingRenID()))
+                    .map(SC_SC_ShouCangJMXModel::getShouCangJID)
+                    .toList();
+
+            //跟入参做比较，去除已经有的收藏夹信息
+            var addShouCangJXX = shouCangJList.stream().filter(x -> !existShouCangJIDs.contains(x.getShouCangJID())).toList();
+
+            //新增新的收藏夹信息
+            addShouCangJXX.forEach(shoucangjitem -> {
+                var addModel = new SC_SC_ShouCangJMXModel();
+                addModel.setBingRenID(bingrenitem.getBingRenID());
+                addModel.setXingMing(bingrenitem.getXingMing());
+                addModel.setShouCangJID(shoucangjitem.getShouCangJID());
+                addModel.setShouCangJMC(shoucangjitem.getShouCangJMC());
+                addModel.setZuZhiJGID(lyraIdentityService.getJiGouID());
+                addModel.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
+                addModel.setShouCangRID(lyraIdentityService.getYongHuId());
+                addModel.setShouCangRXM(lyraIdentityService.getUserName());
+                addModel.setShouCangSJ(new Date());
+                addModelList.add(addModel);
+            });
+        });
+        
+        sc_sc_shouCangJMXRepository.saveAll(addModelList);
         return 1;
     }
 

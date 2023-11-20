@@ -82,10 +82,11 @@ public interface FangAnService {
      * @param mergeType
      * @param pageIndex
      * @param pageSize
+     * @param isShowBQ
      * @return
      * @throws TongYongYWException
      */
-    List<List<QueryResultDTO>> getFangAnJGList(String fangAnCXLSId, Integer mergeType, Integer pageIndex, Integer pageSize) throws TongYongYWException;
+    List<List<QueryResultDTO>> getFangAnJGList(String fangAnCXLSId, Integer mergeType, Integer pageIndex, Integer pageSize, boolean isShowBQ) throws TongYongYWException;
 
     /**
      * 获取方案患者信息

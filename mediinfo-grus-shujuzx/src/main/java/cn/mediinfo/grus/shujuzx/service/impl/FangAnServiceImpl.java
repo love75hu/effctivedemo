@@ -28,6 +28,7 @@ import cn.mediinfo.grus.shujuzx.dto.shitumx.FieldDTO;
 import cn.mediinfo.grus.shujuzx.dto.shitumx.SchemaTable;
 import cn.mediinfo.grus.shujuzx.dto.shitumx.ShuJuJMXZDDto;
 import cn.mediinfo.grus.shujuzx.dto.shitumx.TableDTO;
+import cn.mediinfo.grus.shujuzx.dto.shujuzxsts.SC_SC_ShouCangJMXListDto;
 import cn.mediinfo.grus.shujuzx.enums.FangAnOperator;
 import cn.mediinfo.grus.shujuzx.enums.NodeTypeEnum;
 import cn.mediinfo.grus.shujuzx.enums.ShuJuZLXDMEnum;
@@ -39,6 +40,7 @@ import cn.mediinfo.grus.shujuzx.remotedto.linchuang.JiuluTextRso;
 import cn.mediinfo.grus.shujuzx.remoteservice.GongYongRemoteService;
 import cn.mediinfo.grus.shujuzx.remoteservice.JiuZhenRemoteService;
 import cn.mediinfo.grus.shujuzx.remoteservice.LinChuangRemoteService;
+import cn.mediinfo.grus.shujuzx.repository.SC_SC_ShouCangJMXRepository;
 import cn.mediinfo.grus.shujuzx.request.fangan.FangAnSC;
 import cn.mediinfo.grus.shujuzx.request.fangan.FangAnXXSaveRequest;
 import cn.mediinfo.grus.shujuzx.request.fangan.FangAnXXUpdateRequest;
@@ -49,6 +51,7 @@ import cn.mediinfo.grus.shujuzx.sql.ast.SQLQueryObject;
 import cn.mediinfo.grus.shujuzx.sql.enums.SQLBinaryOperator;
 import cn.mediinfo.grus.shujuzx.util.FangAnTreeUtils;
 import cn.mediinfo.grus.shujuzx.util.SqlUtils;
+import cn.mediinfo.lyra.extension.service.LyraIdentityService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
@@ -98,6 +101,12 @@ public class FangAnServiceImpl implements FangAnService {
 
     @Autowired
     private LinChuangRemoteService linChuangRemoteService;
+
+    @Autowired
+    public SC_SC_ShouCangJMXRepository scScShouCangJMXRepository;
+
+    @Autowired
+    private LyraIdentityService lyraIdentityService;
 
     /**
      * 保存方案
@@ -290,10 +299,11 @@ public class FangAnServiceImpl implements FangAnService {
      * @param mergeType
      * @param pageIndex
      * @param pageSize
+     * @param isShowBQ
      * @return
      * @throws TongYongYWException
      */
-    public List<List<QueryResultDTO>> getFangAnJGList(String fangAnCXLSId, Integer mergeType, Integer pageIndex, Integer pageSize) throws TongYongYWException {
+    public List<List<QueryResultDTO>> getFangAnJGList(String fangAnCXLSId, Integer mergeType, Integer pageIndex, Integer pageSize, boolean isShowBQ) throws TongYongYWException {
         List<List<QueryResultDTO>> result = new ArrayList<>();
         List<FangAnSCDTO> fangAnSCList = new ArrayList<>();
         //根据查询结果按病人进行分组
@@ -303,6 +313,14 @@ public class FangAnServiceImpl implements FangAnService {
         }
         String bingRenIDXSMC = "MPI";
         boolean isHuanZheHB=Objects.equals(mergeType, 1);
+        //收藏夹明细
+        List<SC_SC_ShouCangJMXListDto> shouChangJMXList = new ArrayList<>();
+        //获取病人收藏夹列表
+        if(isShowBQ){
+            //获取病人ID列表
+            List<String> bingRenIDList=bingRenFZList.stream().map(FangAnCXBRFZDto::getBingRenID).distinct().toList();
+            shouChangJMXList= MapUtils.copyListProperties(scScShouCangJMXRepository.findByShouCangRIDAndBingRenIDIn(lyraIdentityService.getYongHuId(),bingRenIDList), SC_SC_ShouCangJMXListDto::new);
+        }
 
         //药品
         if (fangAnSCList.stream().anyMatch(p -> "4".equals(p.getZhiBiaoLXDM()))) {
@@ -376,7 +394,8 @@ public class FangAnServiceImpl implements FangAnService {
                     result.add(row1);
                 }
             }
-            return  result;
+            //添加收藏夹标签
+            return getShouCangJiaList(isShowBQ, result, shouChangJMXList);
         }
 
         //普通行转列
@@ -469,7 +488,8 @@ public class FangAnServiceImpl implements FangAnService {
                 result.add(row);
             }
         }
-        return result;
+        //添加收藏夹标签
+        return getShouCangJiaList(isShowBQ, result, shouChangJMXList);
     }
 
     /**
@@ -623,6 +643,23 @@ public class FangAnServiceImpl implements FangAnService {
             bingRenFZ.setJiuZhenCount(jiuZhenFZList.size());
             return bingRenFZ;
         }).toList();
+    }
+
+    /**
+     * 获取收藏夹列表
+     *
+     * @param isShowBQ
+     * @param result
+     * @param shouChangJMXList
+     * @return
+     */
+    private List<List<QueryResultDTO>> getShouCangJiaList(Boolean isShowBQ, List<List<QueryResultDTO>> result, List<SC_SC_ShouCangJMXListDto> shouChangJMXList) {
+        if(isShowBQ){
+            for (var jieGuoLB :result){
+                jieGuoLB.add(new QueryResultDTO("","标签",shouChangJMXList.stream().filter(x-> Objects.equals(x.getBingRenID(), jieGuoLB.stream().filter(p->"bingrenid".equals(p.getZiDuanDM())).map(QueryResultDTO::getZiDuanZhi).findFirst().orElse(null))).toList(),1));
+            }
+        }
+        return result;
     }
 
     /**

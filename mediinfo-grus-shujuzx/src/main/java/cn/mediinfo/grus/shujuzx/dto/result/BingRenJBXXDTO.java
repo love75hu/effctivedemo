@@ -29,6 +29,9 @@ public class BingRenJBXXDTO {
     @Schema(description = "出生日期")
     private Date chuShengRQ;
 
+    @Schema(description = "年龄")
+    private Integer nianLing;
+
     @Schema(description = "门诊就诊次数")
     private Integer mzJiuZhenNum;
 

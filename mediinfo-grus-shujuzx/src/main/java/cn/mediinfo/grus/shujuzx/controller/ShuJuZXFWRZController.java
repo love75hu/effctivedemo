@@ -56,42 +56,4 @@ public class ShuJuZXFWRZController {
         return MsfResponse.success(shuJuZXFWRZService.getFangWenRZList(fangWenKSRQ, fangWenJSRQ, bingRenID, xingMing, fangWenRXM, pageIndex, pageSize));
     }
 
-    /**
-     * 获取共享文档访问日志列表
-     */
-    @Operation(summary = "获取共享文档访问日志列表")
-    @GetMapping("GetFangWenGXWDList")
-    public MsfResponse<List<SC_RZ_FangWenGXWDto>> getFangWenGXWDList(
-            @RequestParam(required = false) Date fangWenRQKS,
-            @RequestParam(required = false) Date fangWenRQJS,
-            @RequestParam(required = false) String likeQuery,
-            @RequestParam(required = false) String fangWenR,
-            @RequestParam(required = false, defaultValue = "1") Integer PageIndex,
-            @RequestParam(required = false, defaultValue = "10") Integer PageSize) {
-        return MsfResponse.success(shuJuZXFWRZService.getFangWenGXWDList(fangWenRQKS, fangWenRQJS, likeQuery, fangWenR, PageIndex, PageSize));
-    }
-
-    
-    /**
-     * 获取共享文档访问日志数量
-     */
-    @Operation(summary = "获取共享文档访问日志数量")
-    @GetMapping("GetFangWenGXWDCount")
-    public MsfResponse<Long> getFangWenGXWDCount(
-            @RequestParam(required = false) Date fangWenRQKS,
-            @RequestParam(required = false) Date fangWenRQJS,
-            @RequestParam(required = false) String likeQuery,
-            @RequestParam(required = false) String fangWenR) {
-        return MsfResponse.success(shuJuZXFWRZService.getFangWenGXWDCount(fangWenRQKS, fangWenRQJS, likeQuery, fangWenR));
-    }
-
-    /**
-     * 添加共享文档访问日志
-     */
-    @Operation(summary = "添加共享文档访问日志")
-    @PostMapping("AddFangWenGXWD")
-    public MsfResponse<String> addFangWenGXWD(@RequestBody SC_RZ_FangWenGXWDCreateDto fangWenGXWCreateDto) {
-        return MsfResponse.success(shuJuZXFWRZService.addFangWenGXWD(fangWenGXWCreateDto));
-    }
-
 }

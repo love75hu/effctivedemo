@@ -90,57 +90,5 @@ public class ShuJuZXFWRZServiceImpl implements ShuJuZXFWRZService {
         return CollectionUtils.isEmpty(list) ? Collections.emptyList() : MapUtils.copyListProperties(list, ShuJuZXFWRZDto::new);
     }
 
-    /**
-     * 获取共享文档访问日志列表
-     */
-    @Override
-    public List<SC_RZ_FangWenGXWDto> getFangWenGXWDList(Date fangWenRQKS, Date fangWenRQJS, String likeQuery, String fangWenR, Integer pageIndex, Integer pageSize) {
-        QSC_RZ_FangWenGXWDModel sjModel = QSC_RZ_FangWenGXWDModel.sC_RZ_FangWenGXWDModel;
-        List<SC_RZ_FangWenGXWDModel> list = new JPAQueryFactory(sc_rz_fangWenGXWDRepository.getEntityManager())
-                .select(sjModel)
-                .from(sjModel)
-                .where(QueryDSLUtils.whereIf(Objects.nonNull(fangWenRQKS), () -> sjModel.fangWenSJ.goe(fangWenRQKS)))
-                .where(QueryDSLUtils.whereIf(Objects.nonNull(fangWenRQJS), () -> sjModel.fangWenSJ.loe(fangWenRQJS)))
-                .where(QueryDSLUtils.whereIf(StringUtils.hasText(likeQuery), () -> sjModel.bingRenID.contains(likeQuery).or(sjModel.xingMing.contains(likeQuery))))
-                .where(QueryDSLUtils.whereIf(StringUtils.hasText(fangWenR), () -> sjModel.fangWenRXM.contains(fangWenR)))
-                .orderBy(sjModel.fangWenSJ.desc())
-                .offset(PageRequestUtil.of(pageIndex, pageSize).getOffset()).limit(pageSize)
-                .fetch();
-        return CollectionUtils.isEmpty(list) ? Collections.emptyList() : MapUtils.copyListProperties(list, SC_RZ_FangWenGXWDto::new);
-    }
-
-    /**
-     * 获取共享文档访问日志数量
-     */
-    @Override
-    public long getFangWenGXWDCount(Date fangWenRQKS, Date fangWenRQJS, String likeQuery, String fangWenR) {
-        QSC_RZ_FangWenGXWDModel sjModel = QSC_RZ_FangWenGXWDModel.sC_RZ_FangWenGXWDModel;
-        var Count = new JPAQueryFactory(sc_rz_fangWenGXWDRepository.getEntityManager())
-                .select(sjModel)
-                .from(sjModel)
-                .where(QueryDSLUtils.whereIf(Objects.nonNull(fangWenRQKS), () -> sjModel.fangWenSJ.goe(fangWenRQKS)))
-                .where(QueryDSLUtils.whereIf(Objects.nonNull(fangWenRQJS), () -> sjModel.fangWenSJ.loe(fangWenRQJS)))
-                .where(QueryDSLUtils.whereIf(StringUtils.hasText(likeQuery), () -> sjModel.bingRenID.contains(likeQuery).or(sjModel.xingMing.contains(likeQuery))))
-                .where(QueryDSLUtils.whereIf(StringUtils.hasText(fangWenR), () -> sjModel.fangWenRXM.contains(fangWenR)))
-                .fetch().size();
-        return Count;
-    }
-
-    @Override
-    public String addFangWenGXWD(SC_RZ_FangWenGXWDCreateDto fangWenGXWDCreateDto) {
-        var zuZhiJGID = lyraIdentityService.getJiGouID();
-        var jiGouMC = lyraIdentityService.getJiGouMC();
-        var userID = lyraIdentityService.getYongHuId();
-        var userName = lyraIdentityService.getUserName();
-        var FangWenGXWD = new SC_RZ_FangWenGXWDModel();
-        FangWenGXWD.setZuZhiJGID(zuZhiJGID);
-        FangWenGXWD.setZuZhiJGMC(jiGouMC);
-        FangWenGXWD.setFangWenRID(userID);
-        FangWenGXWD.setFangWenRXM(userName);
-        FangWenGXWD.setFangWenSJ(new Date());
-        MapUtils.mergeProperties(fangWenGXWDCreateDto, FangWenGXWD, true);
-        sc_rz_fangWenGXWDRepository.save(FangWenGXWD);
-        return FangWenGXWD.getId();
-    }
 
 }

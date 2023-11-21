@@ -36,17 +36,4 @@ Boolean addFangWenRZ(AddFangWenRZDto addFangWenRZDto);
      * @return
      */
     List<ShuJuZXFWRZDto> getFangWenRZList(Date fangWenKSRQ, Date fangWenJSRQ, String bingRenID, String xingMing, String fangWenRXM, Integer pageIndex, Integer pageSize);
-
-    /**
-     * 获取共享文档访问日志列表
-     */
-    List<SC_RZ_FangWenGXWDto> getFangWenGXWDList(Date fangWenRQKS, Date fangWenRQJS, String likeQuery, String fangWenR, Integer pageIndex, Integer pageSize);
-
-    /**
-     * 获取共享文档访问日志数量
-     */
-    long getFangWenGXWDCount(Date fangWenRQKS, Date fangWenRQJS, String likeQuery, String fangWenR);
-
-    String addFangWenGXWD(SC_RZ_FangWenGXWDCreateDto fangWenGXWCreateDto);
-
 }

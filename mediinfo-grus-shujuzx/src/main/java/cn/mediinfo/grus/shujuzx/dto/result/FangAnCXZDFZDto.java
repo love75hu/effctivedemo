@@ -15,6 +15,9 @@ public class FangAnCXZDFZDto {
     @Schema(description = "字段代码")
     private String ziDuanDM;
 
+    @Schema(description = "字段原代码")
+    private String ziDuanYDM;
+
     @Schema(description = "字段名称")
     private String ziDuanMC;
 

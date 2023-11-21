@@ -14,15 +14,17 @@ public class QueryResultDTO {
 
     }
 
-    public QueryResultDTO(String ziDuanDM,String ziDuanMC,Object ziDuanZhi) {
+    public QueryResultDTO(String ziDuanDM,String ziDuanYDM,String ziDuanMC,Object ziDuanZhi) {
         this.ziDuanDM = ziDuanDM;
+        this.ziDuanYDM = ziDuanYDM;
         this.ziDuanMC = ziDuanMC;
         this.ziDuanZhi = ziDuanZhi;
         this.type = 0;
     }
 
-    public QueryResultDTO(String ziDuanDM,String ziDuanMC,Object ziDuanZhi,Integer type) {
+    public QueryResultDTO(String ziDuanDM,String ziDuanYDM,String ziDuanMC,Object ziDuanZhi,Integer type) {
         this.ziDuanDM = ziDuanDM;
+        this.ziDuanYDM = ziDuanYDM;
         this.ziDuanMC = ziDuanMC;
         this.ziDuanZhi = ziDuanZhi;
         this.type = type;
@@ -30,6 +32,9 @@ public class QueryResultDTO {
 
     @Schema(description = "字段代码")
     private String ziDuanDM;
+
+    @Schema(description = "字段原代码")
+    private String ziDuanYDM;
 
     @Schema(description = "字段名称")
     private String ziDuanMC;

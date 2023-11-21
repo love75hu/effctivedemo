@@ -337,7 +337,7 @@ public class FangAnServiceImpl implements FangAnService {
                     List<QueryResultDTO> row1 = new ArrayList<>();
                     //加入基本信息空值行
                     row0.add(new QueryResultDTO());
-                    row1.add(new QueryResultDTO("bingrenid", bingRenIDXSMC, bingRenFZ.getBingRenID()));
+                    row1.add(new QueryResultDTO("bingrenid","bingrenid", bingRenIDXSMC, bingRenFZ.getBingRenID()));
                     if(CollUtil.isNotEmpty(bingRenFZ.getBingRenJBXX())) {
                         row0.addAll(new ArrayList<>(Collections.nCopies(bingRenFZ.getBingRenJBXX().size(), new QueryResultDTO())));
                         row1.addAll(bingRenFZ.getBingRenJBXX());
@@ -349,8 +349,8 @@ public class FangAnServiceImpl implements FangAnService {
                             for(FangAnCXSTZJFZDto shiTuZJFZ:shiTuFZ.getFangAnCXSTZJFZList()){
                                 for(FangAnCXZDFZDto ziDuanFZ:shiTuZJFZ.getFangAnCXZDFZList()){
                                     for(Object zhi:ziDuanFZ.getZiDuanZhiList()){
-                                        row0.add(new QueryResultDTO("","",ziDuanFZ.getZiDuanMC()));
-                                        row1.add(new QueryResultDTO("","",ziDuanFZ));
+                                        row0.add(new QueryResultDTO("","","",ziDuanFZ.getZiDuanMC()));
+                                        row1.add(new QueryResultDTO("","","",ziDuanFZ));
                                     }
                                     ziDuanCount=ziDuanCount+ziDuanFZ.getZiDuanZhiCount();
                                 }
@@ -373,7 +373,7 @@ public class FangAnServiceImpl implements FangAnService {
                     List<QueryResultDTO> row1 = new ArrayList<>();
                     //加入基本信息空值行
                     row0.add(new QueryResultDTO());
-                    row1.add(new QueryResultDTO("bingrenid", bingRenIDXSMC, bingRenFZ.getBingRenID()));
+                    row1.add(new QueryResultDTO("bingrenid", "bingrenid", bingRenIDXSMC, bingRenFZ.getBingRenID()));
                     if(CollUtil.isNotEmpty(bingRenFZ.getBingRenJBXX())) {
                         row0.addAll(new ArrayList<>(Collections.nCopies(bingRenFZ.getBingRenJBXX().size(), new QueryResultDTO())));
                         row1.addAll(bingRenFZ.getBingRenJBXX());
@@ -384,8 +384,8 @@ public class FangAnServiceImpl implements FangAnService {
                         for(FangAnCXSTZJFZDto shiTuZJFZ:shiTuFZ.getFangAnCXSTZJFZList()){
                             for(FangAnCXZDFZDto ziDuanFZ:shiTuZJFZ.getFangAnCXZDFZList()){
                                 for(Object zhi:ziDuanFZ.getZiDuanZhiList()){
-                                    row0.add(new QueryResultDTO("","",ziDuanFZ.getZiDuanMC()));
-                                    row1.add(new QueryResultDTO("","",ziDuanFZ));
+                                    row0.add(new QueryResultDTO("","","",ziDuanFZ.getZiDuanMC()));
+                                    row1.add(new QueryResultDTO("","","",ziDuanFZ));
                                 }
                                 ziDuanCount=ziDuanCount+ziDuanFZ.getZiDuanZhiCount();
                             }
@@ -407,6 +407,7 @@ public class FangAnServiceImpl implements FangAnService {
             binRenSXFZ.setShiTuSXH(st.getShiTuSXH());
             binRenSXFZ.setShiTuZJSXH(stzj.getShiTuZJSXH());
             binRenSXFZ.setZiDuanDM(zd.getZiDuanDM());
+            binRenSXFZ.setZiDuanYDM(zd.getZiDuanYDM());
             binRenSXFZ.setZiDuanMC(zd.getZiDuanMC());
             binRenSXFZ.setZiDuanSXH(zd.getZiDuanSXH());
             binRenSXFZ.setZiDuanCD(zd.getZiDuanZhiCount());
@@ -416,7 +417,7 @@ public class FangAnServiceImpl implements FangAnService {
         //按患者合并
         if (isHuanZheHB) {
             //按就诊次数视图次数获取每个字段次数分组
-            bingRenSXFZList=binRenSXFZStream.collect(Collectors.groupingBy(br->ListUtil.toList(br.getJiuZhenSXH(),br.getShiTuBM(),br.getShiTuSXH(),br.getShiTuZJSXH(),br.getZiDuanDM(),br.getZiDuanMC(),br.getZiDuanSXH()))).entrySet().stream().map(br-> {
+            bingRenSXFZList=binRenSXFZStream.collect(Collectors.groupingBy(br->ListUtil.toList(br.getJiuZhenSXH(),br.getShiTuBM(),br.getShiTuSXH(),br.getShiTuZJSXH(),br.getZiDuanDM(),br.getZiDuanYDM(),br.getZiDuanMC(),br.getZiDuanSXH()))).entrySet().stream().map(br-> {
                 Integer ziDuanMaxCount = br.getValue().stream().map(FangAnCXJGFZDto::getZiDuanCD).reduce(0, Integer::max);
                 FangAnCXJGFZDto binRenSXFZ=new FangAnCXJGFZDto();
                 binRenSXFZ.setJiuZhenSXH((Integer) br.getKey().get(0));
@@ -424,15 +425,16 @@ public class FangAnServiceImpl implements FangAnService {
                 binRenSXFZ.setShiTuSXH((Integer) br.getKey().get(2));
                 binRenSXFZ.setShiTuZJSXH((Integer) br.getKey().get(3));
                 binRenSXFZ.setZiDuanDM(String.valueOf(br.getKey().get(4)));
-                binRenSXFZ.setZiDuanMC(String.valueOf(br.getKey().get(5)));
-                binRenSXFZ.setZiDuanSXH((Integer) br.getKey().get(6));
+                binRenSXFZ.setZiDuanYDM(String.valueOf(br.getKey().get(5)));
+                binRenSXFZ.setZiDuanMC(String.valueOf(br.getKey().get(6)));
+                binRenSXFZ.setZiDuanSXH((Integer) br.getKey().get(7));
                 binRenSXFZ.setZiDuanCD(ziDuanMaxCount);
                 return binRenSXFZ;
             }).sorted(Comparator.comparing(FangAnCXJGFZDto::getJiuZhenSXH).thenComparing(FangAnCXJGFZDto::getShiTuSXH).thenComparing(FangAnCXJGFZDto::getShiTuZJSXH).thenComparing(FangAnCXJGFZDto::getZiDuanSXH)).toList();
         }
         else{
             //按视图次数获取每个字段次数分组
-            bingRenSXFZList=binRenSXFZStream.collect(Collectors.groupingBy(br->ListUtil.toList(br.getShiTuBM(),br.getShiTuSXH(),br.getShiTuZJSXH(),br.getZiDuanDM(),br.getZiDuanMC(),br.getZiDuanSXH()))).entrySet().stream().map(br-> {
+            bingRenSXFZList=binRenSXFZStream.collect(Collectors.groupingBy(br->ListUtil.toList(br.getShiTuBM(),br.getShiTuSXH(),br.getShiTuZJSXH(),br.getZiDuanDM(),br.getZiDuanYDM(),br.getZiDuanMC(),br.getZiDuanSXH()))).entrySet().stream().map(br-> {
                 Integer ziDuanMaxCount = br.getValue().stream().map(FangAnCXJGFZDto::getZiDuanCD).reduce(0, Integer::max);
                 FangAnCXJGFZDto binRenSXFZ=new FangAnCXJGFZDto();
                 binRenSXFZ.setJiuZhenSXH(1);
@@ -440,8 +442,9 @@ public class FangAnServiceImpl implements FangAnService {
                 binRenSXFZ.setShiTuSXH((Integer) br.getKey().get(1));
                 binRenSXFZ.setShiTuZJSXH((Integer) br.getKey().get(2));
                 binRenSXFZ.setZiDuanDM(String.valueOf(br.getKey().get(3)));
-                binRenSXFZ.setZiDuanMC(String.valueOf(br.getKey().get(4)));
-                binRenSXFZ.setZiDuanSXH((Integer) br.getKey().get(5));
+                binRenSXFZ.setZiDuanYDM(String.valueOf(br.getKey().get(4)));
+                binRenSXFZ.setZiDuanMC(String.valueOf(br.getKey().get(5)));
+                binRenSXFZ.setZiDuanSXH((Integer) br.getKey().get(6));
                 binRenSXFZ.setZiDuanCD(ziDuanMaxCount);
                 return binRenSXFZ;
             }).sorted(Comparator.comparing(FangAnCXJGFZDto::getShiTuSXH).thenComparing(FangAnCXJGFZDto::getShiTuZJSXH).thenComparing(FangAnCXJGFZDto::getZiDuanSXH)).toList();
@@ -451,7 +454,7 @@ public class FangAnServiceImpl implements FangAnService {
             if(isHuanZheHB){
                 List<QueryResultDTO> row = new ArrayList<>();
                 //加入基本信息空值行
-                row.add(new QueryResultDTO("bingrenid", bingRenIDXSMC, bingRenFZ.getBingRenID()));
+                row.add(new QueryResultDTO("bingrenid", "bingrenid", bingRenIDXSMC, bingRenFZ.getBingRenID()));
                 if(CollUtil.isNotEmpty(bingRenFZ.getBingRenJBXX())) {
                     row.addAll(new ArrayList<>(Collections.nCopies(bingRenFZ.getBingRenJBXX().size(), new QueryResultDTO())));
                 }
@@ -462,7 +465,7 @@ public class FangAnServiceImpl implements FangAnService {
                         if (jiuZhenFZ != null && jiuZhenFZ.getZiDuanZhiCount() >= bingRenSXFZ.getZiDuanCD()) {
                             zhi = jiuZhenFZ.getZiDuanZhiList().get(zdTuple);
                         }
-                        row.add(new QueryResultDTO(bingRenSXFZ.getZiDuanDM(), bingRenSXFZ.getZiDuanMC(), zhi));
+                        row.add(new QueryResultDTO(bingRenSXFZ.getZiDuanDM(),bingRenSXFZ.getZiDuanYDM(), bingRenSXFZ.getZiDuanMC(), zhi));
                     }
                 }
                 result.add(row);
@@ -472,7 +475,7 @@ public class FangAnServiceImpl implements FangAnService {
             for (FangAnCXJZFZDto jiuZhenFZ : bingRenFZ.getFangAnCXJZFZList()) {
                 List<QueryResultDTO> row = new ArrayList<>();
                 //加入基本信息
-                row.add(new QueryResultDTO("bingrenid", bingRenIDXSMC, bingRenFZ.getBingRenID()));
+                row.add(new QueryResultDTO("bingrenid", "bingrenid", bingRenIDXSMC, bingRenFZ.getBingRenID()));
                 if(CollUtil.isNotEmpty(bingRenFZ.getBingRenJBXX())) {
                     row.addAll(new ArrayList<>(Collections.nCopies(bingRenFZ.getBingRenJBXX().size(), new QueryResultDTO())));
                 }
@@ -483,7 +486,7 @@ public class FangAnServiceImpl implements FangAnService {
                         if (shiTuZDFZ != null && shiTuZDFZ.getZiDuanZhiCount() >= bingRenSXFZ.getZiDuanCD()) {
                             zhi = shiTuZDFZ.getZiDuanZhiList().get(zdTuple);
                         }
-                        row.add(new QueryResultDTO(bingRenSXFZ.getZiDuanDM(), bingRenSXFZ.getZiDuanMC(), zhi));
+                        row.add(new QueryResultDTO(bingRenSXFZ.getZiDuanDM(), bingRenSXFZ.getZiDuanYDM(), bingRenSXFZ.getZiDuanMC(), zhi));
                     }
                 }
                 result.add(row);
@@ -559,12 +562,15 @@ public class FangAnServiceImpl implements FangAnService {
             switch (fangAnSC.getZhiBiaoLXDM()) {
                 case "2":
                     fangAnSC.setBiaoMing("jy_bg_baogaomx");
+                    fangAnSC.setZhiBiaoID("");
                     break;
                 case "3":
                     fangAnSC.setBiaoMing("jc_bg_baogaoxx");
+                    fangAnSC.setZhiBiaoID("");
                     break;
                 case "4":
                     fangAnSC.setBiaoMing(isZhuYuan ? "yz_zy_yizhuxx" : "yz_mz_yizhuxx");
+                    fangAnSC.setZhiBiaoID("");
                     break;
                 default:
                     break;
@@ -590,7 +596,7 @@ public class FangAnServiceImpl implements FangAnService {
             if (CollUtil.isNotEmpty(jiBenXXSCList)) {
                 List<QueryResultDTO> jiBenXXSCJGList = new ArrayList<>();
                 for (FangAnSCDTO jiBenXXSC : jiBenXXSCList) {
-                    QueryResultDTO jiBenXXSCJG = new QueryResultDTO(jiBenXXSC.getId(), jiBenXXSC.getZhiBiaoMC(), p.getValue().get(0).get(jiBenXXSC.getId()));
+                    QueryResultDTO jiBenXXSCJG = new QueryResultDTO(jiBenXXSC.getId(),jiBenXXSC.getZhiBiaoID(), jiBenXXSC.getZhiBiaoMC(), p.getValue().get(0).get(jiBenXXSC.getId()));
                     jiBenXXSCJGList.add(jiBenXXSCJG);
                 }
                 bingRenFZ.setBingRenJBXX(jiBenXXSCJGList);
@@ -622,6 +628,7 @@ public class FangAnServiceImpl implements FangAnService {
                         for (FangAnSCDTO fangAnSC : qiTaSC.getValue()) {
                             FangAnCXZDFZDto ziDuanFZ = new FangAnCXZDFZDto();
                             ziDuanFZ.setZiDuanDM(fangAnSC.getId());
+                            ziDuanFZ.setZiDuanYDM(fangAnSC.getZhiBiaoID());
                             ziDuanFZ.setZiDuanMC(fangAnSC.getZhiBiaoMC());
                             List<Object> zhiList = st.getValue().stream().map(zd -> zd.get(fangAnSC.getId())).distinct().toList();
                             ziDuanFZ.setZiDuanZhiList(zhiList);
@@ -657,7 +664,7 @@ public class FangAnServiceImpl implements FangAnService {
     private List<List<QueryResultDTO>> getShouCangJiaList(Boolean isShowBQ, List<List<QueryResultDTO>> result, List<SC_SC_ShouCangJMXListDto> shouChangJMXList) {
         if(isShowBQ){
             for (var jieGuoLB :result){
-                jieGuoLB.add(new QueryResultDTO("","标签",shouChangJMXList.stream().filter(x-> Objects.equals(x.getBingRenID(), jieGuoLB.stream().filter(p->"bingrenid".equals(p.getZiDuanDM())).map(QueryResultDTO::getZiDuanZhi).findFirst().orElse(null))).toList(),1));
+                jieGuoLB.add(new QueryResultDTO("","","标签",shouChangJMXList.stream().filter(x-> Objects.equals(x.getBingRenID(), jieGuoLB.stream().filter(p->"bingrenid".equals(p.getZiDuanDM())).map(QueryResultDTO::getZiDuanZhi).findFirst().orElse(null))).toList(),1));
             }
         }
         return result;

@@ -94,4 +94,6 @@ mediinfo:
     provider: snowflake
     snowflake:
       workid: 1
+  zhparser:
+    state: 0  #全文检索状态 0关闭 1开启
 

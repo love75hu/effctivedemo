@@ -14,6 +14,7 @@ import cn.mediinfo.grus.shujuzx.common.fangan.condition.FangAnCondition;
 import cn.mediinfo.grus.shujuzx.common.fangan.condition.FangAnTreeNode;
 import cn.mediinfo.grus.shujuzx.common.fangan.condition.RelatedFangAnQueryCondition;
 import cn.mediinfo.grus.shujuzx.common.fangan.condition.RelatedFieldCondition;
+import cn.mediinfo.grus.shujuzx.config.QuanWenJSConfig;
 import cn.mediinfo.grus.shujuzx.dto.bihuanlcs.BingLiXQDto;
 import cn.mediinfo.grus.shujuzx.dto.bihuanlcs.BingLiXQXXDto;
 import cn.mediinfo.grus.shujuzx.dto.bihuanlcs.JiuluTextDto;
@@ -109,6 +110,9 @@ public class FangAnServiceImpl implements FangAnService {
     @Autowired
     private LyraIdentityService lyraIdentityService;
 
+    @Autowired
+    private QuanWenJSConfig quanWenJSConfig;
+
     /**
      * 保存方案
      *
@@ -193,7 +197,6 @@ public class FangAnServiceImpl implements FangAnService {
      */
     @Override
     public String getSql(FangAnTreeNode root, List<FangAnSC> fangAnSCList, String fangAnLXDM, String guanJianZi) throws YuanChengException {
-        //todo 校验条件
         if (StringUtils.isBlank(fangAnLXDM)) {
             return "";
         }
@@ -1058,9 +1061,13 @@ public class FangAnServiceImpl implements FangAnService {
         if (StringUtils.isBlank(guanJianZi)) {
             return CharSequenceUtil.replaceLast(builder.toString(), " AND ", " ");
         }
-
+        //关键字拼接
+        String guanJianZiPJ="ll0.jilunr like '%"+guanJianZi+"%'";
+        if(Objects.equals(1,quanWenJSConfig.getState())){
+            guanJianZiPJ="to_tsvector('zhcfg',ll0.jilunr) @@ to_tsquery('zhcfg','"+guanJianZi+"')";
+        }
         //关键字查询条件
-        builder.append(MessageFormat.format("exists(select 1 from (select bingrenid,binglijlid,jiuzhenid,''1'' as jiuzhenywlx,jilunr from {0} union select bingrenid,binglijlid,zhuyuanjzid as jiuzhenid,''3'' as jiuzhenywlx,jilunr from {1}) ll0 where ll0.jilunr like ''%{2}%'' and {3}.bingrenid=ll0.bingrenid)", formatBiaoMingByBXX("BL_MZ_BINGLIJLTEXT", jiChuBiaoXXList), formatBiaoMingByBXX("BL_WS_JILUTEXT", jiChuBiaoXXList), guanJianZi, jiChuTable.item1()));
+        builder.append(MessageFormat.format("exists(select 1 from (select bingrenid,binglijlid,jiuzhenid,''1'' as jiuzhenywlx,jilunr from {0} union select bingrenid,binglijlid,zhuyuanjzid as jiuzhenid,''3'' as jiuzhenywlx,jilunr from {1}) ll0 where {2} and {3}.bingrenid=ll0.bingrenid)", formatBiaoMingByBXX("BL_MZ_BINGLIJLTEXT", jiChuBiaoXXList), formatBiaoMingByBXX("BL_WS_JILUTEXT", jiChuBiaoXXList), guanJianZiPJ, jiChuTable.item1()));
         builder.append(" AND ");
 
         return CharSequenceUtil.replaceLast(builder.toString(), " AND ", " ");
@@ -1315,7 +1322,9 @@ public class FangAnServiceImpl implements FangAnService {
         //组合病历查询sql
         StringBuilder builder = new StringBuilder();
         builder.append(MessageFormat.format("select a.bingrenid,a.xingming,a.xingbiedm,a.xingbiemc,a.chushengrq,a.menzhencs,a.zhuyuancs,b.jiuzhenywid,b.jiuzhenywlxdm,b.zuzhijgid,b.zuzhijgmc,b.jiuzhenrq,b.jiuzhenksid,b.jiuzhenksmc,b.binglijlid from {0} a inner join (select c1.bingrenid,c1.id as binglijlid,c1.jiuzhenid as jiuzhenywid,''1'' as jiuzhenywlxdm,c1.zuzhijgid,c1.zuzhijgmc,c1.jilunr,c2.jiuzhenrq,c2.jiuzhenksid,c2.jiuzhenksmc from {1} c1 inner join {3} c2 on c1.zuzhijgid =c2.zuzhijgid and c1.jiuzhenid=c2.id union select c3.bingrenid,c3.id as binglijlid,c3.zhuyuanjzid as jiuzhenywid,''3'' as jiuzhenywlxdm,c3.zuzhijgid,c3.zuzhijgmc,c3.jilunr,c4.ruyuansj as jiuzhenrq,c4.dangqianksid as jiuzhenksid,c4.dangqianksmc as jiuzhenksmc from {2} c3 inner join {4} c4 on c3.zuzhijgid =c3.zuzhijgid and c3.zhuyuanjzid =c4.id) b on a.bingrenid=b.bingrenid where ", formatBiaoMingByBXX("SC_LC_BINGRENYLSJ", biaoXinXiList), formatBiaoMingByBXX("BL_MZ_BINGLIJLTEXT", biaoXinXiList), formatBiaoMingByBXX("BL_WS_JILUTEXT", biaoXinXiList), formatBiaoMingByBXX("JZ_MZ_JIUZHENXX", biaoXinXiList), formatBiaoMingByBXX("JZ_ZY_JIUZHENXX", biaoXinXiList)));
-        if (StringUtils.isBlank(chaXunSQL)) {
+        if(StringUtils.isBlank(chaXunSQL)&&Objects.equals(1,quanWenJSConfig.getState())){
+            builder.append(" to_tsvector('zhcfg',b.jilunr) @@ to_tsquery('zhcfg','").append(guanJianZi).append("')");
+        }else if (StringUtils.isBlank(chaXunSQL)) {
             builder.append(" b.jilunr like '%").append(guanJianZi).append("%'");
         } else {
             builder.append(MessageFormat.format(" exists(select 1 from ({0}) ll0 where ll0.bingrenid=a.bingrenid)", chaXunSQL));

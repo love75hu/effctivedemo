@@ -13,6 +13,7 @@ import cn.mediinfo.grus.shujuzx.dto.result.QueryResultDTO;
 import cn.mediinfo.grus.shujuzx.request.result.BingLiXXQRequest;
 import cn.mediinfo.grus.shujuzx.service.FangAnService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +35,9 @@ public class FangAnResultController {
     }
 
     @Operation(summary = "病历查询")
+    @Parameter(name = "fangAnCXLSId", description = "方案查询历史id")
+    @Parameter(name = "pageIndex", description = "页码")
+    @Parameter(name = "pageSize", description = "每页数量")
     @GetMapping("/bl/list")
     public MsfResponse<List<BingRenJBXXDTO>> listBLXX(@NotBlank(message="方案查询历史id不能为空") @RequestParam String fangAnCXLSId, @RequestParam(required = false,defaultValue = "1") Integer pageIndex,  @RequestParam(required = false,defaultValue = "10") Integer pageSize) throws TongYongYWException, YuanChengException {
         return MsfResponse.success(fangAnService.getBinRenJBXXList(fangAnCXLSId,pageIndex,pageSize));
@@ -41,6 +45,7 @@ public class FangAnResultController {
 
 
     @Operation(summary = "病历查询总数")
+    @Parameter(name = "fangAnCXLSId", description = "方案查询历史id")
     @GetMapping("/bl/count")
     public MsfResponse<Long> countBLXX(@NotBlank(message="方案查询历史id不能为空") @RequestParam String fangAnCXLSId) throws TongYongYWException, YuanChengException {
         return MsfResponse.success(fangAnService.getBinRenJBXXCount(fangAnCXLSId));
@@ -53,18 +58,25 @@ public class FangAnResultController {
 //    }
 
     @Operation(summary = "查询历史方案")
+    @Parameter(name = "fangAnCXLSId", description = "方案查询历史id")
     @GetMapping("/getFangAnCXLS")
     public MsfResponse<FangAnByFACXLSDTO> getFangAnCXLS(@NotBlank(message="方案查询历史id不能为空") @RequestParam String fangAnCXLSId) throws TongYongYWException, WeiZhaoDSJException {
         return MsfResponse.success(fangAnService.getFangAnCXLS(fangAnCXLSId));
     }
 
     @Operation(summary = "结果列表")
+    @Parameter(name = "fangAnCXLSId", description = "方案查询历史id")
+    @Parameter(name = "mergeType", description = "合并类型，1-患者，2-就诊")
+    @Parameter(name = "pageIndex", description = "页码")
+    @Parameter(name = "pageSize", description = "每页数量")
     @GetMapping("/listQueryResult")
     public MsfResponse<List<List<QueryResultDTO>>> listQueryResult(@NotBlank(message="方案查询历史id不能为空") @RequestParam String fangAnCXLSId, @RequestParam(required = false) Integer mergeType, @RequestParam(required = false,defaultValue = "1") Integer pageIndex,  @RequestParam(required = false,defaultValue = "10") Integer pageSize) throws TongYongYWException {
         return MsfResponse.success(fangAnService.getFangAnJGList(fangAnCXLSId,mergeType,pageIndex,pageSize,true));
     }
 
     @Operation(summary = "结果列表总数")
+    @Parameter(name = "fangAnCXLSId", description = "方案查询历史id")
+    @Parameter(name = "mergeType", description = "合并类型，1-患者，2-就诊")
     @GetMapping("/countQueryResult")
     public MsfResponse<Long> countQueryResult(@NotBlank(message="方案查询历史id不能为空") @RequestParam String fangAnCXLSId, @RequestParam(required = false) Integer mergeType) throws TongYongYWException {
         return MsfResponse.success(fangAnService.getFangAnJGCount(fangAnCXLSId,mergeType));

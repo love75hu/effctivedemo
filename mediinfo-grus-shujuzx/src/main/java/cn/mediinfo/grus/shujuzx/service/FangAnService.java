@@ -30,16 +30,18 @@ public interface FangAnService {
      * 获取方案信息
      *
      * @param id 主键ID
-     * @return
+     * @return FangAnQueryDTO
      * @throws YuanChengException
      */
     FangAnQueryDTO getFangAnXX(String id) throws TongYongYWException, WeiZhaoDSJException;
 
     /**
      * 根据方案查询历史获取方案信息
-     * @param fangAnCXLSId
-     * @return
+     *
+     * @param fangAnCXLSId 方案查询历史id
+     * @return FangAnByFACXLSDTO
      * @throws TongYongYWException
+     * @throws WeiZhaoDSJException
      */
     FangAnByFACXLSDTO getFangAnCXLS(String fangAnCXLSId) throws TongYongYWException, WeiZhaoDSJException;
 
@@ -47,7 +49,7 @@ public interface FangAnService {
      * 更新方案
      *
      * @param request
-     * @return
+     * @return Boolean
      * @throws YuanChengException
      * @throws TongYongYWException
      */
@@ -60,7 +62,7 @@ public interface FangAnService {
      * @param fangAnSCList 方案输出项
      * @param fangAnLXDM   方案类型代码
      * @param guanJianZi   关键字
-     * @return
+     * @return String
      * @throws YuanChengException
      */
     String getSql(FangAnTreeNode root, List<FangAnSC> fangAnSCList, String fangAnLXDM, String guanJianZi) throws YuanChengException;
@@ -68,9 +70,9 @@ public interface FangAnService {
     /**
      * 获取结果列表总数
      *
-     * @param fangAnCXLSId
-     * @param mergeType
-     * @return
+     * @param fangAnCXLSId 方案查询历史id
+     * @param mergeType 合并类型，1-患者，2-就诊
+     * @return Long
      * @throws TongYongYWException
      */
     Long getFangAnJGCount(String fangAnCXLSId, Integer mergeType) throws TongYongYWException;
@@ -78,12 +80,12 @@ public interface FangAnService {
     /**
      * 获取方案查询结果
      *
-     * @param fangAnCXLSId
-     * @param mergeType
-     * @param pageIndex
-     * @param pageSize
-     * @param isShowBQ
-     * @return
+     * @param fangAnCXLSId 方案查询历史id
+     * @param mergeType 合并类型，1-患者，2-就诊
+     * @param pageIndex 页码
+     * @param pageSize 每页数量
+     * @param isShowBQ 是否显示标签
+     * @return List<List<QueryResultDTO>>
      * @throws TongYongYWException
      */
     List<List<QueryResultDTO>> getFangAnJGList(String fangAnCXLSId, Integer mergeType, Integer pageIndex, Integer pageSize, boolean isShowBQ) throws TongYongYWException;
@@ -91,18 +93,18 @@ public interface FangAnService {
     /**
      * 获取方案患者信息
      *
-     * @param fangAnCXLSId
-     * @param pageIndex
-     * @param pageSize
-     * @return
+     * @param fangAnCXLSId 方案查询历史id
+     * @param pageIndex 页码
+     * @param pageSize 每页数量
+     * @return List<BingRenJBXXDTO>
      * @throws TongYongYWException
      */
     List<BingRenJBXXDTO> getBinRenJBXXList(String fangAnCXLSId, Integer pageIndex, Integer pageSize) throws TongYongYWException, YuanChengException;
 
     /**
      * 获取方案患者信息数量
-     * @param fangAnCXLSId
-     * @return
+     * @param fangAnCXLSId 方案查询历史id
+     * @return Long
      * @throws TongYongYWException
      */
     Long getBinRenJBXXCount(String fangAnCXLSId) throws TongYongYWException, YuanChengException;

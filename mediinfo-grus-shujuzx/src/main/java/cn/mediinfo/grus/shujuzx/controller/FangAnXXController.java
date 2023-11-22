@@ -14,6 +14,7 @@ import cn.mediinfo.grus.shujuzx.request.fangan.FangAnXXUpdateRequest;
 import cn.mediinfo.grus.shujuzx.service.ChaXunFAXXService;
 import cn.mediinfo.grus.shujuzx.service.FangAnService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
 import lombok.extern.slf4j.Slf4j;
@@ -45,6 +46,7 @@ public class FangAnXXController {
     }
 
     @Operation(summary = "获取方案信息")
+    @Parameter(name = "id", description = "主键ID")
     @GetMapping("/get")
     public MsfResponse<FangAnQueryDTO> getFangAnXX(@NotBlank(message = "ID不能为空") @RequestParam String id) throws TongYongYWException, WeiZhaoDSJException {
         return MsfResponse.success(fangAnService.getFangAnXX(id));
@@ -120,12 +122,4 @@ public class FangAnXXController {
     public MsfResponse<Boolean> deleteChaXunFA(@RequestParam String id) {
         return MsfResponse.success(chaXunFAXXService.deleteChaXunFA(id));
     }
-
-    @Operation(summary = "查询病历详情")
-    @GetMapping("getBingLiXQ")
-    public MsfResponse<String> getBingLiXQ(String getBingLiXQ, String jiuzhenId, String jiuzhenLXDM, String bingRenId) {
-        return MsfResponse.success();
-    }
-
-
 }

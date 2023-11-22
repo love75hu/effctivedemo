@@ -133,7 +133,7 @@ public class FangAnServiceImpl implements FangAnService {
      * 根据方案ID获取方案信息
      *
      * @param id 主键ID
-     * @return
+     * @return FangAnQueryDTO
      * @throws TongYongYWException
      */
     @Override
@@ -145,7 +145,7 @@ public class FangAnServiceImpl implements FangAnService {
      * 更新方案
      *
      * @param request
-     * @return
+     * @return Boolean
      * @throws YuanChengException
      * @throws TongYongYWException
      */
@@ -163,8 +163,8 @@ public class FangAnServiceImpl implements FangAnService {
     /**
      * 根据方案查询历史获取方案信息
      *
-     * @param fangAnCXLSId
-     * @return
+     * @param fangAnCXLSId 方案查询历史id
+     * @return FangAnByFACXLSDTO
      * @throws TongYongYWException
      */
     @Override
@@ -277,9 +277,9 @@ public class FangAnServiceImpl implements FangAnService {
     /**
      * 获取结果列表总数
      *
-     * @param fangAnCXLSId
-     * @param mergeType
-     * @return
+     * @param fangAnCXLSId 方案查询历史id
+     * @param mergeType 合并类型，1-患者，2-就诊
+     * @return Long
      * @throws TongYongYWException
      */
     @Override
@@ -299,12 +299,12 @@ public class FangAnServiceImpl implements FangAnService {
     /**
      * 获取方案查询结果
      *
-     * @param fangAnCXLSId
-     * @param mergeType
-     * @param pageIndex
-     * @param pageSize
-     * @param isShowBQ
-     * @return
+     * @param fangAnCXLSId 方案查询历史id
+     * @param mergeType 合并类型，1-患者，2-就诊
+     * @param pageIndex 页码
+     * @param pageSize 每页数量
+     * @param isShowBQ 是否显示标签
+     * @return List<List<QueryResultDTO>>
      * @throws TongYongYWException
      */
     public List<List<QueryResultDTO>> getFangAnJGList(String fangAnCXLSId, Integer mergeType, Integer pageIndex, Integer pageSize, boolean isShowBQ) throws TongYongYWException {
@@ -502,12 +502,12 @@ public class FangAnServiceImpl implements FangAnService {
     /**
      * 获取方案查询病人分组列表
      *
-     * @param fangAnCXLSId
-     * @param mergeType
-     * @param pageIndex
-     * @param pageSize
-     * @param fangAnSCList
-     * @return
+     * @param fangAnCXLSId 方案查询历史id
+     * @param mergeType 合并类型，1-患者，2-就诊
+     * @param pageIndex 页码
+     * @param pageSize  每页数量
+     * @param fangAnSCList  方案输出项
+     * @return List<FangAnCXBRFZDto>
      * @throws TongYongYWException
      */
     private List<FangAnCXBRFZDto> getFangAnCXBRFZList(String fangAnCXLSId, Integer mergeType, Integer pageIndex, Integer pageSize, List<FangAnSCDTO> fangAnSCList) throws TongYongYWException {
@@ -659,10 +659,10 @@ public class FangAnServiceImpl implements FangAnService {
     /**
      * 获取收藏夹列表
      *
-     * @param isShowBQ
+     * @param isShowBQ 是否显示标签
      * @param result
-     * @param shouChangJMXList
-     * @return
+     * @param shouChangJMXList 收藏夹明细列表
+     * @return List<List<QueryResultDTO>>
      */
     private List<List<QueryResultDTO>> getShouCangJiaList(Boolean isShowBQ, List<List<QueryResultDTO>> result, List<SC_SC_ShouCangJMXListDto> shouChangJMXList) {
         if(isShowBQ){
@@ -676,10 +676,10 @@ public class FangAnServiceImpl implements FangAnService {
     /**
      * 获取方案患者信息
      *
-     * @param fangAnCXLSId
-     * @param pageIndex
-     * @param pageSize
-     * @return
+     * @param fangAnCXLSId 方案查询历史id
+     * @param pageIndex 页码
+     * @param pageSize 每页数量
+     * @return List<BingRenJBXXDTO>
      * @throws TongYongYWException
      */
     @Override
@@ -740,8 +740,8 @@ public class FangAnServiceImpl implements FangAnService {
     /**
      * 获取方案患者信息数量
      *
-     * @param fangAnCXLSId
-     * @return
+     * @param fangAnCXLSId  方案查询历史id
+     * @return Long
      * @throws TongYongYWException
      * @throws YuanChengException
      */
@@ -990,7 +990,7 @@ public class FangAnServiceImpl implements FangAnService {
      * 拼接表名
      *
      * @param aliasMap 表别名
-     * @return 表
+     * @return String
      */
     private String getTable(Map<String, Tuple.Tuple4<String, String, Boolean, Boolean>> aliasMap) {
         List<String> tableNameList = ListUtil.toList();
@@ -1231,7 +1231,7 @@ public class FangAnServiceImpl implements FangAnService {
      *
      * @param moShi
      * @param biaoMing
-     * @return
+     * @return String
      */
     private String formatBiaoMing(String moShi, String biaoMing) {
         StringBuilder builder = new StringBuilder();
@@ -1247,7 +1247,7 @@ public class FangAnServiceImpl implements FangAnService {
      *
      * @param biaoMing
      * @param biaoXinXiList
-     * @return
+     * @return String
      */
     private String formatBiaoMingByBXX(String biaoMing, List<ShuJuXXMSRso> biaoXinXiList) {
         String moShi = biaoXinXiList.stream().filter(p -> p.getBiaoMing().equals(biaoMing.toUpperCase())).findFirst().orElse(new ShuJuXXMSRso()).getShuJuYMC();
@@ -1264,7 +1264,7 @@ public class FangAnServiceImpl implements FangAnService {
      *
      * @param table     表信息
      * @param tableName 表组合名
-     * @return
+     * @return String
      */
     private String getShiTuBGX(TableDTO table, String tableName) {
         StringBuilder builder = new StringBuilder();
@@ -1311,9 +1311,9 @@ public class FangAnServiceImpl implements FangAnService {
     /**
      * 获取病历查询SQL
      *
-     * @param chaXunSQL
-     * @param guanJianZi
-     * @return
+     * @param chaXunSQL 查询sql
+     * @param guanJianZi 关键字
+     * @return String
      * @throws YuanChengException
      */
     private String getBingRenJBXXSQL(String chaXunSQL, String guanJianZi) throws YuanChengException {

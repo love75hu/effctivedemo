@@ -28,6 +28,12 @@ public class FangAnSCServiceImpl implements FangAnSCService {
         return null;
     }
 
+    /**
+     *查询方案输出字段id
+     *
+     * @param fangAnSCIds 方案输出id
+     * @return List 方案输出字段
+     */
     @Override
     public List<FangAnSCFieldDTO> listFangAnSCFieldByIds(Set<String> fangAnSCIds) {
         List<SC_CX_FangAnSCModel> fangAnSCList=fangAnSCRepository.findByIdIn(fangAnSCIds);

@@ -14,6 +14,7 @@ import cn.mediinfo.grus.shujuzx.request.fangan.FangAnSC;
 import cn.mediinfo.grus.shujuzx.request.fangan.FangAnXXSaveRequest;
 import cn.mediinfo.grus.shujuzx.request.fangan.FangAnXXUpdateRequest;
 
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 public interface FangAnService {
@@ -89,6 +90,18 @@ public interface FangAnService {
      * @throws TongYongYWException
      */
     List<List<QueryResultDTO>> getFangAnJGList(String fangAnCXLSId, Integer mergeType, Integer pageIndex, Integer pageSize, boolean isShowBQ) throws TongYongYWException;
+
+    /**
+     * 获取方案结果Excel
+     *
+     * @param fangAnCXLSId 方案查询历史id
+     * @param mergeType 合并类型，1-患者，2-就诊
+     * @param pageSize 页码
+     * @return List<XSSFWorkbook>
+     * @throws TongYongYWException
+     * @throws RuntimeException
+     */
+    List<ByteArrayOutputStream> getFangAnJGExcelList(String fangAnCXLSId, Integer mergeType, Integer pageSize) throws TongYongYWException, RuntimeException;
 
     /**
      * 获取方案患者信息

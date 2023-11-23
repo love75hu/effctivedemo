@@ -7,19 +7,21 @@ import cn.mediinfo.cyan.msf.core.response.MsfResponse;
 import cn.mediinfo.grus.shujuzx.dto.bihuanlcs.BingLiXQDto;
 import cn.mediinfo.grus.shujuzx.dto.bihuanlcs.BingLiXQXXDto;
 import cn.mediinfo.grus.shujuzx.dto.fangan.FangAnByFACXLSDTO;
-import cn.mediinfo.grus.shujuzx.dto.result.BingLiXQDTO;
 import cn.mediinfo.grus.shujuzx.dto.result.BingRenJBXXDTO;
 import cn.mediinfo.grus.shujuzx.dto.result.QueryResultDTO;
-import cn.mediinfo.grus.shujuzx.request.result.BingLiXXQRequest;
 import cn.mediinfo.grus.shujuzx.service.FangAnService;
+import cn.mediinfo.grus.shujuzx.utils.ExportUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotBlank;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -81,10 +83,22 @@ public class FangAnResultController {
     public MsfResponse<Long> countQueryResult(@NotBlank(message="方案查询历史id不能为空") @RequestParam String fangAnCXLSId, @RequestParam(required = false) Integer mergeType) throws TongYongYWException {
         return MsfResponse.success(fangAnService.getFangAnJGCount(fangAnCXLSId,mergeType));
     }
+
     @Operation(summary = "查询病历详情")
     @PostMapping("/getBingLiXQ")
     public MsfResponse<List<BingLiXQXXDto>> getBingLiXQ(@RequestBody BingLiXQDto bingLiXQDto) throws YuanChengException {
         return MsfResponse.success(fangAnService.getBingLiXQ(bingLiXQDto));
+    }
+
+    @Operation(summary = "导出结果列表")
+    @Parameter(name = "fangAnCXLSId", description = "方案查询历史id")
+    @Parameter(name = "mingCheng", description = "名称（一般为方案名称+关键字）")
+    @Parameter(name = "mergeType", description = "合并类型，1-患者，2-就诊")
+    @GetMapping("/exportQueryResult")
+    public void exportQueryResult(@NotBlank(message="方案查询历史id不能为空") @RequestParam String fangAnCXLSId,@RequestParam String mingCheng, @RequestParam(required = false) Integer mergeType, HttpServletResponse response) throws TongYongYWException, IOException {
+        List<ByteArrayOutputStream> excelList=fangAnService.getFangAnJGExcelList(fangAnCXLSId,mergeType,1000);
+        //统一封装zip压缩包并导出
+        ExportUtils.downFileByStream(response,excelList,mingCheng);
     }
 }
 

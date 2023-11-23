@@ -41,9 +41,10 @@ public class SQLQueryExpr {
         if (StringUtil.isBlank(text)) {
             return "";
         }
+        right = (right.isEmpty() ? "" : " " + right);
         return switch (text) {
-            case "SELECT", "FROM", "WHERE" -> text + " " + left + (right.isEmpty() ? "" : " " + right) + " ";
-            case "AND", "OR" -> (left.isEmpty() ? "" : left + " ") + text + (right.isEmpty() ? "" : " " + right);
+            case "SELECT", "FROM", "WHERE" -> text + " " + left + right + " ";
+            case "AND", "OR" -> (left.isEmpty() ? "" : left + " ") + text + right;
             case "()" -> "(" + left + ")";
             default -> text;
         };

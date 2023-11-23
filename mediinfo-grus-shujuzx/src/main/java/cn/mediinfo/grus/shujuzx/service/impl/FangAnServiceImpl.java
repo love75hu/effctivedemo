@@ -52,12 +52,21 @@ import cn.mediinfo.grus.shujuzx.sql.ast.SQLQueryObject;
 import cn.mediinfo.grus.shujuzx.sql.enums.SQLBinaryOperator;
 import cn.mediinfo.grus.shujuzx.util.FangAnTreeUtils;
 import cn.mediinfo.grus.shujuzx.util.SqlUtils;
+import cn.mediinfo.grus.shujuzx.utils.ExportUtils;
 import cn.mediinfo.lyra.extension.service.LyraIdentityService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -65,6 +74,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.MessageFormat;
@@ -660,7 +671,7 @@ public class FangAnServiceImpl implements FangAnService {
      * 获取收藏夹列表
      *
      * @param isShowBQ 是否显示标签
-     * @param result
+     * @param result 方案结果
      * @param shouChangJMXList 收藏夹明细列表
      * @return List<List<QueryResultDTO>>
      */
@@ -671,6 +682,92 @@ public class FangAnServiceImpl implements FangAnService {
             }
         }
         return result;
+    }
+
+    /**
+     * 获取方案结果Excel
+     *
+     * @param fangAnCXLSId 方案查询历史id
+     * @param mergeType 合并类型，1-患者，2-就诊
+     * @param pageSize 页码
+     * @return List<XSSFWorkbook>
+     * @throws TongYongYWException
+     * @throws RuntimeException
+     */
+    public List<ByteArrayOutputStream> getFangAnJGExcelList(String fangAnCXLSId, Integer mergeType, Integer pageSize) throws TongYongYWException, RuntimeException {
+        List<ByteArrayOutputStream> excelList=new ArrayList<>();
+        Long jieGuoCount=getFangAnJGCount(fangAnCXLSId,mergeType);
+        if(jieGuoCount.equals(0L)){
+            return excelList;
+        }
+        int pageCount= ExportUtils.getPageCount(Math.toIntExact(jieGuoCount),pageSize);
+        for(int i=1;i<=pageCount;i++) {
+            List<List<QueryResultDTO>> fangAnJGList = getFangAnJGList(fangAnCXLSId, mergeType, i, pageSize, false);
+            try (XSSFWorkbook wb = new XSSFWorkbook()) {
+                XSSFSheet sheet=wb.createSheet("结果列表");
+                int index=0;
+                for(List<QueryResultDTO> fangAnJGRow:fangAnJGList){
+                    buildSheet(sheet,fangAnJGRow,index);
+                    index++;
+                }
+                // 将Workbook写入内存流
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                wb.write(baos);
+                excelList.add(baos);
+                baos.close();
+            } catch (IOException e) {
+                throw new TongYongYWException(e.getMessage());
+            }
+        }
+        return excelList;
+    }
+
+    /**
+     * 填充表格
+     *
+     * @param sheet 表单
+     * @param fangAnJGRow 方案结果行
+     * @param index 行标
+     */
+    private void buildSheet(XSSFSheet sheet, List<QueryResultDTO> fangAnJGRow, int index) {
+        int colIndex = 0;
+        XSSFRow row0 = null;
+        XSSFRow row = sheet.createRow(index + 1);
+        if (index == 0) {
+            row0 = sheet.createRow(index);
+        }
+        for (QueryResultDTO fangAnJGCOl : fangAnJGRow) {
+
+            if (index > 0) {
+                row.createCell(colIndex).setCellValue(null != fangAnJGCOl.getZiDuanZhi() ? fangAnJGCOl.getZiDuanZhi().toString() : "");
+                colIndex++;
+                continue;
+            }
+            if (row0 != null) {
+                XSSFCell cell = row0.createCell(colIndex);
+                cell.setCellStyle(getHeadStyle(sheet.getWorkbook()));
+                cell.setCellValue(fangAnJGCOl.getZiDuanMC());
+            }
+            row.createCell(colIndex).setCellValue(null != fangAnJGCOl.getZiDuanZhi() ? fangAnJGCOl.getZiDuanZhi().toString() : "");
+            colIndex++;
+        }
+    }
+
+    /**
+     * 设置样式
+     *
+     * @param wb 表格
+     * @return
+     */
+    private CellStyle getHeadStyle(Workbook wb){
+        CellStyle cellStyle=wb.createCellStyle();
+        //居中
+        cellStyle.setAlignment(HorizontalAlignment.CENTER);
+        //加粗
+        Font font=wb.createFont();
+        font.setBold(true);
+        cellStyle.setFont(font);
+        return cellStyle;
     }
 
     /**
@@ -835,7 +932,7 @@ public class FangAnServiceImpl implements FangAnService {
                 log.error("根据{}获取条件字段信息失败", condition.getShiTuMXID());
                 return null;
             }
-            List<String> valList = List.of(Optional.ofNullable(condition.getValues()).orElse("").split(","));
+            List<String> valList = List.of(Optional.ofNullable(condition.getValues()).orElse("").replaceAll("'","''").split(","));
             SQLQueryObject obj = toSQLQueryObject(condition.getOperator(), field, valList, condition.getRelatedFangAnQueryCondition());
             //子条件
             if (CollUtil.isNotEmpty(condition.getRelatedFieldConditions())) {
@@ -930,7 +1027,7 @@ public class FangAnServiceImpl implements FangAnService {
         StringBuilder builder = new StringBuilder();
         relatedFieldConditions.forEach(e -> {
             FieldDTO field = fieldMap.get(e.getShiTuMXGXID());
-            List<String> valList = List.of(Optional.ofNullable(e.getValues()).orElse("").split(","));
+            List<String> valList = List.of(Optional.ofNullable(e.getValues()).orElse("").replaceAll("'","''").split(","));
             SQLQueryObject obj = toSQLQueryObject(e.getOperator(), field, valList, e.getRelatedFangAnQueryCondition());
             builder.append(obj.getText());
             builder.append(" AND ");
@@ -1175,7 +1272,7 @@ public class FangAnServiceImpl implements FangAnService {
         for (FangAnSC e : Optional.ofNullable(fangAnSCList).orElse(new ArrayList<>())) {
             String key = aliasMap.keySet().stream().filter(p -> p.contains(formatBiaoMing(e.getMoShi(), e.getBiaoMing()))).findFirst().orElse("");
             String alias = aliasMap.containsKey(key) ? aliasMap.get(key).item1() : "";
-            switch (e.getZhiBiaoLXDM()) {
+            switch (Optional.ofNullable(e.getZhiBiaoLXDM()).orElse("")) {
                 case "2": //检验
                     key = aliasMap.keySet().stream().filter(p -> p.contains("jy_bg_baogaomx")).findFirst().orElse("");
                     alias = aliasMap.containsKey(key) ? aliasMap.get(key).item1() : "";

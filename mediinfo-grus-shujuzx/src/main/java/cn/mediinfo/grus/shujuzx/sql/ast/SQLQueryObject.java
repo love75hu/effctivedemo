@@ -69,6 +69,8 @@ public class SQLQueryObject {
             return StrUtil.nullToDefault(this.subSql, "") + this.fieldName + " " + this.operator.getSymbol() + " (" + this.val + " )";
         } else if (this.operator == SQLBinaryOperator.LIKE || this.operator == SQLBinaryOperator.NOTLIKE) {
             return StrUtil.nullToDefault(this.subSql, "") + this.fieldName + " " + this.operator.getSymbol() + " '%" + this.val + "%'";
+        } else if(this.operator==SQLBinaryOperator.ISNULL||this.operator==SQLBinaryOperator.ISNOTNULL){
+            return StrUtil.nullToDefault(this.subSql, "") + this.fieldName + " " + this.operator.getSymbol();
         } else {
             return StrUtil.nullToDefault(this.subSql, "") + this.fieldName + " " + this.operator.getSymbol() + " " + this.val + " ";
         }

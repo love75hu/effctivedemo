@@ -100,7 +100,7 @@ class JiBenXXServiceImpl implements JiBenXXService {
         shiTuMXModel.setZuZhiJGMC("通用");
         shiTuMXModel.setZuZhiJGID("0");
         ruCanXXService.addRuCanXX(dto.getRuCanXXDtoList(),dto.getBiHuanLXDM(),dto.getBiHuanLXMC(),biHuanID,dto.getBiHuanMC());
-        jiBenXXRepository.insert(shiTuMXModel);
+        jiBenXXRepository.save(shiTuMXModel);
         return true;
     }
     /**

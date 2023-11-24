@@ -103,16 +103,16 @@ public class JieDianXXServiceImpl implements JieDianXXService {
         //节点信息
         jieDianXXRepository.asDeleteDsl().where(n->n.biHuanID.eq(dto.getBiHuanID())).execute();
 
-        jieDianXXRepository.insertAll(jieDianXX);
+        jieDianXXRepository.saveAll(jieDianXX);
         //节点失效
         jieDianSXRepository.asDeleteDsl().where(n->n.biHuanID.eq(dto.getBiHuanID())).execute();
-        jieDianSXRepository.insertAll(jieDianSX);
+        jieDianSXRepository.saveAll(jieDianSX);
         //子闭环信息
         ziBiHXXRepository.asDeleteDsl().where(n -> n.biHuanID.eq(dto.getBiHuanID())).execute();
-        ziBiHXXRepository.insertAll(ziBiHXX);
+        ziBiHXXRepository.saveAll(ziBiHXX);
         //子闭环显示列
         ziBiHXSLRepository.asDeleteDsl().where(n->n.biHuanID.eq(dto.getBiHuanID())).execute();
-        ziBiHXSLRepository.insertAll(ziBiHXSL);
+        ziBiHXSLRepository.saveAll(ziBiHXSL);
         return dto.getBiHuanID();
     }
 

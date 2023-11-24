@@ -13,27 +13,33 @@ import cn.mediinfo.grus.shujuzx.dto.shujuyzys.SC_ZD_ShuJuYZYDto;
 import cn.mediinfo.grus.shujuzx.model.SC_ZD_ShengMingZQModel;
 import cn.mediinfo.grus.shujuzx.repository.SC_ZD_ShengMingZQRepository;
 import cn.mediinfo.grus.shujuzx.service.ShengMingZQPZService;
+import cn.mediinfo.lyra.extension.service.LyraIdentityService;
 import cn.mediinfo.lyra.extension.service.SequenceService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class ShengMingZQPZServiceImpl implements ShengMingZQPZService {
     private final SequenceService sequenceService;
     private final SC_ZD_ShengMingZQRepository shengMingZQRepository;
-    public ShengMingZQPZServiceImpl(SequenceService sequenceService,SC_ZD_ShengMingZQRepository shengMingZQRepository){
-        this.sequenceService=sequenceService;
-        this.shengMingZQRepository=shengMingZQRepository;
+    private final LyraIdentityService lyraIdentityService;
+
+    public ShengMingZQPZServiceImpl(SequenceService sequenceService, SC_ZD_ShengMingZQRepository shengMingZQRepository, LyraIdentityService lyraIdentityService) {
+        this.sequenceService = sequenceService;
+        this.shengMingZQRepository = shengMingZQRepository;
+        this.lyraIdentityService = lyraIdentityService;
     }
 
     /**
      * 获取生命周期字典列表
+     *
      * @return
      */
     @Override
-    public List<SC_ZD_ShengMingZQListDto> getShengMingZQList(){
+    public List<SC_ZD_ShengMingZQListDto> getShengMingZQList() {
         var shengMingZQList = shengMingZQRepository.asQuerydsl()
                 .orderBy(x -> x.shunXuHao.asc())
                 .select(SC_ZD_ShengMingZQListDto.class)
@@ -48,22 +54,18 @@ public class ShengMingZQPZServiceImpl implements ShengMingZQPZService {
     @Override
     @Transactional(rollbackOn = Exception.class)
     public Boolean addShengMingZQ(SC_ZD_ShengMingZQCreateDto createDto) throws TongYongYWException {
-        String shengmingZQID;
         if (!StringUtil.notHasText(createDto.getShengMingZQMC())) {
-            shengmingZQID = sequenceService.getXuHao("SC_ZD_ShengMingZQ_ShengMingZQID", 7);
-            boolean existShengMingZQMC = shengMingZQRepository.asQuerydsl().where(t->t.shengMingZQMC.eq(createDto.getShengMingZQMC())).exists();
+            boolean existShengMingZQMC = shengMingZQRepository.asQuerydsl().where(t -> t.shengMingZQMC.eq(createDto.getShengMingZQMC())).exists();
             if (existShengMingZQMC) {
                 throw new TongYongYWException("生命周期名称已存在，请重新确认! ");
             }
-        } else {
-            shengmingZQID = "";
         }
+        String shengmingZQID = sequenceService.getXuHao("SC_ZD_ShengMingZQ_ShengMingZQID", 7);
+        ;
         SC_ZD_ShengMingZQModel addModel = BeanUtil.copyProperties(createDto, SC_ZD_ShengMingZQModel::new, (dto, model) -> {
-            model.setZuZhiJGID(ShuJuZXConstant.TONGYONG_JGID);
-            model.setZuZhiJGMC(ShuJuZXConstant.TONGYONG_JGMC);
-            if (StringUtil.hasText(shengmingZQID)) {
-                model.setShengMingZQID(shengmingZQID);
-            }
+            model.setZuZhiJGID(lyraIdentityService.getJiGouID());
+            model.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
+            model.setShengMingZQID(shengmingZQID);
         });
         shengMingZQRepository.insert(addModel);
         return true;
@@ -71,6 +73,7 @@ public class ShengMingZQPZServiceImpl implements ShengMingZQPZService {
 
     /**
      * 修改生命周期
+     *
      * @param updateDto
      * @return
      * @throws TongYongYWException
@@ -79,21 +82,23 @@ public class ShengMingZQPZServiceImpl implements ShengMingZQPZService {
     @Transactional(rollbackOn = Exception.class)
     public Boolean updateShengMingZQ(SC_ZD_ShengMingZQUpdateDto updateDto) throws TongYongYWException {
 
+        var entity = shengMingZQRepository.findById(updateDto.getId()).orElse(null);
+        if (null == entity) {
+            throw new TongYongYWException("该生命周期不存在!");
+        }
         //查询是否存在
         var shiFouCZ = shengMingZQRepository.existsByIdIsNotAndShengMingZQMC(updateDto.getId(), updateDto.getShengMingZQMC());
         //判断是否存在数据元类别
         if (shiFouCZ) {
             throw new TongYongYWException("生命周期名称已存在!");
         }
-        var entity = shengMingZQRepository.findById(updateDto.getId()).orElse(null);
-        if (null == entity) {
-            throw new TongYongYWException("该数据源值域不存在!");
-        }
+
         //把dto赋值到entity
-        MapUtils.mergeProperties(updateDto, entity);
+        BeanUtil.mergeProperties(updateDto, entity);
         shengMingZQRepository.save(entity);
         return true;
     }
+
     /**
      * 作废数据源值域
      *
@@ -114,9 +119,12 @@ public class ShengMingZQPZServiceImpl implements ShengMingZQPZService {
     }
 
     @Override
-    public SC_ZD_ShengMingZQDto getShengMingZQByID(String id) {
+    public SC_ZD_ShengMingZQDto getShengMingZQByID(String id) throws TongYongYWException {
         var shuJuYZY = shengMingZQRepository.findById(id).orElse(null);
-        return MapUtils.copyProperties(shuJuYZY, SC_ZD_ShengMingZQDto::new);
+        if (Objects.isNull(shuJuYZY)){
+            throw new TongYongYWException("该生命周期字典不存在!");
+        }
+        return BeanUtil.copyProperties(shuJuYZY, SC_ZD_ShengMingZQDto::new);
     }
 
 }

@@ -86,7 +86,7 @@ public class ShengMingZQPZController {
      */
     @Operation(summary = "根据ID获取生命周期")
     @GetMapping("GetShengMingZQByID")
-    public MsfResponse<SC_ZD_ShengMingZQDto> getShengMingZQByID(@NotEmpty(message = "主键ID必传！") String id) {
+    public MsfResponse<SC_ZD_ShengMingZQDto> getShengMingZQByID(@NotEmpty(message = "id不能为空！") String id) throws TongYongYWException {
         return MsfResponse.success(shengMingZQPZService.getShengMingZQByID(id));
     }
 

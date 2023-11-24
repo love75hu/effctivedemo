@@ -19,5 +19,5 @@ public interface ShengMingZQPZService {
     @Transactional(rollbackOn = Exception.class)
     Boolean zuoFeiShengMingZQ(String id) throws TongYongYWException;
 
-    SC_ZD_ShengMingZQDto getShengMingZQByID(String id);
+    SC_ZD_ShengMingZQDto getShengMingZQByID(String id) throws TongYongYWException;
 }

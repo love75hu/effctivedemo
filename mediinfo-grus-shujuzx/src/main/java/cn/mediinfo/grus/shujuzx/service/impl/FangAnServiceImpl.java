@@ -350,7 +350,7 @@ public class FangAnServiceImpl implements FangAnService {
                     List<QueryResultDTO> row0 = new ArrayList<>();
                     List<QueryResultDTO> row1 = new ArrayList<>();
                     //加入基本信息空值行
-                    row0.add(new QueryResultDTO());
+                    row0.add(new QueryResultDTO("bingrenid","bingrenid",bingRenIDXSMC,""));
                     row1.add(new QueryResultDTO("bingrenid","bingrenid", bingRenIDXSMC, bingRenFZ.getBingRenID()));
                     if(CollUtil.isNotEmpty(bingRenFZ.getBingRenJBXX())) {
                         row0.addAll(new ArrayList<>(Collections.nCopies(bingRenFZ.getBingRenJBXX().size(), new QueryResultDTO())));
@@ -364,7 +364,7 @@ public class FangAnServiceImpl implements FangAnService {
                                 for(FangAnCXZDFZDto ziDuanFZ:shiTuZJFZ.getFangAnCXZDFZList()){
                                     for(Object zhi:ziDuanFZ.getZiDuanZhiList()){
                                         row0.add(new QueryResultDTO("","","",ziDuanFZ.getZiDuanMC()));
-                                        row1.add(new QueryResultDTO("","","",ziDuanFZ));
+                                        row1.add(new QueryResultDTO("","","",zhi));
                                     }
                                     ziDuanCount=ziDuanCount+ziDuanFZ.getZiDuanZhiCount();
                                 }
@@ -386,7 +386,7 @@ public class FangAnServiceImpl implements FangAnService {
                     List<QueryResultDTO> row0 = new ArrayList<>();
                     List<QueryResultDTO> row1 = new ArrayList<>();
                     //加入基本信息空值行
-                    row0.add(new QueryResultDTO());
+                    row0.add(new QueryResultDTO("bingrenid","bingrenid",bingRenIDXSMC,""));
                     row1.add(new QueryResultDTO("bingrenid", "bingrenid", bingRenIDXSMC, bingRenFZ.getBingRenID()));
                     if(CollUtil.isNotEmpty(bingRenFZ.getBingRenJBXX())) {
                         row0.addAll(new ArrayList<>(Collections.nCopies(bingRenFZ.getBingRenJBXX().size(), new QueryResultDTO())));
@@ -399,7 +399,7 @@ public class FangAnServiceImpl implements FangAnService {
                             for(FangAnCXZDFZDto ziDuanFZ:shiTuZJFZ.getFangAnCXZDFZList()){
                                 for(Object zhi:ziDuanFZ.getZiDuanZhiList()){
                                     row0.add(new QueryResultDTO("","","",ziDuanFZ.getZiDuanMC()));
-                                    row1.add(new QueryResultDTO("","","",ziDuanFZ));
+                                    row1.add(new QueryResultDTO("","","",zhi));
                                 }
                                 ziDuanCount=ziDuanCount+ziDuanFZ.getZiDuanZhiCount();
                             }
@@ -1276,7 +1276,7 @@ public class FangAnServiceImpl implements FangAnService {
                 case "2": //检验
                     key = aliasMap.keySet().stream().filter(p -> p.contains("jy_bg_baogaomx")).findFirst().orElse("");
                     alias = aliasMap.containsKey(key) ? aliasMap.get(key).item1() : "";
-                    fields.add(MessageFormat.format("(case when {0}.shiyanxmdm=''{1}'' and {0}.jianyanxmid=''{1}'' then concat({0}.shiyanjg,{0}.danwei) else '''' end) as {3}", alias, e.getZhiBiaoID(),e.getZhiBiaoFLID(), "zd_" + fangAnSCList.indexOf(e)));
+                    fields.add(MessageFormat.format("(case when {0}.shiyanxmdm=''{1}'' and {0}.jianyanxmid=''{1}'' then concat({0}.shiyanjg,{0}.danwei) else '''' end) as {3}", alias, e.getZhiBiaoID(), e.getZhiBiaoFLID(), "zd_" + fangAnSCList.indexOf(e)));
                     break;
                 case "3": //检查
                     key = aliasMap.keySet().stream().filter(p -> p.contains("jc_bg_baogaoxx")).findFirst().orElse("");
@@ -1303,9 +1303,9 @@ public class FangAnServiceImpl implements FangAnService {
                     break;
                 default:
                     fields.add(alias + "." + e.getZhiBiaoID() + " as zd_" + fangAnSCList.indexOf(e));
-                    zhuJianList.add(alias + ".id as zj_" + alias);
                     break;
             }
+            zhuJianList.add((StringUtil.isBlank(alias) ? "" : alias + ".") + "id as zj_" + alias);
         }
         fields.addAll(zhuJianList.stream().toList());
         return " " + CharSequenceUtil.join(",", fields);

@@ -18,7 +18,7 @@ public class AddBiHuanSTJDMXDto {
     @Schema(description = "闭环类型名称")
     private String biHuanLXMC;
     @Schema(description = "条件标志")
-    private String tiaoJianBZ;
+    private Integer tiaoJianBZ;
     @Schema(description = "入参标志")
-    private String ruCanBZ;
+    private Integer ruCanBZ;
 }

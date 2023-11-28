@@ -9,7 +9,7 @@ public class ZiDuanBMMC {
      */
     private String ziDuanBM;
     /**
-     * 字段名称
+     * 字段值
      */
     private String ziDuanZhi;
 }

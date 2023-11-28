@@ -65,10 +65,9 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
         List<SC_BH_DiaoYongPZDto> biHuanPZList = diaoYongPZRepository.getBiHuanPZList(biHuanGNDPZ.getBiHuanGNDDM());
         //获取配的闭环
         var biHuanIDs=biHuanPZList.stream().map(SC_BH_DiaoYongPZDto::getBiHuanID).toList();
-        //获取闭环入参信息
-        var biHuanRCXXList=ruCanXXRepository.findByBiHuanIDIn(biHuanIDs);
-        //闭环信息
 
+        //闭环调用信息
+        List<String>  guoLuhuanIDs=new ArrayList<>();
         for (var b:biHuanPZList)
         {
             List<GuiZeDto> jsonToList = JsonUtil.getJsonToList(b.getTiaoJian(), GuiZeDto.class);
@@ -118,9 +117,34 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
             Long count = jdbcTemplate.queryForObject(sql, Long.class);
             if (count!=null && count>0)
             {
-             //处理 闭环执行逻辑
+                guoLuhuanIDs.add(b.getBiHuanID());
             }
         }
+        //获取闭环入参信息
+        var biHuanRCXXList=ruCanXXRepository.findByBiHuanIDIn(biHuanIDs);
+        //入参字段
+        var ziDuanBM=biHuanGNDPZ.getRuCanList().stream().map(ZiDuanBMMC::getZiDuanBM).toList();
+        //匹配 闭环调用的  的所有闭环，匹配入参是否一致
+        var zuiZhongBiHuanID=new ArrayList<String>();
+        for (var b:guoLuhuanIDs)
+        {
+            long count = biHuanRCXXList.stream().filter(n -> n.getBiHuanID().equals(b) && ziDuanBM.contains(n.getZiDuanBM())).count();
+            if(count==ziDuanBM.size())
+            {
+                zuiZhongBiHuanID.add(b);
+            }
+        }
+        //闭环 执行的逻辑
+
+        return null;
+    }
+
+    /**
+     * 根据闭环id获取闭配置信息去执行sql
+     *
+     */
+    public BiHuanXQDto getBiHuanZXJG(String biHuanID)
+    {
 
         return null;
     }

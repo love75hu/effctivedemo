@@ -6,7 +6,6 @@ import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
 import cn.mediinfo.cyan.msf.core.util.*;
 import cn.mediinfo.cyan.msf.tenant.orm.entity.StringMTEntity;
 import cn.mediinfo.grus.shujuzx.common.fangan.condition.FangAnTreeNode;
-import cn.mediinfo.grus.shujuzx.constant.ShuJuZXConstant;
 import cn.mediinfo.grus.shujuzx.dto.fangan.FangAnQueryDTO;
 import cn.mediinfo.grus.shujuzx.dto.fangan.FangAnSCDTO;
 import cn.mediinfo.grus.shujuzx.dto.shitumx.SchemaTable;
@@ -67,7 +66,7 @@ public class FangAnManagerImpl implements FangAnManager {
         if (fangAnXX==null) {
             throw new TongYongYWException("方案不存在！");
         }
-        FangAnQueryDTO result = MapUtils.copyProperties(fangAnXX, FangAnQueryDTO::new);
+        FangAnQueryDTO result = BeanUtil.copyProperties(fangAnXX, FangAnQueryDTO::new);
         zuZhuangFAXX(fangAnXX.getFangAnID(),result);
 
         return result;
@@ -86,7 +85,7 @@ public class FangAnManagerImpl implements FangAnManager {
         if (ObjectUtils.isEmpty(fangAnXX)) {
             throw new TongYongYWException("方案不存在！");
         }
-        FangAnQueryDTO result = MapUtils.copyProperties(fangAnXX, FangAnQueryDTO::new);
+        FangAnQueryDTO result = BeanUtil.copyProperties(fangAnXX, FangAnQueryDTO::new);
         zuZhuangFAXX(fangAnId,result);
 
         return result;
@@ -167,7 +166,7 @@ public class FangAnManagerImpl implements FangAnManager {
         if (fangAnXXModel==null) {
             throw new TongYongYWException("方案不存在");
         }
-        MapUtils.mergeProperties(request, fangAnXXModel);
+        BeanUtil.mergeProperties(request, fangAnXXModel);
 
         //检索方案内容
         SC_CX_FangAnNRModel fangAnNRModel = fangAnNRRepository.findByFangAnID(fangAnXXModel.getFangAnID());
@@ -219,10 +218,9 @@ public class FangAnManagerImpl implements FangAnManager {
             return  shuJuST;
         }).toList();
         List<SchemaTable> schemaTableList=shiTuMXService.getFangAnSCZD(shuJuSTList);
-
-        List<FangAnSCDTO> fangAnSCList = MapUtils.copyListProperties(fangAnSCModelList, FangAnSCDTO::new, (a, b) -> {
-            SchemaTable schemaTable =schemaTableList.stream().filter(p->p.getShuJuJMXZDDtos().stream().anyMatch(q-> Objects.equals(a.getZhiBiaoID().toLowerCase(),q.getZiDuanBM().toLowerCase()))).findFirst().orElse(null);
-            if(schemaTable!=null){
+        List<FangAnSCDTO> fangAnSCList = BeanUtil.copyListProperties(fangAnSCModelList, FangAnSCDTO::new, (a, b) -> {
+            SchemaTable schemaTable =schemaTableList.stream().filter(p->p.getShuJuJMXZDDtos().stream().anyMatch(q-> Objects.equals(Optional.ofNullable(a.getZhiBiaoID()).orElse("").toLowerCase(),Optional.ofNullable(q.getZiDuanBM()).orElse("").toLowerCase())&&Objects.equals(a.getZhiBiaoFLID(),q.getMoShi()))).findFirst().orElse(null);
+            if(schemaTable!=null&&"1".equals(a.getZhiBiaoLXDM())) {
                 b.setMoShi(schemaTable.getMoShi());
                 b.setBiaoMing(schemaTable.getBiaoMing());
             }

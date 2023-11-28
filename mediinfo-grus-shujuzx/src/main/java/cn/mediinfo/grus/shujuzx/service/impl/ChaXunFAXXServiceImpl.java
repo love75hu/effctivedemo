@@ -86,7 +86,7 @@ public class ChaXunFAXXServiceImpl implements ChaXunFAXXService {
             chaXunLXMC = "方案查询";
         }
         SC_CX_FangAnCXLSModel model = new SC_CX_FangAnCXLSModel();
-        MapUtils.mergeProperties(request, model);
+        BeanUtil.mergeProperties(request, model);
         model.setZuZhiJGID(lyraIdentityService.getJiGouID());
         model.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
         model.setChaXunLXDM(chaXunLXDM);
@@ -121,7 +121,7 @@ public class ChaXunFAXXServiceImpl implements ChaXunFAXXService {
         if (model==null) {
             return result;
         }
-        MapUtils.copyProperties(model, result);
+        BeanUtil.copyProperties(model, result);
         return result;
     }
 

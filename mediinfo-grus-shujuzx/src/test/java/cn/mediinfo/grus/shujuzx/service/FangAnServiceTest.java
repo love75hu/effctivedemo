@@ -1,6 +1,7 @@
 package cn.mediinfo.grus.shujuzx.service;
 
 import cn.hutool.core.collection.ListUtil;
+import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
 import cn.mediinfo.cyan.msf.core.response.MsfResponse;
 import cn.mediinfo.cyan.msf.tenant.security.BasicTenantInfo;
@@ -52,7 +53,7 @@ class FangAnServiceTest {
     private FangAnService fangAnService = new FangAnServiceImpl();
 
     @Test
-    void saveFangAn() throws YuanChengException {
+    void saveFangAn() throws YuanChengException, TongYongYWException {
         when(shiTuMXService.listTable(anySet())).thenReturn(mockTable());
         when(shiTuMXService.listFields(anySet())).thenReturn(mockFields());
         when(gongYongRemoteService.getShuJXXMS(anyList())).thenReturn(mockJiChuTable());

@@ -25,7 +25,7 @@ public interface FangAnService {
      * @param request FangAnXXSaveRequest
      * @return String 方案id
      */
-    String saveFangAn(FangAnXXSaveRequest request) throws YuanChengException;
+    String saveFangAn(FangAnXXSaveRequest request) throws YuanChengException, TongYongYWException;
 
     /**
      * 获取方案信息
@@ -66,7 +66,7 @@ public interface FangAnService {
      * @return String
      * @throws YuanChengException
      */
-    String getSql(FangAnTreeNode root, List<FangAnSC> fangAnSCList, String fangAnLXDM, String guanJianZi) throws YuanChengException;
+    String getSql(FangAnTreeNode root, List<FangAnSC> fangAnSCList, String fangAnLXDM, String guanJianZi) throws YuanChengException, TongYongYWException;
 
     /**
      * 获取结果列表总数

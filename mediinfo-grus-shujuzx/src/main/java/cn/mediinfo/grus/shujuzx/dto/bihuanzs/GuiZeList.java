@@ -1,5 +1,6 @@
 package cn.mediinfo.grus.shujuzx.dto.bihuanzs;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.util.List;
@@ -9,44 +10,42 @@ import java.util.List;
  */
 @Data
 public class GuiZeList {
-    /**
-     * 规则ID
-     */
-    private String shiTuID;
-    /**
-     * 规则ID
-     */
-    private String shiTuMC;
-    /**
-     * 数据集ID
-     */
-    private String shuJuJID;
-    /**
-     * 数据集名称
-     */
-    private String shuJuJMC;
-    /**
-     * 表名
-     */
-    private String biaoMing;
-    /**
-     * 字段编码
-     */
-    private String ziDuanBM;
-    /**
-     * 字段名称
-     */
-    private String ziDuanMC;
-    /**
-     * 关系代码
-     */
-    private String guanXiDM;
-    /**
-     * 关系名称
-     */
-    private String guanXiMC;
-    /**
-     * 字段值
-     */
-    List<ZiDuanZhi> ziDuanZhi;
+    @JsonProperty("guiZeList")
+    private List<ShiTu> guiZeList;
+
+    // getters and setters
+
+    public static class ShiTu {
+        @JsonProperty("shiTuID")
+        private String shiTuID;
+        @JsonProperty("shiTuMC")
+        private String shiTuMC;
+        @JsonProperty("shuJuJID")
+        private String shuJuJID;
+        @JsonProperty("shuJuJMC")
+        private String shuJuJMC;
+        @JsonProperty("biaoMing")
+        private String biaoMing;
+        @JsonProperty("ziDuanBM")
+        private String ziDuanBM;
+        @JsonProperty("ziDuanMC")
+        private String ziDuanMC;
+        @JsonProperty("guanXiDM")
+        private String guanXiDM;
+        @JsonProperty("guanXiMC")
+        private String guanXiMC;
+        @JsonProperty("ziDuanZhi")
+        private List<ZiDuanZhi> ziDuanZhi;
+
+        // getters and setters
+    }
+
+    public static class ZiDuanZhi {
+        @JsonProperty("key")
+        private String key;
+        @JsonProperty("value")
+        private String value;
+
+        // getters and setters
+    }
 }

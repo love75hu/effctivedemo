@@ -101,7 +101,6 @@ public class JieDianXXServiceImpl implements JieDianXXService {
 
         //
         //节点信息
-        jieDianXXRepository.asDeleteDsl().where(n->n.biHuanID.eq(dto.getBiHuanID())).execute();
 
         jieDianXXRepository.saveAll(jieDianXX);
         //节点失效

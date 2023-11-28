@@ -1,10 +1,11 @@
 package cn.mediinfo.grus.shujuzx.controller;
 
+import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
 import cn.mediinfo.cyan.msf.core.response.MsfResponse;
-import cn.mediinfo.grus.shujuzx.dto.bihuansz.BiHuanJBXXTreeDto;
 import cn.mediinfo.grus.shujuzx.dto.bihuanzs.BiHuanGNDPZ;
 import cn.mediinfo.grus.shujuzx.dto.bihuanzs.BiHuanRCXXDto;
 import cn.mediinfo.grus.shujuzx.dto.bihuanzs.BiHuanXQDto;
+import cn.mediinfo.grus.shujuzx.service.BiHuanZSService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -20,11 +21,17 @@ import java.util.List;
 @Validated
 public class BiHuanZSController {
 
+     private final BiHuanZSService biHuanZSService;
+
+    public BiHuanZSController(BiHuanZSService biHuanZSService) {
+        this.biHuanZSService = biHuanZSService;
+    }
+
     @Operation(summary = "根据闭环功能点和相关入参获取闭环详情")
     @PostMapping("getBiHuanXQ")
-    public MsfResponse<BiHuanXQDto> getBiHuanXQ(@RequestBody BiHuanGNDPZ biHuanGNDPZ)
+    public MsfResponse<BiHuanXQDto> getBiHuanXQ(@RequestBody BiHuanGNDPZ biHuanGNDPZ) throws YuanChengException
     {
-        return MsfResponse.success();
+        return MsfResponse.success(biHuanZSService.getBiHuanXQ(biHuanGNDPZ));
     }
 
     @Operation(summary = "获取闭环入参信息列表")

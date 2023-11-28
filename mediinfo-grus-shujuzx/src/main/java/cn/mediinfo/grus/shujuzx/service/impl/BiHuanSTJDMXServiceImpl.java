@@ -35,9 +35,9 @@ public class BiHuanSTJDMXServiceImpl implements BiHuanSTJDMXService {
 return result;
     }
     @Override
-    public List<JieDianNRDto> getShiTuJDMX(String shiTuID)
+    public List<JieDianNRDto> getShiTuJDMX(String jieDianID)
     {
-        return shiTuJDMXRepository.getJieDianMX(shiTuID);
+        return shiTuJDMXRepository.getJieDianMX(jieDianID);
     }
 
     @Override

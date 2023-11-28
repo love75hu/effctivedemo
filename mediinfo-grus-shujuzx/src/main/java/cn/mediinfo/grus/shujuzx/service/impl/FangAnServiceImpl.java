@@ -130,7 +130,7 @@ public class FangAnServiceImpl implements FangAnService {
      * @param request
      */
     @Override
-    public String saveFangAn(FangAnXXSaveRequest request) throws YuanChengException {
+    public String saveFangAn(FangAnXXSaveRequest request) throws YuanChengException, TongYongYWException {
         StopWatch watch = new StopWatch();
         watch.start("AST树转换成sql");
         String sql = getSql(request.getRoot(), request.getFangAnSCList(), request.getFangAnLXDM(), request.getGuanJianZi());
@@ -185,13 +185,13 @@ public class FangAnServiceImpl implements FangAnService {
         if (ObjectUtils.isEmpty(fangAnCXLS)) {
             throw new TongYongYWException("查询方案历史不存在");
         }
-        MapUtils.copyProperties(fangAnCXLS, result);
+        BeanUtil.copyProperties(fangAnCXLS, result);
         if (StringUtils.isBlank(fangAnCXLS.getFangAnID())) {
             return result;
         }
         FangAnQueryDTO fangAnXX = fangAnManager.getFangAnXXByFAID(fangAnCXLS.getFangAnID());
         if (ObjectUtils.isNotEmpty(fangAnXX)) {
-            MapUtils.copyProperties(fangAnXX, result);
+            BeanUtil.copyProperties(fangAnXX, result);
         }
         return result;
     }
@@ -207,7 +207,7 @@ public class FangAnServiceImpl implements FangAnService {
      * @throws YuanChengException
      */
     @Override
-    public String getSql(FangAnTreeNode root, List<FangAnSC> fangAnSCList, String fangAnLXDM, String guanJianZi) throws YuanChengException {
+    public String getSql(FangAnTreeNode root, List<FangAnSC> fangAnSCList, String fangAnLXDM, String guanJianZi) throws YuanChengException, TongYongYWException {
         if (StringUtils.isBlank(fangAnLXDM)) {
             return "";
         }
@@ -220,6 +220,9 @@ public class FangAnServiceImpl implements FangAnService {
         subFangAn(conditionList);
 
         Set<String> shiTuMXIds = conditionList.stream().map(FangAnCondition::getShiTuMXID).collect(Collectors.toSet());
+        if(shiTuMXIds.stream().anyMatch(StringUtil::isBlank)){
+            throw new TongYongYWException("视图明细ID不能为空");
+        }
         //from
         List<TableDTO> tableList = shiTuMXService.listTable(shiTuMXIds);
         tableList = (CollUtil.isEmpty(tableList)) ? ListUtil.toList() : tableList;
@@ -334,7 +337,7 @@ public class FangAnServiceImpl implements FangAnService {
         if(isShowBQ){
             //获取病人ID列表
             List<String> bingRenIDList=bingRenFZList.stream().map(FangAnCXBRFZDto::getBingRenID).distinct().toList();
-            shouChangJMXList= MapUtils.copyListProperties(scScShouCangJMXRepository.findByShouCangRIDAndBingRenIDIn(lyraIdentityService.getYongHuId(),bingRenIDList), SC_SC_ShouCangJMXListDto::new);
+            shouChangJMXList= BeanUtil.copyListProperties(scScShouCangJMXRepository.findByShouCangRIDAndBingRenIDIn(lyraIdentityService.getYongHuId(),bingRenIDList), SC_SC_ShouCangJMXListDto::new);
         }
 
         //药品
@@ -600,7 +603,7 @@ public class FangAnServiceImpl implements FangAnService {
         }
 
         List<FangAnSCDTO> jiBenXXSCList = fangAnSCList.stream().filter(p -> "br_da_jibenxx".equals(p.getBiaoMing())).toList();
-        var qiTaSCList = fangAnSCList.stream().filter(p -> !"br_da_jibenxx".equals(p.getBiaoMing())).collect(Collectors.groupingBy(FangAnSCDTO::getBieMing,Collectors.toList()));
+        var qiTaSCList = fangAnSCList.stream().filter(p -> !"br_da_jibenxx".equals(p.getBiaoMing())&&StringUtil.hasText(p.getBieMing())).collect(Collectors.groupingBy(FangAnSCDTO::getBieMing,Collectors.toList()));
 
         //结果分组除重 患者基本信息表：br_da_jibenxx，该表相关字段分组后只显示1次，其它按就诊显示
         return jieGuoList.stream().collect(Collectors.groupingBy(p -> p.get("bingrenid"))).entrySet().stream().map(p -> {
@@ -1044,7 +1047,7 @@ public class FangAnServiceImpl implements FangAnService {
      * @param jiChuBiaoXXList 基础表信息
      * @return Map
      */
-    private Map<String, Tuple.Tuple4<String, String, Boolean, Boolean>> getAliasMap(List<TableDTO> tableList, String fangAnLXDM, List<ShuJuXXMSRso> jiChuBiaoXXList) throws YuanChengException {
+    private Map<String, Tuple.Tuple4<String, String, Boolean, Boolean>> getAliasMap(List<TableDTO> tableList, String fangAnLXDM, List<ShuJuXXMSRso> jiChuBiaoXXList) {
         //Tuple4中T1：别名，T2: 表关联，T3:是否外连表，T4:是否基础表,LinkedHashMap有序,CaseInsensitiveMap不区分大小写
         Map<String, Tuple.Tuple4<String, String, Boolean, Boolean>> aliasMap = new LinkedHashMap<>();
         //基础表
@@ -1272,6 +1275,9 @@ public class FangAnServiceImpl implements FangAnService {
         for (FangAnSC e : Optional.ofNullable(fangAnSCList).orElse(new ArrayList<>())) {
             String key = aliasMap.keySet().stream().filter(p -> p.contains(formatBiaoMing(e.getMoShi(), e.getBiaoMing()))).findFirst().orElse("");
             String alias = aliasMap.containsKey(key) ? aliasMap.get(key).item1() : "";
+            if(StringUtil.isBlank(alias)){
+                continue;
+            }
             switch (Optional.ofNullable(e.getZhiBiaoLXDM()).orElse("")) {
                 case "2": //检验
                     key = aliasMap.keySet().stream().filter(p -> p.contains("jy_bg_baogaomx")).findFirst().orElse("");
@@ -1305,7 +1311,7 @@ public class FangAnServiceImpl implements FangAnService {
                     fields.add(alias + "." + e.getZhiBiaoID() + " as zd_" + fangAnSCList.indexOf(e));
                     break;
             }
-            zhuJianList.add((StringUtil.isBlank(alias) ? "" : alias + ".") + "id as zj_" + alias);
+            zhuJianList.add(alias + "." + "id as zj_" + alias);
         }
         fields.addAll(zhuJianList.stream().toList());
         return " " + CharSequenceUtil.join(",", fields);

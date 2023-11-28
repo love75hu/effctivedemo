@@ -41,7 +41,7 @@ public class FangAnXXController {
 
     @Operation(summary = "保存方案")
     @PostMapping("/save")
-    public MsfResponse<String> saveFangAnXX(@Validated @RequestBody FangAnXXSaveRequest request) throws YuanChengException {
+    public MsfResponse<String> saveFangAnXX(@Validated @RequestBody FangAnXXSaveRequest request) throws YuanChengException, TongYongYWException {
         return MsfResponse.success(fangAnService.saveFangAn(request));
     }
 
@@ -60,14 +60,14 @@ public class FangAnXXController {
 
     @Operation(summary = "查询sql")
     @PostMapping("/getSql")
-    public MsfResponse<String> getFangAnSql(@Validated @RequestBody FangAnQuerySqlRequest request) throws YuanChengException {
+    public MsfResponse<String> getFangAnSql(@Validated @RequestBody FangAnQuerySqlRequest request) throws YuanChengException, TongYongYWException {
         return MsfResponse.success(fangAnService.getSql(request.getRoot(), request.getFangAnSCList(), request.getFangAnLXDM(), request.getGuanJianZi()));
     }
 
 
     @Operation(summary = "保存查询记录")
     @PostMapping("/saveQueryRercord")
-    public MsfResponse<String> saveFangAnCXLSSaveRequest(@Validated @RequestBody FangAnCXLSSaveRequest request) throws YuanChengException {
+    public MsfResponse<String> saveFangAnCXLSSaveRequest(@Validated @RequestBody FangAnCXLSSaveRequest request) throws YuanChengException, TongYongYWException {
         String sql = fangAnService.getSql(request.getRoot(), request.getFangAnSCList(), request.getFangAnLXDM(), request.getGuanJianZi());
         return MsfResponse.success(chaXunFAXXService.saveFangAnCXLS(request, sql));
     }

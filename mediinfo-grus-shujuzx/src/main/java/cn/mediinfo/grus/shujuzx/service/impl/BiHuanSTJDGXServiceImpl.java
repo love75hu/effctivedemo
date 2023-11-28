@@ -29,8 +29,8 @@ public class BiHuanSTJDGXServiceImpl implements BiHuanSTJDGXService {
         this.lyraIdentityService = lyraIdentityService;
     }
     @Override
-    public List<GuanLianJDDto> getGuanLianJDXX(String shiTuID) {
-        return  shiTuJDGXRepository.getGuanLianJDXX(shiTuID);
+    public List<GuanLianJDDto> getGuanLianJDXX(String jieDianID) {
+        return  shiTuJDGXRepository.getGuanLianJDXX(jieDianID);
     }
     @Override
     public List<SC_BH_ShiTuJDGXDto> getGuanLianJDXXs(List<String> jieDianID)

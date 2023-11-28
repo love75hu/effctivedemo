@@ -11,9 +11,9 @@ import java.util.List;
 
 @MsfDataSource("datasourcesjzx")
 public interface SC_BH_ShiTuJDGXRepository extends MsfJpaRepository<QSC_BH_ShiTuJDGXModel, SC_BH_ShiTuJDGXModel, String>, JpaSpecificationExecutor<SC_BH_ShiTuJDGXModel> {
-    default List<GuanLianJDDto> getGuanLianJDXX(String shiTuID)
+    default List<GuanLianJDDto> getGuanLianJDXX(String jieDianID)
     {
-        return this.asQuerydsl().where(n->n.shiTuID.eq(shiTuID)).select(GuanLianJDDto.class).fetch();
+        return this.asQuerydsl().where(n->n.jieDianID.eq(jieDianID)).select(GuanLianJDDto.class).fetch();
     }
 
 

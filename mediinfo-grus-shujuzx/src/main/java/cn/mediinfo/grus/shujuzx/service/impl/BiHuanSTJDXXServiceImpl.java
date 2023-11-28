@@ -60,8 +60,8 @@ public class BiHuanSTJDXXServiceImpl implements BiHuanSTJDXXService {
         SC_BH_ShiTuJDXXDto shiTuJDXX = getShiTuJDXX(id);
         BiHuanSTJDDto biHuanSTJDDto = new BiHuanSTJDDto();
         BeanUtil.copyProperties(shiTuJDXX,biHuanSTJDDto);
-        biHuanSTJDDto.setGuanLianJD(biHuanSTJDGXService.getGuanLianJDXX(shiTuJDXX.getShiTuID()));
-        biHuanSTJDDto.setJieDianNR( biHuanSTJDMXService.getShiTuJDMX(shiTuJDXX.getShiTuID()));
+        biHuanSTJDDto.setGuanLianJD(biHuanSTJDGXService.getGuanLianJDXX(shiTuJDXX.getJieDianID()));
+        biHuanSTJDDto.setJieDianNR( biHuanSTJDMXService.getShiTuJDMX(shiTuJDXX.getJieDianID()));
         return biHuanSTJDDto;
     }
 
@@ -203,7 +203,7 @@ public class BiHuanSTJDXXServiceImpl implements BiHuanSTJDXXService {
         biHuanSTJDGXService.addGuanLianJDXX(dto.getGuanLianJD(),
                 scBhShiTuJDXXModel.getShiTuID(),
                 scBhShiTuJDXXModel.getShiTuMC(),scBhShiTuJDXXModel.getJieDianID(),scBhShiTuJDXXModel.getJieDianMC());
-        //添加节点内容
+
         biHuanSTJDMXService.addShiTuJDMX(dto.getJieDianNR(),
                 scBhShiTuJDXXModel.getShiTuID(),
                 scBhShiTuJDXXModel.getShiTuMC(),scBhShiTuJDXXModel.getJieDianID(),scBhShiTuJDXXModel.getJieDianMC());

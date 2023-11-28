@@ -13,9 +13,9 @@ import java.util.List;
 @MsfDataSource("datasourcesjzx")
 public interface SC_BH_ShiTuJDMXRepository extends MsfJpaRepository<QSC_BH_ShiTuJDMXModel, SC_BH_ShiTuJDMXModel, String>, JpaSpecificationExecutor<SC_BH_ShiTuJDMXModel> {
 
-    default List<JieDianNRDto> getJieDianMX(String shiTuID)
+    default List<JieDianNRDto> getJieDianMX(String jieDianID)
     {
-        return this.asQuerydsl().where(n->n.shiTuID.eq(shiTuID)).select(JieDianNRDto.class).fetch();
+        return this.asQuerydsl().where(n->n.jieDianID.eq(jieDianID)).select(JieDianNRDto.class).fetch();
     }
     default List<SC_BH_ShiTuJDMXDto> getJieDianMXs(List<String> jieDianID)
     {

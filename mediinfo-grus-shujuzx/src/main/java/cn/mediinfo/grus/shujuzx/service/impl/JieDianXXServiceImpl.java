@@ -120,12 +120,11 @@ public class JieDianXXServiceImpl implements JieDianXXService {
      *
      * @param biHuanID
      * @return
-     */
-    @Override
+     */    @Override
     public List<BiHuanSZXXDto> getBiHuanSZXXBybiHuanID(String biHuanID)
     {
         List<BiHuanSZXXDto> biHuanSZXXDtos=new ArrayList<>();
-       //节点信息
+        //节点信息
         List<BiHuanSZXXDto> jieDianXXList = jieDianXXRepository.asQuerydsl()
                 .where(n -> n.biHuanID.eq(biHuanID))
                 .orderBy(n->n.shunXuHao.asc())
@@ -148,7 +147,7 @@ public class JieDianXXServiceImpl implements JieDianXXService {
 
         for (var a:jieDianXXList)
         {
-           a.setZiBiHXXDto(BeanUtil.copyProperties(ziBiHXXList.stream().filter(x->x.getJieDianID().equals(a.getJieDianID())).findFirst().orElse(null),ZiBiHXXDto.class));
+            a.setZiBiHXXDto(BeanUtil.copyProperties(ziBiHXXList.stream().filter(x->x.getJieDianID().equals(a.getJieDianID())).findFirst().orElse(null),ZiBiHXXDto.class));
 
             a.setJieDianSXList(BeanUtil.copyToList(biHuanSZXXList.stream().filter(x->x.getJieDianID().equals(a.getJieDianID())).collect(Collectors.toList()),JieDianSXDto.class));
 
@@ -157,9 +156,32 @@ public class JieDianXXServiceImpl implements JieDianXXService {
         return jieDianXXList;
     }
 
+
     @Override
     public List<JieDianSXXXDto> getJieDianSXXX(String biHuanID,String jieDianID) {
         return jieDianXXRepository.asQuerydsl().whereIf(StringUtil.hasText(jieDianID),n->n.jieDianID.ne(jieDianID)).where(n->n.biHuanID.eq(biHuanID)).select(JieDianSXXXDto.class).fetch();
+    }
+
+    /**
+     * 获取闭环信息
+     *
+     */
+    @Override
+    public BiHuanSZXXDto getBiHuanJDNRXX(String biHuanID, String jieDianID) throws WeiZhaoDSJException {
+
+        SC_BH_JieDianXXDto jieDianSXXXDto = jieDianXXRepository.asQuerydsl()
+                .where(n -> n.biHuanID.eq(biHuanID))
+                .where(n -> n.jieDianID.eq(jieDianID)).select(SC_BH_JieDianXXDto.class).fetchFirst();
+        if (jieDianSXXXDto!=null)
+        {
+            BiHuanSZXXDto biHuanSZXXDto = BeanUtil.copyProperties(jieDianSXXXDto, BiHuanSZXXDto.class);
+            biHuanSZXXDto.setJieDianSXList(jieDianSXRepository.asQuerydsl().where(n -> n.biHuanID.eq(biHuanID)).where(n -> n.jieDianID.eq(jieDianID)).select(JieDianSXDto.class).fetch());
+            biHuanSZXXDto.setZiBiHXXDto(ziBiHXXRepository.asQuerydsl().where(n -> n.biHuanID.eq(biHuanID)).where(n -> n.jieDianID.eq(jieDianID)).select(ZiBiHXXDto.class).fetchFirst());
+            biHuanSZXXDto.setZiBiHXSLDtoList(ziBiHXSLRepository.asQuerydsl().where(n -> n.biHuanID.eq(biHuanID)).where(n -> n.jieDianID.eq(jieDianID)).select(ZiBiHXSLDto.class).fetch());
+            return biHuanSZXXDto;
+        }else {
+            throw new WeiZhaoDSJException("未找到数据");
+        }
     }
 
 

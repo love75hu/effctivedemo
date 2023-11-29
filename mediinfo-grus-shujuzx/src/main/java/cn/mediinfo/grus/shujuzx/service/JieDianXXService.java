@@ -20,4 +20,6 @@ public interface JieDianXXService {
 
     List<JieDianSXXXDto>  getJieDianSXXX(String biHuanID,String jieDianID);
 
+    BiHuanSZXXDto getBiHuanJDNRXX( String biHuanID,String jieDianID) throws WeiZhaoDSJException;
+
 }

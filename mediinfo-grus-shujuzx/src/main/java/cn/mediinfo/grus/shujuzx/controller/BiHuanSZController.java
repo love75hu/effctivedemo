@@ -1,6 +1,7 @@
 package cn.mediinfo.grus.shujuzx.controller;
 
 import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
+import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
 import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
 import cn.mediinfo.cyan.msf.core.response.MsfResponse;
 import cn.mediinfo.cyan.msf.core.util.BeanUtil;
@@ -15,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.plaf.PanelUI;
 import java.util.List;
 
 @RestController
@@ -123,19 +125,9 @@ public class BiHuanSZController {
         return MsfResponse.success(BeanUtil.copyListProperties(ruChanXXService.getRuCanXX(biHuanID),BiHuanSTZDDto::new) );
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    @Operation(summary = "闭环id 于节点id 获取节点内容信息")
+    @GetMapping("getBiHuanJDNRXX")
+    public MsfResponse<BiHuanSZXXDto> getBiHuanJDNRXX(@NotEmpty(message = "闭环id不能为空") String biHuanID,@NotEmpty(message = "节点id不能为空") String jieDianID) throws WeiZhaoDSJException {
+        return MsfResponse.success(jieDianXXService.getBiHuanJDNRXX(biHuanID,jieDianID));
+    }
 }

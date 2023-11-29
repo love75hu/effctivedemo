@@ -342,12 +342,9 @@ public class FangAnServiceImpl implements FangAnService {
 
         //药品
         if (fangAnSCList.stream().anyMatch(p -> "4".equals(p.getZhiBiaoLXDM()))) {
-            //获取输出字段部分按就诊合并的最大长度
-            Integer maxColCount = bingRenFZList.stream().map(br -> br.getFangAnCXJZFZList().stream().map(jz -> jz.getFangAnCXSTFZList().stream().map(st->st.getFangAnCXSTZJFZList().stream().map(stzj->stzj.getFangAnCXZDFZList().stream().map(FangAnCXZDFZDto::getZiDuanZhiCount).reduce(0,Integer::sum)).reduce(0,Integer::sum)).reduce(0, Integer::sum)).reduce(0, Integer::max)).reduce(0,Integer::max);
-            //按患者合并
-            if (isHuanZheHB) {
-                maxColCount = bingRenFZList.stream().map(br -> br.getFangAnCXJZFZList().stream().map(jz -> jz.getFangAnCXSTFZList().stream().map(st->st.getFangAnCXSTZJFZList().stream().map(stzj->stzj.getFangAnCXZDFZList().stream().map(FangAnCXZDFZDto::getZiDuanZhiCount).reduce(0,Integer::sum)).reduce(0,Integer::sum)).reduce(0, Integer::sum)).reduce(0, Integer::sum)).reduce(0,Integer::max);
-            }
+            //获取输出字段部分按就诊/患者合并的最大长度
+            int maxColCount =bingRenFZList.stream().map(br -> br.getFangAnCXJZFZList().stream().map(jz -> jz.getFangAnCXSTFZList().stream().map(st->st.getFangAnCXSTZJFZList().stream().map(stzj->stzj.getFangAnCXZDFZList().stream().map(FangAnCXZDFZDto::getZiDuanZhiCount).reduce(0,Integer::sum)).reduce(0,Integer::sum)).reduce(0, (isHuanZheHB?Integer::sum:Integer::max))).reduce(0, Integer::max)).reduce(0,Integer::max);
+
             for (FangAnCXBRFZDto bingRenFZ : bingRenFZList) {
                 if(isHuanZheHB){
                     List<QueryResultDTO> row0 = new ArrayList<>();
@@ -430,7 +427,7 @@ public class FangAnServiceImpl implements FangAnService {
             binRenSXFZ.setZiDuanCD(zd.getZiDuanZhiCount());
             return binRenSXFZ;
          })))));
-        List<FangAnCXJGFZDto> bingRenSXFZList=new ArrayList<>();
+        List<FangAnCXJGFZDto> bingRenSXFZList;
         //按患者合并
         if (isHuanZheHB) {
             //按就诊次数视图次数获取每个字段次数分组
@@ -1109,7 +1106,7 @@ public class FangAnServiceImpl implements FangAnService {
      * @param jiChuBiaoXXList 基础表信息
      * @return 表关系sql
      */
-    private String getTableJoinRelation(List<TableDTO> tableList, Map<String, Tuple.Tuple4<String, String, Boolean, Boolean>> aliasMap, String fangAnLXDM, String guanJianZi, List<ShuJuXXMSRso> jiChuBiaoXXList) throws YuanChengException {
+    private String getTableJoinRelation(List<TableDTO> tableList, Map<String, Tuple.Tuple4<String, String, Boolean, Boolean>> aliasMap, String fangAnLXDM, String guanJianZi, List<ShuJuXXMSRso> jiChuBiaoXXList) {
         //获取基础表
         Tuple.Tuple4<String, String, Boolean, Boolean> jiChuTable = aliasMap.values().stream().filter(Tuple.Tuple4::item4).findFirst().orElse(null);
         //获取视图中表关系

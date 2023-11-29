@@ -78,7 +78,6 @@ public class ChaXunFAXXServiceImpl implements ChaXunFAXXService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public String saveFangAnCXLS(FangAnCXLSSaveRequest request, String sql) {
-        String zuZhiJGID = lyraIdentityService.getJiGouID();
         String chaXunLXDM = "2";
         String chaXunLXMC = "高级查询";
         if (StringUtils.hasText(request.getFangAnId()) || CollUtil.isNotEmpty(request.getFangAnSCList())) {
@@ -97,7 +96,7 @@ public class ChaXunFAXXServiceImpl implements ChaXunFAXXService {
         if(CollUtil.isNotEmpty(request.getFangAnSCList())){
             model.setChaXunSC(JsonUtil.getBeanToJson(request.getFangAnSCList()));
         }
-        if (chaXunLXDM.equals("1")) {
+        if ("1".equals(chaXunLXDM)) {
             model.setChaXunSQL(sql);
         }
         model.setChaXunSJ(new Date());

@@ -16,8 +16,7 @@ public class DataSourceConfig {
     public DataSourceProperties datasourcesjzx_dataSourceProperties() {
         return new DataSourceProperties();
     }
-
-    @ConfigurationProperties(prefix = "spring.datasource.multiple.datasourcesjzx.configuration")
+    
     @Bean(name = "datasourcesjzx_dataSourceFactory")
     public HikariDataSource datasourcesjzx_dataSourceFactory(@Qualifier("datasourcesjzx_dataSourceProperties") DataSourceProperties properties) {
         return properties.initializeDataSourceBuilder().type(HikariDataSource.class).build();

@@ -252,10 +252,16 @@ public class ShiTuMXServiceImpl implements ShiTuMXService {
      */
     @Override
     public List<SchemaTable> getFangAnSCZD(List<ShuJuSTDto> shuJuSTDto) throws WeiZhaoDSJException {
-        var shiTUIDXX = shuJuSTDto.stream().map(ShuJuSTDto::getShiTuID).collect(Collectors.toList());
+        List<String> shiTUIDXX = shuJuSTDto.stream().map(ShuJuSTDto::getShiTuID).collect(Collectors.toList());
+        List<String>ziDuanBMXX = new ArrayList<>();
+        for(var list :shuJuSTDto.stream().map(ShuJuSTDto::getZiDuanBM).toList() ){
+            for(var key :list ){
+                ziDuanBMXX.add(key.toUpperCase());
+            }
+        }
         Set<String> shiTuIds = new HashSet<>(shiTUIDXX);
         var shiTuXXList = shiTuXXRepository.findByShiTuIDIn(shiTuIds);//视图信息
-        var shiTuMXZDList  =  shiTuMXRepository.getShiTuMXSJ(shiTUIDXX,-1,null);//视图明细信息
+        var shiTuMXZDList  =  shiTuMXRepository.getShiTuMXSJ(shiTUIDXX,ziDuanBMXX);//视图明细信息
         //公共接口入参组装
         List<LingChuangJSPZDto> lingChuangJSPZDtos = new ArrayList<>();
         //视图信息分组 数据来源ID 数据来源类型DM
@@ -272,22 +278,23 @@ public class ShiTuMXServiceImpl implements ShiTuMXService {
                 return shuJuJMXZDDto;
             }).toList();
             lingChuangJSPZDto.setShuJuJMXZDDtos(list);
+            lingChuangJSPZDtos.add(lingChuangJSPZDto);
         }
         //获取公共接口数据
         List<LingChuangJSPZZDXXRso> lingChuangJSPZZDList = gongYongRemoteService.getlingChuangJSPZZDXX(lingChuangJSPZDtos).getData();
         List<SchemaTable> result = new ArrayList<>();
         for (LingChuangJSPZZDXXRso pz : lingChuangJSPZZDList) {
             for (ShiTuZDMXDto zd : pz.getShiTuMXZDDtos()) {
-                var cunZai = result.stream().filter(t-> Objects.equals(t.getMoShi(), pz.getShuJuLYID()) && Objects.equals(t.getBiaoMing(), zd.getBiaoMing())).findFirst().orElse(null);;
+                var cunZai = result.stream().filter(t-> Objects.equals(t.getMoShi(), zd.getShuJuYMC()) && Objects.equals(t.getBiaoMing(), zd.getBiaoMing())).findFirst().orElse(null);;
                 ShuJuJMXZDDto shuJuJMXZDDto = new ShuJuJMXZDDto();
-                shuJuJMXZDDto.setMoShi(pz.getShuJuLYID());
+                shuJuJMXZDDto.setMoShi(zd.getShuJuYMC());
                 shuJuJMXZDDto.setZiDuanBM(zd.getZiDuanBM());
                 shuJuJMXZDDto.setZiDuanMC(zd.getZiDuanMC());
                 if(cunZai == null){
                     SchemaTable schema = new SchemaTable();
                     List<ShuJuJMXZDDto> dto = new ArrayList<>();
                     dto.add(shuJuJMXZDDto);
-                    schema.setMoShi(pz.getShuJuLYID());
+                    schema.setMoShi(zd.getShuJuYMC());
                     schema.setBiaoMing(zd.getBiaoMing());
                     schema.setShuJuJMXZDDtos(dto);
                     result.add(schema);

@@ -98,4 +98,18 @@ public interface SC_CX_ShiTuMXRepository extends MsfJpaRepository<QSC_CX_ShiTuMX
                 .whereIf(StringUtil.hasText(likeQuery), e -> e.ziDuanMC.contains(likeQuery))
                 .fetchDetach();
     }
+
+
+    /**
+     * 获取视图明细数据
+     * @param shiTuIDs
+     * @param ziDuanBMs
+     * @return
+     */
+    default List<SC_CX_ShiTuMXModel> getShiTuMXSJ(List<String> shiTuIDs,List<String> ziDuanBMs) {
+        return this.asQuerydsl()
+                .where(e->e.shiTuID.in(shiTuIDs))
+                .whereIf(ziDuanBMs.stream().count()>0, o->o.ziDuanBM.toUpperCase().in(ziDuanBMs))
+                .fetchDetach();
+    }
 }

@@ -8,6 +8,8 @@ import java.util.List;
 @Data
 public class JieDianXXSZDto {
 
+    private String id;
+
     /**
      * 组织机构ID
      */
@@ -56,6 +58,10 @@ public class JieDianXXSZDto {
     @Schema(description = "并行节点标志")
     private Integer bingXingBZ;
 
+    /**
+     * 上级节点id
+     */
+    private String shangJiJDID;
 
     /**
      * 子闭环信息

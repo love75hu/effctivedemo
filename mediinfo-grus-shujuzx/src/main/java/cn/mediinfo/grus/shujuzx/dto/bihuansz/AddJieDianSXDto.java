@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 
 @Data
 public class AddJieDianSXDto {
+    private String id;
     /**
      * 组织机构ID
      */

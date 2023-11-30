@@ -19,6 +19,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -60,7 +61,37 @@ public class JieDianXXServiceImpl implements JieDianXXService {
     @Transactional(rollbackOn = Exception.class)
     public String addBiHuanSZXX(AddBiHuanSZXXDto dto) {
 
+        SC_BH_JieDianXXModel scBhJieDianXXModel = jieDianXXRepository.findById(dto.getJieDianXXSZDtoList().getShangJiJDID()).orElse(null);
 
+        SC_BH_JieDianXXModel jieDianXX=new SC_BH_JieDianXXModel();
+
+        SC_BH_JieDianXXModel jieDianXXModel = BeanUtil.copyProperties(dto.getJieDianXXSZDtoList(), SC_BH_JieDianXXModel.class);
+        jieDianXXModel.setBiHuanID(dto.getBiHuanID());
+        jieDianXXModel.setBiHuanMC(dto.getBiHuanMC());
+        if (scBhJieDianXXModel==null)
+        {
+            jieDianXXModel.setShunXuHao(1);
+            jieDianXX = jieDianXXRepository.save(jieDianXXModel);
+        }else {
+            if (!StringUtil.hasText(dto.getJieDianXXSZDtoList().getId()) ) {
+                jieDianXXRepository.asDeleteDsl().where(n->n.biHuanID.eq(dto.getBiHuanID()))
+                        .where(n->n.jieDianID.eq(dto.getJieDianXXSZDtoList().getJieDianID())).execute();
+
+                jieDianXXModel.setShunXuHao(scBhJieDianXXModel.getShunXuHao() + 1);
+
+                List<SC_BH_JieDianXXModel> fetch = jieDianXXRepository.asQuerydsl().where(n -> n.shunXuHao.gt(scBhJieDianXXModel.getShunXuHao())).fetch();
+                for (var a : fetch) {
+                    a.setShunXuHao(a.getShunXuHao() + 1);
+                }
+                jieDianXXRepository.saveAll(fetch);
+                jieDianXX = jieDianXXRepository.save(jieDianXXModel);
+            }else {
+                SC_BH_JieDianXXModel scBhJieDianXXModel1 = jieDianXXRepository.findById(dto.getJieDianXXSZDtoList().getId()).orElse(new SC_BH_JieDianXXModel());
+               BeanUtil.copyProperties(scBhJieDianXXModel1,jieDianXXModel);
+
+                jieDianXX= jieDianXXRepository.save(scBhJieDianXXModel1);
+            }
+        }
         //节点时效
         List<SC_BH_JieDianSXModel> jieDianSX=new ArrayList<>();
         //子闭环信息
@@ -79,10 +110,6 @@ public class JieDianXXServiceImpl implements JieDianXXService {
                 ziBiHXXModel.setJieDianMC(jieDianXXSZ.getJieDianMC());
                 ziBiHXX.add(ziBiHXXModel);
             }
-            //子闭环信息
-            SC_BH_JieDianXXModel jieDianXXModel = BeanUtil.copyProperties(jieDianXXSZ, SC_BH_JieDianXXModel.class);
-            jieDianXXModel.setBiHuanID(dto.getBiHuanID());
-            jieDianXXModel.setBiHuanMC(dto.getBiHuanMC());
             //时效
             for (var s :jieDianXXSZ.getJieDianSXList())
             {
@@ -100,12 +127,6 @@ public class JieDianXXServiceImpl implements JieDianXXService {
                 ziBiHXSLModel.setBiHuanMC(dto.getBiHuanMC());
                 ziBiHXSL.add(ziBiHXSLModel);
             }
-
-        //
-        //节点信息
-        jieDianXXRepository.asDeleteDsl().where(n->n.biHuanID.eq(dto.getBiHuanID()))
-                .where(n->n.jieDianID.eq(jieDianXXSZ.getJieDianID())).execute();
-        SC_BH_JieDianXXModel jieDianXX = jieDianXXRepository.save(jieDianXXModel);
 
         //节点失效
         jieDianSXRepository.asDeleteDsl().where(n->n.biHuanID.eq(dto.getBiHuanID())).execute();
@@ -148,7 +169,7 @@ public class JieDianXXServiceImpl implements JieDianXXService {
 
             a.setZiBiHXSLDtoList(BeanUtil.copyToList(ziBiHXSLList.stream().filter(x->x.getJieDianID().equals(a.getJieDianID())).collect(Collectors.toList()), ZiBiHXSLDto.class));
         }
-        return jieDianXXList;
+        return jieDianXXList.stream().sorted((Comparator.comparing(BiHuanSZXXDto::getShunXuHao))).collect(Collectors.toList());
     }
 
 

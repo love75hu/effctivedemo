@@ -8,6 +8,8 @@ import java.util.List;
 
 @Data
 public class BiHuanSZXXDto {
+
+    private String id;
     /**
      * 组织机构ID
      */

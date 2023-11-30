@@ -200,7 +200,7 @@ public class BiHuanSTMXServiceImpl implements BiHuanSTMXService {
         BiHuanSTSJXXDto biHuanSTSJXXDto=new BiHuanSTSJXXDto();
         biHuanSTSJXXDto.setShiTuID(scBhShiTuXXModel.getShiTuID());
         biHuanSTSJXXDto.setShiTuMC(scBhShiTuXXModel.getShiTuMC());
-        var shiTuZDXX=shiTuList.stream().filter(n-> Objects.equals( n.getShuJuZLXDM(),3)).collect(Collectors.toList());
+        var shiTuZDXX=shiTuList.stream().filter(n-> Objects.equals( n.getShuJuZLXDM(),"3")).collect(Collectors.toList());
         List<ShiJianXXDto> shiJianXXDtoList=new ArrayList<>();
         shiTuZDXX.forEach(n->{
             ShiJianXXDto shiJianXXDto=new ShiJianXXDto();

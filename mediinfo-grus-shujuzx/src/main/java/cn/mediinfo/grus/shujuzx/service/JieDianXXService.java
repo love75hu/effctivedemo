@@ -17,14 +17,14 @@ public interface JieDianXXService {
 
     String addBiHuanSZXX(AddBiHuanSZXXDto dto);
 
-    List<BiHuanSZXXDto>  getBiHuanSZXXBybiHuanID( String biHuanID);
+    List<BiHuanSZXXDto>  getBiHuanSZXXBybiHuanID( String biHuanID,String jiGouID);
 
     List<JieDianSXXXDto>  getJieDianSXXX(String biHuanID,String jieDianID,String jiGouID);
 
-    BiHuanSZXXDto getBiHuanJDNRXX( String biHuanID,String jieDianID ,String jiGouID) throws WeiZhaoDSJException;
+    BiHuanSZXXDto getBiHuanJDNRXX(String jieDianXXID) throws WeiZhaoDSJException;
 
-    Boolean zuoFeiBiHuanJDXX(String biHuanID,String jieDianID,String jiGouID);
+    Boolean zuoFeiBiHuanJDXX(String jieDianXXID) throws WeiZhaoDSJException;
 
-    Boolean jieDianYC(String biHuanID,String jieDianID, String jiGouID,Integer yinCangBZ);
+    Boolean jieDianYC(String jieDianXXID,String yinCangBZ);
 
 }

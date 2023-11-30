@@ -69,6 +69,7 @@ public class BiHuanSZXXDto {
     @Schema(description = "并行节点标志")
     private Integer bingXingBZ;
 
+    private Integer shunXuHao;
 
     /**
      * 子闭环信息

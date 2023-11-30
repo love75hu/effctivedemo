@@ -163,8 +163,9 @@ public class BiHuanSTMXServiceImpl implements BiHuanSTMXService {
      */
     @Override
     public List<BiHuanSTSJXXDto> getShiJianXX(String shiTuID) throws WeiZhaoDSJException, YuanChengException {
+        //获取当前视图下得字段
         List<KeXuanZDDto> shiTUZDXX = shiTuMXRepository.getShiTUZDXX(shiTuID);
-
+        //获取视图信息
         SC_BH_ShiTuXXDto scBhShiTuXXModel = shiTuXXRepository.asQuerydsl()
                 .where(n -> n.shiTuID.eq(shiTuID))
                 .select(SC_BH_ShiTuXXDto.class).fetchFirst();
@@ -200,7 +201,7 @@ public class BiHuanSTMXServiceImpl implements BiHuanSTMXService {
         BiHuanSTSJXXDto biHuanSTSJXXDto=new BiHuanSTSJXXDto();
         biHuanSTSJXXDto.setShiTuID(scBhShiTuXXModel.getShiTuID());
         biHuanSTSJXXDto.setShiTuMC(scBhShiTuXXModel.getShiTuMC());
-        var shiTuZDXX=shiTuList.stream().filter(n-> Objects.equals( n.getShuJuZLXDM(),"3")).collect(Collectors.toList());
+        var shiTuZDXX=shiTuList.stream().filter(n-> Objects.equals( n.getShuJuZLXDM(),"3")).toList();
         List<ShiJianXXDto> shiJianXXDtoList=new ArrayList<>();
         shiTuZDXX.forEach(n->{
             ShiJianXXDto shiJianXXDto=new ShiJianXXDto();
@@ -214,6 +215,10 @@ public class BiHuanSTMXServiceImpl implements BiHuanSTMXService {
         return biHuanSTSJXXDtoList;
     }
 
+    /**
+     * 获取闭环类型下字段
+     *
+     */
     @Override
     public  List<BiHuanSTRCZDDto>  getBiHuanSTZDBybiHuanLXDM(String biHuanLXDM) {
 

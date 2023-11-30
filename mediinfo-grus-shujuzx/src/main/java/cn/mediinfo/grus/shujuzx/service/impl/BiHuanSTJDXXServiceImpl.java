@@ -74,7 +74,7 @@ public class BiHuanSTJDXXServiceImpl implements BiHuanSTJDXXService {
     @Override
     public Boolean addBiHuanSTJD(BiHuanSTJDDto dto) throws WeiZhaoDSJException {
 
-        SC_BH_ShiTuXXModel shiTuXX = shiTuXXRepository.asQuerydsl().where(n->n.shiTuID.eq(dto.getShiTuID())).fetchFirst();
+        SC_BH_ShiTuXXModel shiTuXX = shiTuXXRepository.findFirstByShiTuID(dto.getShiTuID());
        if (shiTuXX==null)
        {
               throw new WeiZhaoDSJException("未找到视图信息");
@@ -106,14 +106,13 @@ public class BiHuanSTJDXXServiceImpl implements BiHuanSTJDXXService {
         return true;
     }
 
+    /**
+     * 获取关联节点信息
+     */
     @Override
     public List<GuanLianJDDto> getGuanLianJDXX(String shiTuID,String jieDianID) {
 
-        return shiTuJDXXRepository.asQuerydsl()
-                .where(n->n.shiTuID.eq(shiTuID))
-                .whereIf(StringUtils.hasText(jieDianID), n->n.jieDianID.ne(jieDianID))
-                .orderBy(n->n.shunXuHao.asc())
-                .select(GuanLianJDDto.class).fetch();
+        return shiTuJDXXRepository.getGuanLianJDXX(shiTuID,jieDianID);
     }
 
     /**
@@ -162,6 +161,11 @@ public class BiHuanSTJDXXServiceImpl implements BiHuanSTJDXXService {
         return shiTuJDXXRepository.getBiHuanJDXXCount(shiTuID, biHuanLXDM,jieDianMC, qiYongBZ);
     }
 
+    /**
+     * 获取可选节点内容
+     * @param biHuanLXDM 闭环类型代码
+     * @return 可选节点内容
+     */
     @Override
     public List<KeXuanJDDto> getKeXuanJDBybiHuanLXDM(String biHuanLXDM) {
         List<SC_BH_ShiTuJDXXDto> shiTuJDXXList = shiTuJDXXRepository.asQuerydsl().where(n -> n.biHuanLXDM.eq(biHuanLXDM)).select(SC_BH_ShiTuJDXXDto.class).fetch();
@@ -179,6 +183,12 @@ public class BiHuanSTJDXXServiceImpl implements BiHuanSTJDXXService {
         return keXuanJDDtoList;
     }
 
+    /**
+     * 节点启用标志
+     * @param id 节点id
+     * @param qiYongBZ 启用标志
+     * @return 成功失败
+     */
     @Override
     public Boolean updateJieDianQYBZ(String id,Integer qiYongBZ) {
         shiTuJDXXRepository.asUpdateDsl().set(n->n.qiYongBZ,qiYongBZ).where(n->n.id.eq(id)).execute();
@@ -211,6 +221,11 @@ public class BiHuanSTJDXXServiceImpl implements BiHuanSTJDXXService {
 
     }
 
+    /**
+     * 获取闭环视图节点
+     * @param biHuanLXDM 闭环类型代码
+     * @return 闭环视图节点
+     */
     @Override
     public List<BiHuanSTJDXXDto> getBiHuanSTJD(String biHuanLXDM)
     {

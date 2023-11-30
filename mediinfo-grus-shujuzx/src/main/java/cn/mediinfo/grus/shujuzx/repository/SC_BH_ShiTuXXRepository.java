@@ -28,5 +28,8 @@ public interface SC_BH_ShiTuXXRepository extends MsfJpaRepository<QSC_BH_ShiTuXX
                 .orderBy(s->s.shunXuHao.asc()).select(SC_BH_ShiTuXXDto.class).fetch();
     }
 
+    SC_BH_ShiTuXXModel  findFirstByShiTuID(String shiTuID);
+
+
 
 }

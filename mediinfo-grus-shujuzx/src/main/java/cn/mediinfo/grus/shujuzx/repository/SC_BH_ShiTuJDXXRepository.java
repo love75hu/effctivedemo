@@ -8,6 +8,7 @@ import cn.mediinfo.grus.shujuzx.dto.JieDianGL.GuanLianJDDto;
 import cn.mediinfo.grus.shujuzx.model.QSC_BH_ShiTuJDXXModel;
 import cn.mediinfo.grus.shujuzx.model.SC_BH_ShiTuJDXXModel;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -42,5 +43,14 @@ public interface SC_BH_ShiTuJDXXRepository extends MsfJpaRepository<QSC_BH_ShiTu
                 .whereIf(StringUtil.hasText(jieDianMC),n->n.jieDianMC.contains(jieDianMC))
                 .whereIf(qiYongBZ.equals(1),n->n.qiYongBZ.eq(qiYongBZ))
                 .select(BiHuanJDXXListDto.class).fetch().size();
+    }
+
+    default  List<GuanLianJDDto> getGuanLianJDXX(String shiTuID,String jieDianID)
+    {
+        return this.asQuerydsl()
+            .where(n->n.shiTuID.eq(shiTuID))
+            .whereIf(StringUtils.hasText(jieDianID), n->n.jieDianID.ne(jieDianID))
+            .orderBy(n->n.shunXuHao.asc())
+            .select(GuanLianJDDto.class).fetch();
     }
 }

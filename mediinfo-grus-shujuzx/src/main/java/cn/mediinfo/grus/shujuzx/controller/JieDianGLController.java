@@ -35,14 +35,12 @@ public class JieDianGLController {
     private final BIHuanSTXXServiceImpl biHuanSTXXService;
     private final BiHuanSTMXServiceImpl biHuanSTMXService;
     private final BiHuanSTJDXXServiceImpl biHuanSTJDXXService;
-    private final BiHuanSTJDGXServiceImpl biHuanSTJDGXService;
 
-   public JieDianGLController(BIHuanSTXXServiceImpl biHuanSTXXService, BiHuanSTMXServiceImpl biHuanSTMXService, BiHuanSTJDXXServiceImpl biHuanSTJDXXService, BiHuanSTJDGXServiceImpl biHuanSTJDGXService) {
+    public JieDianGLController(BIHuanSTXXServiceImpl biHuanSTXXService, BiHuanSTMXServiceImpl biHuanSTMXService, BiHuanSTJDXXServiceImpl biHuanSTJDXXService, BiHuanSTJDGXServiceImpl biHuanSTJDGXService) {
        this.biHuanSTXXService = biHuanSTXXService;
        this.biHuanSTMXService = biHuanSTMXService;
        this.biHuanSTJDXXService = biHuanSTJDXXService;
-       this.biHuanSTJDGXService = biHuanSTJDGXService;
-   }
+    }
 
     /**
      * 获取闭环视图信息树
@@ -62,7 +60,7 @@ public class JieDianGLController {
 
     @Operation(summary = "获取闭环视图字段")
     @GetMapping("getBiHuanSTZD")
-    public MsfResponse<List<BiHuanSTZDDto>> getBiHuanSTZD( String shiTuID,String ziDuanMC,
+    public MsfResponse<List<BiHuanSTZDDto>> getBiHuanSTZD(@NotEmpty(message = "视图id不能为空") String shiTuID,String ziDuanMC,
     String biHuanLXDM,
                                                           Integer chaXunLXDM, Integer pageIndex, Integer pageSize)
     {
@@ -159,24 +157,24 @@ public class JieDianGLController {
 
     @Operation(summary = "获取节点列表数量")
     @GetMapping("getBiHuanJDXXCount")
-    public MsfResponse<Integer> getBiHuanJDXXCount( String shiTuID,
+    public MsfResponse<Integer> getBiHuanJDXXCount(@NotEmpty(message = "闭环类型代码不能为空")  String shiTuID,
                                                    String biHuanLXDM,
                                                    String jieDianMC,
                                                    Integer qiYongBZ)
     {
-        return MsfResponse.success(biHuanSTJDXXService.getBiHuanJDXXCount(shiTuID,biHuanLXDM,jieDianMC,qiYongBZ));
+        return MsfResponse.success(biHuanSTJDXXService.getBiHuanJDXXCount( shiTuID,biHuanLXDM,jieDianMC,qiYongBZ));
     }
 
     @Operation(summary = "获取可选节点内容")
     @GetMapping("getKeXuanJDBybiHuanLXDM")
-    public MsfResponse<List<KeXuanJDDto>> getKeXuanJDBybiHuanLXDM(@NotEmpty(message = "闭环类型代码")  String biHuanLXDM)
+    public MsfResponse<List<KeXuanJDDto>> getKeXuanJDBybiHuanLXDM(@NotEmpty(message = "闭环类型代码不能为空")  String biHuanLXDM)
     {
         return MsfResponse.success(biHuanSTJDXXService.getKeXuanJDBybiHuanLXDM(biHuanLXDM));
 
     }
     @Operation(summary = "节点启用标志")
     @PutMapping("updateJieDianQYBZ")
-    public MsfResponse<Boolean> updateJieDianQYBZ( @RequestParam @NotEmpty(message ="id") String id,@RequestParam Integer qiYongBZ)
+    public MsfResponse<Boolean> updateJieDianQYBZ( @RequestParam @NotEmpty(message ="id不能为空") String id,@RequestParam Integer qiYongBZ)
     {
         return MsfResponse.success(biHuanSTJDXXService.updateJieDianQYBZ(id,qiYongBZ));
     }

@@ -88,6 +88,10 @@ public class BIHuanSTXXServiceImpl implements BIHuanSTXXService {
     @Override
     public Boolean updateBiHuanSTXX(BiHuanSTXXDto dto) throws WeiZhaoDSJException {
         var scCxShiTuXXModel = shiTuXXRepository.findById(dto.getId()).orElse(null);
+        if (scCxShiTuXXModel==null)
+        {
+            throw new WeiZhaoDSJException("未获取到数据");
+        }
         BeanUtil.copyProperties(dto,scCxShiTuXXModel);
         shiTuXXRepository.save(scCxShiTuXXModel);
         return true;

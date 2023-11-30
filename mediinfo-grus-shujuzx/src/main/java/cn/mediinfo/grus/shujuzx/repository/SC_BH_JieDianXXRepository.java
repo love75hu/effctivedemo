@@ -16,14 +16,14 @@ import java.util.List;
 public interface SC_BH_JieDianXXRepository extends MsfJpaRepository<QSC_BH_JieDianXXModel, SC_BH_JieDianXXModel, String>, JpaSpecificationExecutor<SC_BH_JieDianXXModel> {
 default List<SC_BH_JieDianXXModel> jieDianXXList(List<String> biHuanID)
 {
-    return asQuerydsl().where(n->n.biHuanID.in(biHuanID)).fetch();
+    return this.asQuerydsl().where(n->n.biHuanID.in(biHuanID)).fetch();
 }
 
     List<SC_BH_JieDianXXModel> findByBiHuanIDAndZuZhiJGIDAndZuZhiJGMC(String biHuanID,String zuZhiJGID,String zuZhiJGMC);
 
     default List<BiHuanSZXXDto> jieDianXXList(String biHuanID,String jiGouID)
     {
-        return asQuerydsl()
+        return this.asQuerydsl()
             .where(n -> n.biHuanID.eq(biHuanID))
             .where(n->n.zuZhiJGID.eq(jiGouID))
             .orderBy(n->n.shunXuHao.asc())
@@ -31,7 +31,7 @@ default List<SC_BH_JieDianXXModel> jieDianXXList(List<String> biHuanID)
     }
     default List<JieDianSXXXDto> byJieDianIDBiHuanID(String biHuanID,String jieDianID,String  jiGouID)
     {
-        return asQuerydsl()
+        return this.asQuerydsl()
                 .whereIf(StringUtil.hasText(jieDianID), n->n.jieDianID.ne(jieDianID))
                 .where(n->n.zuZhiJGID.eq(jiGouID))
                 .where(n->n.biHuanID.eq(biHuanID)).select(JieDianSXXXDto.class).fetch();
@@ -39,7 +39,7 @@ default List<SC_BH_JieDianXXModel> jieDianXXList(List<String> biHuanID)
 
     default SC_BH_JieDianXXDto jieDianSXXXDto (String biHuanID,String jieDianID,String jiGouID)
     {
-        return asQuerydsl()
+        return this.asQuerydsl()
                 .where(n -> n.biHuanID.eq(biHuanID))
                 .where(n->n.zuZhiJGID.eq(jiGouID))
                 .where(n -> n.jieDianID.eq(jieDianID)).select(SC_BH_JieDianXXDto.class).fetchFirst();

@@ -65,9 +65,10 @@ public class BiHuanSZController {
 
     @Operation(summary = "获取节点时效字段")
     @GetMapping("getShiTuJDMXByJieDianID")
-    public MsfResponse<List<JieDianSXXXDto>> getShiTuJDMXByJieDianID(@NotEmpty(message = "闭环ID不能为空")String biHuanID,String jieDianID)
+    public MsfResponse<List<JieDianSXXXDto>> getShiTuJDMXByJieDianID(@NotEmpty(message = "闭环ID不能为空")String biHuanID
+            ,String jieDianID,String jiGouID)
     {
-        return MsfResponse.success(jieDianXXService.getJieDianSXXX(biHuanID,jieDianID));
+        return MsfResponse.success(jieDianXXService.getJieDianSXXX(biHuanID,jieDianID,jiGouID));
     }
 
     @Operation(summary = "添加闭环设置信息")
@@ -120,14 +121,36 @@ public class BiHuanSZController {
 
     @Operation(summary = "获取闭环视图视图入参字段")
     @GetMapping("getBiHuanSTRCZD")
-    public MsfResponse<List<BiHuanSTZDDto>> getBiHuanSTRCZD(@NotEmpty(message = "闭环id不能为空") String biHuanID)
+    public MsfResponse<List<BiHuanSTRCZDDto>> getBiHuanSTRCZD(@NotEmpty(message = "闭环id不能为空") String biHuanID ,String jiGouID)
     {
-        return MsfResponse.success(BeanUtil.copyListProperties(ruChanXXService.getRuCanXX(biHuanID),BiHuanSTZDDto::new) );
+        return MsfResponse.success(ruChanXXService.getBiHuanSTRCZD(biHuanID,jiGouID));
     }
 
     @Operation(summary = "闭环id 于节点id 获取节点内容信息")
     @GetMapping("getBiHuanJDNRXX")
-    public MsfResponse<BiHuanSZXXDto> getBiHuanJDNRXX(@NotEmpty(message = "闭环id不能为空") String biHuanID,@NotEmpty(message = "节点id不能为空") String jieDianID) throws WeiZhaoDSJException {
-        return MsfResponse.success(jieDianXXService.getBiHuanJDNRXX(biHuanID,jieDianID));
+    public MsfResponse<BiHuanSZXXDto> getBiHuanJDNRXX(@NotEmpty(message = "闭环id不能为空") String biHuanID,
+                                                      @NotEmpty(message = "节点id不能为空") String jieDianID,
+                                                      @NotEmpty(message = "机构id不能为空") String jiGouID) throws WeiZhaoDSJException {
+        return MsfResponse.success(jieDianXXService.getBiHuanJDNRXX(biHuanID,jieDianID,jiGouID));
     }
+
+    @Operation(summary = "单个节点作废")
+    @DeleteMapping("zuoFeiBiHuanJDXX")
+    public MsfResponse<Boolean> zuoFeiBiHuanJDXX(@NotEmpty(message = "闭环id不能为空") @RequestParam String biHuanID,
+                                                 @NotEmpty(message = "节点id不能为空") @RequestParam String jieDianID,
+                                                 @NotEmpty(message = "机构id不能为空") String jiGouID)
+    {
+        return MsfResponse.success(jieDianXXService.zuoFeiBiHuanJDXX(biHuanID,jieDianID,jiGouID));
+    }
+
+    @Operation(summary = "节点隐藏不隐藏")
+    @PutMapping("jieDianYC")
+    public MsfResponse<Boolean> jieDianYC( @RequestParam @NotEmpty(message ="闭环id不能为空") String biHuanID,
+                                           @RequestParam @NotEmpty(message ="闭环id不能为空") String jieDianID,
+                                           @NotEmpty(message = "机构id不能为空") String jiGouID,
+                                           @RequestParam Integer yinCangBZ)
+    {
+        return MsfResponse.success(jieDianXXService.jieDianYC(biHuanID,jieDianID,jiGouID,yinCangBZ));
+    }
+
 }

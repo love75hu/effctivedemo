@@ -6,6 +6,7 @@ import cn.mediinfo.cyan.msf.core.response.MsfResponse;
 import cn.mediinfo.cyan.msf.web.apiversion.ApiVersion;
 import cn.mediinfo.grus.shujuzx.dto.JieDianGL.*;
 import cn.mediinfo.grus.shujuzx.dto.bihuangl.SC_BH_ShiTuXXDto;
+import cn.mediinfo.grus.shujuzx.dto.bihuansz.BiHuanSTRCZDDto;
 import cn.mediinfo.grus.shujuzx.dto.bihuansz.KeXuanJDDto;
 import cn.mediinfo.grus.shujuzx.service.impl.BIHuanSTXXServiceImpl;
 import cn.mediinfo.grus.shujuzx.service.impl.BiHuanSTJDGXServiceImpl;
@@ -188,7 +189,7 @@ public class JieDianGLController {
 
     @Operation(summary = "获取闭环类型下字段")
     @GetMapping("getBiHuanSTZDBybiHuanLXDM")
-    public MsfResponse<List<BiHuanSTZDDto>> getBiHuanSTZDBybiHuanLXDM(@NotEmpty(message = "闭环类型代码不能为空") String biHuanLXDM)
+    public MsfResponse<List<BiHuanSTRCZDDto> > getBiHuanSTZDBybiHuanLXDM(@NotEmpty(message = "闭环类型代码不能为空") String biHuanLXDM)
     {
     return MsfResponse.success(biHuanSTMXService.getBiHuanSTZDBybiHuanLXDM(biHuanLXDM));
     }

@@ -4,15 +4,15 @@ import aj.org.objectweb.asm.TypeReference;
 import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
 import cn.mediinfo.cyan.msf.core.util.JsonUtil;
 import cn.mediinfo.grus.shujuzx.dto.bihuandy.SC_BH_DiaoYongPZDto;
+import cn.mediinfo.grus.shujuzx.dto.bihuansz.SC_BH_JieDianXXDto;
 import cn.mediinfo.grus.shujuzx.dto.bihuanzs.*;
 import cn.mediinfo.grus.shujuzx.dto.fangan.BingLiSCDTO;
 import cn.mediinfo.grus.shujuzx.remotedto.GongYong.GY_ZD_ShuJuSTXXRso;
 import cn.mediinfo.grus.shujuzx.remotedto.GongYong.GuanLianGXDto;
 import cn.mediinfo.grus.shujuzx.remotedto.GongYong.ShuJuXXMSRso;
 import cn.mediinfo.grus.shujuzx.remoteservice.GongYongRemoteService;
+import cn.mediinfo.grus.shujuzx.repository.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import cn.mediinfo.grus.shujuzx.repository.SC_BH_DiaoYongPZRepository;
-import cn.mediinfo.grus.shujuzx.repository.SC_BH_RuCanXXRepository;
 import cn.mediinfo.grus.shujuzx.service.BiHuanZSService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.Resource;
@@ -50,6 +50,34 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
      * 公用服务
      */
     private GongYongRemoteService gongYongRemoteService;
+
+    /**
+     * 闭环基本信息
+     */
+    private SC_BH_JiBenXXRepository jiBenXXRepository;
+
+    /**
+     * 闭环节点信息
+     */
+    private SC_BH_JieDianXXRepository jieDianXXRepository;
+
+    /**
+     * 闭环节点时效
+     */
+    private SC_BH_JieDianSXRepository jieDianSXRepository;
+
+    /**
+     * 闭环子闭环显示列
+     */
+    private SC_BH_ZiBiHXSLRepository ziBiHXSLRepository;
+
+    /**
+     * 闭环子闭环信息
+     */
+    private SC_BH_ZiBiHXXRepository ziBiHXXRepository;
+
+
+
 
     @Resource
     @Qualifier("datasourcesjzx_jdbcTemplateFactory")
@@ -145,6 +173,8 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
      */
     public BiHuanXQDto getBiHuanZXJG(String biHuanID)
     {
+
+
 
         return null;
     }

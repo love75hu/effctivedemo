@@ -3,6 +3,7 @@ package cn.mediinfo.grus.shujuzx.repository;
 import cn.mediinfo.cyan.msf.orm.MsfJpaRepository;
 import cn.mediinfo.cyan.msf.orm.datasource.MsfDataSource;
 import cn.mediinfo.grus.shujuzx.dto.bihuansz.SC_BH_ZiBiHXSLDto;
+import cn.mediinfo.grus.shujuzx.dto.bihuansz.ZiBiHXSLDto;
 import cn.mediinfo.grus.shujuzx.model.QSC_BH_ZiBiHXSLModel;
 import cn.mediinfo.grus.shujuzx.model.SC_BH_ZiBiHXSLModel;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -24,5 +25,18 @@ public interface SC_BH_ZiBiHXSLRepository extends MsfJpaRepository<QSC_BH_ZiBiHX
                 .orderBy(n->n.shunXuHao.asc())
                 .select(SC_BH_ZiBiHXSLDto.class).fetch();
 
+    }
+    default List<ZiBiHXSLDto>  ziBiHXSLDtoList(String biHuanID,String jieDianID,String jiGouID)
+    {
+        return asQuerydsl()
+                .where(n -> n.biHuanID.eq(biHuanID))
+                .where(n->n.zuZhiJGID.eq(jiGouID))
+                .where(n -> n.jieDianID.eq(jieDianID)).select(ZiBiHXSLDto.class).fetch();
+    }
+    default void  deleteByBiHuanID(String biHuanID,String jieDianID,String jiGouID)
+    {
+        asDeleteDsl().where(n->n.biHuanID.eq(biHuanID))
+                .where(n->n.zuZhiJGID.eq(jiGouID))
+                .where(n->n.jieDianID.eq(jieDianID)).execute();
     }
 }

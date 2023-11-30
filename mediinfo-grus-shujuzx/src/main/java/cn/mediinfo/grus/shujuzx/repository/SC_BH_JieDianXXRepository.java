@@ -29,7 +29,7 @@ default List<SC_BH_JieDianXXModel> jieDianXXList(List<String> biHuanID)
             .orderBy(n->n.shunXuHao.asc())
             .select(BiHuanSZXXDto.class).fetch();
     }
-    default List<JieDianSXXXDto> byJieDianIDBiHuanID(String jieDianID,String biHuanID,String  jiGouID)
+    default List<JieDianSXXXDto> byJieDianIDBiHuanID(String biHuanID,String jieDianID,String  jiGouID)
     {
         return asQuerydsl()
                 .whereIf(StringUtil.hasText(jieDianID), n->n.jieDianID.ne(jieDianID))

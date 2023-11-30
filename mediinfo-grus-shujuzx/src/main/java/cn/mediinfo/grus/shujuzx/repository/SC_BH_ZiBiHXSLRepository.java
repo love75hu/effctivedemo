@@ -2,6 +2,7 @@ package cn.mediinfo.grus.shujuzx.repository;
 
 import cn.mediinfo.cyan.msf.orm.MsfJpaRepository;
 import cn.mediinfo.cyan.msf.orm.datasource.MsfDataSource;
+import cn.mediinfo.grus.shujuzx.dto.bihuansz.SC_BH_ZiBiHXSLDto;
 import cn.mediinfo.grus.shujuzx.model.QSC_BH_ZiBiHXSLModel;
 import cn.mediinfo.grus.shujuzx.model.SC_BH_ZiBiHXSLModel;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -14,4 +15,14 @@ public interface SC_BH_ZiBiHXSLRepository extends MsfJpaRepository<QSC_BH_ZiBiHX
     }
 
     List<SC_BH_ZiBiHXSLModel> findByBiHuanIDAndZuZhiJGIDAndZuZhiJGMC(String biHuanID, String zuZhiJGID, String zuZhiJGMC);
+
+    default List<SC_BH_ZiBiHXSLDto> ziBiHXSLList(String biHuanID, String jiGouID)
+    {
+        return asQuerydsl()
+                .where(n -> n.biHuanID.eq(biHuanID))
+                .where(n->n.zuZhiJGID.eq(jiGouID))
+                .orderBy(n->n.shunXuHao.asc())
+                .select(SC_BH_ZiBiHXSLDto.class).fetch();
+
+    }
 }

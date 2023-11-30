@@ -3,15 +3,17 @@ package cn.mediinfo.grus.shujuzx.service.impl;
 import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
 import cn.mediinfo.cyan.msf.core.util.AssertUtil;
 import cn.mediinfo.cyan.msf.core.util.BeanUtil;
-import cn.mediinfo.grus.shujuzx.dto.bihuansz.AddRuCanXXDto;
-import cn.mediinfo.grus.shujuzx.dto.bihuansz.RuCanXXDto;
-import cn.mediinfo.grus.shujuzx.dto.bihuansz.SC_BH_RuCanXXDto;
+import cn.mediinfo.cyan.msf.core.util.MapUtil;
+import cn.mediinfo.grus.shujuzx.dto.bihuansz.*;
 import cn.mediinfo.grus.shujuzx.model.SC_BH_RuCanXXModel;
 import cn.mediinfo.grus.shujuzx.repository.SC_BH_RuCanXXRepository;
 import cn.mediinfo.grus.shujuzx.service.RuCanXXService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 闭环入参信息服务
@@ -34,6 +36,30 @@ public class RuCanXXServiceImpl implements RuCanXXService {
     {
         return ruCanXXRepository.findByBiHuanID(biHuanID);
     }
+
+    @Override
+    public  List<BiHuanSTRCZDDto> getBiHuanSTRCZD(String biHuanID, String jiGouID) {
+
+        List<SC_BH_RuCanXXModel> byBiHuanIDAndZuZhiJGID = ruCanXXRepository.findByBiHuanIDAndZuZhiJGID(biHuanID, jiGouID);
+
+        List<String> shiTuIDs = byBiHuanIDAndZuZhiJGID.stream().map(n -> n.getShiTuID()).distinct().collect(Collectors.toList());
+
+        List<BiHuanSTRCZDDto> biHuanSTRCZDDtos=new ArrayList<>();
+
+        shiTuIDs.forEach(n->{
+            SC_BH_RuCanXXModel scBhRuCanXXModel = byBiHuanIDAndZuZhiJGID.stream().filter(f -> f.getShiTuID().equals(n)).findFirst().orElse(new SC_BH_RuCanXXModel());
+            BiHuanSTRCZDDto biHuanSTRCZDDto=new BiHuanSTRCZDDto();
+            biHuanSTRCZDDto.setShiTuMC(scBhRuCanXXModel.getShiTuMC());
+            biHuanSTRCZDDto.setShiTuID(scBhRuCanXXModel.getShiTuID());
+            biHuanSTRCZDDto.setChildren(BeanUtil.copyListProperties(byBiHuanIDAndZuZhiJGID.stream().filter(j->j.getShiTuID().equals(n)).collect(Collectors.toList()),BiHuanZDXXDto::new));
+            biHuanSTRCZDDtos.add(biHuanSTRCZDDto);
+        });
+        return biHuanSTRCZDDtos;
+
+    }
+
+
+
     /**
      * 新增闭环入参信息
      */

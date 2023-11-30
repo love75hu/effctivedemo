@@ -1,6 +1,5 @@
 package cn.mediinfo.grus.shujuzx.service.impl;
 
-import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
 import cn.mediinfo.cyan.msf.core.util.AssertUtil;
 import cn.mediinfo.cyan.msf.core.util.BeanUtil;
@@ -15,6 +14,7 @@ import cn.mediinfo.grus.shujuzx.repository.SC_BH_JieDianXXRepository;
 import cn.mediinfo.grus.shujuzx.repository.SC_BH_ZiBiHXSLRepository;
 import cn.mediinfo.grus.shujuzx.repository.SC_BH_ZiBiHXXRepository;
 import cn.mediinfo.grus.shujuzx.service.JieDianXXService;
+import cn.mediinfo.lyra.extension.service.LyraIdentityService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -35,11 +35,14 @@ public class JieDianXXServiceImpl implements JieDianXXService {
 
     private final SC_BH_ZiBiHXSLRepository ziBiHXSLRepository;
 
-    public JieDianXXServiceImpl(SC_BH_JieDianXXRepository jieDianXXRepository, SC_BH_JieDianSXRepository jieDianSXRepository, SC_BH_ZiBiHXXRepository ziBiHXXRepository, SC_BH_ZiBiHXSLRepository ziBiHXSLRepository) {
+    private final LyraIdentityService lyraIdentityService;
+
+    public JieDianXXServiceImpl(SC_BH_JieDianXXRepository jieDianXXRepository, SC_BH_JieDianSXRepository jieDianSXRepository, SC_BH_ZiBiHXXRepository ziBiHXXRepository, SC_BH_ZiBiHXSLRepository ziBiHXSLRepository, LyraIdentityService lyraIdentityService) {
         this.jieDianXXRepository = jieDianXXRepository;
         this.jieDianSXRepository = jieDianSXRepository;
         this.ziBiHXXRepository = ziBiHXXRepository;
         this.ziBiHXSLRepository = ziBiHXSLRepository;
+        this.lyraIdentityService = lyraIdentityService;
     }
 
     /**
@@ -58,7 +61,7 @@ public class JieDianXXServiceImpl implements JieDianXXService {
     public String addBiHuanSZXX(AddBiHuanSZXXDto dto) {
 
         //节点信息
-        List<SC_BH_JieDianXXModel> jieDianXX = new ArrayList<>();
+        SC_BH_JieDianXXModel jieDianXX = new SC_BH_JieDianXXModel();
         //节点时效
         List<SC_BH_JieDianSXModel> jieDianSX=new ArrayList<>();
         //子闭环信息
@@ -70,6 +73,7 @@ public class JieDianXXServiceImpl implements JieDianXXService {
             if (BeanUtil.isNotEmpty(jieDianXXSZ.getZiBiHXXDto()))
             {
               var ziBiHXXModel=  BeanUtil.copyProperties(jieDianXXSZ.getZiBiHXXDto(),SC_BH_ZiBiHXXModel.class);
+
                 ziBiHXXModel.setBiHuanID(dto.getBiHuanID());
                 ziBiHXXModel.setBiHuanMC(dto.getBiHuanMC());
                 ziBiHXXModel.setJieDianID(jieDianXXSZ.getJieDianID());
@@ -80,7 +84,6 @@ public class JieDianXXServiceImpl implements JieDianXXService {
             SC_BH_JieDianXXModel jieDianXXModel = BeanUtil.copyProperties(jieDianXXSZ, SC_BH_JieDianXXModel.class);
             jieDianXXModel.setBiHuanID(dto.getBiHuanID());
             jieDianXXModel.setBiHuanMC(dto.getBiHuanMC());
-            jieDianXX.add(jieDianXXModel);
             //时效
             for (var s :jieDianXXSZ.getJieDianSXList())
             {
@@ -101,8 +104,9 @@ public class JieDianXXServiceImpl implements JieDianXXService {
 
         //
         //节点信息
-
-        jieDianXXRepository.saveAll(jieDianXX);
+        jieDianSXRepository.asDeleteDsl().where(n->n.biHuanID.eq(dto.getBiHuanID()))
+                .where(n->n.jieDianID.eq(jieDianXXSZ.getJieDianID())).execute();
+        jieDianXXRepository.save(jieDianXX);
         //节点失效
         jieDianSXRepository.asDeleteDsl().where(n->n.biHuanID.eq(dto.getBiHuanID())).execute();
         jieDianSXRepository.saveAll(jieDianSX);
@@ -125,25 +129,15 @@ public class JieDianXXServiceImpl implements JieDianXXService {
     {
         List<BiHuanSZXXDto> biHuanSZXXDtos=new ArrayList<>();
         //节点信息
-        List<BiHuanSZXXDto> jieDianXXList = jieDianXXRepository.asQuerydsl()
-                .where(n -> n.biHuanID.eq(biHuanID))
-                .orderBy(n->n.shunXuHao.asc())
-                .select(BiHuanSZXXDto.class).fetch();
+        List<BiHuanSZXXDto> jieDianXXList =jieDianXXRepository.jieDianXXList(biHuanID,lyraIdentityService.getJiGouID());
         //节点失效
-        List< SC_BH_JieDianSXDto> biHuanSZXXList = jieDianSXRepository.asQuerydsl()
-                .where(n -> n.biHuanID.eq(biHuanID))
-                .select(SC_BH_JieDianSXDto.class).fetch();
+        List< SC_BH_JieDianSXDto> biHuanSZXXList = jieDianSXRepository.biHuanSZXXList(biHuanID,lyraIdentityService.getJiGouID());
 
         //子闭环信息
-        var ziBiHXXList = ziBiHXXRepository.asQuerydsl().where(n -> n.biHuanID.eq(biHuanID)).select(SC_BH_ZiBiHXXDto.class).fetch();
-
-
+        var ziBiHXXList = ziBiHXXRepository.ziBiHXXList(biHuanID,lyraIdentityService.getJiGouID());
 
         //子闭环显示列
-        List<SC_BH_ZiBiHXSLDto> ziBiHXSLList = ziBiHXSLRepository.asQuerydsl()
-                .where(n -> n.biHuanID.eq(biHuanID))
-                .orderBy(n->n.shunXuHao.asc())
-                .select(SC_BH_ZiBiHXSLDto.class).fetch();
+        List<SC_BH_ZiBiHXSLDto> ziBiHXSLList = ziBiHXSLRepository.ziBiHXSLList(biHuanID,lyraIdentityService.getJiGouID());
 
         for (var a:jieDianXXList)
         {
@@ -158,8 +152,8 @@ public class JieDianXXServiceImpl implements JieDianXXService {
 
 
     @Override
-    public List<JieDianSXXXDto> getJieDianSXXX(String biHuanID,String jieDianID) {
-        return jieDianXXRepository.asQuerydsl().whereIf(StringUtil.hasText(jieDianID),n->n.jieDianID.ne(jieDianID)).where(n->n.biHuanID.eq(biHuanID)).select(JieDianSXXXDto.class).fetch();
+    public List<JieDianSXXXDto> getJieDianSXXX(String biHuanID,String jieDianID ,String jiGouID) {
+        return jieDianXXRepository.byJieDianIDBiHuanID(biHuanID, jieDianID,jiGouID);
     }
 
     /**
@@ -167,21 +161,41 @@ public class JieDianXXServiceImpl implements JieDianXXService {
      *
      */
     @Override
-    public BiHuanSZXXDto getBiHuanJDNRXX(String biHuanID, String jieDianID) throws WeiZhaoDSJException {
+    public BiHuanSZXXDto getBiHuanJDNRXX(String biHuanID, String jieDianID,String jiGouID) throws WeiZhaoDSJException {
 
-        SC_BH_JieDianXXDto jieDianSXXXDto = jieDianXXRepository.asQuerydsl()
-                .where(n -> n.biHuanID.eq(biHuanID))
-                .where(n -> n.jieDianID.eq(jieDianID)).select(SC_BH_JieDianXXDto.class).fetchFirst();
+        SC_BH_JieDianXXDto jieDianSXXXDto = jieDianXXRepository.jieDianSXXXDto(jieDianID,biHuanID,jiGouID);
         if (jieDianSXXXDto!=null)
         {
             BiHuanSZXXDto biHuanSZXXDto = BeanUtil.copyProperties(jieDianSXXXDto, BiHuanSZXXDto.class);
-            biHuanSZXXDto.setJieDianSXList(jieDianSXRepository.asQuerydsl().where(n -> n.biHuanID.eq(biHuanID)).where(n -> n.jieDianID.eq(jieDianID)).select(JieDianSXDto.class).fetch());
-            biHuanSZXXDto.setZiBiHXXDto(ziBiHXXRepository.asQuerydsl().where(n -> n.biHuanID.eq(biHuanID)).where(n -> n.jieDianID.eq(jieDianID)).select(ZiBiHXXDto.class).fetchFirst());
-            biHuanSZXXDto.setZiBiHXSLDtoList(ziBiHXSLRepository.asQuerydsl().where(n -> n.biHuanID.eq(biHuanID)).where(n -> n.jieDianID.eq(jieDianID)).select(ZiBiHXSLDto.class).fetch());
+            biHuanSZXXDto.setJieDianSXList(jieDianSXRepository.asQuerydsl().where(n -> n.biHuanID.eq(biHuanID)).where(n->n.zuZhiJGID.eq(lyraIdentityService.getJiGouID())).where(n -> n.jieDianID.eq(jieDianID)).select(JieDianSXDto.class).fetch());
+            biHuanSZXXDto.setZiBiHXXDto(ziBiHXXRepository.asQuerydsl().where(n -> n.biHuanID.eq(biHuanID)).where(n->n.zuZhiJGID.eq(lyraIdentityService.getJiGouID())).where(n -> n.jieDianID.eq(jieDianID)).select(ZiBiHXXDto.class).fetchFirst());
+            biHuanSZXXDto.setZiBiHXSLDtoList(ziBiHXSLRepository.asQuerydsl().where(n -> n.biHuanID.eq(biHuanID)).where(n->n.zuZhiJGID.eq(lyraIdentityService.getJiGouID())).where(n -> n.jieDianID.eq(jieDianID)).select(ZiBiHXSLDto.class).fetch());
             return biHuanSZXXDto;
         }else {
             throw new WeiZhaoDSJException("未找到数据");
         }
+    }
+
+    @Override
+    public Boolean zuoFeiBiHuanJDXX(String biHuanID, String jieDianID,String jiGouID) {
+        jieDianXXRepository.asDeleteDsl().where(n->n.biHuanID.eq(biHuanID))
+                .where(n->n.zuZhiJGID.eq(lyraIdentityService.getJiGouID()))
+                .where(n->n.jieDianID.eq(jieDianID)).execute();
+        jieDianSXRepository.asDeleteDsl().where(n->n.biHuanID.eq(biHuanID)).where(n->n.zuZhiJGID.eq(lyraIdentityService.getJiGouID())).where(n->n.jieDianID.eq(jieDianID)).execute();
+        ziBiHXXRepository.asDeleteDsl().where(n->n.biHuanID.eq(biHuanID)).where(n->n.zuZhiJGID.eq(lyraIdentityService.getJiGouID())).where(n->n.jieDianID.eq(jieDianID)).execute();
+        ziBiHXSLRepository.asDeleteDsl().where(n->n.biHuanID.eq(biHuanID)).where(n->n.zuZhiJGID.eq(lyraIdentityService.getJiGouID())).where(n->n.jieDianID.eq(jieDianID)).execute();
+        return true;
+    }
+
+    @Override
+    public Boolean jieDianYC(String biHuanID, String jieDianID,String jiGouID,  Integer yinCangBZ) {
+        jieDianXXRepository.asUpdateDsl()
+                .where(n->n.zuZhiJGID.eq(jiGouID))
+                .where(n->n.biHuanID.eq(biHuanID))
+                .where(n->n.jieDianID.eq(jieDianID))
+                .set(n->n.yinCangBZ,yinCangBZ)
+                .execute();
+        return true;
     }
 
 

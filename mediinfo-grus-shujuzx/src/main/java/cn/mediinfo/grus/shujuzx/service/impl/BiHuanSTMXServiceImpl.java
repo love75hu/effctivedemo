@@ -9,6 +9,8 @@ import cn.mediinfo.cyan.msf.core.util.StringUtil;
 import cn.mediinfo.grus.shujuzx.dto.JieDianGL.*;
 import cn.mediinfo.grus.shujuzx.dto.bihuangl.SC_BH_ShiTuMXDto;
 import cn.mediinfo.grus.shujuzx.dto.bihuangl.SC_BH_ShiTuXXDto;
+import cn.mediinfo.grus.shujuzx.dto.bihuansz.BiHuanSTRCZDDto;
+import cn.mediinfo.grus.shujuzx.dto.bihuansz.BiHuanZDXXDto;
 import cn.mediinfo.grus.shujuzx.dto.shitumx.*;
 import cn.mediinfo.grus.shujuzx.model.SC_BH_ShiTuMXModel;
 import cn.mediinfo.grus.shujuzx.model.SC_BH_ShiTuXXModel;
@@ -213,8 +215,23 @@ public class BiHuanSTMXServiceImpl implements BiHuanSTMXService {
     }
 
     @Override
-    public List<BiHuanSTZDDto> getBiHuanSTZDBybiHuanLXDM(String biHuanLXDM) {
-       return shiTuMXRepository.getBiHuanSTZDBybiHuanLXDM(biHuanLXDM);
+    public  List<BiHuanSTRCZDDto>  getBiHuanSTZDBybiHuanLXDM(String biHuanLXDM) {
+
+        List<BiHuanSTRCZDDto> biHuanSTRCZDDtos=new ArrayList<>();
+
+        var dataList=shiTuMXRepository.getBiHuanSTZDBybiHuanLXDM(biHuanLXDM);
+
+        List<String> shiTuIDs = dataList.stream().map(BiHuanSTZDDto::getShiTuID).distinct().collect(Collectors.toList());
+
+        shiTuIDs.forEach(n->{
+            BiHuanSTRCZDDto biHuanSTRCZDDto=new BiHuanSTRCZDDto();
+            BiHuanSTZDDto biHuanSTZDDto = dataList.stream().filter(t -> t.getShiTuID().equals(n)).findFirst().orElse(new BiHuanSTZDDto());
+            biHuanSTRCZDDto.setShiTuID(biHuanSTZDDto.getShiTuID());
+            biHuanSTRCZDDto.setShiTuMC(biHuanSTZDDto.getShiTuMC());
+            biHuanSTRCZDDto.setChildren(BeanUtil.copyListProperties( dataList.stream().filter(f -> f.getShiTuID().equals(n)).collect(Collectors.toList()), BiHuanZDXXDto::new));
+            biHuanSTRCZDDtos.add(biHuanSTRCZDDto);
+        });
+        return biHuanSTRCZDDtos;
     }
 
 }

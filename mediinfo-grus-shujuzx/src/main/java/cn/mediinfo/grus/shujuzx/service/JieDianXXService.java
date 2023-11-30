@@ -5,6 +5,7 @@ import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
 import cn.mediinfo.grus.shujuzx.dto.bihuansz.*;
 import jakarta.validation.constraints.NotEmpty;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -18,8 +19,12 @@ public interface JieDianXXService {
 
     List<BiHuanSZXXDto>  getBiHuanSZXXBybiHuanID( String biHuanID);
 
-    List<JieDianSXXXDto>  getJieDianSXXX(String biHuanID,String jieDianID);
+    List<JieDianSXXXDto>  getJieDianSXXX(String biHuanID,String jieDianID,String jiGouID);
 
-    BiHuanSZXXDto getBiHuanJDNRXX( String biHuanID,String jieDianID) throws WeiZhaoDSJException;
+    BiHuanSZXXDto getBiHuanJDNRXX( String biHuanID,String jieDianID ,String jiGouID) throws WeiZhaoDSJException;
+
+    Boolean zuoFeiBiHuanJDXX(String biHuanID,String jieDianID,String jiGouID);
+
+    Boolean jieDianYC(String biHuanID,String jieDianID, String jiGouID,Integer yinCangBZ);
 
 }

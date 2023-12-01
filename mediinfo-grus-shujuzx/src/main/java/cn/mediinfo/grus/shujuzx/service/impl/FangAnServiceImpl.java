@@ -802,6 +802,9 @@ public class FangAnServiceImpl implements FangAnService {
                 return rs.getString(1);
             }
         });
+        //获取对应病人的收藏夹明细
+        List<SC_SC_ShouCangJMXListDto> shouChangJMXList= BeanUtil.copyListProperties(scScShouCangJMXRepository.findByShouCangRIDAndBingRenIDIn(lyraIdentityService.getYongHuId(),bingRenIDList), SC_SC_ShouCangJMXListDto::new);
+
         //获取病历查询结果
         String bingLiCXSql = MessageFormat.format(" {0} and a.bingrenid in (''{1}'') order by a.bingrenid", bingLiCXJCSql, CollUtil.join(bingRenIDList, "','"));
 
@@ -814,7 +817,7 @@ public class FangAnServiceImpl implements FangAnService {
             item.setXingBieDM(String.valueOf(p.getKey().get(2)));
             item.setXingBieMC(String.valueOf(p.getKey().get(3)));
             item.setChuShengRQ((Date) p.getKey().get(4));
-            item.setNianLing(DateUtil.getAge(DateFormatUtils.format((Date) p.getKey().get(4),"yyyy-MM-dd")));
+            item.setNianLing(DateUtil.getAge(DateFormatUtils.format((Date) p.getKey().get(4), "yyyy-MM-dd")));
             item.setMzJiuZhenNum((Integer) p.getKey().get(5));
             item.setZhuYuanNum((Integer) p.getKey().get(6));
             List<JiuZhenXXDTO> jiuZhenXXList = p.getValue().stream().collect(Collectors.groupingBy(q -> ListUtil.toList(q.getJiuZhenYWID(), q.getJiuZhenYWLXDM(), q.getZuZhiJGID(), q.getZuZhiJGMC(), q.getJiuZhenRQ(), q.getJiuZhenKSID(), q.getJiuZhenKSMC()))).entrySet().stream().map(q -> {
@@ -830,6 +833,9 @@ public class FangAnServiceImpl implements FangAnService {
                 return jiuZhenBLXX;
             }).sorted(Comparator.comparing(JiuZhenXXDTO::getJiuZhenRQ, Comparator.nullsLast(Date::compareTo))).toList();
             item.setJiuZhenXXList(jiuZhenXXList);
+            //为收藏夹赋值
+            List<SC_SC_ShouCangJMXListDto> currentShouChangJMXList=shouChangJMXList.stream().filter(o->Objects.equals(o.getBingRenID(),p.getKey().get(0))).toList();
+            item.setShouCangJiaList(BeanUtil.copyListProperties(currentShouChangJMXList,ShouCangJiaDto::new));
             return item;
         }).toList();
     }

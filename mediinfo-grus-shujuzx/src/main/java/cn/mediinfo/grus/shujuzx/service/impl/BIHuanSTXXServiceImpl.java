@@ -14,6 +14,7 @@ import cn.mediinfo.grus.shujuzx.repository.SC_BH_ShiTuXXRepository;
 import cn.mediinfo.grus.shujuzx.service.BIHuanSTXXService;
 import cn.mediinfo.grus.shujuzx.service.ShuJuYZYService;
 import cn.mediinfo.lyra.extension.service.LyraIdentityService;
+import cn.mediinfo.lyra.extension.service.SequenceService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,13 +32,15 @@ public class BIHuanSTXXServiceImpl implements BIHuanSTXXService {
     private final LyraIdentityService lyraIdentityService;
     private final  BiHuanSTMXServiceImpl biHuanSTMXService;
     private final ShuJuYZYService shuJuYZYService;
+    private final SequenceService sequenceService;
 
-    public BIHuanSTXXServiceImpl(StringGenerator stringGenerator, SC_BH_ShiTuXXRepository shiTuXXRepository, LyraIdentityService lyraIdentityService, BiHuanSTMXServiceImpl biHuanSTMXService, ShuJuYZYService shuJuYZYService) {
+    public BIHuanSTXXServiceImpl(StringGenerator stringGenerator, SC_BH_ShiTuXXRepository shiTuXXRepository, LyraIdentityService lyraIdentityService, BiHuanSTMXServiceImpl biHuanSTMXService, ShuJuYZYService shuJuYZYService, SequenceService sequenceService) {
         this.stringGenerator = stringGenerator;
         this.shiTuXXRepository = shiTuXXRepository;
         this.lyraIdentityService = lyraIdentityService;
         this.biHuanSTMXService = biHuanSTMXService;
         this.shuJuYZYService = shuJuYZYService;
+        this.sequenceService = sequenceService;
     }
 
     /**
@@ -80,7 +83,7 @@ public class BIHuanSTXXServiceImpl implements BIHuanSTXXService {
         SC_BH_ShiTuXXModel scBhShiTuXXModel = BeanUtil.copyProperties(dto, SC_BH_ShiTuXXModel::new);
         scBhShiTuXXModel.setZuZhiJGID(ShuJuZXConstant.TONGYONG_JGID);
         scBhShiTuXXModel.setZuZhiJGMC(ShuJuZXConstant.TONGYONG_JGMC);
-        scBhShiTuXXModel.setShiTuID(stringGenerator.Create());
+        scBhShiTuXXModel.setShiTuID(sequenceService.getXuHao("SC_BH_ShiTuxx_ShiTuID", 6));
        scBhShiTuXXModel.setShunXuHao(dto.getShunXuHAO()==null?shiTuXXRepository.getMaxShunXuHao()+1:dto.getShunXuHAO());
        var model= shiTuXXRepository.save(scBhShiTuXXModel);
         return model.getId();

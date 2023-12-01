@@ -3,10 +3,10 @@ package cn.mediinfo.grus.shujuzx.service.impl;
 import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
 import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
-import cn.mediinfo.cyan.msf.core.util.AssertUtil;
 import cn.mediinfo.cyan.msf.core.util.BeanUtil;
 import cn.mediinfo.cyan.msf.core.util.StringUtil;
 import cn.mediinfo.cyan.msf.stringgenerator.StringGenerator;
+import cn.mediinfo.grus.shujuzx.constant.ShuJuZXConstant;
 import cn.mediinfo.grus.shujuzx.dto.bihuansz.*;
 import cn.mediinfo.grus.shujuzx.dto.shujuyzys.SC_ZD_ShuJuYZYDto;
 import cn.mediinfo.grus.shujuzx.model.*;
@@ -16,6 +16,7 @@ import cn.mediinfo.grus.shujuzx.repository.*;
 import cn.mediinfo.grus.shujuzx.service.JiBenXXService;
 import cn.mediinfo.grus.shujuzx.service.ShuJuYZYService;
 import cn.mediinfo.lyra.extension.service.LyraIdentityService;
+import cn.mediinfo.lyra.extension.service.SequenceService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +30,7 @@ import java.util.stream.Collectors;
 @Service
 class JiBenXXServiceImpl implements JiBenXXService {
     private final SC_BH_JiBenXXRepository jiBenXXRepository;
-    private final LyraIdentityService lyraIdentityService;
+    private final SequenceService sequenceService;
 
     private final SC_BH_JieDianXXRepository jieDianXXRepository;
 
@@ -46,9 +47,9 @@ class JiBenXXServiceImpl implements JiBenXXService {
     private final ShuJuYZYService shuJuYZYService;
 
 
-    public JiBenXXServiceImpl(SC_BH_JiBenXXRepository jiBenXXRepository, LyraIdentityService lyraIdentityService, SC_BH_JieDianXXRepository jieDianXXRepository, SC_BH_JieDianSXRepository jieDianSXRepository, SC_BH_ZiBiHXXRepository ziBiHXXRepository, SC_BH_ZiBiHXSLRepository ziBiHXSLRepository, StringGenerator stringGenerator, DiZuoRemoteService diZuoRemoteService, RuCanXXServiceImpl ruCanXXService, ShuJuYZYService shuJuYZYService) {
+    public JiBenXXServiceImpl(SC_BH_JiBenXXRepository jiBenXXRepository, SequenceService sequenceService, SC_BH_JieDianXXRepository jieDianXXRepository, SC_BH_JieDianSXRepository jieDianSXRepository, SC_BH_ZiBiHXXRepository ziBiHXXRepository, SC_BH_ZiBiHXSLRepository ziBiHXSLRepository, StringGenerator stringGenerator, DiZuoRemoteService diZuoRemoteService, RuCanXXServiceImpl ruCanXXService, ShuJuYZYService shuJuYZYService) {
         this.jiBenXXRepository = jiBenXXRepository;
-        this.lyraIdentityService = lyraIdentityService;
+        this.sequenceService = sequenceService;
         this.jieDianXXRepository = jieDianXXRepository;
         this.jieDianSXRepository = jieDianSXRepository;
         this.ziBiHXXRepository = ziBiHXXRepository;
@@ -93,15 +94,28 @@ class JiBenXXServiceImpl implements JiBenXXService {
 
     @Override
     public Boolean addBiHuanJBXX(AddBiHuanXXDto dto) {
-        var biHuanID=stringGenerator.Create();
+        if (StringUtil.hasText(dto.getId()))
+        {
+            SC_BH_JiBenXXModel jiBenXXModel = jiBenXXRepository.findById(dto.getId()).orElse(null);
+            if (jiBenXXModel==null)
+            {
+                return false;
+            }
+            BeanUtil.copyProperties(dto,jiBenXXModel);
+            jiBenXXRepository.save(jiBenXXModel);
+            ruCanXXService.addRuCanXX(dto.getRuCanXXDtoList(),dto.getBiHuanLXDM(),dto.getBiHuanLXMC(),dto.getBiHuanID(),dto.getBiHuanMC());
+        return true;
+        }else {
+        var biHuanID= sequenceService.getXuHao("SC_BH_JiBenxx_BiHuanID", 6);
         SC_BH_JiBenXXModel shiTuMXModel=new SC_BH_JiBenXXModel();
         BeanUtil.copyProperties(dto,shiTuMXModel);
         shiTuMXModel.setBiHuanID(biHuanID);
-        shiTuMXModel.setZuZhiJGMC("通用");
-        shiTuMXModel.setZuZhiJGID("0");
+        shiTuMXModel.setZuZhiJGMC(ShuJuZXConstant.TONGYONG_JGMC);
+        shiTuMXModel.setZuZhiJGID(ShuJuZXConstant.TONGYONG_JGID);
         ruCanXXService.addRuCanXX(dto.getRuCanXXDtoList(),dto.getBiHuanLXDM(),dto.getBiHuanLXMC(),biHuanID,dto.getBiHuanMC());
         jiBenXXRepository.save(shiTuMXModel);
         return true;
+        }
     }
     /**
      * 闭环设置下发

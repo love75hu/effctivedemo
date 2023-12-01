@@ -41,4 +41,6 @@ public class BingRenJBXXDTO {
     @Schema(description = "就诊信息")
     private List<JiuZhenXXDTO> jiuZhenXXList;
 
+    @Schema(description = "收藏夹信息")
+    private List<ShouCangJiaDto> shouCangJiaList;
 }

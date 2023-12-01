@@ -92,11 +92,19 @@ public class JieDianGLController {
     public MsfResponse<Boolean> zuoFeiBHSTXX(@NotEmpty(message = "id不能为空") @RequestParam String id) throws WeiZhaoDSJException {
         return MsfResponse.success(biHuanSTXXService.zuoFeiBHSTXX(id));
     }
+
+    @Operation(summary = "作废闭环节点")
+    @DeleteMapping("zuoFeiBHJD")
+    public MsfResponse<Boolean> zuoFeiBHJD(@NotEmpty(message = "id不能为空") String id) throws WeiZhaoDSJException {
+        return MsfResponse.success(biHuanSTJDXXService.zuoFeiBHJD(id));
+    }
     @Operation(summary = "添加闭环视图节点字段")
     @PostMapping("addBiHuanSTJDMX")
     public MsfResponse<Boolean> addBiHuanSTJDMX(@RequestBody @Validated List<AddBiHuanSTJDMXDto> dto) throws WeiZhaoDSJException {
         return MsfResponse.success(biHuanSTMXService.addBiHuanSTJDMX(dto));
     }
+
+
     @Operation(summary = "移除闭环视图节点字段")
     @DeleteMapping("zuoFeiBHSTJDMX")
     public MsfResponse<Boolean> zuoFeiBHSTJDMX(@NotEmpty(message = "id不能为空") @RequestParam String id){

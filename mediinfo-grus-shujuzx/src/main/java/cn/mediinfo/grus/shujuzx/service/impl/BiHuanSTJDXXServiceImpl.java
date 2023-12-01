@@ -239,7 +239,19 @@ public class BiHuanSTJDXXServiceImpl implements BiHuanSTJDXXService {
                 }).toList();
     }
 
+    @Override
+    public Boolean zuoFeiBHJD(String id) throws WeiZhaoDSJException {
+        SC_BH_ShiTuJDXXModel scBhShiTuJDXXModel = shiTuJDXXRepository.findById(id).orElse(null);
+        if (scBhShiTuJDXXModel==null)
+        {
+            throw new WeiZhaoDSJException("未找到节点信息");
+        }else {
 
+        }
+        shiTuJDXXRepository.asUpdateDsl().where(n->n.id.eq(id)).execute();
+        biHuanSTJDMXService.zuoFeiJDMX(scBhShiTuJDXXModel.getJieDianID());
+        return true;
+    }
 
 
 }

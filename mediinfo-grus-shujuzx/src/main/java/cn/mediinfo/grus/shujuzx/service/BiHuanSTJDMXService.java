@@ -13,4 +13,6 @@ public interface BiHuanSTJDMXService {
     List<SC_BH_ShiTuJDMXDto> getShiTuJDMXs(List<String> jieDianID);
 
     List<JieDianNRDto> getShiTuJDMXByJieDianID(String jieDianID);
+
+    Boolean zuoFeiJDMX(String jieDianID);
 }

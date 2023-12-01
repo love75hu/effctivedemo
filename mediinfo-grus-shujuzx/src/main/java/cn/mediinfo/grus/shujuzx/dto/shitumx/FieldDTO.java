@@ -70,6 +70,15 @@ public class FieldDTO {
     private String lingYuMC;
 
     /**
+     * 数据源类别ID
+     */
+    private String shuJuYLBID;
+    /**
+     *
+     */
+    private String shuJuYLBMC;
+
+    /**
      * 数据值类型名称[1.数字2.字符3.字典4.枚举5.时间6.日期7.日期时间8.二进制]
      */
     private String shuJuZLXMC;

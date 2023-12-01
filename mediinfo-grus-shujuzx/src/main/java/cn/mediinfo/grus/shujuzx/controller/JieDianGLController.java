@@ -60,7 +60,7 @@ public class JieDianGLController {
 
     @Operation(summary = "获取闭环视图字段")
     @GetMapping("getBiHuanSTZD")
-    public MsfResponse<List<BiHuanSTZDDto>> getBiHuanSTZD(@NotEmpty(message = "视图id不能为空") String shiTuID,String ziDuanMC,
+    public MsfResponse<List<BiHuanSTZDDto>> getBiHuanSTZD(String shiTuID,String ziDuanMC,
     String biHuanLXDM,
                                                           Integer chaXunLXDM, Integer pageIndex, Integer pageSize)
     {

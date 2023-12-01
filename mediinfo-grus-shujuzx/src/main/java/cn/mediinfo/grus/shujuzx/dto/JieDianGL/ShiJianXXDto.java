@@ -13,4 +13,8 @@ public class ShiJianXXDto {
     private String lingYuDM;
     @Schema(description = "领域名称")
     private String lingYuMC;
+    @Schema(description = "数据源类别ID")
+    private String shuJuYLBID;
+    @Schema(description = "数据源类别名称")
+    private String shuJuYLBMC;
 }

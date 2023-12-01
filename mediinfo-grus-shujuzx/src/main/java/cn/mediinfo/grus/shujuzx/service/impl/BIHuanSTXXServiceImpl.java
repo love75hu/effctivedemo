@@ -4,6 +4,7 @@ import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
 import cn.mediinfo.cyan.msf.core.util.AssertUtil;
 import cn.mediinfo.cyan.msf.core.util.BeanUtil;
 import cn.mediinfo.cyan.msf.stringgenerator.StringGenerator;
+import cn.mediinfo.grus.shujuzx.constant.ShuJuZXConstant;
 import cn.mediinfo.grus.shujuzx.dto.JieDianGL.BiHuanSTXXDto;
 import cn.mediinfo.grus.shujuzx.dto.JieDianGL.BiHuanSTXXTree;
 import cn.mediinfo.grus.shujuzx.dto.bihuangl.SC_BH_ShiTuXXDto;
@@ -77,10 +78,10 @@ public class BIHuanSTXXServiceImpl implements BIHuanSTXXService {
     @Override
     public String addBiHuanSTXX(BiHuanSTXXDto dto) {
         SC_BH_ShiTuXXModel scBhShiTuXXModel = BeanUtil.copyProperties(dto, SC_BH_ShiTuXXModel::new);
-        scBhShiTuXXModel.setZuZhiJGID(lyraIdentityService.getJiGouID());
-        scBhShiTuXXModel.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
+        scBhShiTuXXModel.setZuZhiJGID(ShuJuZXConstant.TONGYONG_JGID);
+        scBhShiTuXXModel.setZuZhiJGMC(ShuJuZXConstant.TONGYONG_JGMC);
         scBhShiTuXXModel.setShiTuID(stringGenerator.Create());
-       scBhShiTuXXModel.setShunXuHao(dto.getShunXuHAO()==null?shiTuXXRepository.getMaxShunXuHao():dto.getShunXuHAO());
+       scBhShiTuXXModel.setShunXuHao(dto.getShunXuHAO()==null?shiTuXXRepository.getMaxShunXuHao()+1:dto.getShunXuHAO());
        var model= shiTuXXRepository.save(scBhShiTuXXModel);
         return model.getId();
     }
@@ -100,13 +101,13 @@ public class BIHuanSTXXServiceImpl implements BIHuanSTXXService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Boolean zuoFeiBHSTXX(String id) throws WeiZhaoDSJException {
-        shiTuXXRepository.asDeleteDsl().where(n->n.id.eq(id)).execute();
         var  shiTuxx = shiTuXXRepository.findById(id).orElse(null);
         if (shiTuxx==null)
         {
             throw new WeiZhaoDSJException("未获取到数据");
         }
         biHuanSTMXService.delectBiHuanSTZDByShiTuID(shiTuxx.getShiTuID());
+        shiTuXXRepository.asDeleteDsl().where(n->n.id.eq(id)).execute();
         return true;
     }
 

@@ -70,8 +70,17 @@ public class JieDianXXServiceImpl implements JieDianXXService {
         jieDianXXModel.setBiHuanMC(dto.getBiHuanMC());
         if (scBhJieDianXXModel==null)
         {
-            jieDianXXModel.setShunXuHao(1);
-            jieDianXX = jieDianXXRepository.save(jieDianXXModel);
+            if (dto.getJieDianXXSZDtoList().getId()!=null)
+            {
+                SC_BH_JieDianXXModel scBhJieDianXXModel1 = jieDianXXRepository.findById(dto.getJieDianXXSZDtoList().getId()).orElse(new SC_BH_JieDianXXModel());
+                BeanUtil.copyProperties(scBhJieDianXXModel1,jieDianXXModel);
+
+                jieDianXX= jieDianXXRepository.save(scBhJieDianXXModel1);
+            }else {
+                jieDianXXModel.setShunXuHao(1);
+                jieDianXX = jieDianXXRepository.save(jieDianXXModel);
+            }
+
         }else {
             if (!StringUtil.hasText(dto.getJieDianXXSZDtoList().getId()) ) {
                 jieDianXXRepository.asDeleteDsl().where(n->n.biHuanID.eq(dto.getBiHuanID()))

@@ -86,6 +86,9 @@ public class ChaXunFAXXServiceImpl implements ChaXunFAXXService {
         }
         SC_CX_FangAnCXLSModel model = new SC_CX_FangAnCXLSModel();
         BeanUtil.mergeProperties(request, model);
+        if("2".equals(chaXunLXDM)){
+            model.setFangAnMC("高级查询");
+        }
         model.setZuZhiJGID(lyraIdentityService.getJiGouID());
         model.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
         model.setChaXunLXDM(chaXunLXDM);

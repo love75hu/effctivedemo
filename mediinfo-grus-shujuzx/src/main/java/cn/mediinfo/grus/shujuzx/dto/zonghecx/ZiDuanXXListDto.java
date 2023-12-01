@@ -10,7 +10,7 @@ public class ZiDuanXXListDto {
     @Schema(description = "字段名称")
     private String ziDuanMC;
     @Schema(description = "条件标志")
-    private String tianJianBZ;
+    private String tiaoJianBZ;
     @Schema(description = "输出标志")
     private String shuChuBZ;
     @Schema(description = "顺序号")

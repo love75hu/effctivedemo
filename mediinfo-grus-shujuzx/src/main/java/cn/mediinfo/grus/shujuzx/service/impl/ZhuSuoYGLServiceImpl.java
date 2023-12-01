@@ -483,7 +483,6 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
         return dto.getId();
 
     }
-    //todo 修改
     /**
      * 取消合并
      * @return Boolean
@@ -529,7 +528,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
         xiangSiHBJL.setHeBingShu(xiangSiHBJL.getHeBingShu() - 1);
         if(brDaJiaoChaSYRepository.existsByZhuBingRID(dto.getXiangSiSYBRID()))
         {
-            xiangSiHBJL.setHeBingZTDM("1");//todo
+            xiangSiHBJL.setHeBingZTDM("1");
             xiangSiHBJL.setHeBingZTMC("合并后主数据");
 
         }else {

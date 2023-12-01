@@ -2,6 +2,7 @@ package cn.mediinfo.grus.shujuzx.service.impl;
 
 import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
 import cn.mediinfo.cyan.msf.core.util.AssertUtil;
+import cn.mediinfo.grus.shujuzx.constant.ShuJuZXConstant;
 import cn.mediinfo.grus.shujuzx.dto.JieDianGL.JieDianNRDto;
 import cn.mediinfo.grus.shujuzx.dto.bihuangl.SC_BH_ShiTuJDMXDto;
 import cn.mediinfo.grus.shujuzx.model.SC_BH_ShiTuJDMXModel;
@@ -60,8 +61,8 @@ return result;
         for (var j:jieDianNRDtos)
         {
             SC_BH_ShiTuJDMXModel shiTuJDMXModel=new SC_BH_ShiTuJDMXModel();
-            shiTuJDMXModel.setZuZhiJGID(lyraIdentityService.getJiGouID());
-            shiTuJDMXModel.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
+            shiTuJDMXModel.setZuZhiJGID(ShuJuZXConstant.TONGYONG_JGID);
+            shiTuJDMXModel.setZuZhiJGMC(ShuJuZXConstant.TONGYONG_JGMC);
             shiTuJDMXModel.setZiDuanBM(j.getZiDuanBM());
             shiTuJDMXModel.setZiDuanMC(j.getZiDuanMC());
             shiTuJDMXModel.setKongZhiSJBZ(j.getKongZhiSJBZ());

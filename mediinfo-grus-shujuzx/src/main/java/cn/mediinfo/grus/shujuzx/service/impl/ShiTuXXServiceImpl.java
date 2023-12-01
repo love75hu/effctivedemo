@@ -50,7 +50,7 @@ class ShiTuXXServiceImpl implements ShiTuXXService {
     @Override
     public SC_CX_ShiTuXXDto getShiTuXXByID(String id) throws WeiZhaoDSJException {
         //获取视图信息
-        var result = shiTuXXRepository.asQuerydsl().where(s -> s.id.eq(id)).select(SC_CX_ShiTuXXDto.class).fetchFirst(); //todo 优化
+        var result = shiTuXXRepository.asQuerydsl().where(s -> s.id.eq(id)).select(SC_CX_ShiTuXXDto.class).fetchFirst();
         AssertUtil.checkWeiZhaoDSJ(result != null, "未获取到数据");
         return result;
     }

@@ -102,15 +102,19 @@ public class BiHuanSTMXServiceImpl implements BiHuanSTMXService {
      */
     @Override
     public Boolean addBiHuanSTJDMX(List<AddBiHuanSTJDMXDto> dto) {
-        List<SC_BH_ShiTuMXModel> shiTuMXList = shiTuMXRepository.asQuerydsl().where(n -> n.shiTuID.eq(dto.get(0).getShiTuID())).fetch();
-        List<String> ziDuanBM = shiTuMXList.stream().map(SC_BH_ShiTuMXModel::getZiDuanBM).toList();
-        List<SC_BH_ShiTuMXModel> scBhShiTuMXModels = BeanUtil.copyListProperties(dto.stream()
-                .filter(s->!ziDuanBM.contains(s.getZiDuanBM())).collect(Collectors.toList()), SC_BH_ShiTuMXModel::new, (d, s) -> {
-            s.setZuZhiJGID(lyraIdentityService.getJiGouID());
-            s.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
-        });
-        shiTuMXRepository.saveAll(scBhShiTuMXModels);
-        return true;
+        if (!dto.isEmpty()) {
+            List<SC_BH_ShiTuMXModel> shiTuMXList = shiTuMXRepository.asQuerydsl().where(n -> n.shiTuID.eq(dto.get(0).getShiTuID())).fetch();
+            List<String> ziDuanBM = shiTuMXList.stream().map(SC_BH_ShiTuMXModel::getZiDuanBM).toList();
+            List<SC_BH_ShiTuMXModel> scBhShiTuMXModels = BeanUtil.copyListProperties(dto.stream()
+                    .filter(s -> !ziDuanBM.contains(s.getZiDuanBM())).collect(Collectors.toList()), SC_BH_ShiTuMXModel::new, (d, s) -> {
+                s.setZuZhiJGID(lyraIdentityService.getJiGouID());
+                s.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
+            });
+            shiTuMXRepository.saveAll(scBhShiTuMXModels);
+            return true;
+        }
+        return false;
+
     }
     /**
      * 保存闭环视图字段
@@ -121,6 +125,7 @@ public class BiHuanSTMXServiceImpl implements BiHuanSTMXService {
 
     @Override
     public Boolean saveBiHuanSTJDMX(SaveBiHuanSTJDMXDto dto) throws WeiZhaoDSJException {
+
         SC_BH_ShiTuMXModel scBhShiTuMXModel = shiTuMXRepository.findById(dto.getId()).orElse(null);
         if (scBhShiTuMXModel==null)
         {
@@ -203,6 +208,7 @@ public class BiHuanSTMXServiceImpl implements BiHuanSTMXService {
         biHuanSTSJXXDto.setShiTuMC(scBhShiTuXXModel.getShiTuMC());
         var shiTuZDXX=shiTuList.stream().filter(n-> Objects.equals( n.getShuJuZLXDM(),"3")).toList();
         List<ShiJianXXDto> shiJianXXDtoList=new ArrayList<>();
+
         shiTuZDXX.forEach(n->{
             ShiJianXXDto shiJianXXDto=new ShiJianXXDto();
             BeanUtil.copyProperties(n,shiJianXXDto);

@@ -4,6 +4,7 @@ import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
 import cn.mediinfo.cyan.msf.core.util.AssertUtil;
 import cn.mediinfo.cyan.msf.core.util.BeanUtil;
 import cn.mediinfo.cyan.msf.stringgenerator.StringGenerator;
+import cn.mediinfo.grus.shujuzx.constant.ShuJuZXConstant;
 import cn.mediinfo.grus.shujuzx.dto.JieDianGL.*;
 import cn.mediinfo.grus.shujuzx.dto.bihuangl.SC_BH_ShiTuJDGXDto;
 import cn.mediinfo.grus.shujuzx.dto.bihuangl.SC_BH_ShiTuJDMXDto;
@@ -18,6 +19,7 @@ import cn.mediinfo.grus.shujuzx.repository.SC_BH_ShiTuJDXXRepository;
 import cn.mediinfo.grus.shujuzx.repository.SC_BH_ShiTuXXRepository;
 import cn.mediinfo.grus.shujuzx.service.BiHuanSTJDXXService;
 import cn.mediinfo.lyra.extension.service.LyraIdentityService;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -38,16 +40,12 @@ public class BiHuanSTJDXXServiceImpl implements BiHuanSTJDXXService {
     private final StringGenerator stringGenerator;
 
 
-
-    private final LyraIdentityService lyraIdentityService;
-
-    public BiHuanSTJDXXServiceImpl(SC_BH_ShiTuJDXXRepository shiTuJDXXRepository, SC_BH_ShiTuXXRepository shiTuXXRepository, BiHuanSTJDGXServiceImpl biHuanSTJDGXService, BiHuanSTJDMXServiceImpl biHuanSTJDMXService,StringGenerator stringGenerator, LyraIdentityService lyraIdentityService) {
+    public BiHuanSTJDXXServiceImpl(SC_BH_ShiTuJDXXRepository shiTuJDXXRepository, SC_BH_ShiTuXXRepository shiTuXXRepository, BiHuanSTJDGXServiceImpl biHuanSTJDGXService, BiHuanSTJDMXServiceImpl biHuanSTJDMXService,StringGenerator stringGenerator) {
         this.shiTuJDXXRepository = shiTuJDXXRepository;
         this.shiTuXXRepository = shiTuXXRepository;
         this.biHuanSTJDGXService = biHuanSTJDGXService;
         this.biHuanSTJDMXService = biHuanSTJDMXService;
         this.stringGenerator = stringGenerator;
-        this.lyraIdentityService = lyraIdentityService;
     }
     @Override
     public SC_BH_ShiTuJDXXDto  getShiTuJDXX(String id) throws WeiZhaoDSJException {
@@ -58,8 +56,7 @@ public class BiHuanSTJDXXServiceImpl implements BiHuanSTJDXXService {
     @Override
     public BiHuanSTJDDto getBiHuanSTJDByID(String id) throws WeiZhaoDSJException {
         SC_BH_ShiTuJDXXDto shiTuJDXX = getShiTuJDXX(id);
-        BiHuanSTJDDto biHuanSTJDDto = new BiHuanSTJDDto();
-        BeanUtil.copyProperties(shiTuJDXX,biHuanSTJDDto);
+        BiHuanSTJDDto biHuanSTJDDto = BeanUtil.copyProperties(shiTuJDXX,BiHuanSTJDDto::new);
         biHuanSTJDDto.setGuanLianJD(biHuanSTJDGXService.getGuanLianJDXX(shiTuJDXX.getJieDianID()));
         biHuanSTJDDto.setJieDianNR( biHuanSTJDMXService.getShiTuJDMX(shiTuJDXX.getJieDianID()));
         return biHuanSTJDDto;
@@ -72,6 +69,7 @@ public class BiHuanSTJDXXServiceImpl implements BiHuanSTJDXXService {
      * @throws WeiZhaoDSJException 未找到异常
      */
     @Override
+    @Transactional(rollbackOn = Exception.class)
     public Boolean addBiHuanSTJD(BiHuanSTJDDto dto) throws WeiZhaoDSJException {
 
         SC_BH_ShiTuXXModel shiTuXX = shiTuXXRepository.findFirstByShiTuID(dto.getShiTuID());
@@ -85,8 +83,8 @@ public class BiHuanSTJDXXServiceImpl implements BiHuanSTJDXXService {
         BeanUtil.copyProperties(dto,scBhShiTuJDXXModel);
         scBhShiTuJDXXModel.setId(null);
         scBhShiTuJDXXModel.setJieDianID(stringGenerator.Create());
-        scBhShiTuJDXXModel.setZuZhiJGID(lyraIdentityService.getJiGouID());
-        scBhShiTuJDXXModel.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
+        scBhShiTuJDXXModel.setZuZhiJGID(ShuJuZXConstant.TONGYONG_JGID);
+        scBhShiTuJDXXModel.setZuZhiJGMC(ShuJuZXConstant.TONGYONG_JGMC);
         scBhShiTuJDXXModel.setShiTuID(shiTuXX.getShiTuID());
         scBhShiTuJDXXModel.setShiTuMC(shiTuXX.getShiTuMC());
         scBhShiTuJDXXModel.setBiHuanLXDM(shiTuXX.getBiHuanLXDM());
@@ -196,6 +194,7 @@ public class BiHuanSTJDXXServiceImpl implements BiHuanSTJDXXService {
     }
 
     @Override
+    @Transactional(rollbackOn = Exception.class)
     public Boolean updateBiHuanSTJD(BiHuanSTJDDto dto) throws WeiZhaoDSJException {
         SC_BH_ShiTuJDXXModel scBhShiTuJDXXModel = shiTuJDXXRepository.findById(dto.getId()).orElse(null);
         if (scBhShiTuJDXXModel==null)

@@ -219,7 +219,7 @@ public class FangAnManagerImpl implements FangAnManager {
         }).toList();
         List<SchemaTable> schemaTableList=shiTuMXService.getFangAnSCZD(shuJuSTList);
         List<FangAnSCDTO> fangAnSCList = BeanUtil.copyListProperties(fangAnSCModelList, FangAnSCDTO::new, (a, b) -> {
-            SchemaTable schemaTable =schemaTableList.stream().filter(p->p.getShuJuJMXZDDtos().stream().anyMatch(q-> Objects.equals(Optional.ofNullable(a.getZhiBiaoID()).orElse("").toLowerCase(),Optional.ofNullable(q.getZiDuanBM()).orElse("").toLowerCase())&&Objects.equals(a.getZhiBiaoFLID(),q.getMoShi()))).findFirst().orElse(null);
+            SchemaTable schemaTable =schemaTableList.stream().filter(p->p.getShuJuJMXZDDtos().stream().anyMatch(q-> Objects.equals(Optional.ofNullable(a.getZhiBiaoID()).orElse("").toLowerCase(),Optional.ofNullable(q.getZiDuanBM()).orElse("").toLowerCase()))).findFirst().orElse(null);
             if(schemaTable!=null&&"1".equals(a.getZhiBiaoLXDM())) {
                 b.setMoShi(schemaTable.getMoShi());
                 b.setBiaoMing(schemaTable.getBiaoMing());

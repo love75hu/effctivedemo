@@ -53,6 +53,13 @@ return result;
                 .where(n->n.jieDianID.eq(jieDianID))
                 .where(n->n.kongZhiSJBZ.eq(1)).select(JieDianNRDto.class).fetch();
     }
+
+    @Override
+    public Boolean zuoFeiJDMX(String jieDianID) {
+        shiTuJDMXRepository.asUpdateDsl().where(n->n.jieDianID.eq(jieDianID)).execute();
+        return true;
+    }
+
     @Override
     public Boolean addShiTuJDMX(List<JieDianNRDto> jieDianNRDtos, String shiTuID,String jieDianMC,String jieDianID,String shiTuMC)
     {

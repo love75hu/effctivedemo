@@ -40,6 +40,7 @@ public interface BiHuanSTJDXXService {
     Boolean updateBiHuanSTJD(BiHuanSTJDDto dto) throws WeiZhaoDSJException;
 
     List<BiHuanSTJDXXDto> getBiHuanSTJD(String biHuanLXDM);
+    Boolean zuoFeiBHJD(String id) throws WeiZhaoDSJException;
 
 
 

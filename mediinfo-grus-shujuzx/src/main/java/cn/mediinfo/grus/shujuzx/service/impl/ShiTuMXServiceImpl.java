@@ -146,6 +146,7 @@ public class ShiTuMXServiceImpl implements ShiTuMXService {
                 SC_CX_ShiTuMXModel shiTuMXModel = new SC_CX_ShiTuMXModel();
                 shiTuMXModel.setShiTuID(addShiTuMXDto.getShiTuID());
                 shiTuMXModel.setShiTuMC(addShiTuMXDto.getShiTuMC());
+                shiTuMXModel.setTiaoJianBZ(Integer.valueOf(s.getTianJianBZ()));
                 shiTuMXModel.setZuZhiJGID(ShuJuZXConstant.TONGYONG_JGID);
                 shiTuMXModel.setZuZhiJGMC(ShuJuZXConstant.TONGYONG_JGMC);
                 BeanUtil.copyProperties(s, shiTuMXModel);

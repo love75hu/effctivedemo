@@ -7,6 +7,8 @@ import java.util.List;
 
 @Data
 public class BiHuanXXDto {
+ 
+    private String id;
     /**
      * 闭环类型代码
      */
@@ -39,5 +41,5 @@ public class BiHuanXXDto {
     @Schema(description = "启用标志")
     private Integer qiYongBZ;
 
-    private List<RuCanXXDto> ruCanXXDtos;
+    private List<RuCanXXDto> ruCanXXDtoList;
 }

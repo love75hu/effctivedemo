@@ -317,7 +317,7 @@ List<SC_BH_JieDianXXModel> addjieDianXXList=new ArrayList<>();
     @Override
     public BiHuanXXDto getBiHuanXXBYID(String biHuanID) {
        var biHuanXX=BeanUtil.copyProperties( jiBenXXRepository.findFirstByBiHuanID(biHuanID),BiHuanXXDto.class);;
-        biHuanXX.setRuCanXXDtos(ruCanXXService.getRuCanXXByBiHuanID(biHuanID));
+        biHuanXX.setRuCanXXDtoList(ruCanXXService.getRuCanXXByBiHuanID(biHuanID));
         return biHuanXX;
     }
     /**

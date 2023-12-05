@@ -17,6 +17,9 @@ public class FangAnQueryDTO {
     @Schema(description = "id")
     private String id;
 
+    @Schema(description = "方案id")
+    private String fangAnID;
+
     @Schema(description = "方案类型代码;0-全部1-门诊2-急诊3-住院4-公卫")
     private String fangAnLXDM;
 

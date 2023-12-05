@@ -4,10 +4,12 @@ import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
 import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
 import cn.mediinfo.cyan.msf.core.response.MsfResponse;
+import cn.mediinfo.cyan.msf.core.util.BeanUtil;
 import cn.mediinfo.grus.shujuzx.dto.chaxunfaxx.FangAnCXLSDto;
 import cn.mediinfo.grus.shujuzx.dto.chaxunfaxx.FangAnXXDto;
 import cn.mediinfo.grus.shujuzx.dto.fangan.FangAnQueryDTO;
 import cn.mediinfo.grus.shujuzx.request.FangAnCXLSSaveRequest;
+import cn.mediinfo.grus.shujuzx.request.FangAnCXLSSaveRequestByFAID;
 import cn.mediinfo.grus.shujuzx.request.fangan.FangAnQuerySqlRequest;
 import cn.mediinfo.grus.shujuzx.request.fangan.FangAnXXSaveRequest;
 import cn.mediinfo.grus.shujuzx.request.fangan.FangAnXXUpdateRequest;
@@ -18,7 +20,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -64,12 +65,22 @@ public class FangAnXXController {
         return MsfResponse.success(fangAnService.getSql(request.getRoot(), request.getFangAnSCList(), request.getFangAnLXDM(), request.getGuanJianZi()));
     }
 
-
     @Operation(summary = "保存查询记录")
     @PostMapping("/saveQueryRercord")
     public MsfResponse<String> saveFangAnCXLSSaveRequest(@Validated @RequestBody FangAnCXLSSaveRequest request) throws YuanChengException, TongYongYWException {
         String sql = fangAnService.getSql(request.getRoot(), request.getFangAnSCList(), request.getFangAnLXDM(), request.getGuanJianZi());
         return MsfResponse.success(chaXunFAXXService.saveFangAnCXLS(request, sql));
+    }
+
+    @Operation(summary = "根据方案ID保存查询记录")
+    @PostMapping("/saveQueryRercordByFAID")
+    public MsfResponse<String> saveFangAnCXLSByFAID(@Validated @RequestBody FangAnCXLSSaveRequestByFAID request) throws YuanChengException, TongYongYWException, WeiZhaoDSJException {
+        FangAnQueryDTO fangAnXX=fangAnService.getFangAnXX(request.getFangAnId());
+        FangAnCXLSSaveRequest saveRequest= BeanUtil.copyProperties(fangAnXX,FangAnCXLSSaveRequest::new) ;
+        saveRequest.setGuanJianZi(request.getGuanJianZi());
+        saveRequest.setFangAnId(fangAnXX.getFangAnID());
+        String sql = fangAnService.getSql(saveRequest.getRoot(), saveRequest.getFangAnSCList(), saveRequest.getFangAnLXDM(), saveRequest.getGuanJianZi());
+        return MsfResponse.success(chaXunFAXXService.saveFangAnCXLS(saveRequest, sql));
     }
 
     /**

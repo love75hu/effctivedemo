@@ -68,6 +68,7 @@ return result;
         for (var j:jieDianNRDtos)
         {
             SC_BH_ShiTuJDMXModel shiTuJDMXModel=new SC_BH_ShiTuJDMXModel();
+            shiTuJDMXModel.setShunXuHao(j.getShunXuHao());
             shiTuJDMXModel.setZuZhiJGID(ShuJuZXConstant.TONGYONG_JGID);
             shiTuJDMXModel.setZuZhiJGMC(ShuJuZXConstant.TONGYONG_JGMC);
             shiTuJDMXModel.setZiDuanBM(j.getZiDuanBM());

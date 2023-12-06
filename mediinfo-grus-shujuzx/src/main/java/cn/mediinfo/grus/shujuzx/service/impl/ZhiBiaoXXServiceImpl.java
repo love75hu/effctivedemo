@@ -4,16 +4,14 @@ import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 import cn.mediinfo.cyan.msf.core.util.BeanUtil;
 import cn.mediinfo.cyan.msf.core.util.StringUtil;
 import cn.mediinfo.grus.shujuzx.constant.ShuJuZXConstant;
-import cn.mediinfo.grus.shujuzx.dto.zhibiaoxxs.ZhiBiaoMXListDto;
-import cn.mediinfo.grus.shujuzx.dto.zhibiaoxxs.ZhiBiaoXXCreateDto;
-import cn.mediinfo.grus.shujuzx.dto.zhibiaoxxs.ZhiBiaoXXListDto;
-import cn.mediinfo.grus.shujuzx.dto.zhibiaoxxs.ZhiBiaoXXUpdateDto;
+import cn.mediinfo.grus.shujuzx.dto.zhibiaoxxs.*;
 import cn.mediinfo.grus.shujuzx.enums.ZhiBiaoLXDMEnum;
 import cn.mediinfo.grus.shujuzx.model.SC_CX_ZhiBiaoXXModel;
 import cn.mediinfo.grus.shujuzx.po.zhibiaoxx.ZhiBiaoFLPo;
 import cn.mediinfo.grus.shujuzx.repository.SC_CX_ZhiBiaoXXRepository;
 import cn.mediinfo.grus.shujuzx.service.ZhiBiaoXXService;
 import cn.mediinfo.lyra.extension.service.SequenceService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -152,6 +150,27 @@ public class ZhiBiaoXXServiceImpl implements ZhiBiaoXXService {
                 .set(p -> p.shunXuHao, updateDto.getShunXuHao())
                 .where(p -> p.id.eq(updateDto.getId())).execute();
         return true;
+    }
+
+    /**
+     * 根据指标类型代码获取指标下拉列表
+     * @param zhiBiaoLXDM
+     * @param likeQuery
+     * @return
+     */
+    @Override
+    public List<ZhiBiaoMXSelectDto> getZhiBiaoSelectByZBLXDM(String zhiBiaoLXDM, String likeQuery) {
+        List<ZhiBiaoMXSelectDto> result;
+        List<SC_CX_ZhiBiaoXXModel> zhiBiaoXXList = zhiBiaoXXRepository.getZhiBiaoXXByZBLXDM(zhiBiaoLXDM, likeQuery);
+        result = zhiBiaoXXList.stream().filter(p -> StringUtil.hasText(p.getZhiBiaoID()))
+                .sorted(Comparator.comparing(SC_CX_ZhiBiaoXXModel::getShunXuHao, Comparator.nullsLast(Integer::compareTo)))
+                .map(p -> {
+                    ZhiBiaoMXSelectDto dto = new ZhiBiaoMXSelectDto();
+                    dto.setZhiYuID(p.getZhiBiaoID());
+                    dto.setZhiYuMC(StringUtil.concat(p.getZhiBiaoFLMC(), "/", p.getZhiBiaoMC()));
+                    return dto;
+                }).toList();
+        return result;
     }
 
     /**

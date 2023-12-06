@@ -278,8 +278,9 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
 
         String sql = getShiTuBGX(tableList.get(0));
 
+        //执行sql 得出结果
         List<Map<String, Object>> maps = jdbcTemplate.queryForList(sql);
-
+        //视图执行完 在视图中查询 要的值
 
 
         biHuanJDXXList.forEach(j->{
@@ -299,6 +300,8 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
             List<SC_BH_ShiTuJDMXModel> biHuanJDMXByJieID = biHuanSTJDMXList.stream().filter(n -> n.getJieDianID().equals(j.getJieDianID())).toList();
 
             jieDianNRList biHuanJDNr=new jieDianNRList();
+
+
 
 
         });

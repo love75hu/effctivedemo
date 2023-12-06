@@ -17,6 +17,8 @@ public interface SC_BH_ZiBiHXSLRepository extends MsfJpaRepository<QSC_BH_ZiBiHX
 
     List<SC_BH_ZiBiHXSLModel> findByBiHuanIDAndZuZhiJGIDAndZuZhiJGMC(String biHuanID, String zuZhiJGID, String zuZhiJGMC);
 
+    List<SC_BH_ZiBiHXSLModel> findByBiHuanIDAndZuZhiJGID(String biHuanID, String zuZhiJGID);
+
     default List<SC_BH_ZiBiHXSLDto> ziBiHXSLList(String biHuanID, String jiGouID)
     {
         return asQuerydsl()

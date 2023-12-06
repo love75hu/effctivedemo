@@ -16,6 +16,9 @@ import java.util.Objects;
 @MsfDataSource("datasourcesjzx")
 public interface SC_BH_ShiTuJDXXRepository extends MsfJpaRepository<QSC_BH_ShiTuJDXXModel, SC_BH_ShiTuJDXXModel, String>, JpaSpecificationExecutor<SC_BH_ShiTuJDXXModel> {
 
+    SC_BH_ShiTuJDXXModel findFirstByJieDianID(String jieDianID);
+
+    List<SC_BH_ShiTuJDXXModel> findByJieDianIDIn(List<String> jieDianID);
    default List<BiHuanJDXXListDto> getBiHuanJDXXList(String shiTuID,
                                                      String biHuanLXDM,
                                                      String jieDianMC,

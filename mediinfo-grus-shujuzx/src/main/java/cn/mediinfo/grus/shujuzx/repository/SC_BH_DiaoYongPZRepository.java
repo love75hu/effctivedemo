@@ -12,6 +12,7 @@ import java.util.List;
 @MsfDataSource("datasourcesjzx")
 public interface SC_BH_DiaoYongPZRepository extends MsfJpaRepository<QSC_BH_DiaoYongPZModel, SC_BH_DiaoYongPZModel, String>, JpaSpecificationExecutor<SC_BH_DiaoYongPZModel> {
     default List<SC_BH_DiaoYongPZDto> getBiHuanPZList(String gongNengDDM) {
-        return asQuerydsl().where(x -> x.gongNengDDM.eq(gongNengDDM)).select(SC_BH_DiaoYongPZDto.class).fetch();
+        return asQuerydsl().where(x -> x.gongNengDDM.eq(gongNengDDM))
+                .where(x->x.qiYongBZ.eq(1)).select(SC_BH_DiaoYongPZDto.class).fetch();
     }
 }

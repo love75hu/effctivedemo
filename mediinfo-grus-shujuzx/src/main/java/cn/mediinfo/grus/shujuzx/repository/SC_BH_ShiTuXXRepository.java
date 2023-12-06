@@ -30,6 +30,9 @@ public interface SC_BH_ShiTuXXRepository extends MsfJpaRepository<QSC_BH_ShiTuXX
 
     SC_BH_ShiTuXXModel  findFirstByShiTuID(String shiTuID);
 
+    List<SC_BH_ShiTuXXModel> findByShiTuIDIn(List<String> shiTuID);
+
+
 
 
 }

@@ -178,7 +178,7 @@ public class JieDianXXServiceImpl implements JieDianXXService {
 
             a.setZiBiHXSLDtoList(BeanUtil.copyToList(ziBiHXSLList.stream().filter(x->x.getJieDianID().equals(a.getJieDianID())).collect(Collectors.toList()), ZiBiHXSLDto.class));
         }
-        return jieDianXXList.stream().sorted((Comparator.comparing(BiHuanSZXXDto::getShunXuHao))).collect(Collectors.toList());
+        return jieDianXXList;
     }
 
 

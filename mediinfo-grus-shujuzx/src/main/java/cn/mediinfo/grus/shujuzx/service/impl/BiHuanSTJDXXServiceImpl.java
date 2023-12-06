@@ -26,6 +26,7 @@ import org.springframework.util.StringUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -166,8 +167,10 @@ public class BiHuanSTJDXXServiceImpl implements BiHuanSTJDXXService {
      */
     @Override
     public List<KeXuanJDDto> getKeXuanJDBybiHuanLXDM(String biHuanLXDM) {
-        List<SC_BH_ShiTuJDXXDto> shiTuJDXXList = shiTuJDXXRepository.asQuerydsl().where(n -> n.biHuanLXDM.eq(biHuanLXDM)).select(SC_BH_ShiTuJDXXDto.class).fetch();
-        List<String> shiTuIDs = shiTuJDXXList.stream().map(SC_BH_ShiTuJDXXDto::getShiTuID).distinct().collect(Collectors.toList());
+        List<SC_BH_ShiTuJDXXDto> shiTuJDXXList = shiTuJDXXRepository.asQuerydsl()
+                .where(n -> n.biHuanLXDM.eq(biHuanLXDM).and(n.qiYongBZ.eq(1)))
+                .select(SC_BH_ShiTuJDXXDto.class).fetch();
+        List<String> shiTuIDs = shiTuJDXXList.stream().map(SC_BH_ShiTuJDXXDto::getShiTuID).distinct().toList();
         List<KeXuanJDDto> keXuanJDDtoList=new ArrayList<>();
         for (var s :shiTuIDs)
         {
@@ -175,7 +178,8 @@ public class BiHuanSTJDXXServiceImpl implements BiHuanSTJDXXService {
             SC_BH_ShiTuJDXXDto scBhShiTuJDXXDto = shiTuJDXXList.stream().filter(n -> n.getShiTuID().equals(s)).findFirst().orElse(new SC_BH_ShiTuJDXXDto());
             keXuanJDDto.setShiTuID(scBhShiTuJDXXDto.getShiTuID());
             keXuanJDDto.setShiTuMC(scBhShiTuJDXXDto.getShiTuMC());
-            keXuanJDDto.setKeXuanJDXXDtoList(BeanUtil.copyToList(shiTuJDXXList.stream().filter(n -> n.getShiTuID().equals(s)).collect(Collectors.toList()), KeXuanJDXXDto.class));
+            keXuanJDDto.setKeXuanJDXXDtoList(BeanUtil.copyToList(shiTuJDXXList.stream()
+                    .filter(n -> n.getShiTuID().equals(s)).collect(Collectors.toList()), KeXuanJDXXDto.class));
             keXuanJDDtoList.add(keXuanJDDto);
         }
         return keXuanJDDtoList;
@@ -245,10 +249,8 @@ public class BiHuanSTJDXXServiceImpl implements BiHuanSTJDXXService {
         if (scBhShiTuJDXXModel==null)
         {
             throw new WeiZhaoDSJException("未找到节点信息");
-        }else {
-
         }
-        shiTuJDXXRepository.asUpdateDsl().where(n->n.id.eq(id)).execute();
+        shiTuJDXXRepository.asDeleteDsl().where(n->n.id.eq(id)).execute();
         biHuanSTJDMXService.zuoFeiJDMX(scBhShiTuJDXXModel.getJieDianID());
         return true;
     }

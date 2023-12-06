@@ -165,7 +165,7 @@ public class JieDianGLController {
 
     @Operation(summary = "获取节点列表数量")
     @GetMapping("getBiHuanJDXXCount")
-    public MsfResponse<Integer> getBiHuanJDXXCount(@NotEmpty(message = "闭环类型代码不能为空")  String shiTuID,
+    public MsfResponse<Integer> getBiHuanJDXXCount(String shiTuID,
                                                    String biHuanLXDM,
                                                    String jieDianMC,
                                                    Integer qiYongBZ)

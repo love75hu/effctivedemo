@@ -1,6 +1,7 @@
 package cn.mediinfo.grus.shujuzx.service;
 
 import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
+import cn.mediinfo.grus.shujuzx.dto.zhibiaoxxs.ZhiBiaoMXSelectDto;
 import cn.mediinfo.grus.shujuzx.dto.zhibiaoxxs.ZhiBiaoXXCreateDto;
 import cn.mediinfo.grus.shujuzx.dto.zhibiaoxxs.ZhiBiaoXXListDto;
 import cn.mediinfo.grus.shujuzx.dto.zhibiaoxxs.ZhiBiaoXXUpdateDto;
@@ -32,4 +33,9 @@ public interface ZhiBiaoXXService {
      * 修改指标信息
      */
     Boolean updateZhiBiaoXX(ZhiBiaoXXUpdateDto updateDto) throws TongYongYWException;
+
+    /*
+    根据指标类型代码获取指标下拉列表
+     */
+    List<ZhiBiaoMXSelectDto> getZhiBiaoSelectByZBLXDM(String zhiBiaoLXDM, String likeQuery);
 }

@@ -2,9 +2,7 @@ package cn.mediinfo.grus.shujuzx.controller;
 
 import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 import cn.mediinfo.cyan.msf.core.response.MsfResponse;
-import cn.mediinfo.grus.shujuzx.dto.zhibiaoxxs.ZhiBiaoXXCreateDto;
-import cn.mediinfo.grus.shujuzx.dto.zhibiaoxxs.ZhiBiaoXXListDto;
-import cn.mediinfo.grus.shujuzx.dto.zhibiaoxxs.ZhiBiaoXXUpdateDto;
+import cn.mediinfo.grus.shujuzx.dto.zhibiaoxxs.*;
 import cn.mediinfo.grus.shujuzx.service.ZhiBiaoXXService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -76,5 +74,15 @@ public class ZhiBiaoXXController {
     @Operation(summary = "修改指标信息")
     public MsfResponse<Boolean> updateZhiBiaoXX(@RequestBody ZhiBiaoXXUpdateDto updateDto) throws TongYongYWException {
         return MsfResponse.success(zhiBiaoXXService.updateZhiBiaoXX(updateDto));
+    }
+
+    /**
+     * 根据指标类型代码获取指标下拉列表
+     */
+    @GetMapping("GetZhiBiaoSelectByZBLXDM")
+    @Operation(summary = "根据指标类型代码获取指标下拉列表")
+    public MsfResponse<List<ZhiBiaoMXSelectDto>> getZhiBiaoSelectByZBLXDM(@NotEmpty(message = "指标类型代码不能为空") String zhiBiaoLXDM,
+                                                                          @RequestParam(required = false) String likeQuery) {
+        return MsfResponse.success(zhiBiaoXXService.getZhiBiaoSelectByZBLXDM(zhiBiaoLXDM,likeQuery));
     }
 }

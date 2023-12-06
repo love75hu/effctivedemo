@@ -280,9 +280,8 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
 
         //执行sql 得出结果
         List<Map<String, Object>> maps = jdbcTemplate.queryForList(sql);
-        //视图执行完 在视图中查询 要的值
-
-
+        //执行完视图 获取节点的数据集合
+       List<JieDianList> jieDianLists=new ArrayList<>();
         biHuanJDXXList.forEach(j->{
             //获取节点下的 节点时效
             List<SC_BH_JieDianSXModel> jieDianSXList = biHuanJDSXList.stream().filter(n -> n.getJieDianID().equals(j.getJieDianID())).toList();
@@ -292,17 +291,50 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
             List<SC_BH_ZiBiHXSLModel> ziBiHXSLList = biHuanZBHXSLList.stream().filter(n -> n.getJieDianID().equals(j.getJieDianID())).toList();
 
             //查询 视图信息
-            SC_BH_ShiTuXXModel biHuanSTXX = biHuanSTXXList.stream().filter(n -> n.getShiTuID().equals(j.getShiTuID())).findFirst().orElse(null);
+            SC_BH_ShiTuXXModel biHuanSTXX = biHuanSTXXList.stream().filter(n -> n.getShiTuID().equals(j.getShiTuID())).findFirst().orElse(new SC_BH_ShiTuXXModel());
 
             //查询 视图节点信息
             SC_BH_ShiTuJDXXModel biHuanSTJDXXByJieID = biHuanSTJDXXList.stream().filter(n -> n.getJieDianID().equals(j.getJieDianID())).findFirst().orElse(null);
             //查询 视图下下的字段信息
             List<SC_BH_ShiTuJDMXModel> biHuanJDMXByJieID = biHuanSTJDMXList.stream().filter(n -> n.getJieDianID().equals(j.getJieDianID())).toList();
 
-            jieDianNRList biHuanJDNr=new jieDianNRList();
+            JieDianList jieDianList=new JieDianList();
+            List<jieDianNRList> jieDianNRList=new ArrayList<>();
 
+            //为行存储的情况
+            if (Objects.equals(biHuanSTXX.getShiTuLXDM(),2))
+            {
+                //事件字段编码
+                var shiJianZDBM=biHuanSTJDXXByJieID.getShiJianZDBM();
+                //事件字段值
+                var shiJianDM=biHuanSTJDXXByJieID.getShiJianDM();
 
+                List<Map<String, Object>> collect = maps.stream().filter(map -> shiJianDM.equals(map.get(shiJianZDBM))).collect(Collectors.toList());
 
+                biHuanJDMXByJieID.forEach(f->{
+                    String o = collect.stream().map(k -> k.get(f.getZiDuanBM()).toString()).findFirst().orElse("");
+                    jieDianNRList biHuanJDNr=new jieDianNRList();
+                    biHuanJDNr.setZiDuanBM(f.getZiDuanBM());
+                    biHuanJDNr.setZiDuanZhi(o);
+                    biHuanJDNr.setKongZhiSJBZ(f.getKongZhiSJBZ());
+                    biHuanJDNr.setYunXuWKBZ(f.getYunXuWKBZ());
+                    jieDianNRList.add(biHuanJDNr);
+                });
+
+            }else {
+                //为列存储的情况
+                biHuanJDMXByJieID.forEach(f->{
+                    String s = maps.stream().map(k -> k.get(f.getZiDuanBM()).toString()).findFirst().orElse("");
+                    jieDianNRList biHuanJDNr=new jieDianNRList();
+                    biHuanJDNr.setZiDuanBM(f.getZiDuanBM());
+                    biHuanJDNr.setZiDuanZhi(s);
+                    biHuanJDNr.setKongZhiSJBZ(f.getKongZhiSJBZ());
+                    biHuanJDNr.setYunXuWKBZ(f.getYunXuWKBZ());
+                    jieDianNRList.add(biHuanJDNr);
+                });
+            }
+            jieDianList.setJieDianList(jieDianNRList);
+            jieDianLists.add(jieDianList);
 
         });
 

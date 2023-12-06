@@ -19,9 +19,9 @@ public class jieDianNRList {
     /**
      * 控制时间标志
      */
-    private String kongZhiSJBZ;
+    private Integer kongZhiSJBZ;
     /**
      * 允许为空标志
      */
-    private String yunXuWKBZ;
+    private Integer yunXuWKBZ;
 }

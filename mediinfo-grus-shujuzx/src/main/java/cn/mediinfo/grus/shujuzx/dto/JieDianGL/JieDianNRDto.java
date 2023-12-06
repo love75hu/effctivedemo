@@ -27,4 +27,9 @@ public class JieDianNRDto {
     @Schema(description = "允许为空标志")
     private Integer yunXuWKBZ;
 
+    /**
+     * 顺序号
+     */
+    private Integer shunXuHao;
+
 }

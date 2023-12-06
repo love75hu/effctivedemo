@@ -155,9 +155,19 @@ public class BiHuanSTMXServiceImpl implements BiHuanSTMXService {
      * @return 字段集合
      */
     @Override
-    public List<KeXuanZDDto> getRuChanZDXX(String biHuanLXDM) {
-
-        return shiTuMXRepository.getRuChanZDXX(biHuanLXDM);
+    public List<BiHuanSTRCZDDto> getRuChanZDXX(String biHuanLXDM) {
+        List<BiHuanSTRCZDDto> biHuanSTRCZDDto=new ArrayList<>();
+        var ruCanZDXXList=shiTuMXRepository.getRuChanZDXX(biHuanLXDM);
+        List<String> shiTuIDs=ruCanZDXXList.stream().map(KeXuanZDDto::getShiTuID).distinct().toList();
+        shiTuIDs.forEach(n->{
+            BiHuanSTRCZDDto biHuanSTRCZD=new BiHuanSTRCZDDto();
+            KeXuanZDDto keXuanZDDto = ruCanZDXXList.stream().filter(t -> t.getShiTuID().equals(n)).findFirst().orElse(new KeXuanZDDto());
+            biHuanSTRCZD.setShiTuID(keXuanZDDto.getShiTuID());
+            biHuanSTRCZD.setShiTuMC(keXuanZDDto.getShiTuMC());
+            biHuanSTRCZD.setChildren(BeanUtil.copyListProperties( ruCanZDXXList.stream().filter(f -> f.getShiTuID().equals(n)).collect(Collectors.toList()), BiHuanZDXXDto::new));
+            biHuanSTRCZDDto.add(biHuanSTRCZD);
+        });
+        return biHuanSTRCZDDto;
     }
 
     /**

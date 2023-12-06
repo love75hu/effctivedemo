@@ -195,7 +195,7 @@ public class JieDianGLController {
 
     @Operation(summary = "获取闭环类型下字段")
     @GetMapping("getBiHuanSTZDBybiHuanLXDM")
-    public MsfResponse<List<BiHuanSTRCZDDto> > getBiHuanSTZDBybiHuanLXDM(@NotEmpty(message = "闭环类型代码不能为空") String biHuanLXDM)
+    public MsfResponse<List<BiHuanSTRCZDDto>> getBiHuanSTZDBybiHuanLXDM(@NotEmpty(message = "闭环类型代码不能为空") String biHuanLXDM)
     {
     return MsfResponse.success(biHuanSTMXService.getBiHuanSTZDBybiHuanLXDM(biHuanLXDM));
     }

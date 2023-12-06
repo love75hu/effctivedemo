@@ -22,7 +22,7 @@ public interface BiHuanSTMXService {
 
     List<KeXuanZDDto> getShiTUZDXX(String shiTUID);
 
-    List<KeXuanZDDto> getRuChanZDXX(String biHuanLXDM);
+    List<BiHuanSTRCZDDto> getRuChanZDXX(String biHuanLXDM);
 
     List<BiHuanSTSJXXDto>  getShiJianXX(String shiTuID) throws WeiZhaoDSJException, YuanChengException;
 

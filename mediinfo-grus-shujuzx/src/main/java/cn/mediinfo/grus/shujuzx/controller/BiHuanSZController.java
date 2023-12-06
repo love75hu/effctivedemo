@@ -58,7 +58,7 @@ public class BiHuanSZController {
     }
     @Operation(summary = "获取入参字段信息")
     @GetMapping("getRuChanZDXX")
-    public MsfResponse<List<KeXuanZDDto>> getRuChanZDXX(@NotEmpty(message = "闭环类型代码不能为空")  String biHuanLXDM)
+    public MsfResponse<List<BiHuanSTRCZDDto>> getRuChanZDXX(@NotEmpty(message = "闭环类型代码不能为空")  String biHuanLXDM)
     {
         return MsfResponse.success(biHuanSTMXService.getRuChanZDXX(biHuanLXDM));
     }

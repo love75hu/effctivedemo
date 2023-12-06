@@ -11,7 +11,7 @@ public class UpdateShiTuMXDto {
     @Schema(description = "字段名称")
     private String ziDuanMC;
     @Schema(description = "条件标志")
-    private Integer tianJianBZ;
+    private Integer tiaoJianBZ;
     @Schema(description = "关联字段列表")
     private List<GuanLianTJZD> guanLianZDList;
     @Schema(description = "输出标志")

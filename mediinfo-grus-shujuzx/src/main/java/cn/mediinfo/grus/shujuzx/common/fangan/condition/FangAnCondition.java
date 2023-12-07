@@ -16,6 +16,9 @@ public class FangAnCondition {
     @Schema(description = "视图明细id")
     private String shiTuMXID;
 
+    @Schema(description = "视图id")
+    private String shiTuID;
+
     @Schema(description = "字段名称")
     private String ziDuanMC;
 

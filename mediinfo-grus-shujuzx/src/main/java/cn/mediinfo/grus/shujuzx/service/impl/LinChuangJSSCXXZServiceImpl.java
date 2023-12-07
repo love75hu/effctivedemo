@@ -58,6 +58,8 @@ public class LinChuangJSSCXXZServiceImpl implements LinChuangJSSCXXZService {
             LingChuangJSPZDto lingChuangJSPZDto = new LingChuangJSPZDto();
             lingChuangJSPZDto.setShuJuLYID(e.getShuJuLYID());
             lingChuangJSPZDto.setShuJuLYLXDM(e.getShuJuLYLXDM());
+            lingChuangJSPZDto.setShiTuID(e.getShiTuID());
+            lingChuangJSPZDto.setShiTuMC(e.getShiTuMC());
             //视图ID关联查找到明细
             List<ShuJuJMXZDDto>  list = shiTuMXList.stream().filter(t-> Objects.equals(t.getShiTuID(),e.getShiTuID())).map(t -> {
                 ShuJuJMXZDDto shuJuJMXZDDto = new ShuJuJMXZDDto();

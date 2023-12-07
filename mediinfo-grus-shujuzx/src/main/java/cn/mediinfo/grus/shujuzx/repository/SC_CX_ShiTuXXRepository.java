@@ -97,8 +97,8 @@ public interface SC_CX_ShiTuXXRepository extends MsfJpaRepository<QSC_CX_ShiTuXX
         return this.asQuerydsl()
                 .where(t->t.moJiBZ.eq(1))
                 .whereIf(yeWuLX ==1, t->t.menZhenSYBZ.eq(1))
-                .whereIf(yeWuLX ==2, t->t.zhuYuanSYBZ.eq(1))
-                .whereIf(yeWuLX ==3, t->t.jiZhenSYBZ.eq(1))
+                .whereIf(yeWuLX ==2, t->t.jiZhenSYBZ.eq(1))
+                .whereIf(yeWuLX ==3, t->t.zhuYuanSYBZ.eq(1))
                 .whereIf(yeWuLX ==4, t->t.gongWeiZYBZ.eq(1))
                 .fetchDetach();
     }

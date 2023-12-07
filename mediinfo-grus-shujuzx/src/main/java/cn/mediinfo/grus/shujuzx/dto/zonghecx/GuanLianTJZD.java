@@ -11,4 +11,8 @@ public class GuanLianTJZD {
     private String ziDuanBM;
     @Schema(description = "字段名称")
     private String ziDuanMC;
+    @Schema(description = "关联字段编码")
+    private String guanLianZDBM;
+    @Schema(description = "关联字段名称")
+    private String guanLianZDMC;
 }

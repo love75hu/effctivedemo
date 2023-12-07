@@ -89,4 +89,6 @@ public interface ShiTuMXService {
     public List<SchemaTable> getFangAnSCZD(List<ShuJuSTDto> shuJuSTDto) throws WeiZhaoDSJException;
 
 
+   public ShuJuXSTXQDto getShuJuSTXQDto(List<String> shiTuIds) throws YuanChengException;
+
 }

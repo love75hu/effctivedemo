@@ -12,5 +12,5 @@ public class ShiTuMXZHCXDto {
     @Schema(description = "父类名称")
     private String fuLeiMC;
     @Schema(description = "视图字段明细")
-    private List<ShiTuZDMXDto> ziDuanList;
+    private List<ShuJuJMXZDDto> ziDuanList;
 }

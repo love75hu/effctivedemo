@@ -58,7 +58,7 @@ class ShiTuMXGXServiceImpl implements ShiTuMXGXService {
 
     //根据视图ID获取视图字段关系
     @Override
-    public List<cn.mediinfo.grus.shujuzx.dto.shitumx.SC_CX_ShiTuMXGXDto> getShiTuMXGXByShiTuID(Set<String> shiTuID) {
+    public List<cn.mediinfo.grus.shujuzx.dto.shitumx.SC_CX_ShiTuMXGXDto> getShiTuMXGXByShiTuID(List<String> shiTuID) {
         return shiTuMXGXRepository.asQuerydsl().where(s -> s.shiTuID.in(shiTuID)).select(cn.mediinfo.grus.shujuzx.dto.shitumx.SC_CX_ShiTuMXGXDto.class).fetch();
     }
 

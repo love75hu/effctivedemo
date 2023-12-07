@@ -8,6 +8,7 @@ import cn.mediinfo.cyan.msf.core.util.BeanUtil;
 import cn.mediinfo.grus.shujuzx.dto.chaxunfaxx.FangAnCXLSDto;
 import cn.mediinfo.grus.shujuzx.dto.chaxunfaxx.FangAnXXDto;
 import cn.mediinfo.grus.shujuzx.dto.fangan.FangAnQueryDTO;
+import cn.mediinfo.grus.shujuzx.dto.shitumx.ShuJuXSTXQDto;
 import cn.mediinfo.grus.shujuzx.request.FangAnCXLSSaveRequest;
 import cn.mediinfo.grus.shujuzx.request.FangAnCXLSSaveRequestByFAID;
 import cn.mediinfo.grus.shujuzx.request.fangan.FangAnQuerySqlRequest;
@@ -23,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -94,6 +96,7 @@ public class FangAnXXController {
                                                               @RequestParam(required = false, defaultValue = "10") Integer pageSize) {
         return MsfResponse.success(chaXunFAXXService.getChaXunFAXXSelect(likeQuery, fangAnLXDM, pageIndex, pageSize));
     }
+
 
     /**
      * 获取方案信息记录

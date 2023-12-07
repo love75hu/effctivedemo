@@ -81,7 +81,7 @@ public interface SC_CX_ShiTuXXRepository extends MsfJpaRepository<QSC_CX_ShiTuXX
     }/**
      * 获取视图信息 根据视图ids
      */
-    default List<SC_CX_ShiTuXXByShiTuIDDto> findByShiTuIDIn(Set<String> shiTuIDs)
+    default List<SC_CX_ShiTuXXByShiTuIDDto> findByShiTuIDIn(List<String> shiTuIDs)
     {
         return this.asQuerydsl().where(s -> s.shiTuID.in(shiTuIDs)).select(SC_CX_ShiTuXXByShiTuIDDto.class).fetch();
     }

@@ -43,7 +43,7 @@ public class ShiTuZDMXDto {
     @Schema(description = "值域列表")
     private List<ZhiYuDto> zhiYuList;
     @Schema(description = "关联条件字段列表")
-    private List<ShiTuZDMXDto> guanLianTJZDList;
+    private List<ShuJuJMXZDDto> guanLianTJZDList;
     @Schema(description = "字段长度")
     private String ziDuanCD;
     @Schema(description = "精度")

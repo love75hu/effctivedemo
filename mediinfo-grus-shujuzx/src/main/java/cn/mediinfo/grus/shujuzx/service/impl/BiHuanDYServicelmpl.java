@@ -12,7 +12,6 @@ import cn.mediinfo.grus.shujuzx.dto.bihuandy.SC_BH_DiaoYongPZUpdateDto;
 import cn.mediinfo.grus.shujuzx.dto.bihuandy.ShiTuMXBHPZDto;
 import cn.mediinfo.grus.shujuzx.dto.bihuangl.SC_BH_ShiTuXXDto;
 import cn.mediinfo.grus.shujuzx.dto.shitumx.LingChuangJSPZDto;
-import cn.mediinfo.grus.shujuzx.dto.shitumx.ShiTuZDMXDto;
 import cn.mediinfo.grus.shujuzx.dto.shitumx.ShuJuJMXZDDto;
 import cn.mediinfo.grus.shujuzx.model.SC_BH_DiaoYongPZModel;
 import cn.mediinfo.grus.shujuzx.remotedto.GongYong.LingChuangJSPZZDXXRso;
@@ -104,9 +103,9 @@ public class BiHuanDYServicelmpl implements BiHuanDYService {
             //根据视图来源ID组装数据给前端
             if (cunZaiJSPZ != null) {
                 var cunZaiZDBMs = shiTuMXs.stream().filter(x -> Objects.equals(x.getShiTuID(), shiTuXX.getShiTuID())).map(KeXuanZDDto::getZiDuanBM).toList();
-                List<ShiTuZDMXDto> gongGongZDMXs = cunZaiJSPZ.getShiTuMXZDDtos().stream().filter(x -> cunZaiZDBMs.contains(x.getZiDuanBM())).toList();
+                List<ShuJuJMXZDDto> gongGongZDMXs = cunZaiJSPZ.getShiTuMXZDDtos().stream().filter(x -> cunZaiZDBMs.contains(x.getZiDuanBM())).toList();
                 if (!gongGongZDMXs.isEmpty()) {
-                    for (ShiTuZDMXDto gongGongZDMX : gongGongZDMXs) {
+                    for (ShuJuJMXZDDto gongGongZDMX : gongGongZDMXs) {
                         gongGongZDMX.setShiTuID(shiTuXX.getShiTuID());
                         gongGongZDMX.setShiTuMC(shiTuXX.getShiTuMC());
                     }
@@ -120,7 +119,7 @@ public class BiHuanDYServicelmpl implements BiHuanDYService {
                     } else {
                         var cunZaiZDMXs = cunZaiDto.getZiDuanList();
                         var quanBuZDMXs = Stream.concat(cunZaiZDMXs.stream(), gongGongZDMXs.stream()).toList();
-                        cunZaiDto.setZiDuanList(CollectionUtil.removeDuplicateObjects(quanBuZDMXs, ShiTuZDMXDto::getZiDuanBM));
+                        cunZaiDto.setZiDuanList(CollectionUtil.removeDuplicateObjects(quanBuZDMXs, ShuJuJMXZDDto::getZiDuanBM));
                     }
                 }
             }

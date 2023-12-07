@@ -1,6 +1,6 @@
 package cn.mediinfo.grus.shujuzx.remotedto.GongYong;
 
-import cn.mediinfo.grus.shujuzx.dto.shitumx.ShiTuZDMXDto;
+import cn.mediinfo.grus.shujuzx.dto.shitumx.ShuJuJMXZDDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import lombok.Data;
@@ -24,5 +24,5 @@ public class LingChuangJSPZZDXXRso {
     @Column(columnDefinition = "视图名称")
     private String shiTuMC;
     @Schema(description = "视图字段明细")
-    private List<ShiTuZDMXDto> shiTuMXZDDtos;
+    private List<ShuJuJMXZDDto> shiTuMXZDDtos;
 }

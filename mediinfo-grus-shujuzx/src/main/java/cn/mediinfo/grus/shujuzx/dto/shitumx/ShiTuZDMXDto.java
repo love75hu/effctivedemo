@@ -8,6 +8,8 @@ import java.util.List;
 
 @Data
 public class ShiTuZDMXDto {
+    @Schema(description = "视图明细ID")
+    private String shiTuMXID;
     @Schema(description = "视图ID")
     private String shiTuID;
     @Schema(description = "视图名称")
@@ -41,7 +43,7 @@ public class ShiTuZDMXDto {
     @Schema(description = "值域列表")
     private List<ZhiYuDto> zhiYuList;
     @Schema(description = "关联条件字段列表")
-    private List<GuanLianTJZD> guanLianTJZDList;
+    private List<ShiTuZDMXDto> guanLianTJZDList;
     @Schema(description = "字段长度")
     private String ziDuanCD;
     @Schema(description = "精度")

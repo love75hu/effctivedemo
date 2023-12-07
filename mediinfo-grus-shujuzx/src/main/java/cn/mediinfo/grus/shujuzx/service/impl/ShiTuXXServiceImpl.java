@@ -218,7 +218,7 @@ class ShiTuXXServiceImpl implements ShiTuXXService {
     }
 
     @Override
-    public List<SC_CX_ShiTuXXByShiTuIDDto> getShiTuXXByIds(Set<String> ids) {
+    public List<SC_CX_ShiTuXXByShiTuIDDto> getShiTuXXByIds(List<String> ids) {
         return shiTuXXRepository.findByShiTuIDIn(ids);
     }
 }

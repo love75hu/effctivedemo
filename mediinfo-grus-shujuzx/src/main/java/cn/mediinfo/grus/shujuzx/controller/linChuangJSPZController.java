@@ -3,7 +3,9 @@ package cn.mediinfo.grus.shujuzx.controller;
 import cn.mediinfo.cyan.msf.core.exception.MsfResponseException;
 import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
+import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
 import cn.mediinfo.cyan.msf.core.response.MsfResponse;
+import cn.mediinfo.grus.shujuzx.dto.shitumx.ShuJuXSTXQDto;
 import cn.mediinfo.grus.shujuzx.dto.zonghecx.*;
 import cn.mediinfo.grus.shujuzx.service.ShiTuMXService;
 import cn.mediinfo.grus.shujuzx.service.ShiTuXXService;
@@ -14,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -161,5 +164,16 @@ public class linChuangJSPZController {
     @DeleteMapping("zuoFeiShiTMX")
     public MsfResponse<Boolean> zuoFeiShiTMX( @NotEmpty(message = "id不能为空")   @RequestParam String id) throws WeiZhaoDSJException {
         return MsfResponse.success(shiTuMXService.zuoFeiShiTMX(id));
+    }
+
+
+    /**
+     * 获取数据视图详情
+     */
+    @Operation(summary = "获取数据视图详情")
+    @GetMapping("getShuJuSTXQDto")
+    public MsfResponse<ShuJuXSTXQDto> getShuJuSTXQDto(String shiTuIds) throws YuanChengException {
+        List<String> shiTuIdList= Arrays.stream(shiTuIds.split(",")).toList();
+        return MsfResponse.success(shiTuMXService.getShuJuSTXQDto(shiTuIdList));
     }
 }

@@ -19,7 +19,7 @@ public interface SC_CX_ShiTuMXGXRepository extends MsfJpaRepository<QSC_CX_ShiTu
      * @param shiTuIDs
      * @return
      */
-    default List<GuanLianTJZD> findByShiTuMXGXIDIn(Set<String> shiTuIDs)
+    default List<GuanLianTJZD> findByShiTuMXGXIDIn(List<String> shiTuIDs)
     {
         return this.asQuerydsl().where(s -> s.shiTuID.in(shiTuIDs)).select(GuanLianTJZD.class).fetch();
     }

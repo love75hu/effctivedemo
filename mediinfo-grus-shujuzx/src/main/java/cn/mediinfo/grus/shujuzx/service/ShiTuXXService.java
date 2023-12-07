@@ -65,7 +65,7 @@ public interface ShiTuXXService {
      */
     Boolean updateShiTuMX(UpdateShiTuMXDto updateShiTuMXDto) throws WeiZhaoDSJException;
 
-    List<SC_CX_ShiTuXXByShiTuIDDto> getShiTuXXByIds(Set<String> ids);
+    List<SC_CX_ShiTuXXByShiTuIDDto> getShiTuXXByIds(List<String> ids);
 
 
 

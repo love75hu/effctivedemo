@@ -10,13 +10,11 @@ import cn.mediinfo.grus.shujuzx.dto.bihuansz.SC_BH_JieDianXXDto;
 import cn.mediinfo.grus.shujuzx.dto.bihuansz.SC_BH_ZiBiHXXDto;
 import cn.mediinfo.grus.shujuzx.dto.bihuanzs.*;
 import cn.mediinfo.grus.shujuzx.dto.fangan.BingLiSCDTO;
-import cn.mediinfo.grus.shujuzx.dto.shitumx.SchemaTable;
-import cn.mediinfo.grus.shujuzx.dto.shitumx.ShuJuJMXZDDto;
-import cn.mediinfo.grus.shujuzx.dto.shitumx.ShuJuLYDto;
-import cn.mediinfo.grus.shujuzx.dto.shitumx.TableDTO;
+import cn.mediinfo.grus.shujuzx.dto.shitumx.*;
 import cn.mediinfo.grus.shujuzx.model.*;
 import cn.mediinfo.grus.shujuzx.remotedto.GongYong.GY_ZD_ShuJuSTXXRso;
 import cn.mediinfo.grus.shujuzx.remotedto.GongYong.GuanLianGXDto;
+import cn.mediinfo.grus.shujuzx.remotedto.GongYong.LingChuangJSPZZDXXRso;
 import cn.mediinfo.grus.shujuzx.remotedto.GongYong.ShuJuXXMSRso;
 import cn.mediinfo.grus.shujuzx.remoteservice.GongYongRemoteService;
 import cn.mediinfo.grus.shujuzx.repository.*;
@@ -249,7 +247,9 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
         });
 
 
-        List<TableDTO> tableList = gongYongRemoteService.getShiTuGLFSGLTJ(shuJuLYDtos).getData("获取功能服务字段信息失败");
+
+        //List<LingChuangJSPZZDXXRso> lingChuangJSPZZDXXRsoList = gongYongRemoteService.getShiTuGLFSGLTJ(null).getData("获取功能服务字段信息失败");
+        List<TableDTO> tableList=new ArrayList<>();
 
         StringBuilder builder = new StringBuilder();
         tableList.get(0).getSchemaTableList().forEach(p->{

@@ -5,11 +5,14 @@ import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
 import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
 import cn.mediinfo.cyan.msf.core.util.AssertUtil;
 import cn.mediinfo.cyan.msf.core.util.BeanUtil;
+import cn.mediinfo.cyan.msf.core.util.CollectionUtil;
 import cn.mediinfo.cyan.msf.core.util.StringUtil;
 import cn.mediinfo.grus.shujuzx.constant.ShuJuZXConstant;
 import cn.mediinfo.grus.shujuzx.dto.shitumx.*;
+import cn.mediinfo.grus.shujuzx.dto.shitumx.SC_CX_ShiTuMXGXDto;
 import cn.mediinfo.grus.shujuzx.dto.zonghecx.*;
 import cn.mediinfo.grus.shujuzx.model.SC_CX_ShiTuMXModel;
+import cn.mediinfo.grus.shujuzx.model.SC_CX_ShiTuXXModel;
 import cn.mediinfo.grus.shujuzx.po.shituxx.ShiTuXXPo;
 import cn.mediinfo.grus.shujuzx.remotedto.GongYong.LingChuangJSPZZDXXRso;
 import cn.mediinfo.grus.shujuzx.remoteservice.GongYongRemoteService;
@@ -19,9 +22,11 @@ import cn.mediinfo.grus.shujuzx.service.ShiTuMXGXService;
 import cn.mediinfo.grus.shujuzx.service.ShiTuMXService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 临床检索视图明细服务
@@ -74,7 +79,7 @@ public class ShiTuMXServiceImpl implements ShiTuMXService {
         //查询视图明细
         List<SC_CX_ShiTuMXByIdDto> shiTuMXModels = shiTuMXRepository.findByIdIs(shiTuMXIds);
         //获取视图id集合
-        Set<String> shiTuIds = shiTuMXModels.stream().map(SC_CX_ShiTuMXByIdDto::getShiTuID).collect(java.util.stream.Collectors.toSet());
+        List<String> shiTuIds = shiTuMXModels.stream().map(SC_CX_ShiTuMXByIdDto::getShiTuID).toList();
         //查询视图信息
         List<SC_CX_ShiTuXXByShiTuIDDto> shiTuXXList = shiTuXXRepository.findByShiTuIDIn(shiTuIds);
 
@@ -106,13 +111,65 @@ public class ShiTuMXServiceImpl implements ShiTuMXService {
         //查询视图明细
         List<SC_CX_ShiTuMXByIdDto> shiTuMXModels = shiTuMXRepository.findByIdIs(shiTuMXIds);
         //获取视图id集合
-        Set<String> shiTuIds = shiTuMXModels.stream().map(SC_CX_ShiTuMXByIdDto::getShiTuID).collect(java.util.stream.Collectors.toSet());
+        List<String> shiTuIds = shiTuMXModels.stream().map(SC_CX_ShiTuMXByIdDto::getShiTuID).toList();
         //查询视图信息
         var shiTuXXList = shiTuXXRepository.findByShiTuIDIn(shiTuIds);
 
         List<ShuJuLYDto> shuJuLYDtos = BeanUtil.copyListProperties(shiTuXXList, ShuJuLYDto::new);
-        return gongYongRemoteService.getShiTuGLFSGLTJ(shuJuLYDtos).getData("获取功能服务字段信息失败");
 
+        List<LingChuangJSPZDto> lingChuangJSPZDtos = new ArrayList<>();
+
+        return gongYongRemoteService.getShiTuGLFSGLTJ(lingChuangJSPZDtos).getData("获取功能服务字段信息失败");
+
+    }
+
+    @Override
+    public ShuJuXSTXQDto getShuJuSTXQDto(List<String> shiTuIds) throws YuanChengException {
+        ShuJuXSTXQDto shuJuXSTXQDto = new ShuJuXSTXQDto();
+        //查询视图信息
+        List<SC_CX_ShiTuXXByShiTuIDDto> shiTuXXModelList = shiTuXXRepository.findByShiTuIDIn(shiTuIds);
+        //查询视图明细
+        List<ShiTuMXListDto> shiTuMXModelList = shiTuMXRepository.getShiTuMXLists(shiTuIds, "", 0, 1, 9999);
+        //查询视图明细关系
+        List<SC_CX_ShiTuMXGXDto> shiTuMXGXDtoList = shiTuMXGXService.getShiTuMXGXByShiTuID(shiTuIds);
+        //公共接口入参组装
+        List<LingChuangJSPZDto> lingChuangJSPZDtos = new ArrayList<>();
+        for (SC_CX_ShiTuXXByShiTuIDDto shiTuXX : shiTuXXModelList) {
+            LingChuangJSPZDto lingChuangJSPZDto = new LingChuangJSPZDto();
+            lingChuangJSPZDto.setShuJuLYID(shiTuXX.getShuJuLYID());
+            lingChuangJSPZDto.setShuJuLYLXDM(shiTuXX.getShuJuLYLXDM());
+            lingChuangJSPZDto.setShiTuID(shiTuXX.getShiTuID());
+            lingChuangJSPZDto.setShiTuMC(shiTuXX.getShiTuMC());
+            //视图ID关联查找到明细
+            List<ShuJuJMXZDDto> shuJuJMXZDDtos = shiTuMXModelList.stream().filter(t -> Objects.equals(t.getShiTuID(), shiTuXX.getShiTuID())).map(t -> {
+                ShuJuJMXZDDto shuJuJMXZDDto = new ShuJuJMXZDDto();
+                shuJuJMXZDDto.setZiDuanBM(t.getZiDuanBM());
+                shuJuJMXZDDto.setZiDuanMC(t.getZiDuanMC());
+                List<SC_CX_ShiTuMXGXDto> shiTuMXGXDto =
+                        shiTuMXGXDtoList.stream().filter(n -> Objects.equals(n.getShiTuID(), shiTuXX.getShiTuID()) && Objects.equals(n.getZiDuanBM(), t.getZiDuanBM())).toList();
+                shuJuJMXZDDto.setGuanLianTJZDList(BeanUtil.copyListProperties(shiTuMXGXDto, ShuJuJMXZDDto::new));
+                return shuJuJMXZDDto;
+            }).toList();
+            lingChuangJSPZDto.setShuJuJMXZDDtos(shuJuJMXZDDtos);
+            lingChuangJSPZDtos.add(lingChuangJSPZDto);
+        }
+        if (CollectionUtils.isEmpty(lingChuangJSPZDtos)) {
+            return null;
+        }
+        List<TableDTO> lingChuangJSPZZDList = gongYongRemoteService.getShiTuGLFSGLTJ(lingChuangJSPZDtos).getData("获取功能服务字段信息失败");
+        List<FieldDTO> fieldDTOList = new ArrayList<>();
+        shuJuXSTXQDto.setTableDTO(lingChuangJSPZZDList);
+        List<ShuJuJMXZDDto> shuJuJMXZDDtoList = new ArrayList<>();
+        for (TableDTO table : lingChuangJSPZZDList) {
+            List<SchemaTable> schemaTable = table.getSchemaTableList();
+            schemaTable.forEach(m -> {
+                shuJuJMXZDDtoList.addAll(m.getShuJuJMXZDDtos());
+            });
+
+        }
+        fieldDTOList.addAll(BeanUtil.copyListProperties(shuJuJMXZDDtoList, FieldDTO::new));
+        shuJuXSTXQDto.setFieldDTO(fieldDTOList);
+        return shuJuXSTXQDto;
     }
 
     @Override
@@ -244,7 +301,7 @@ public class ShiTuMXServiceImpl implements ShiTuMXService {
                 ziDuanBMXX.add(key.toUpperCase());
             }
         }
-        Set<String> shiTuIds = new HashSet<>(shiTUIDXX);
+        List<String> shiTuIds = shiTUIDXX;
         var shiTuXXList = shiTuXXRepository.findByShiTuIDIn(shiTuIds);//视图信息
         var shiTuMXZDList = shiTuMXRepository.getShiTuMXSJ(shiTUIDXX, ziDuanBMXX);//视图明细信息
         //公共接口入参组装
@@ -269,7 +326,7 @@ public class ShiTuMXServiceImpl implements ShiTuMXService {
         List<LingChuangJSPZZDXXRso> lingChuangJSPZZDList = gongYongRemoteService.getlingChuangJSPZZDXX(lingChuangJSPZDtos).getData();
         List<SchemaTable> result = new ArrayList<>();
         for (LingChuangJSPZZDXXRso pz : lingChuangJSPZZDList) {
-            for (ShiTuZDMXDto zd : pz.getShiTuMXZDDtos()) {
+            for (ShuJuJMXZDDto zd : pz.getShiTuMXZDDtos()) {
                 var cunZai = result.stream().filter(t -> Objects.equals(t.getMoShi(), zd.getShuJuYMC()) && Objects.equals(t.getBiaoMing(), zd.getBiaoMing())).findFirst().orElse(null);
                 ;
                 ShuJuJMXZDDto shuJuJMXZDDto = new ShuJuJMXZDDto();

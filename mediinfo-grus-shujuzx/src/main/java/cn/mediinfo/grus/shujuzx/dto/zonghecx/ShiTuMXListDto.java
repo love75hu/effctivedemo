@@ -7,6 +7,8 @@ import lombok.Data;
 public class ShiTuMXListDto {
 
     private String id;
+    @Schema(description = "视图ID")
+    private String shiTuID;
     @Schema(description = "视图名称")
     private String shiTuMC;
     @Schema(description = "字段编码")

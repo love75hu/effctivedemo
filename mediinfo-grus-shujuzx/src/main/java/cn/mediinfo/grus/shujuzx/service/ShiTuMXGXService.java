@@ -17,7 +17,7 @@ public interface ShiTuMXGXService {
     List<GuanLianTJZD> getShiTuMXGXList(String shiTuID,String ziDuanBM,String ziDuanMC);
 
     Boolean delectShiTuMXGX(String id);
-    List<cn.mediinfo.grus.shujuzx.dto.shitumx.SC_CX_ShiTuMXGXDto> getShiTuMXGXByShiTuID(Set<String> shiTuID);
+    List<cn.mediinfo.grus.shujuzx.dto.shitumx.SC_CX_ShiTuMXGXDto> getShiTuMXGXByShiTuID(List<String> shiTuID);
 
     Boolean addShiTuMXGX(String shiTuID,String ziDuanBM,String ziDuanMC, List<GuanLianTJZD> guanLianZDList);
 

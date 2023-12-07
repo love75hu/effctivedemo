@@ -25,8 +25,7 @@ public interface GongYongRemoteService {
     MsfResponse<List<FieldDTO>> getShiTuZDXXList(@RequestBody List<SC_CX_ShiTuXXZDDto> dtos);
 
     @PostMapping("api/v1.0/shujust/getShiTuGLFSGLTJ")
-    MsfResponse<List<TableDTO>> getShiTuGLFSGLTJ(@RequestBody List<ShuJuLYDto> shuJuLYDtos);
-
+    MsfResponse<List<TableDTO>> getShiTuGLFSGLTJ(@RequestBody List<LingChuangJSPZDto> lingChuangJSPZDtos);
 
     /**
      * 根据视图类型获取数据视图中字段信息列表

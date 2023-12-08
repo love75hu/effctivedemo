@@ -17,6 +17,9 @@ public class RelatedFangAnQueryCondition {
     @Schema(description = "方案输出id")
     private String fangAnSCId;
 
+    @Schema(description = "方案输出名称")
+    private String fangAnSCMC;
+
     @Schema(description = "方案sql", hidden = true)
     private String sql;
 

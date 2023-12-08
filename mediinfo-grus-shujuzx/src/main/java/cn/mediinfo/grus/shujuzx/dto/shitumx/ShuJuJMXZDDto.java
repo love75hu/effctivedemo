@@ -61,4 +61,6 @@ public class ShuJuJMXZDDto {
     private String biTianBZ;
     @Schema(description = "是否选择")
     private String shiFouXZ;
+    @Schema(description = "别名")
+    private String alias;
 }

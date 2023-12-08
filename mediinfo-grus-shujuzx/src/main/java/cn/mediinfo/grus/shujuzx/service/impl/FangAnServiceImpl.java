@@ -146,7 +146,7 @@ public class FangAnServiceImpl implements FangAnService {
      */
     @Override
     public FangAnQueryDTO getFangAnXX(String id) throws TongYongYWException, WeiZhaoDSJException {
-        return fangAnManager.getFangAnXXByID(id);
+        return fangAnManager.getFangAnXXByFAID(id);
     }
 
     /**

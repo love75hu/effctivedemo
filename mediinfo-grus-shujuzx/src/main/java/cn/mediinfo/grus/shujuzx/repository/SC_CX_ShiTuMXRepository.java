@@ -99,16 +99,6 @@ public interface SC_CX_ShiTuMXRepository extends MsfJpaRepository<QSC_CX_ShiTuMX
                 .fetchDetach();
     }
     /**
-     * 获取视图输出必填明细数据
-     * @return
-     */
-    default List<SC_CX_ShiTuMXModel> getShiTuMXByBTBZ() {
-        return this.asQuerydsl()
-                .where(e->e.shuChuBXBZ.eq(1))
-                .fetchDetach();
-    }
-
-    /**
      * 获取视图明细数据
      * @param shiTuIDs
      * @param ziDuanBMs
@@ -116,7 +106,7 @@ public interface SC_CX_ShiTuMXRepository extends MsfJpaRepository<QSC_CX_ShiTuMX
      */
     default List<SC_CX_ShiTuMXModel> getShiTuMXSJ(List<String> shiTuIDs,List<String> ziDuanBMs) {
         return this.asQuerydsl()
-                .where(e->e.shiTuID.in(shiTuIDs))
+                .whereIf(!shiTuIDs.isEmpty(),e->e.shiTuID.in(shiTuIDs))
                 .whereIf(ziDuanBMs.stream().count()>0, o->o.ziDuanBM.toUpperCase().in(ziDuanBMs))
                 .fetchDetach();
     }

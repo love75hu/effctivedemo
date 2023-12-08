@@ -16,5 +16,5 @@ public class ShiTuSCXDto {
     @Schema(description = "条件")
     public List<ShiTuMXZHCXDto> tiaoJianDto;
     @Schema(description = "输出必选")
-    public List<SC_CX_ShiTuMXModel> shuChuBXDto;
+    public List<ShuJuJMXZDDto> shuChuBXDto;
 }

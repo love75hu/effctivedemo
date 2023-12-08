@@ -216,18 +216,18 @@ public class FangAnServiceImpl implements FangAnService {
         //子方案
         subFangAn(conditionList);
 
-        Set<String> shiTuMXIds = conditionList.stream().map(FangAnCondition::getShiTuMXID).collect(Collectors.toSet());
-        if(shiTuMXIds.stream().anyMatch(StringUtil::isBlank)){
+        List<String> shiTuIds = conditionList.stream().map(FangAnCondition::getShiTuID).distinct().collect(Collectors.toList());
+        if(shiTuIds.stream().anyMatch(StringUtil::isBlank)){
             throw new TongYongYWException("视图明细ID不能为空");
         }
         //from
-        List<TableDTO> tableList = shiTuMXService.listTable(shiTuMXIds);
-        tableList = (CollUtil.isEmpty(tableList)) ? ListUtil.toList() : tableList;
+        ShuJuXSTXQDto shuJuXSTXQ = Optional.ofNullable(shiTuMXService.getShuJuSTXQDto(shiTuIds)).orElse(new ShuJuXSTXQDto());
+        List<TableDTO> tableList = Optional.ofNullable(shuJuXSTXQ.getTableDTO()).orElse(ListUtil.toList());
 
         //基础表信息
         List<ShuJuXXMSRso> jiChuBiaoXXList = gongYongRemoteService.getShuJXXMS(ListUtil.toList("JZ_MZ_JIUZHENXX", "JZ_ZY_JIUZHENXX", "BL_MZ_BINGLIJLTEXT", "BL_WS_JILUTEXT")).getData("获取基础信息表模式信息失败");
 
-        //生成别名 key schema.table value alias
+        //生成别名 T1：别名，T2: 表关联，T3:是否外连表，T4:是否基础表
         Map<String, Tuple.Tuple4<String, String, Boolean, Boolean>> aliasMap = getAliasMap(tableList, fangAnLXDM, jiChuBiaoXXList);
         //拼接表关系
         String table = getTable(aliasMap);
@@ -239,17 +239,11 @@ public class FangAnServiceImpl implements FangAnService {
         String fields = getQueryFields(fangAnSCList, aliasMap, fangAnLXDM);
 
         //where
-        conditionList.forEach(e -> {
-            if (CollUtil.isEmpty(e.getRelatedFieldConditions())) {
-                return;
-            }
-            e.getRelatedFieldConditions().forEach(s -> shiTuMXIds.add(s.getShiTuMXGXID()));
-        });
-        List<FieldDTO> fieldList = shiTuMXService.listFields(shiTuMXIds);
+        List<ShuJuJMXZDDto> fieldList = tableList.stream().flatMap(p ->Optional.ofNullable(p.getSchemaTableList()).orElse(new ArrayList<>()).stream().flatMap(q -> Optional.ofNullable(q.getShuJuJMXZDDtos()).orElse(new ArrayList<>()).stream())).toList();
 
         fieldList.forEach(e -> e.setAlias(aliasMap.entrySet().stream().filter(p -> p.getKey().contains(formatBiaoMing(e.getMoShi(), e.getBiaoMing()))).map(Map.Entry::getValue).findFirst().orElse(Tuple.of("", "", false, false)).item1()));
         //转化sql树
-        Map<String, FieldDTO> fieldMap = fieldList.stream().collect(Collectors.toMap(FieldDTO::getId, e -> e));
+        Map<String, ShuJuJMXZDDto> fieldMap = fieldList.stream().collect(Collectors.toMap(f ->Optional.ofNullable(f.getShiTuID()).orElse("").toLowerCase() + "|" + Optional.ofNullable(f.getZiDuanBM()).orElse("").toLowerCase(), e -> e));
         SQLQueryNode condition = transform(root, fieldMap);
 
         //构建sql树
@@ -589,7 +583,7 @@ public class FangAnServiceImpl implements FangAnService {
             if (StringUtils.isBlank(fangAnSC.getBiaoMing())) {
                 continue;
             }
-            fangAnSC.setBiaoMing(fangAnSC.getBiaoMing().toLowerCase());
+            fangAnSC.setBiaoMing(Optional.ofNullable(fangAnSC.getBiaoMing()).orElse("").toLowerCase());
             int index= matCherList.indexOf(fangAnSC.getId())-1;
             if(index>=0) {
                 fangAnSC.setBieMing(matCherList.get(index));
@@ -917,7 +911,7 @@ public class FangAnServiceImpl implements FangAnService {
      * @param fieldMap 字段Map
      * @return SQLQueryNode
      */
-    private SQLQueryNode transform(FangAnTreeNode node, Map<String, FieldDTO> fieldMap) {
+    private SQLQueryNode transform(FangAnTreeNode node, Map<String, ShuJuJMXZDDto> fieldMap) {
         if (node == null) {
             return null;
         }
@@ -930,9 +924,9 @@ public class FangAnServiceImpl implements FangAnService {
         if (condition == null || NodeTypeEnum.RELATION_NODE.getType().equals(node.getNodeType())) {
             sqlNode = new SQLQueryNode(new SQLQueryObject(sqlOperator));
         } else {
-            FieldDTO field = fieldMap.get(condition.getShiTuMXID());
+            ShuJuJMXZDDto field = fieldMap.get(condition.getShiTuID().toLowerCase()+"|"+condition.getZiDuanBM().toLowerCase());
             if (Objects.isNull(field)) {
-                log.error("根据{}获取条件字段信息失败", condition.getShiTuMXID());
+                log.error("根据{},{}获取条件字段信息失败", condition.getShiTuID(),condition.getZiDuanBM());
                 return null;
             }
             List<String> valList = List.of(Optional.ofNullable(condition.getValues()).orElse("").replaceAll("'","''").split(","));
@@ -987,7 +981,7 @@ public class FangAnServiceImpl implements FangAnService {
         return guanXiNode;
     }
 
-    private SQLQueryObject toSQLQueryObject(String operator, FieldDTO field, List<String> valList, RelatedFangAnQueryCondition relatedFangAnQueryCondition) {
+    private SQLQueryObject toSQLQueryObject(String operator, ShuJuJMXZDDto field, List<String> valList, RelatedFangAnQueryCondition relatedFangAnQueryCondition) {
         String val = "";
         SQLBinaryOperator sqlOperator = SQLBinaryOperator.getSQLBinaryOperator(operator);
         if (CollUtil.isEmpty(valList)) {
@@ -1023,13 +1017,13 @@ public class FangAnServiceImpl implements FangAnService {
     }
 
 
-    private String getRelatedFieldCondition(List<RelatedFieldCondition> relatedFieldConditions, Map<String, FieldDTO> fieldMap) {
+    private String getRelatedFieldCondition(List<RelatedFieldCondition> relatedFieldConditions, Map<String, ShuJuJMXZDDto> fieldMap) {
         if (CollUtil.isEmpty(relatedFieldConditions)) {
             return "";
         }
         StringBuilder builder = new StringBuilder();
         relatedFieldConditions.forEach(e -> {
-            FieldDTO field = fieldMap.get(e.getShiTuMXGXID());
+            ShuJuJMXZDDto field = fieldMap.get(e.getShiTuID().toLowerCase()+"|"+e.getZiDuanBM().toLowerCase());
             List<String> valList = List.of(Optional.ofNullable(e.getValues()).orElse("").replaceAll("'","''").split(","));
             SQLQueryObject obj = toSQLQueryObject(e.getOperator(), field, valList, e.getRelatedFangAnQueryCondition());
             builder.append(obj.getText());

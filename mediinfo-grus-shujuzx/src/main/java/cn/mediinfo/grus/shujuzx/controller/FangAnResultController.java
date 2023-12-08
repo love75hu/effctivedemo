@@ -73,8 +73,8 @@ public class FangAnResultController {
     @Parameter(name = "pageSize", description = "每页数量")
     @GetMapping("/listQueryResult")
     public MsfResponse<List<List<QueryResultDTO>>> listQueryResult(@NotBlank(message = "方案查询历史id不能为空") @RequestParam String fangAnCXLSId,
-                                                                   @RequestParam(required = false) Integer mergeType, @RequestParam(required = false, defaultValue = "1") Integer pageIndex, @RequestParam(required = false, defaultValue = "10") Integer pageSize) throws TongYongYWException {
-        return MsfResponse.success(fangAnService.getFangAnJGList(fangAnCXLSId, mergeType, pageIndex, pageSize, true));
+                                                                   @RequestParam(required = false) Integer mergeType, @RequestParam(required = false, defaultValue = "1") Integer page, @RequestParam(required = false, defaultValue = "10") Integer pageSize) throws TongYongYWException {
+        return MsfResponse.success(fangAnService.getFangAnJGList(fangAnCXLSId, mergeType, page, pageSize, true));
     }
 
     @Operation(summary = "结果列表总数")

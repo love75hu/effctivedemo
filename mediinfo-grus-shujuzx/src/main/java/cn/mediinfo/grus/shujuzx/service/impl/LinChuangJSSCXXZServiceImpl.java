@@ -42,29 +42,41 @@ public class LinChuangJSSCXXZServiceImpl implements LinChuangJSSCXXZService {
     @Override
     public ShiTuSCXDto getShuTuMXForZHCX (Integer yeWuLX, Integer jieKouLX,String likeQuery) throws YuanChengException {
         ShiTuSCXDto shiTuSCXDto = new ShiTuSCXDto();
+        List<ShuJuJMXZDDto> shuChuBXDtos =new ArrayList<>();
         if (jieKouLX == 1){
-            shiTuSCXDto.setShuChuDto(getShuChuMXByYeWuLX(yeWuLX,1,likeQuery));
+            var shuChuMXByYWLX1 = getShuChuMXByYeWuLX(yeWuLX,1,likeQuery);
+            shuChuBXDtos = shuChuMXByYWLX1.shuJuJMXZDDtos;
+            shiTuSCXDto.setShuChuDto(shuChuMXByYWLX1.shiTuMXZHCXDtos);
         } else if (jieKouLX == 0) {
-            shiTuSCXDto.setTiaoJianDto(getShuChuMXByYeWuLX(yeWuLX,0,likeQuery));
+            var shuChuMXByYWLX0 = getShuChuMXByYeWuLX(yeWuLX,0,likeQuery);
+            shuChuBXDtos = shuChuMXByYWLX0.shuJuJMXZDDtos;
+            shiTuSCXDto.setTiaoJianDto(shuChuMXByYWLX0.shiTuMXZHCXDtos);
         }else{
-            shiTuSCXDto.setShuChuDto(getShuChuMXByYeWuLX(yeWuLX,1,likeQuery));
-            shiTuSCXDto.setTiaoJianDto(getShuChuMXByYeWuLX(yeWuLX,0,likeQuery));
+            var shuChuMXByYWLX1 = getShuChuMXByYeWuLX(yeWuLX,1,likeQuery);
+            var shuChuMXByYWLX0 = getShuChuMXByYeWuLX(yeWuLX,0,likeQuery);
+            shiTuSCXDto.setShuChuDto(shuChuMXByYWLX1.shiTuMXZHCXDtos);
+            shiTuSCXDto.setTiaoJianDto(shuChuMXByYWLX0.shiTuMXZHCXDtos);
+            shuChuBXDtos = Stream.concat(shuChuMXByYWLX1.shuJuJMXZDDtos.stream(),shuChuMXByYWLX0.shuJuJMXZDDtos.stream()).toList();//合并字段
         }
-        shiTuSCXDto.setShuChuBXDto(sc_cx_shiTuMXRepository.getShiTuMXByBTBZ());
+        shiTuSCXDto.setShuChuBXDto(CollectionUtil.removeDuplicateObjects(shuChuBXDtos, ShuJuJMXZDDto::getZiDuanBM));
         return shiTuSCXDto;
     }
 
 
-    public List<ShiTuMXZHCXDto> getShuChuMXByYeWuLX(Integer yeWuLX, Integer jieKouLX,String likeQuery) throws YuanChengException{
+    public ShiTuCXDTO getShuChuMXByYeWuLX(Integer yeWuLX, Integer jieKouLX,String likeQuery) throws YuanChengException{
+        ShiTuCXDTO result = new ShiTuCXDTO();
+        List<ShuJuJMXZDDto> shuChuBXDto =new ArrayList<>();
         //获取视图信息数据
         List<SC_CX_ShiTuXXModel> shiTuXXList = sc_cx_shiTuXXRepository.getShiTuXXSJ(yeWuLX);
         List<String> shiTuIDs = shiTuXXList.stream().map(SC_CX_ShiTuXXModel::getShiTuID).toList();
         //获取视图明细数据
         List<SC_CX_ShiTuMXModel> shiTuMXList = sc_cx_shiTuMXRepository.getShiTuMXSJ(shiTuIDs,jieKouLX,likeQuery);
+        //获取输出必选字段
+        var shuChuBXZDList = shiTuMXList.stream().filter(t->Objects.equals(t.getShuChuBXBZ(),1)).toList();
         //获取视图明细关联字段
         List<GuanLianTJZD> shiTuMXGXList = sc_cx_shiTuMXGXRepository.findByShiTuMXGXIDIn(shiTuIDs);
         if (shiTuMXList.isEmpty()){
-            return new ArrayList<>();
+            return result;
         }
         //公共接口入参组装
         List<LingChuangJSPZDto> lingChuangJSPZDtos = new ArrayList<>();
@@ -119,13 +131,13 @@ public class LinChuangJSSCXXZServiceImpl implements LinChuangJSSCXXZService {
             }
         }
         if (lingChuangJSPZDtos.isEmpty()){
-            return new ArrayList<>();
+            return result;
         }
         //获取公共接口数据
         List<LingChuangJSPZZDXXRso> lingChuangJSPZZDList = gongYongRemoteService.getlingChuangJSPZZDXX(lingChuangJSPZDtos).getData("远程调用接口getlingChuangJSPZZDXX错误！");
-        List<LingChuangJSPZZDXXRso> guanLianZZDList = gongYongRemoteService.getlingChuangJSPZZDXX(guanLianDtos).getData("远程调用接口getlingChuangJSPZZDXX错误！");
+        List<LingChuangJSPZZDXXRso> guanLianZZDList = guanLianDtos.isEmpty()? null : gongYongRemoteService.getlingChuangJSPZZDXX(guanLianDtos).getData("远程调用接口getlingChuangJSPZZDXX错误！");
         if (ObjectUtils.isEmpty(lingChuangJSPZZDList)){
-            return new ArrayList<>();
+            return result;
         }
         List<ShiTuMXZHCXDto> resultlist = new ArrayList<>();
         for (SC_CX_ShiTuXXModel e :shiTuXXList) {
@@ -138,15 +150,22 @@ public class LinChuangJSSCXXZServiceImpl implements LinChuangJSSCXXZService {
                     for ( ShuJuJMXZDDto zdmxDto : copyGongGongZDMX) {
                         zdmxDto.setShiTuID(e.getShiTuID());
                         zdmxDto.setShiTuMC(e.getShiTuMC());
-                        var guanLianZDMXXX = guanLianZZDList.stream().filter(t-> Objects.equals(t.getShiTuID(), e.getShiTuID()) ).findFirst().orElse(null);
-                        if (guanLianZDMXXX != null)
-                        {
-                            var shiTuGLMX = shiTuMXGXList.stream().filter(t-> Objects.equals(t.getShiTuID(), e.getShiTuID()) && Objects.equals(t.getZiDuanBM(), zdmxDto.getZiDuanBM())).toList();
-                            if (!shiTuGLMX.isEmpty()){
-                                var ziDuanMBS = shiTuGLMX.stream().map(GuanLianTJZD::getGuanLianZDBM).toList();
-                                var shiTuMXZDList = guanLianZDMXXX.getShiTuMXZDDtos().stream().filter(t->ziDuanMBS.contains(t.getZiDuanBM())).toList();
-                                zdmxDto.setGuanLianTJZDList(shiTuMXZDList);
+                        //关联字段处理
+                        if (guanLianZZDList != null){
+                            var guanLianZDMXXX = guanLianZZDList.stream().filter(t-> Objects.equals(t.getShiTuID(), e.getShiTuID()) ).findFirst().orElse(null);
+                            if (guanLianZDMXXX != null)
+                            {
+                                var shiTuGLMX = shiTuMXGXList.stream().filter(t-> Objects.equals(t.getShiTuID(), e.getShiTuID()) && Objects.equals(t.getZiDuanBM(), zdmxDto.getZiDuanBM())).toList();
+                                if (!shiTuGLMX.isEmpty()){
+                                    var ziDuanMBS = shiTuGLMX.stream().map(GuanLianTJZD::getGuanLianZDBM).toList();
+                                    var shiTuMXZDList = guanLianZDMXXX.getShiTuMXZDDtos().stream().filter(t->ziDuanMBS.contains(t.getZiDuanBM())).toList();
+                                    zdmxDto.setGuanLianTJZDList(shiTuMXZDList);
+                                }
                             }
+                        }
+                        //输出标志字段处理
+                        if (!shuChuBXZDList.stream().filter(t-> Objects.equals(t.getZiDuanBM(), zdmxDto.getZiDuanBM()) && Objects.equals(t.getShiTuID(), zdmxDto.getShiTuID())).toList().isEmpty()) {
+                            shuChuBXDto.add(zdmxDto);
                         }
                     }
                     var cunZaiDto = resultlist.stream().filter(t->t.getFuLeiID().equals(e.getFuLeiID())).findFirst().orElse(null);
@@ -165,6 +184,8 @@ public class LinChuangJSSCXXZServiceImpl implements LinChuangJSSCXXZService {
                 }
             }
         }
-        return resultlist ;
+        result.setShiTuMXZHCXDtos(resultlist);
+        result.setShuJuJMXZDDtos(shuChuBXDto);
+        return result ;
     }
 }

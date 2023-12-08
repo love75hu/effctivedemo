@@ -90,7 +90,7 @@ public interface SC_CX_ShiTuXXRepository extends MsfJpaRepository<QSC_CX_ShiTuXX
 
     /**
      * 获取视图信息列表
-     * @param yeWuLX  1 门诊,2 住院 ,3 急诊,9 公卫
+     * @param yeWuLX  1 门诊,2 住院 ,3 急诊,4 公卫
      * @return
      */
     default List<SC_CX_ShiTuXXModel> getShiTuXXSJ(Integer yeWuLX){

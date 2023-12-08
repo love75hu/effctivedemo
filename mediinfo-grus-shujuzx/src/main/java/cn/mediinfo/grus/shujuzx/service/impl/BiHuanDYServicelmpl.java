@@ -2,6 +2,7 @@ package cn.mediinfo.grus.shujuzx.service.impl;
 
 import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
 import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
+import cn.mediinfo.cyan.msf.core.util.BeanUtil;
 import cn.mediinfo.cyan.msf.core.util.CollectionUtil;
 import cn.mediinfo.cyan.msf.core.util.MapUtils;
 import cn.mediinfo.cyan.msf.stringgenerator.StringGenerator;
@@ -70,10 +71,15 @@ public class BiHuanDYServicelmpl implements BiHuanDYService {
         //构建远程服务入参
         for (SC_BH_ShiTuXXDto shiTuXX : shiTuXXs) {
             LingChuangJSPZDto lingChuangJSPZDto = new LingChuangJSPZDto();
-            lingChuangJSPZDto.setShuJuLYID(shiTuXX.getShuJuLYID());
-            lingChuangJSPZDto.setShuJuLYLXDM(shiTuXX.getShuJuLYLXDM());
+            BeanUtil.mergeProperties(shiTuXX,lingChuangJSPZDto);
+//            lingChuangJSPZDto.setShuJuLYID(shiTuXX.getShuJuLYID());
+//            lingChuangJSPZDto.setShuJuLYLXDM(shiTuXX.getShuJuLYLXDM());
+//            lingChuangJSPZDto.setShuJuLYID(shiTuXX.getShuJuLYID());
+//            lingChuangJSPZDto.setShuJuLYLXDM(shiTuXX.getShuJuLYLXDM());
             List<ShuJuJMXZDDto> shuJuJMXZDs = shiTuMXs.stream().filter(x -> Objects.equals(x.getShiTuID(), shiTuXX.getShiTuID())).map(x -> {
                 ShuJuJMXZDDto shuJuJMXZDDto = new ShuJuJMXZDDto();
+                shuJuJMXZDDto.setShiTuID(shiTuXX.getShiTuID());
+                shuJuJMXZDDto.setShiTuID(shiTuXX.getShiTuMC());
                 shuJuJMXZDDto.setZiDuanBM(x.getZiDuanBM());
                 shuJuJMXZDDto.setZiDuanMC(x.getZiDuanMC());
                 return shuJuJMXZDDto;

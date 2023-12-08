@@ -2,6 +2,7 @@ package cn.mediinfo.grus.shujuzx.dto.shitumx;
 
 import cn.mediinfo.grus.shujuzx.dto.zonghecx.GuanLianTJZD;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
 import lombok.Data;
 
 import java.util.List;
@@ -63,4 +64,13 @@ public class ShuJuJMXZDDto {
     private String shiFouXZ;
     @Schema(description = "别名")
     private String alias;
+
+    @Schema(description = "条件标志")
+    private Integer tiaoJianBZ;
+
+    @Schema(description = "输出标志")
+    private Integer shuChuBZ;
+
+    @Schema(description = "输出必选标志")
+    private Integer shuChuBXBZ;
 }

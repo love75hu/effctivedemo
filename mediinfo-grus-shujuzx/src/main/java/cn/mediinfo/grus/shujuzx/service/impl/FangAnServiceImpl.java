@@ -564,21 +564,23 @@ public class FangAnServiceImpl implements FangAnService {
         fangAnSCList.addAll(JsonUtil.getJsonToList(fangAnCXLS.getChaXunSC(), FangAnSCDTO.class));
         for (FangAnSCDTO fangAnSC : fangAnSCList) {
             fangAnSC.setId("zd_" + fangAnSCList.indexOf(fangAnSC));
-            switch (fangAnSC.getZhiBiaoLXDM()) {
-                case "2":
-                    fangAnSC.setBiaoMing("jy_bg_baogaomx");
-                    fangAnSC.setZhiBiaoID("");
-                    break;
-                case "3":
-                    fangAnSC.setBiaoMing("jc_bg_baogaoxx");
-                    fangAnSC.setZhiBiaoID("");
-                    break;
-                case "4":
-                    fangAnSC.setBiaoMing(isZhuYuan ? "yz_zy_yizhuxx" : "yz_mz_yizhuxx");
-                    fangAnSC.setZhiBiaoID("");
-                    break;
-                default:
-                    break;
+            if(StringUtil.hasText(fangAnSC.getZhiBiaoLXDM())) {
+                switch (fangAnSC.getZhiBiaoLXDM()) {
+                    case "2":
+                        fangAnSC.setBiaoMing("jy_bg_baogaomx");
+                        fangAnSC.setZhiBiaoID("");
+                        break;
+                    case "3":
+                        fangAnSC.setBiaoMing("jc_bg_baogaoxx");
+                        fangAnSC.setZhiBiaoID("");
+                        break;
+                    case "4":
+                        fangAnSC.setBiaoMing(isZhuYuan ? "yz_zy_yizhuxx" : "yz_mz_yizhuxx");
+                        fangAnSC.setZhiBiaoID("");
+                        break;
+                    default:
+                        break;
+                }
             }
             if (StringUtils.isBlank(fangAnSC.getBiaoMing())) {
                 continue;

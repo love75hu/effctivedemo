@@ -1,6 +1,7 @@
 package cn.mediinfo.grus.shujuzx.service;
 import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
 import cn.mediinfo.grus.shujuzx.dto.shitumx.ShiTuMXZHCXDto;
+import cn.mediinfo.grus.shujuzx.dto.shitumx.ShiTuSCXDto;
 
 import java.util.List;
 public interface LinChuangJSSCXXZService {
@@ -12,5 +13,5 @@ public interface LinChuangJSSCXXZService {
      * @param likeQuery
      * @return
      */
-    List<ShiTuMXZHCXDto> getShuTuMXForZHCX(Integer yeWuLX,Integer jieKouLX, String likeQuery) throws YuanChengException;
+    ShiTuSCXDto getShuTuMXForZHCX(Integer yeWuLX, Integer jieKouLX, String likeQuery) throws YuanChengException;
 }

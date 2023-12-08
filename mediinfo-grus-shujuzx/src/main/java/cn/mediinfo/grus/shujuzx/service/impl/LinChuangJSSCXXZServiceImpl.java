@@ -40,7 +40,22 @@ public class LinChuangJSSCXXZServiceImpl implements LinChuangJSSCXXZService {
      * @return
      */
     @Override
-    public List<ShiTuMXZHCXDto> getShuTuMXForZHCX (Integer yeWuLX, Integer jieKouLX,String likeQuery) throws YuanChengException {
+    public ShiTuSCXDto getShuTuMXForZHCX (Integer yeWuLX, Integer jieKouLX,String likeQuery) throws YuanChengException {
+        ShiTuSCXDto shiTuSCXDto = new ShiTuSCXDto();
+        if (jieKouLX == 1){
+            shiTuSCXDto.setShuChuDto(getShuChuMXByYeWuLX(yeWuLX,1,likeQuery));
+        } else if (jieKouLX == 0) {
+            shiTuSCXDto.setTiaoJianDto(getShuChuMXByYeWuLX(yeWuLX,0,likeQuery));
+        }else{
+            shiTuSCXDto.setShuChuDto(getShuChuMXByYeWuLX(yeWuLX,1,likeQuery));
+            shiTuSCXDto.setTiaoJianDto(getShuChuMXByYeWuLX(yeWuLX,0,likeQuery));
+        }
+        shiTuSCXDto.setShuChuBXDto(sc_cx_shiTuMXRepository.getShiTuMXByBTBZ());
+        return shiTuSCXDto;
+    }
+
+
+    public List<ShiTuMXZHCXDto> getShuChuMXByYeWuLX(Integer yeWuLX, Integer jieKouLX,String likeQuery) throws YuanChengException{
         //获取视图信息数据
         List<SC_CX_ShiTuXXModel> shiTuXXList = sc_cx_shiTuXXRepository.getShiTuXXSJ(yeWuLX);
         List<String> shiTuIDs = shiTuXXList.stream().map(SC_CX_ShiTuXXModel::getShiTuID).toList();
@@ -121,10 +136,6 @@ public class LinChuangJSSCXXZServiceImpl implements LinChuangJSSCXXZService {
                 var copyGongGongZDMX = BeanUtil.copyListProperties(gongGongZDMX.stream().toList(), ShuJuJMXZDDto::new);
                 if(!copyGongGongZDMX.isEmpty()){
                     for ( ShuJuJMXZDDto zdmxDto : copyGongGongZDMX) {
-                        var shiTUMXXX = (shiTuMXList.stream().filter(t-> Objects.equals(t.getShiTuID(), e.getShiTuID()) && Objects.equals(t.getZiDuanBM(), zdmxDto.getZiDuanBM()))).findFirst().orElse(null);
-//                        if (shiTUMXXX!=null){
-//                            zdmxDto.setShiTuMXID(shiTUMXXX.getId());
-//                        }
                         zdmxDto.setShiTuID(e.getShiTuID());
                         zdmxDto.setShiTuMC(e.getShiTuMC());
                         var guanLianZDMXXX = guanLianZZDList.stream().filter(t-> Objects.equals(t.getShiTuID(), e.getShiTuID()) ).findFirst().orElse(null);

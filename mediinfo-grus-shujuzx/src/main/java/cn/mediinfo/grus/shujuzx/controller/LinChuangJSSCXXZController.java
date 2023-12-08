@@ -3,6 +3,7 @@ package cn.mediinfo.grus.shujuzx.controller;
 import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
 import cn.mediinfo.cyan.msf.core.response.MsfResponse;
 import cn.mediinfo.grus.shujuzx.dto.shitumx.ShiTuMXZHCXDto;
+import cn.mediinfo.grus.shujuzx.dto.shitumx.ShiTuSCXDto;
 import cn.mediinfo.grus.shujuzx.service.LinChuangJSSCXXZService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,23 +31,23 @@ public class LinChuangJSSCXXZController {
     }
     /**
      *综合查询输出项选择列表
-     * @param yeWuLX  0全部 ,1门诊 ,2住院 ,3急诊 ,9公卫
+     * @param yeWuLX  0全部 ,1门诊 ,2住院 ,3急诊 ,4公卫
      * @param jieKouLX 1：输出标志   0：条件标志
      * @param likeQuery 字段名称模糊查询
      * @return
      */
     @Operation(summary = "综合查询输出项选择列表")
     @GetMapping(path = "GetShuTuMXForZHCX")
-    public MsfResponse<List<ShiTuMXZHCXDto>> getShuTuMXForZHCX(@RequestParam(required = false) Integer yeWuLX,
-                                                               @RequestParam(required = false) Integer jieKouLX,
-                                                               @RequestParam(required = false) String likeQuery) throws YuanChengException {
+    public MsfResponse<ShiTuSCXDto> getShuTuMXForZHCX(@RequestParam(required = false) Integer yeWuLX,
+                                                      @RequestParam(required = false) Integer jieKouLX,
+                                                      @RequestParam(required = false) String likeQuery) throws YuanChengException {
         if (yeWuLX == null){
-            return MsfResponse.fail("业务类型不允许为空!");
+            return MsfResponse.fail("业务类型不允许为空!0全部 ,1门诊 ,2住院 ,3急诊 ,4公卫");
         }
         if (jieKouLX == null){
-            return MsfResponse.fail("接口类型不允许为空!");
+            return MsfResponse.fail("接口类型不允许为空! 0输出标志，1条件标志，2全部返回");
         }
-        List<ShiTuMXZHCXDto> list = _linChuangJSSCXXZService.getShuTuMXForZHCX(yeWuLX, jieKouLX,likeQuery);
-        return MsfResponse.success(list) ;
+        ShiTuSCXDto dto = _linChuangJSSCXXZService.getShuTuMXForZHCX(yeWuLX, jieKouLX,likeQuery);
+        return MsfResponse.success(dto) ;
     }
 }

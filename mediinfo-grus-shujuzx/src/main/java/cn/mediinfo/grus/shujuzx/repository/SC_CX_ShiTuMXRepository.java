@@ -98,7 +98,15 @@ public interface SC_CX_ShiTuMXRepository extends MsfJpaRepository<QSC_CX_ShiTuMX
                 .whereIf(StringUtil.hasText(likeQuery), e -> e.ziDuanMC.contains(likeQuery))
                 .fetchDetach();
     }
-
+    /**
+     * 获取视图输出必填明细数据
+     * @return
+     */
+    default List<SC_CX_ShiTuMXModel> getShiTuMXByBTBZ() {
+        return this.asQuerydsl()
+                .where(e->e.shuChuBXBZ.eq(1))
+                .fetchDetach();
+    }
 
     /**
      * 获取视图明细数据

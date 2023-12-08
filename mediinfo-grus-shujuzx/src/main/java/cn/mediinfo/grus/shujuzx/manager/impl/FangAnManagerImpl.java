@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -217,7 +218,10 @@ public class FangAnManagerImpl implements FangAnManager {
             shuJuST.setZiDuanBM(p.getValue().stream().map(SC_CX_FangAnSCModel::getZhiBiaoID).distinct().collect(Collectors.toList()));
             return  shuJuST;
         }).toList();
-        List<SchemaTable> schemaTableList=shiTuMXService.getFangAnSCZD(shuJuSTList);
+        List<SchemaTable> schemaTableList= new ArrayList<>();
+        if(shuJuSTList.size()>0){
+            shiTuMXService.getFangAnSCZD(shuJuSTList);
+        }
         List<FangAnSCDTO> fangAnSCList = BeanUtil.copyListProperties(fangAnSCModelList, FangAnSCDTO::new, (a, b) -> {
             SchemaTable schemaTable =schemaTableList.stream().filter(p->p.getShuJuJMXZDDtos().stream().anyMatch(q-> Objects.equals(Optional.ofNullable(a.getZhiBiaoID()).orElse("").toLowerCase(),Optional.ofNullable(q.getZiDuanBM()).orElse("").toLowerCase()))).findFirst().orElse(null);
             if(schemaTable!=null&&"1".equals(a.getZhiBiaoLXDM())) {

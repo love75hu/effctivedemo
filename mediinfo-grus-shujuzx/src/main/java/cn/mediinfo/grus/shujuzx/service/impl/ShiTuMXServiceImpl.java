@@ -324,6 +324,9 @@ public class ShiTuMXServiceImpl implements ShiTuMXService {
         }
         //获取公共接口数据
         List<LingChuangJSPZZDXXRso> lingChuangJSPZZDList = gongYongRemoteService.getlingChuangJSPZZDXX(lingChuangJSPZDtos).getData();
+        if (CollectionUtils.isEmpty(lingChuangJSPZZDList)) {
+            return null;
+        }
         List<SchemaTable> result = new ArrayList<>();
         for (LingChuangJSPZZDXXRso pz : lingChuangJSPZZDList) {
             for (ShuJuJMXZDDto zd : pz.getShiTuMXZDDtos()) {

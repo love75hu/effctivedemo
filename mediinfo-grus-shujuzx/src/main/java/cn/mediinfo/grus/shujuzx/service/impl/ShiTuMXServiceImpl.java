@@ -131,7 +131,7 @@ public class ShiTuMXServiceImpl implements ShiTuMXService {
         //查询视图明细
         List<ShiTuMXListDto> shiTuMXModelList = shiTuMXRepository.getShiTuMXLists(shiTuIds, "", 0, 1, 9999);
         //查询视图明细关系
-        List<SC_CX_ShiTuMXGXDto> shiTuMXGXDtoList = shiTuMXGXService.getShiTuMXGXByShiTuID(shiTuIds);
+        List<ShuJuJMXZDDto> shiTuMXGXDtoList = shiTuMXGXService.getShiTuMXGXBySTIDs(shiTuIds);
         //公共接口入参组装
         List<LingChuangJSPZDto> lingChuangJSPZDtos = new ArrayList<>();
         for (SC_CX_ShiTuXXByShiTuIDDto shiTuXX : shiTuXXModelList) {
@@ -145,9 +145,9 @@ public class ShiTuMXServiceImpl implements ShiTuMXService {
                 ShuJuJMXZDDto shuJuJMXZDDto = new ShuJuJMXZDDto();
                 shuJuJMXZDDto.setZiDuanBM(t.getZiDuanBM());
                 shuJuJMXZDDto.setZiDuanMC(t.getZiDuanMC());
-                List<SC_CX_ShiTuMXGXDto> shiTuMXGXDto =
+                List<ShuJuJMXZDDto> shiTuMXGXDto =
                         shiTuMXGXDtoList.stream().filter(n -> Objects.equals(n.getShiTuID(), shiTuXX.getShiTuID()) && Objects.equals(n.getZiDuanBM(), t.getZiDuanBM())).toList();
-                shuJuJMXZDDto.setGuanLianTJZDList(BeanUtil.copyListProperties(shiTuMXGXDto, ShuJuJMXZDDto::new));
+                shuJuJMXZDDto.setGuanLianTJZDList(shiTuMXGXDto);
                 return shuJuJMXZDDto;
             }).toList();
             lingChuangJSPZDto.setShuJuJMXZDDtos(shuJuJMXZDDtos);

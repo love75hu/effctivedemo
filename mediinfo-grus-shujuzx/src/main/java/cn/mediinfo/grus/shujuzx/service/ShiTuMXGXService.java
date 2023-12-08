@@ -2,6 +2,7 @@ package cn.mediinfo.grus.shujuzx.service;
 
 import cn.mediinfo.cyan.msf.core.exception.MsfResponseException;
 import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
+import cn.mediinfo.grus.shujuzx.dto.shitumx.ShuJuJMXZDDto;
 import cn.mediinfo.grus.shujuzx.dto.zonghecx.GuanLianTJZD;
 import cn.mediinfo.grus.shujuzx.dto.zonghecx.SC_CX_ShiTuMXGXDto;
 
@@ -20,5 +21,7 @@ public interface ShiTuMXGXService {
     List<cn.mediinfo.grus.shujuzx.dto.shitumx.SC_CX_ShiTuMXGXDto> getShiTuMXGXByShiTuID(List<String> shiTuID);
 
     Boolean addShiTuMXGX(String shiTuID,String ziDuanBM,String ziDuanMC, List<GuanLianTJZD> guanLianZDList);
+
+    List<ShuJuJMXZDDto> getShiTuMXGXBySTIDs(List<String> shiTuIDs);
 
 }

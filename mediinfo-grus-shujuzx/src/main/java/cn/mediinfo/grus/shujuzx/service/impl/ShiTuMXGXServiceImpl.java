@@ -3,6 +3,7 @@ package cn.mediinfo.grus.shujuzx.service.impl;
 import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
 import cn.mediinfo.cyan.msf.core.util.AssertUtil;
 import cn.mediinfo.cyan.msf.core.util.BeanUtil;
+import cn.mediinfo.grus.shujuzx.dto.shitumx.ShuJuJMXZDDto;
 import cn.mediinfo.grus.shujuzx.dto.zonghecx.GuanLianTJZD;
 import cn.mediinfo.grus.shujuzx.dto.zonghecx.SC_CX_ShiTuMXGXDto;
 import cn.mediinfo.grus.shujuzx.model.SC_CX_ShiTuMXGXModel;
@@ -79,6 +80,11 @@ class ShiTuMXGXServiceImpl implements ShiTuMXGXService {
         }
         shiTuMXGXRepository.saveAll(shiTuMXGXModelList);
         return true;
+    }
+
+    @Override
+    public List<ShuJuJMXZDDto> getShiTuMXGXBySTIDs(List<String> shiTuIDs) {
+        return shiTuMXGXRepository.asQuerydsl().where(s -> s.shiTuID.in(shiTuIDs)).select(ShuJuJMXZDDto.class).fetch();
     }
 
 

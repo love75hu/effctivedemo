@@ -94,7 +94,7 @@ public interface SC_CX_ShiTuMXRepository extends MsfJpaRepository<QSC_CX_ShiTuMX
         return this.asQuerydsl()
                 .where(e->e.shiTuID.in(shiTuIDs))
                 .whereIf(jieKouLX == 1,e->e.shuChuBZ.eq(1))
-                .whereIf(jieKouLX == 0,e->e.tiaoJianBZ.eq(1))
+                .whereIf(jieKouLX == 0,e->e.tiaoJianBZ.eq(1).or(e.shuChuBXBZ.eq(1)))
                 .whereIf(StringUtil.hasText(likeQuery), e -> e.ziDuanMC.contains(likeQuery))
                 .fetchDetach();
     }

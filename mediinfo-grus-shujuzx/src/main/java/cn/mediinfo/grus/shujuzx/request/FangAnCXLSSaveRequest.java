@@ -24,8 +24,8 @@ public class FangAnCXLSSaveRequest {
     @Schema(description = "方案类型名称;0-全部1-门诊2-急诊3-住院4-公卫")
     private String fangAnLXMC;
 
-    @Schema(description = "id")
-    private String fangAnId;
+    @Schema(description = "方案ID")
+    private String fangAnID;
 
     @Schema(description = "方案名称")
     private String fangAnMC;

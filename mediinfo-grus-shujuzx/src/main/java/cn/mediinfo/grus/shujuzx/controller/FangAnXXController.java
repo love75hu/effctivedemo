@@ -12,6 +12,7 @@ import cn.mediinfo.grus.shujuzx.dto.shitumx.ShuJuXSTXQDto;
 import cn.mediinfo.grus.shujuzx.request.FangAnCXLSSaveRequest;
 import cn.mediinfo.grus.shujuzx.request.FangAnCXLSSaveRequestByFAID;
 import cn.mediinfo.grus.shujuzx.request.fangan.FangAnQuerySqlRequest;
+import cn.mediinfo.grus.shujuzx.request.fangan.FangAnSC;
 import cn.mediinfo.grus.shujuzx.request.fangan.FangAnXXSaveRequest;
 import cn.mediinfo.grus.shujuzx.request.fangan.FangAnXXUpdateRequest;
 import cn.mediinfo.grus.shujuzx.service.ChaXunFAXXService;
@@ -80,7 +81,8 @@ public class FangAnXXController {
         FangAnQueryDTO fangAnXX=fangAnService.getFangAnXX(request.getFangAnId());
         FangAnCXLSSaveRequest saveRequest= BeanUtil.copyProperties(fangAnXX,FangAnCXLSSaveRequest::new) ;
         saveRequest.setGuanJianZi(request.getGuanJianZi());
-        saveRequest.setFangAnId(fangAnXX.getFangAnID());
+        saveRequest.setFangAnID(fangAnXX.getFangAnID());
+        saveRequest.setFangAnSCList(BeanUtil.copyListProperties(fangAnXX.getFangAnSCList(), FangAnSC::new));
         String sql = fangAnService.getSql(saveRequest.getRoot(), saveRequest.getFangAnSCList(), saveRequest.getFangAnLXDM(), saveRequest.getGuanJianZi());
         return MsfResponse.success(chaXunFAXXService.saveFangAnCXLS(saveRequest, sql));
     }

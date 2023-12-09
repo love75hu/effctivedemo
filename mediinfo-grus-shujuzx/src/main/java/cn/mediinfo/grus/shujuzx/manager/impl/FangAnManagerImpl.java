@@ -219,16 +219,19 @@ public class FangAnManagerImpl implements FangAnManager {
             return  shuJuST;
         }).toList();
         List<SchemaTable> schemaTableList= new ArrayList<>();
-        if(shuJuSTList.size()>0){
-            shiTuMXService.getFangAnSCZD(shuJuSTList);
+        if(!shuJuSTList.isEmpty()){
+            schemaTableList = shiTuMXService.getFangAnSCZD(shuJuSTList);
         }
-        List<FangAnSCDTO> fangAnSCList = BeanUtil.copyListProperties(fangAnSCModelList, FangAnSCDTO::new, (a, b) -> {
-            SchemaTable schemaTable =schemaTableList.stream().filter(p->p.getShuJuJMXZDDtos().stream().anyMatch(q-> Objects.equals(Optional.ofNullable(a.getZhiBiaoID()).orElse("").toLowerCase(),Optional.ofNullable(q.getZiDuanBM()).orElse("").toLowerCase()))).findFirst().orElse(null);
-            if(schemaTable!=null&&"1".equals(a.getZhiBiaoLXDM())) {
-                b.setMoShi(schemaTable.getMoShi());
-                b.setBiaoMing(schemaTable.getBiaoMing());
+        List<FangAnSCDTO> fangAnSCList =new ArrayList<>();
+        for(var fanAnSC : fangAnSCModelList) {
+            SchemaTable schemaTable =schemaTableList.stream().filter(p->p.getShuJuJMXZDDtos().stream().anyMatch(q-> Objects.equals(Optional.ofNullable(fanAnSC.getZhiBiaoID()).orElse("").toLowerCase(),Optional.ofNullable(q.getZiDuanBM()).orElse("").toLowerCase()))).findFirst().orElse(null);
+            FangAnSCDTO currentFangAnSC= BeanUtil.copyProperties(fanAnSC,FangAnSCDTO::new) ;
+            if(schemaTable!=null&&"1".equals(fanAnSC.getZhiBiaoLXDM())) {
+                currentFangAnSC.setMoShi(schemaTable.getMoShi());
+                currentFangAnSC.setBiaoMing(schemaTable.getBiaoMing());
             }
-        });
+            fangAnSCList.add(currentFangAnSC);
+        }
         result.setFangAnSCList(fangAnSCList);
     }
 }

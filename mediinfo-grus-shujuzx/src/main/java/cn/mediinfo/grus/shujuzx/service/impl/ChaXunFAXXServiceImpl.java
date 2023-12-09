@@ -80,23 +80,23 @@ public class ChaXunFAXXServiceImpl implements ChaXunFAXXService {
     public String saveFangAnCXLS(FangAnCXLSSaveRequest request, String sql) {
         String chaXunLXDM = "2";
         String chaXunLXMC = "高级查询";
-        if (StringUtils.hasText(request.getFangAnID())||StringUtils.hasText(request.getFangAnMC()) || CollUtil.isNotEmpty(request.getFangAnSCList())) {
+        if (StringUtils.hasText(request.getFangAnID()) && StringUtils.hasText(request.getFangAnMC())) {
             chaXunLXDM = "1";
             chaXunLXMC = "方案查询";
         }
         SC_CX_FangAnCXLSModel model = new SC_CX_FangAnCXLSModel();
         BeanUtil.mergeProperties(request, model);
-        if("2".equals(chaXunLXDM)){
+        if ("2".equals(chaXunLXDM)) {
             model.setFangAnMC("高级查询");
         }
         model.setZuZhiJGID(lyraIdentityService.getJiGouID());
         model.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
         model.setChaXunLXDM(chaXunLXDM);
         model.setChaXunLXMC(chaXunLXMC);
-        if(ObjectUtil.isNotEmpty(request.getRoot())){
+        if (ObjectUtil.isNotEmpty(request.getRoot())) {
             model.setChaXunTJ(JsonUtil.getBeanToJson(request.getRoot()));
         }
-        if(CollUtil.isNotEmpty(request.getFangAnSCList())){
+        if (CollUtil.isNotEmpty(request.getFangAnSCList())) {
             model.setChaXunSC(JsonUtil.getBeanToJson(request.getFangAnSCList()));
         }
         if ("1".equals(chaXunLXDM)) {
@@ -120,7 +120,7 @@ public class ChaXunFAXXServiceImpl implements ChaXunFAXXService {
     public FangAnCXLSDTO getFangAnCXLSByID(String id) {
         FangAnCXLSDTO result = new FangAnCXLSDTO();
         SC_CX_FangAnCXLSModel model = fangAnCXLSRepository.findById(id).orElse(null);
-        if (model==null) {
+        if (model == null) {
             return result;
         }
         BeanUtil.copyProperties(model, result);

@@ -30,11 +30,11 @@ public interface FangAnService {
     /**
      * 获取方案信息
      *
-     * @param id 主键ID
+     * @param fangAnID 方案ID
      * @return FangAnQueryDTO
      * @throws YuanChengException
      */
-    FangAnQueryDTO getFangAnXX(String id) throws TongYongYWException, WeiZhaoDSJException;
+    FangAnQueryDTO getFangAnXX(String fangAnID) throws TongYongYWException, WeiZhaoDSJException;
 
     /**
      * 根据方案查询历史获取方案信息

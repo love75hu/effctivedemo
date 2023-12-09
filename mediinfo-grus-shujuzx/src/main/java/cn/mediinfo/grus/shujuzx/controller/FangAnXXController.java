@@ -49,10 +49,10 @@ public class FangAnXXController {
     }
 
     @Operation(summary = "获取方案信息")
-    @Parameter(name = "id", description = "主键ID")
+    @Parameter(name = "fangAnID", description = "方案ID")
     @GetMapping("/get")
-    public MsfResponse<FangAnQueryDTO> getFangAnXX(@NotBlank(message = "ID不能为空") @RequestParam String id) throws TongYongYWException, WeiZhaoDSJException {
-        return MsfResponse.success(fangAnService.getFangAnXX(id));
+    public MsfResponse<FangAnQueryDTO> getFangAnXX(@NotBlank(message = "方案ID不能为空") @RequestParam String fangAnID) throws TongYongYWException, WeiZhaoDSJException {
+        return MsfResponse.success(fangAnService.getFangAnXX(fangAnID));
     }
 
     @Operation(summary = "更新方案")

@@ -140,13 +140,13 @@ public class FangAnServiceImpl implements FangAnService {
     /**
      * 根据方案ID获取方案信息
      *
-     * @param id 主键ID
+     * @param fangAnID 方案ID
      * @return FangAnQueryDTO
      * @throws TongYongYWException
      */
     @Override
-    public FangAnQueryDTO getFangAnXX(String id) throws TongYongYWException, WeiZhaoDSJException {
-        return fangAnManager.getFangAnXXByFAID(id);
+    public FangAnQueryDTO getFangAnXX(String fangAnID) throws TongYongYWException, WeiZhaoDSJException {
+        return fangAnManager.getFangAnXXByFAID(fangAnID);
     }
 
     /**
@@ -218,7 +218,7 @@ public class FangAnServiceImpl implements FangAnService {
 
         List<String> shiTuIds = conditionList.stream().map(FangAnCondition::getShiTuID).distinct().collect(Collectors.toList());
         if(shiTuIds.stream().anyMatch(StringUtil::isBlank)){
-            throw new TongYongYWException("视图明细ID不能为空");
+            throw new TongYongYWException("视图ID不能为空");
         }
         //from
         ShuJuXSTXQDto shuJuXSTXQ = Optional.ofNullable(shiTuMXService.getShuJuSTXQDto(shiTuIds)).orElse(new ShuJuXSTXQDto());
@@ -268,8 +268,13 @@ public class FangAnServiceImpl implements FangAnService {
                 where.setLeft(new SQLQueryNode(new SQLQueryObject(joinRelation)));
                 where.setRight(new SQLQueryNode(new SQLQueryObject(SQLBinaryOperator.AND)));
                 where.getRight().setRight(new SQLQueryNode(new SQLQueryObject(filterCondition)));
-                where.getRight().setLeft(new SQLQueryNode(new SQLQueryObject(SQLBinaryOperator.AND)));
-                where.getRight().getLeft().setRight(condition);
+                if(Objects.isNull(condition.getLeft())){
+                    where.getRight().setLeft(condition);
+                }
+                else {
+                    where.getRight().setLeft(new SQLQueryNode(new SQLQueryObject(SQLBinaryOperator.AND)));
+                    where.getRight().getLeft().setRight(condition);
+                }
             }
         }
 
@@ -1072,7 +1077,7 @@ public class FangAnServiceImpl implements FangAnService {
             }
             String tableName = StringUtils.join(table.getSchemaTableList().stream().map(p -> formatBiaoMing(p.getMoShi(), p.getBiaoMing())).collect(Collectors.toSet()), ",");
             String shiTuBGX = getShiTuBGX(table, tableName);
-            aliasMap.put(tableName, Tuple.of("t_" + i, shiTuBGX, false, tableName.contains(formatBiaoMing(jiChuBiao.getMoShi(), jiChuBiao.getBiaoMing()))));
+            aliasMap.put(tableName, Tuple.of("t_" + i, shiTuBGX, false, tableName.equals(formatBiaoMing(jiChuBiao.getMoShi(), jiChuBiao.getBiaoMing()))));
         }
 
         if (ObjectUtils.isNotEmpty(jiChuBiao) && !StringUtils.isBlank(jiChuBiao.getBiaoMing()) && !aliasMap.containsKey(formatBiaoMing(jiChuBiao.getMoShi(), jiChuBiao.getBiaoMing()))) {

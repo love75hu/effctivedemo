@@ -12,6 +12,8 @@ public class ShiTuFLDto {
     private String id;
     @Schema(description = "分类名称，必填")
     private String shiTuFLMC  ;
+
+
     /**
      * 顺序号
      */

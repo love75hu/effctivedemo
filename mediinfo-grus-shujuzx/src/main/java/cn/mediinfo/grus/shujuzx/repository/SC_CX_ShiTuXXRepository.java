@@ -63,11 +63,12 @@ public interface SC_CX_ShiTuXXRepository extends MsfJpaRepository<QSC_CX_ShiTuXX
     {
         return this.asQuerydsl()
                 .where(s -> s.fuLeiID.eq(fuLeiID))
-                .whereIf(StringUtil.hasText(likeQuery), s -> s.fuLeiMC.like(likeQuery))
+                .whereIf(StringUtil.hasText(likeQuery), s -> s.fuLeiMC.like(likeQuery)).orderBy(n->n.shunXuHao.asc())
                 .select(e-> QueryDSLUtils.bean(
                         ShiTuFLDto.class,
                         e.id,
-                        e.fuLeiMC.as("shiTuFLMC"))).fetch();
+                        e.shunXuHao,
+                        e.shiTuMC.as("shiTuFLMC"))).fetch();
     }
     /**
      * 获取视图信息 根据视图id

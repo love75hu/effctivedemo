@@ -43,12 +43,12 @@ public class ChaXunFAXXServiceImpl implements ChaXunFAXXService {
 
     @Override
     public List<FangAnXXDto> getChaXunFAXXSelect(String likeQuery, String fangAnLXDM, Integer pageIndex, Integer pageSize) {
-        return fangAnXXRepository.getFangAnXX(likeQuery, fangAnLXDM, pageIndex, pageSize);
+        return fangAnXXRepository.getFangAnXX(lyraIdentityService.getJiGouID(),likeQuery, fangAnLXDM, pageIndex, pageSize);
     }
 
     @Override
     public List<FangAnXXDto> getFangAnXXList(String likeQuery, Integer pageIndex, Integer pageSize) {
-        return fangAnXXRepository.getFangAnXX(likeQuery, "", pageIndex, pageSize);
+        return fangAnXXRepository.getFangAnXX(lyraIdentityService.getJiGouID(),likeQuery, "", pageIndex, pageSize);
     }
 
     @Override

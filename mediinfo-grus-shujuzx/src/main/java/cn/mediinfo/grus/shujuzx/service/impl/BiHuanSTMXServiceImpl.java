@@ -164,7 +164,8 @@ public class BiHuanSTMXServiceImpl implements BiHuanSTMXService {
             KeXuanZDDto keXuanZDDto = ruCanZDXXList.stream().filter(t -> t.getShiTuID().equals(n)).findFirst().orElse(new KeXuanZDDto());
             biHuanSTRCZD.setShiTuID(keXuanZDDto.getShiTuID());
             biHuanSTRCZD.setShiTuMC(keXuanZDDto.getShiTuMC());
-            biHuanSTRCZD.setChildren(BeanUtil.copyListProperties( ruCanZDXXList.stream().filter(f -> f.getShiTuID().equals(n)).collect(Collectors.toList()), BiHuanZDXXDto::new));
+            biHuanSTRCZD.setChildren(BeanUtil.copyListProperties( ruCanZDXXList.stream()
+                    .filter(f -> f.getShiTuID().equals(n)).collect(Collectors.toList()), BiHuanZDXXDto::new));
             biHuanSTRCZDDto.add(biHuanSTRCZD);
         });
         return biHuanSTRCZDDto;

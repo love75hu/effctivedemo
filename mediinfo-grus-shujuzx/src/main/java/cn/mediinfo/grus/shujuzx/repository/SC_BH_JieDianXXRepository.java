@@ -46,4 +46,13 @@ default List<SC_BH_JieDianXXModel> jieDianXXList(List<String> biHuanID)
                 .where(n->n.zuZhiJGID.eq(jiGouID))
                 .where(n -> n.jieDianID.eq(jieDianID)).select(SC_BH_JieDianXXDto.class).fetchFirst();
     }
+
+    default  boolean jieDianYC(String jieDianXXID,String yinCangBZ)
+    {
+         this.asUpdateDsl()
+            .where(n->n.id.eq(jieDianXXID))
+            .set(n->n.yinCangBZ,yinCangBZ)
+            .execute();
+         return true;
+    }
 }

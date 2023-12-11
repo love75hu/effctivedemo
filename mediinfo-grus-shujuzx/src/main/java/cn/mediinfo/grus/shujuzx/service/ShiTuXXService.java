@@ -3,6 +3,7 @@ package cn.mediinfo.grus.shujuzx.service;
 import cn.mediinfo.cyan.msf.core.exception.MsfResponseException;
 import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
+import cn.mediinfo.cyan.msf.util.tree.TreeNode;
 import cn.mediinfo.grus.shujuzx.dto.shitumx.SC_CX_ShiTuXXByShiTuIDDto;
 import cn.mediinfo.grus.shujuzx.dto.zonghecx.*;
 
@@ -20,7 +21,7 @@ public interface ShiTuXXService {
     /**
      * 获取临床检索视图树
      */
-    List<LinChuangJSSTDtoTree> getLinChuangJSSTTree(String fuLeiID, String likeQuery);
+    List<TreeNode<LinChuangJSSTDtoTree>> getLinChuangJSSTTree(String fuLeiID, String likeQuery);
 
     /**
      * 新增视图分类

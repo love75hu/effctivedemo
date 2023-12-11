@@ -63,7 +63,7 @@ public class JieDianXXServiceImpl implements JieDianXXService {
 
         SC_BH_JieDianXXModel scBhJieDianXXModel = jieDianXXRepository.findById(dto.getJieDianXXSZDtoList().getShangJiJDID()).orElse(null);
 
-        SC_BH_JieDianXXModel jieDianXX=new SC_BH_JieDianXXModel();
+          SC_BH_JieDianXXModel jieDianXX = null; //todo 实例化
 
         SC_BH_JieDianXXModel jieDianXXModel = BeanUtil.copyProperties(dto.getJieDianXXSZDtoList(), SC_BH_JieDianXXModel.class);
         jieDianXXModel.setBiHuanID(dto.getBiHuanID());
@@ -83,11 +83,12 @@ public class JieDianXXServiceImpl implements JieDianXXService {
 
         }else {
             if (!StringUtil.hasText(dto.getJieDianXXSZDtoList().getId()) ) {
+                //todo 查询操作修改
                 jieDianXXRepository.asDeleteDsl().where(n->n.biHuanID.eq(dto.getBiHuanID()))
                         .where(n->n.jieDianID.eq(dto.getJieDianXXSZDtoList().getJieDianID())).execute();
 
                 jieDianXXModel.setShunXuHao(scBhJieDianXXModel.getShunXuHao() + 1);
-
+                //todo
                 List<SC_BH_JieDianXXModel> fetch = jieDianXXRepository.asQuerydsl().where(n -> n.shunXuHao.gt(scBhJieDianXXModel.getShunXuHao())).fetch();
                 for (var a : fetch) {
                     a.setShunXuHao(a.getShunXuHao() + 1);
@@ -158,7 +159,6 @@ public class JieDianXXServiceImpl implements JieDianXXService {
     @Override
     public List<BiHuanSZXXDto> getBiHuanSZXXBybiHuanID(String biHuanID ,String jiGouID)
     {
-        List<BiHuanSZXXDto> biHuanSZXXDtos=new ArrayList<>();
         //节点信息
         List<BiHuanSZXXDto> jieDianXXList =jieDianXXRepository.jieDianXXList(biHuanID,jiGouID);
         //节点失效
@@ -195,6 +195,8 @@ public class JieDianXXServiceImpl implements JieDianXXService {
     public BiHuanSZXXDto getBiHuanJDNRXX(String jieDianXXID) throws WeiZhaoDSJException {
 
         SC_BH_JieDianXXModel jieDianSXXXDto = jieDianXXRepository.findById(jieDianXXID).orElse(null);
+         //todo  直接抛出异常
+
         if (jieDianSXXXDto!=null)
         {
             BiHuanSZXXDto biHuanSZXXDto = BeanUtil.copyProperties(jieDianSXXXDto, BiHuanSZXXDto.class);
@@ -217,7 +219,7 @@ public class JieDianXXServiceImpl implements JieDianXXService {
 
     @Override
     @Transactional(rollbackOn = Exception.class)
-    public Boolean zuoFeiBiHuanJDXX(String jieDianXXID) throws WeiZhaoDSJException {
+    public boolean zuoFeiBiHuanJDXX(String jieDianXXID) throws WeiZhaoDSJException {
 
         SC_BH_JieDianXXModel jieDianXXModel = jieDianXXRepository.findById(jieDianXXID).orElse(null);
         if(jieDianXXModel==null)
@@ -238,11 +240,8 @@ public class JieDianXXServiceImpl implements JieDianXXService {
     }
 
     @Override
-    public Boolean jieDianYC(String jieDianXXID,String yinCangBZ) {
-        jieDianXXRepository.asUpdateDsl()
-                .where(n->n.id.eq(jieDianXXID))
-                .set(n->n.yinCangBZ,yinCangBZ)
-                .execute();
+    public boolean jieDianYC(String jieDianXXID,String yinCangBZ) {
+        jieDianXXRepository.jieDianYC(jieDianXXID,yinCangBZ);
         return true;
     }
 

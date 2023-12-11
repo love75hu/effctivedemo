@@ -52,8 +52,7 @@ public class BiHuanSZController {
     }
     @Operation(summary = "添加闭环信息")
     @PostMapping("addBiHuanJBXX")
-    public MsfResponse<Boolean> addBiHuanJBXX(@RequestBody @Validated AddBiHuanXXDto dto)
-    {
+    public MsfResponse<Boolean> addBiHuanJBXX(@RequestBody @Validated AddBiHuanXXDto dto) throws WeiZhaoDSJException {
         return MsfResponse.success(jiBenXXService.addBiHuanJBXX(dto));
     }
     @Operation(summary = "获取入参字段信息")

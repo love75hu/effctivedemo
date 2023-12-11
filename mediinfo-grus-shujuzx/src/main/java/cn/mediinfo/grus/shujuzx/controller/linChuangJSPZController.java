@@ -5,6 +5,7 @@ import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
 import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
 import cn.mediinfo.cyan.msf.core.response.MsfResponse;
+import cn.mediinfo.cyan.msf.util.tree.TreeNode;
 import cn.mediinfo.grus.shujuzx.dto.shitumx.ShuJuXSTXQDto;
 import cn.mediinfo.grus.shujuzx.dto.zonghecx.*;
 import cn.mediinfo.grus.shujuzx.service.ShiTuMXService;
@@ -43,7 +44,7 @@ public class linChuangJSPZController {
      */
     @Operation(summary = "获取临床检索树")
     @GetMapping("getLinChuangJSSTTree")
-    public MsfResponse<List<LinChuangJSSTDtoTree>> getLinChuangJSSTTree(
+    public MsfResponse< List<TreeNode<LinChuangJSSTDtoTree>>> getLinChuangJSSTTree(
             @RequestParam(required = false) String fuLeiID,
             @RequestParam(required = false) String likeQuery)
     {

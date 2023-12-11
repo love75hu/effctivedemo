@@ -10,8 +10,8 @@ import cn.mediinfo.grus.shujuzx.model.SC_CX_ZhiBiaoXXModel;
 import cn.mediinfo.grus.shujuzx.po.zhibiaoxx.ZhiBiaoFLPo;
 import cn.mediinfo.grus.shujuzx.repository.SC_CX_ZhiBiaoXXRepository;
 import cn.mediinfo.grus.shujuzx.service.ZhiBiaoXXService;
+import cn.mediinfo.lyra.extension.service.LyraIdentityService;
 import cn.mediinfo.lyra.extension.service.SequenceService;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -23,10 +23,13 @@ public class ZhiBiaoXXServiceImpl implements ZhiBiaoXXService {
     private final SC_CX_ZhiBiaoXXRepository zhiBiaoXXRepository;
     private final SequenceService sequenceService;
 
+    private final LyraIdentityService lyraIdentityService;
+
     public ZhiBiaoXXServiceImpl(SC_CX_ZhiBiaoXXRepository zhiBiaoXXRepository,
-                                SequenceService sequenceService) {
+                                SequenceService sequenceService, LyraIdentityService lyraIdentityService) {
         this.zhiBiaoXXRepository = zhiBiaoXXRepository;
         this.sequenceService = sequenceService;
+        this.lyraIdentityService = lyraIdentityService;
     }
 
     /**
@@ -35,13 +38,13 @@ public class ZhiBiaoXXServiceImpl implements ZhiBiaoXXService {
     @Override
     public List<ZhiBiaoXXListDto> getZhiBiaoXXListByZBLXDM(String zhiBiaoLXDM, String likeQuery) {
         List<ZhiBiaoXXListDto> result = new ArrayList<>();
-        List<SC_CX_ZhiBiaoXXModel> zhiBiaoXXList = zhiBiaoXXRepository.getZhiBiaoXXByZBLXDM(zhiBiaoLXDM, likeQuery);
+        List<SC_CX_ZhiBiaoXXModel> zhiBiaoXXList = zhiBiaoXXRepository.getZhiBiaoXXByZBLXDM(lyraIdentityService.getJiGouID(), zhiBiaoLXDM, likeQuery);
         if (zhiBiaoLXDM.equals(ZhiBiaoLXDMEnum.YAO_PIN.getZhiBiaoLXDM())) {
             List<SC_CX_ZhiBiaoXXModel> fenLeiList = zhiBiaoXXList.stream().filter(p -> StringUtil.notHasText(p.getZhiBiaoID())).
                     sorted(Comparator.comparing(SC_CX_ZhiBiaoXXModel::getShunXuHao)).collect(Collectors.toList());
             if (CollectionUtils.isEmpty(fenLeiList)) {
                 List<String> zhiBiaoFLIDs = zhiBiaoXXList.stream().map(SC_CX_ZhiBiaoXXModel::getZhiBiaoFLID).distinct().toList();
-                List<SC_CX_ZhiBiaoXXModel> zhiBiaoFLList= zhiBiaoXXRepository.findByZhiBiaoLXDMAndZhiBiaoFLIDInAndZhiBiaoIDIsNull(zhiBiaoLXDM,zhiBiaoFLIDs);
+                List<SC_CX_ZhiBiaoXXModel> zhiBiaoFLList = zhiBiaoXXRepository.findByZuZhiJGIDAndZhiBiaoLXDMAndZhiBiaoFLIDInAndZhiBiaoIDIsNull(lyraIdentityService.getJiGouID(), zhiBiaoLXDM, zhiBiaoFLIDs);
                 fenLeiList.addAll(zhiBiaoFLList);
             }
             for (var item : fenLeiList) {
@@ -87,7 +90,7 @@ public class ZhiBiaoXXServiceImpl implements ZhiBiaoXXService {
      */
     @Override
     public Boolean zuoFeiZhiBiaoFL(String zhiBiaoLXDM, String zhiBiaoFLID) {
-        zhiBiaoXXRepository.asDeleteDsl().where(p -> p.zhiBiaoLXDM.eq(zhiBiaoLXDM).and(p.zhiBiaoFLID.eq(zhiBiaoFLID))).execute();
+        zhiBiaoXXRepository.asDeleteDsl().where(p->p.zuZhiJGID.eq(lyraIdentityService.getJiGouID()).and(p.zhiBiaoLXDM.eq(zhiBiaoLXDM)).and(p.zhiBiaoFLID.eq(zhiBiaoFLID))).execute();
         return true;
     }
 
@@ -103,8 +106,8 @@ public class ZhiBiaoXXServiceImpl implements ZhiBiaoXXService {
             checkZhiBiaoID(item.getKey(), item.getValue().stream().map(ZhiBiaoXXCreateDto::getZhiBiaoID).toList());
         }
         List<SC_CX_ZhiBiaoXXModel> addList = BeanUtil.copyListProperties(createDtos, SC_CX_ZhiBiaoXXModel::new, (dto, model) -> {
-            model.setZuZhiJGID(ShuJuZXConstant.TONGYONG_JGID);
-            model.setZuZhiJGMC(ShuJuZXConstant.TONGYONG_JGMC);
+            model.setZuZhiJGID(lyraIdentityService.getJiGouID());
+            model.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
         });
         zhiBiaoXXRepository.insertAll(addList);
         return true;
@@ -118,7 +121,7 @@ public class ZhiBiaoXXServiceImpl implements ZhiBiaoXXService {
         String zhiBiaoFLID;
         if (StringUtil.notHasText(createDto.getZhiBiaoID()) && createDto.getZhiBiaoLXDM().equals(ZhiBiaoLXDMEnum.YAO_PIN.getZhiBiaoLXDM())) {
             zhiBiaoFLID = sequenceService.getXuHao("SC_CX_ZhiBiaoXX_ZhiBiaoFLID", 7);
-            boolean existZhiBiaoMC = zhiBiaoXXRepository.existsZhiBiaoFL(createDto.getZhiBiaoLXDM(), zhiBiaoFLID, createDto.getZhiBiaoFLMC());
+            boolean existZhiBiaoMC = zhiBiaoXXRepository.existsZhiBiaoFL(lyraIdentityService.getJiGouID(), createDto.getZhiBiaoLXDM(), zhiBiaoFLID, createDto.getZhiBiaoFLMC());
             if (existZhiBiaoMC) {
                 throw new TongYongYWException("指标分类名称或分类ID已存在，请重新确认! ");
             }
@@ -126,8 +129,8 @@ public class ZhiBiaoXXServiceImpl implements ZhiBiaoXXService {
             zhiBiaoFLID = "";
         }
         SC_CX_ZhiBiaoXXModel addModel = BeanUtil.copyProperties(createDto, SC_CX_ZhiBiaoXXModel::new, (dto, model) -> {
-            model.setZuZhiJGID(ShuJuZXConstant.TONGYONG_JGID);
-            model.setZuZhiJGMC(ShuJuZXConstant.TONGYONG_JGMC);
+            model.setZuZhiJGID(lyraIdentityService.getJiGouID());
+            model.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
             if (StringUtil.hasText(zhiBiaoFLID)) {
                 model.setZhiBiaoFLID(zhiBiaoFLID);
             }
@@ -141,7 +144,8 @@ public class ZhiBiaoXXServiceImpl implements ZhiBiaoXXService {
      */
     @Override
     public Boolean updateZhiBiaoXX(ZhiBiaoXXUpdateDto updateDto) throws TongYongYWException {
-        boolean existZhiBiaoMC = zhiBiaoXXRepository.existsByZhiBiaoLXDMAndZhiBiaoFLMC(ZhiBiaoLXDMEnum.YAO_PIN.getZhiBiaoLXDM(), updateDto.getZhiBiaoFLMC());
+        boolean existZhiBiaoMC = zhiBiaoXXRepository.existsByZuZhiJGIDAndZhiBiaoLXDMAndZhiBiaoFLMC(lyraIdentityService.getJiGouID(),
+                ZhiBiaoLXDMEnum.YAO_PIN.getZhiBiaoLXDM(), updateDto.getZhiBiaoFLMC());
         if (existZhiBiaoMC) {
             throw new TongYongYWException("指标分类名称已存在，请重新确认! ");
         }
@@ -154,6 +158,7 @@ public class ZhiBiaoXXServiceImpl implements ZhiBiaoXXService {
 
     /**
      * 根据指标类型代码获取指标下拉列表
+     *
      * @param zhiBiaoLXDM
      * @param likeQuery
      * @return
@@ -161,7 +166,7 @@ public class ZhiBiaoXXServiceImpl implements ZhiBiaoXXService {
     @Override
     public List<ZhiBiaoMXSelectDto> getZhiBiaoSelectByZBLXDM(String zhiBiaoLXDM, String likeQuery) {
         List<ZhiBiaoMXSelectDto> result;
-        List<SC_CX_ZhiBiaoXXModel> zhiBiaoXXList = zhiBiaoXXRepository.getZhiBiaoXXByZBLXDM(zhiBiaoLXDM, likeQuery);
+        List<SC_CX_ZhiBiaoXXModel> zhiBiaoXXList = zhiBiaoXXRepository.getZhiBiaoXXByZBLXDM(lyraIdentityService.getJiGouID(), zhiBiaoLXDM, likeQuery);
         result = zhiBiaoXXList.stream().filter(p -> StringUtil.hasText(p.getZhiBiaoID()))
                 .sorted(Comparator.comparing(SC_CX_ZhiBiaoXXModel::getShunXuHao, Comparator.nullsLast(Integer::compareTo)))
                 .map(p -> {
@@ -177,7 +182,7 @@ public class ZhiBiaoXXServiceImpl implements ZhiBiaoXXService {
      * 指标校验
      */
     private void checkZhiBiaoID(String zhiBiaoLXDM, List<String> zhiBiaoIDs) throws TongYongYWException {
-        List<SC_CX_ZhiBiaoXXModel> zhiBiaoXXList = zhiBiaoXXRepository.findByZhiBiaoLXDMAndZhiBiaoIDIn(zhiBiaoLXDM, zhiBiaoIDs);
+        List<SC_CX_ZhiBiaoXXModel> zhiBiaoXXList = zhiBiaoXXRepository.findByZuZhiJGIDAndZhiBiaoLXDMAndZhiBiaoIDIn(lyraIdentityService.getJiGouID(), zhiBiaoLXDM, zhiBiaoIDs);
         if (!CollectionUtils.isEmpty(zhiBiaoXXList)) {
             String zhiBiaoXX = StringUtil.join(",", zhiBiaoXXList.stream().map(p ->
                     StringUtil.concat("[", p.getZhiBiaoID(), "]", p.getZhiBiaoMC())).toList());

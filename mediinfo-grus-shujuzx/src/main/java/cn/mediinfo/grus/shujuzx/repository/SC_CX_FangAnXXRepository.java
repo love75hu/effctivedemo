@@ -13,8 +13,9 @@ import java.util.List;
 @MsfDataSource("datasourcesjzx")
 public interface SC_CX_FangAnXXRepository extends MsfJpaRepository<QSC_CX_FangAnXXModel, SC_CX_FangAnXXModel, String> {
 
-    default List<FangAnXXDto> getFangAnXX(String likeQuery, String fangAnLXDM, int pageIndex, int pageSize) {
+    default List<FangAnXXDto> getFangAnXX(String zuZhiJGID,String likeQuery, String fangAnLXDM, int pageIndex, int pageSize) {
         return this.asQuerydsl()
+                .where(x->x.zuZhiJGID.eq(zuZhiJGID))
                 .whereIf(StringUtil.hasText(likeQuery), p -> p.fangAnMC.contains(likeQuery).or(p.guanJianZi.contains(likeQuery)))
                 .whereIf(StringUtil.hasText(fangAnLXDM), p -> p.fangAnLXDM.eq(fangAnLXDM))
                 .orderBy(p -> p.chuangJianSJ.desc())

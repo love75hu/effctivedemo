@@ -73,7 +73,7 @@ class JiBenXXServiceImpl implements JiBenXXService {
      */
     @Override
     public List<BiHuanJBXXTreeDto> getBiHuanJBXXTree(String zuZhiJGID, String likeQuery) {
-        List<SC_ZD_ShuJuYZYDto> shuJuYZYList = shuJuYZYService.getShuJuYZYListByLBID("SC0013");
+        List<SC_ZD_ShuJuYZYDto> shuJuYZYList = shuJuYZYService.getShuJuYZYListByLBID("SC0013");//字典分类 闭环类型
         List<SC_BH_JIBENXXDto> jIBENXXList = jiBenXXRepository.getJIBENXXList(zuZhiJGID,likeQuery);
         List<BiHuanJBXXTreeDto> biHuanJBXXTreeDtos=new ArrayList<>();
          for(var a:shuJuYZYList)
@@ -93,20 +93,16 @@ class JiBenXXServiceImpl implements JiBenXXService {
     }
 
     @Override
-    public Boolean addBiHuanJBXX(AddBiHuanXXDto dto) {
+    public boolean addBiHuanJBXX(AddBiHuanXXDto dto) throws WeiZhaoDSJException {
         if (StringUtil.hasText(dto.getId()))
         {
-            SC_BH_JiBenXXModel jiBenXXModel = jiBenXXRepository.findById(dto.getId()).orElse(null);
-            if (jiBenXXModel==null)
-            {
-                return false;
-            }
+            SC_BH_JiBenXXModel jiBenXXModel = jiBenXXRepository.findById(dto.getId()).orElseThrow(() -> new WeiZhaoDSJException("未获取到数据"));
             BeanUtil.copyProperties(dto,jiBenXXModel);
             jiBenXXRepository.save(jiBenXXModel);
             ruCanXXService.addRuCanXX(dto.getRuCanXXDtoList(),dto.getBiHuanLXDM(),dto.getBiHuanLXMC(),dto.getBiHuanID(),dto.getBiHuanMC());
         return true;
         }else {
-        var biHuanID= sequenceService.getXuHao("SC_BH_JiBenxx_BiHuanID", 6);
+        var biHuanID= sequenceService.getXuHao("SC_BH_JiBenxx_BiHuanID", 6); //闭环id
         SC_BH_JiBenXXModel shiTuMXModel=new SC_BH_JiBenXXModel();
         BeanUtil.copyProperties(dto,shiTuMXModel);
         shiTuMXModel.setBiHuanID(biHuanID);
@@ -122,7 +118,7 @@ class JiBenXXServiceImpl implements JiBenXXService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Boolean biHuanSZXF(BiHuanSZXFDto dto) throws TongYongYWException, YuanChengException {
+    public boolean biHuanSZXF(BiHuanSZXFDto dto) throws TongYongYWException, YuanChengException {
         List<BiHuanZZJGDto> xiaFaJGIdGList = new ArrayList<>();
 
         if ("0".equals(dto.getXiaFaFS()))
@@ -294,7 +290,7 @@ List<SC_BH_JieDianXXModel> addjieDianXXList=new ArrayList<>();
      * 闭环设置删除
      */
     @Override
-    public Boolean biHuanSZSC(String biHuanID) {
+    public boolean biHuanSZSC(String biHuanID) {
         jiBenXXRepository.asDeleteDsl().where(n->n.biHuanID.eq(biHuanID)).execute();
         jieDianXXRepository.asDeleteDsl().where(n->n.biHuanID.eq(biHuanID)).execute();
         jieDianSXRepository.asDeleteDsl().where(n->n.biHuanID.eq(biHuanID)).execute();
@@ -306,8 +302,8 @@ List<SC_BH_JieDianXXModel> addjieDianXXList=new ArrayList<>();
      * 闭环设置启用
      */
     @Override
-    public Boolean biHuanSZQY(String biHuanID,Integer qiyongBZ) {
-        jiBenXXRepository.asUpdateDsl().where(n->n.biHuanID.eq(biHuanID)).set(n->n.qiYongBZ,qiyongBZ).execute();
+    public boolean biHuanSZQY(String biHuanID,Integer qiyongBZ) {
+        jiBenXXRepository.biHuanSZQY(biHuanID,qiyongBZ);
         return true;
     }
 
@@ -316,7 +312,8 @@ List<SC_BH_JieDianXXModel> addjieDianXXList=new ArrayList<>();
      */
     @Override
     public BiHuanXXDto getBiHuanXXBYID(String biHuanID) {
-       var biHuanXX=BeanUtil.copyProperties( jiBenXXRepository.findFirstByBiHuanID(biHuanID),BiHuanXXDto.class);;
+       var biHuanXX=BeanUtil.copyProperties( jiBenXXRepository.findFirstByBiHuanID(biHuanID),BiHuanXXDto.class);
+       //todo 判断空
         biHuanXX.setRuCanXXDtoList(ruCanXXService.getRuCanXXByBiHuanID(biHuanID));
         return biHuanXX;
     }

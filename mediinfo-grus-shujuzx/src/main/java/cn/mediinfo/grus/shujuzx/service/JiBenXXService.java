@@ -19,12 +19,12 @@ public interface JiBenXXService {
      */
     List<BiHuanJBXXTreeDto> getBiHuanJBXXTree(String zuZhiJGID, String likeQuery );
 
-    Boolean addBiHuanJBXX(AddBiHuanXXDto dto);
+    boolean addBiHuanJBXX(AddBiHuanXXDto dto) throws WeiZhaoDSJException;
 
     /**
      * 闭环设置下发
      */
-    Boolean biHuanSZXF(BiHuanSZXFDto dto) throws TongYongYWException, YuanChengException;
+    boolean biHuanSZXF(BiHuanSZXFDto dto) throws TongYongYWException, YuanChengException;
     /**
      * 闭环设置复制
      */
@@ -33,12 +33,12 @@ public interface JiBenXXService {
     /**
      * 闭环设置删除
      */
-    Boolean biHuanSZSC(String biHuanID);
+    boolean biHuanSZSC(String biHuanID);
 
     /**
      * 闭环设置启用
      */
-    Boolean biHuanSZQY(String biHuanID,Integer qiyongBZ);
+    boolean biHuanSZQY(String biHuanID,Integer qiyongBZ);
 
     BiHuanXXDto getBiHuanXXBYID(String biHuanID);
     /**

@@ -3,6 +3,7 @@ package cn.mediinfo.grus.shujuzx.service.impl;
 import aj.org.objectweb.asm.TypeReference;
 import cn.hutool.core.collection.CollUtil;
 import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
+import cn.mediinfo.cyan.msf.core.util.BeanUtil;
 import cn.mediinfo.cyan.msf.core.util.JsonUtil;
 import cn.mediinfo.cyan.msf.core.util.Tuple;
 import cn.mediinfo.grus.shujuzx.dto.bihuandy.SC_BH_DiaoYongPZDto;
@@ -23,6 +24,7 @@ import cn.mediinfo.grus.shujuzx.service.BiHuanZSService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.Resource;
 import lombok.AllArgsConstructor;
+import lombok.val;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -187,11 +189,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
         }
         //闭环 执行的逻辑
 
-        getBiHuanZXJG(biHuanIDs.get(0),"0",biHuanGNDPZ.getRuCanList());
-
-
-
-        return null;
+       return getBiHuanZXJG(biHuanIDs.get(0),"0",biHuanGNDPZ.getRuCanList());
     }
 
     /**
@@ -238,18 +236,16 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
         biHuanXQDto.setBiHuanMC(biHuanJBXX.getBiHuanMC());
 
 
-        List<ShuJuLYDto> shuJuLYDtos=new ArrayList<>();
+        List<LingChuangJSPZDto> shuJuLYDtos=new ArrayList<>();
         biHuanSTXXList.forEach(s->{
-            ShuJuLYDto shuJuLYDto=new ShuJuLYDto();
+            LingChuangJSPZDto shuJuLYDto=new LingChuangJSPZDto();
             shuJuLYDto.setShuJuLYID(s.getShuJuLYID());
             shuJuLYDto.setShuJuLYLXDM(s.getShuJuLYLXDM());
+            val list = biHuanSTJDMXList.stream().filter(n -> n.getShiTuID().equals(s.getShiTuID())).toList();
+            shuJuLYDto.setShuJuJMXZDDtos(BeanUtil.copyListProperties(list, ShuJuJMXZDDto::new));
             shuJuLYDtos.add(shuJuLYDto);
         });
-
-
-
-        //List<LingChuangJSPZZDXXRso> lingChuangJSPZZDXXRsoList = gongYongRemoteService.getShiTuGLFSGLTJ(null).getData("获取功能服务字段信息失败");
-        List<TableDTO> tableList=new ArrayList<>();
+        List<TableDTO>  tableList = gongYongRemoteService.getShiTuGLFSGLTJ(shuJuLYDtos).getData("获取功能服务字段信息失败");
 
         StringBuilder builder = new StringBuilder();
         tableList.get(0).getSchemaTableList().forEach(p->{
@@ -301,44 +297,86 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
             JieDianList jieDianList=new JieDianList();
             List<jieDianNRList> jieDianNRList=new ArrayList<>();
 
-            //为行存储的情况
-            if (Objects.equals(biHuanSTXX.getShiTuLXDM(),2))
+
+            // 在 forEach 循环之前判断是行存储还是列存储
+            boolean isRowStorage = Objects.equals(biHuanSTXX.getShiTuLXDM(), 2);
+
+             // 如果是行存储，先过滤出符合条件的映射
+            List<Map<String, Object>> filteredMaps = isRowStorage
+                    ? maps.stream()
+                    .filter(map -> Objects.equals(map.get(biHuanSTJDXXByJieID.getShiJianZDBM()), biHuanSTJDXXByJieID.getShiJianDM()))
+                    .collect(Collectors.toList())
+                    : null;
+            biHuanJDMXByJieID.forEach(f -> {
+                String value;
+                if (isRowStorage) {
+                    // 行存储情况
+                    value = filteredMaps.stream()
+                            .map(k -> k.getOrDefault(f.getZiDuanBM(), "").toString())
+                            .findFirst()
+                            .orElse("");
+                } else {
+                    // 列存储情况
+                    value = maps.stream()
+                            .map(k -> k.getOrDefault(f.getZiDuanBM(), "").toString())
+                            .findFirst()
+                            .orElse("");
+                }
+
+                // 创建并配置 jieDianNRList 对象
+                jieDianNRList biHuanJDNr = new jieDianNRList();
+                biHuanJDNr.setZiDuanBM(f.getZiDuanBM());
+                biHuanJDNr.setZiDuanMC(f.getZiDuanMC());
+                biHuanJDNr.setYunXuWKBZ(f.getYunXuWKBZ());
+                biHuanJDNr.setKongZhiSJBZ(f.getKongZhiSJBZ());
+                biHuanJDNr.setZiDuanZhi(value);
+
+                // 将对象添加到列表中
+                jieDianNRList.add(biHuanJDNr);
+            });
+
+            //是 并行节点，用控制时间排序， 否者用节点顺序，时效问题，用控制时间字段 做比较
+
+            //获取是否有子闭环
+            val ziBiHXXModel = ziBiHXXList.stream().filter(n -> n.getJieDianID().equals(j.getJieDianID())).findFirst();
+            if (ziBiHXXList!=null)
             {
-                //事件字段编码
-                var shiJianZDBM=biHuanSTJDXXByJieID.getShiJianZDBM();
-                //事件字段值
-                var shiJianDM=biHuanSTJDXXByJieID.getShiJianDM();
-
-                List<Map<String, Object>> collect = maps.stream().filter(map -> shiJianDM.equals(map.get(shiJianZDBM))).collect(Collectors.toList());
-
-                biHuanJDMXByJieID.forEach(f->{
-                    String o = collect.stream().map(k -> k.get(f.getZiDuanBM()).toString()).findFirst().orElse("");
-                    jieDianNRList biHuanJDNr=new jieDianNRList();
-                    biHuanJDNr.setZiDuanBM(f.getZiDuanBM());
-                    biHuanJDNr.setZiDuanZhi(o);
-                    biHuanJDNr.setKongZhiSJBZ(f.getKongZhiSJBZ());
-                    biHuanJDNr.setYunXuWKBZ(f.getYunXuWKBZ());
-                    jieDianNRList.add(biHuanJDNr);
-                });
-
-            }else {
-                //为列存储的情况
-                biHuanJDMXByJieID.forEach(f->{
-                    String s = maps.stream().map(k -> k.get(f.getZiDuanBM()).toString()).findFirst().orElse("");
-                    jieDianNRList biHuanJDNr=new jieDianNRList();
-                    biHuanJDNr.setZiDuanBM(f.getZiDuanBM());
-                    biHuanJDNr.setZiDuanZhi(s);
-                    biHuanJDNr.setKongZhiSJBZ(f.getKongZhiSJBZ());
-                    biHuanJDNr.setYunXuWKBZ(f.getYunXuWKBZ());
-                    jieDianNRList.add(biHuanJDNr);
-                });
+                //子闭环标志
+                jieDianList.setZiBiHBZ("1");
             }
+
+            //子闭环多次执行标志
+            jieDianList.setZiBiHDCZXBZ("");
+            //子闭环显示列
+            jieDianList.setZiBiHXSLList(BeanUtil.copyListProperties(ziBiHXSLList, ZiDuanBMMC::new));
+            //子闭环信息
+            jieDianList.setJieDianXX(null);
+            //逆节点标志
+            jieDianList.setNiJieDBZ("");
+            //缺失标志
+            if (Objects.equals(j.getBiXuBZ(),1)&&jieDianNRList.isEmpty())
+            {
+                jieDianList.setQueShiBZ("1");
+            }
+            //时效异常标志
+            jieDianList.setShiXiaoYCBZ("");
+            //时效异常描述
+            jieDianList.setShiXiaoYCMS("");
+            //未执行标志
+            if (jieDianNRList.isEmpty())
+            {
+                jieDianList.setWeiZhiXBZ("1");
+            }
+
+
+
+           // jieDianNRList.stream().sorted(Comparator.comparing(jieDianNRList::getZiDuanZhi).reversed());
             jieDianList.setJieDianList(jieDianNRList);
             jieDianLists.add(jieDianList);
 
         });
-
-        return null;
+        biHuanXQDto.setJieDianList(jieDianLists);
+        return biHuanXQDto;
     }
 
     /**

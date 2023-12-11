@@ -23,8 +23,8 @@ public interface JieDianXXService {
 
     BiHuanSZXXDto getBiHuanJDNRXX(String jieDianXXID) throws WeiZhaoDSJException;
 
-    Boolean zuoFeiBiHuanJDXX(String jieDianXXID) throws WeiZhaoDSJException;
+    boolean zuoFeiBiHuanJDXX(String jieDianXXID) throws WeiZhaoDSJException;
 
-    Boolean jieDianYC(String jieDianXXID,String yinCangBZ);
+    boolean jieDianYC(String jieDianXXID,String yinCangBZ);
 
 }

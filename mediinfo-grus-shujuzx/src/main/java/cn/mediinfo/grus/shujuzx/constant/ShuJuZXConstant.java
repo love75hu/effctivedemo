@@ -17,4 +17,7 @@ public class ShuJuZXConstant {
      * 通用病区id
      */
     public static final String TONGYONG_BQID = "0";
+    public static final String Fu_LEI_ID="0";
+    public static final String Fu_LEI_MC="全部";
+
 }

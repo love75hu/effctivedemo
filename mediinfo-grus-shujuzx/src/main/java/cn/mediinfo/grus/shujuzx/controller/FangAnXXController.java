@@ -6,6 +6,7 @@ import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
 import cn.mediinfo.cyan.msf.core.response.MsfResponse;
 import cn.mediinfo.cyan.msf.core.util.BeanUtil;
 import cn.mediinfo.grus.shujuzx.dto.chaxunfaxx.FangAnCXLSDto;
+import cn.mediinfo.grus.shujuzx.dto.chaxunfaxx.FangAnSelectXXDto;
 import cn.mediinfo.grus.shujuzx.dto.chaxunfaxx.FangAnXXDto;
 import cn.mediinfo.grus.shujuzx.dto.fangan.FangAnQueryDTO;
 import cn.mediinfo.grus.shujuzx.dto.shitumx.ShuJuXSTXQDto;
@@ -138,4 +139,15 @@ public class FangAnXXController {
     public MsfResponse<Boolean> deleteChaXunFA(@RequestParam String id) {
         return MsfResponse.success(chaXunFAXXService.deleteChaXunFA(id));
     }
+
+    /**
+     * 在某方案的方案下拉
+     */
+    @Operation(summary = "在某方案的方案下拉")
+    @GetMapping("GetZaiMouFAXXSelect")
+    public MsfResponse<List<FangAnSelectXXDto>> getZaiMouFAXXSelect(@RequestParam(required = false) String likeQuery,
+                                                                    @RequestParam(required = false) String fangAnLXDM) {
+        return MsfResponse.success(chaXunFAXXService.getZaiMouFAXXSelect(likeQuery, fangAnLXDM));
+    }
+
 }

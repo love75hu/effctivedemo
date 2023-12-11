@@ -34,4 +34,13 @@ public interface SC_CX_FangAnXXRepository extends MsfJpaRepository<QSC_CX_FangAn
     }
 
     SC_CX_FangAnXXModel findByFangAnID(String fangAnID);
+
+    default List<SC_CX_FangAnXXModel> getFangAnXXList(String zuZhiJGID,String likeQuery, String fangAnLXDM) {
+        return this.asQuerydsl()
+                .where(x->x.zuZhiJGID.eq(zuZhiJGID))
+                .whereIf(StringUtil.hasText(likeQuery), p -> p.fangAnMC.contains(likeQuery).or(p.guanJianZi.contains(likeQuery)))
+                .whereIf(StringUtil.hasText(fangAnLXDM), p -> p.fangAnLXDM.eq(fangAnLXDM))
+                .orderBy(p -> p.chuangJianSJ.desc())
+                .fetch();
+    }
 }

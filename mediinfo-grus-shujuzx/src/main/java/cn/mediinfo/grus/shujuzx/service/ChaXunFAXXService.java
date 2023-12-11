@@ -1,6 +1,7 @@
 package cn.mediinfo.grus.shujuzx.service;
 
 import cn.mediinfo.grus.shujuzx.dto.chaxunfaxx.FangAnCXLSDto;
+import cn.mediinfo.grus.shujuzx.dto.chaxunfaxx.FangAnSelectXXDto;
 import cn.mediinfo.grus.shujuzx.dto.chaxunfaxx.FangAnXXDto;
 import cn.mediinfo.grus.shujuzx.dto.fangancxls.FangAnCXLSDTO;
 import cn.mediinfo.grus.shujuzx.request.FangAnCXLSSaveRequest;
@@ -22,4 +23,6 @@ public interface ChaXunFAXXService {
     Boolean deleteFangAnCXLS(String id);
 
     Boolean deleteChaXunFA(String id);
+
+    List<FangAnSelectXXDto> getZaiMouFAXXSelect(String likeQuery, String fangAnLXDM);
 }

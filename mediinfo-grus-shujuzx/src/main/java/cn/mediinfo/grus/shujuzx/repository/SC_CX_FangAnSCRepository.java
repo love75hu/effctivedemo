@@ -13,4 +13,7 @@ public interface SC_CX_FangAnSCRepository extends MsfJpaRepository<QSC_CX_FangAn
     List<SC_CX_FangAnSCModel> findByFangAnID(String fangAnID);
 
     List<SC_CX_FangAnSCModel> findByIdIn(Set<String> idList);
+
+
+    List<SC_CX_FangAnSCModel> findByFangAnIDIn(List<String> fangAnIDList);
 }

@@ -3,44 +3,47 @@ package cn.mediinfo.grus.shujuzx.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.mediinfo.cyan.msf.core.util.*;
-import cn.mediinfo.grus.shujuzx.constant.ShuJuZXConstant;
 import cn.mediinfo.grus.shujuzx.dto.chaxunfaxx.FangAnCXLSDto;
+import cn.mediinfo.grus.shujuzx.dto.chaxunfaxx.FangAnSelectXXDto;
 import cn.mediinfo.grus.shujuzx.dto.chaxunfaxx.FangAnXXDto;
+import cn.mediinfo.grus.shujuzx.dto.fangan.FangAnSCDTO;
 import cn.mediinfo.grus.shujuzx.dto.fangancxls.FangAnCXLSDTO;
 import cn.mediinfo.grus.shujuzx.model.SC_CX_FangAnCXLSModel;
+import cn.mediinfo.grus.shujuzx.model.SC_CX_FangAnSCModel;
+import cn.mediinfo.grus.shujuzx.model.SC_CX_FangAnXXModel;
 import cn.mediinfo.grus.shujuzx.repository.SC_CX_FangAnCXLSRepository;
 import cn.mediinfo.grus.shujuzx.repository.SC_CX_FangAnNRRepository;
+import cn.mediinfo.grus.shujuzx.repository.SC_CX_FangAnSCRepository;
 import cn.mediinfo.grus.shujuzx.repository.SC_CX_FangAnXXRepository;
 import cn.mediinfo.grus.shujuzx.request.FangAnCXLSSaveRequest;
 import cn.mediinfo.grus.shujuzx.service.ChaXunFAXXService;
 import cn.mediinfo.lyra.extension.service.LyraIdentityService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class ChaXunFAXXServiceImpl implements ChaXunFAXXService {
     private final SC_CX_FangAnXXRepository fangAnXXRepository;
     private final SC_CX_FangAnNRRepository fangAnNRRepository;
     private final SC_CX_FangAnCXLSRepository fangAnCXLSRepository;
+    private final SC_CX_FangAnSCRepository fangAnSCRepository;
     private final LyraIdentityService lyraIdentityService;
 
     public ChaXunFAXXServiceImpl(SC_CX_FangAnXXRepository fangAnXXRepository,
                                  SC_CX_FangAnNRRepository fangAnNRRepository,
                                  SC_CX_FangAnCXLSRepository fangAnCXLSRepository,
-                                 LyraIdentityService lyraIdentityService) {
+                                 SC_CX_FangAnSCRepository fangAnSCRepository, LyraIdentityService lyraIdentityService) {
         this.fangAnXXRepository = fangAnXXRepository;
         this.fangAnNRRepository = fangAnNRRepository;
         this.fangAnCXLSRepository = fangAnCXLSRepository;
+        this.fangAnSCRepository = fangAnSCRepository;
         this.lyraIdentityService = lyraIdentityService;
     }
 
+    //region 获取方案列表，方案下拉，方案历史，在某方案的方案下拉
     @Override
     public List<FangAnXXDto> getChaXunFAXXSelect(String likeQuery, String fangAnLXDM, Integer pageIndex, Integer pageSize) {
         return fangAnXXRepository.getFangAnXX(lyraIdentityService.getJiGouID(),likeQuery, fangAnLXDM, pageIndex, pageSize);
@@ -53,9 +56,7 @@ public class ChaXunFAXXServiceImpl implements ChaXunFAXXService {
 
     @Override
     public List<FangAnCXLSDto> getFangAnCXLSList(Integer pageIndex, Integer pageSize) {
-        return BeanUtil.copyListProperties(fangAnCXLSRepository.findAll()
-                        .stream().sorted(Comparator.comparing(SC_CX_FangAnCXLSModel::getChuangJianSJ, Comparator.reverseOrder()))
-                        .collect(CollectorUtil.page(pageIndex, pageSize)),
+        return BeanUtil.copyListProperties(fangAnCXLSRepository.getFangAnCXLSList(lyraIdentityService.getJiGouID(), pageIndex, pageSize),
                 FangAnCXLSDto::new, (model, dto) -> {
                     if (model.getChaXunLXDM().equals("2")) {
                         dto.setBiaoTiMC(StringUtil.concat("高级查询", model.getGuanJianZi()));
@@ -67,6 +68,27 @@ public class ChaXunFAXXServiceImpl implements ChaXunFAXXService {
                     dto.setChaXunTJMS(model.getChaXunTJMS());
                 });
     }
+
+    /**
+     * 在某方案的方案下拉
+     * @param likeQuery
+     * @param fangAnLXDM
+     * @return
+     */
+    @Override
+    public List<FangAnSelectXXDto> getZaiMouFAXXSelect(String likeQuery, String fangAnLXDM) {
+        List<SC_CX_FangAnXXModel> fangAnXXModelList= fangAnXXRepository.getFangAnXXList(lyraIdentityService.getJiGouID(),likeQuery, fangAnLXDM);
+        List<String> fangAnIDs=fangAnXXModelList.stream().map(SC_CX_FangAnXXModel::getFangAnID).toList();
+        List<SC_CX_FangAnSCModel> fangAnSCModelList=fangAnSCRepository.findByFangAnIDIn(fangAnIDs);
+        List<FangAnSelectXXDto> fangAnSelectXXDtoList=BeanUtil.copyListProperties(fangAnXXModelList,FangAnSelectXXDto::new,(model,dto)->{
+            List<FangAnSCDTO> fangAnSCDTOList=BeanUtil.copyListProperties(fangAnSCModelList.stream().filter(x->x.getFangAnID().equals(model.getFangAnID())).toList()
+                    ,FangAnSCDTO::new);
+            dto.setFangAnSCDTOList(fangAnSCDTOList);
+        });
+        return fangAnSelectXXDtoList;
+    }
+
+    //endregion
 
     /**
      * 保存查询方案历史记录

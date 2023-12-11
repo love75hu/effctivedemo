@@ -3,6 +3,7 @@ package cn.mediinfo.grus.shujuzx.remoteservice;
 import cn.mediinfo.cyan.msf.core.response.MsfResponse;
 import cn.mediinfo.grus.shujuzx.dto.shitumx.*;
 import cn.mediinfo.grus.shujuzx.remotedto.GongYong.GY_ZD_ShuJuSTXXRso;
+import cn.mediinfo.grus.shujuzx.remotedto.GongYong.GY_ZD_ShuJuYuanTreeRso;
 import cn.mediinfo.grus.shujuzx.remotedto.GongYong.LingChuangJSPZZDXXRso;
 import cn.mediinfo.grus.shujuzx.remotedto.GongYong.ShuJuXXMSRso;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -45,6 +46,11 @@ public interface GongYongRemoteService {
 
     @PostMapping("api/v1.0/shujust/getShuJuSTXXList")
     MsfResponse<List<GY_ZD_ShuJuSTXXRso>> getShuJuSTXXList(@RequestBody List<String> shiTuId);
-
+    /**
+     * 获取数据源树
+     * @return
+     */
+    @GetMapping("api/v1.0/shujuyuan/GetShuJuYFLTree")
+    MsfResponse<List<GY_ZD_ShuJuYuanTreeRso>> getShuJuYFLTree();
 
 }

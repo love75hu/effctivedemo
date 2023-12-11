@@ -126,7 +126,7 @@ class ShiTuXXServiceImpl implements ShiTuXXService {
         ShiTuFLDto shiTuFLByIDDto = new ShiTuFLDto();
         //复制属性
         BeanUtil.copyProperties(shiTuXXByID,shiTuFLByIDDto);
-        shiTuFLByIDDto.setShiTuFLMC(shiTuXXByID.getFuLeiMC());
+        shiTuFLByIDDto.setShiTuFLMC(shiTuXXByID.getShiTuMC());
         return shiTuFLByIDDto;
     }
 

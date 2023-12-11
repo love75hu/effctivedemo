@@ -24,6 +24,5 @@ public class LinChuangJSSTDtoTree {
     private Integer shunXuHao  ;
     @Schema(description = "末级标志")
     private Integer moJiBZ ;
-    private List<LinChuangJSSTDtoTree> children ;
 
 }

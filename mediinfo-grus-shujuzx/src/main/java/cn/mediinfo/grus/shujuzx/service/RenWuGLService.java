@@ -17,6 +17,8 @@ public interface RenWuGLService {
 
     SC_RW_JiBenXXDto getRenWuXXById(String id) throws TongYongYWException;
 
+    List<SC_RW_JiBenXXDto> getRenWuXXByIds(List<String> ids) throws TongYongYWException;
+
     String addRenWuJBXX(SC_RW_JiBenXXCreateDto createDto) throws TongYongYWException;
 
     Boolean updateRenWuJBXX(SC_RW_JiBenXXUpdateDto updateDto) throws TongYongYWException;
@@ -35,5 +37,7 @@ public interface RenWuGLService {
 
     Boolean saveTongYongPZ(List<SC_RW_TongYongPZDto> creatDto);
 
-    Boolean saveZhiXingRZ(String id);
+    Boolean saveZhiXingRZ(String id) throws TongYongYWException;
+
+    Boolean saveZhiXingRZList(List<SC_RW_ZhiXingRZCreateDto> creatDto);
 }

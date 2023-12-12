@@ -241,7 +241,7 @@ public class FangAnServiceImpl implements FangAnService {
         //where
         List<ShuJuJMXZDDto> fieldList = tableList.stream().flatMap(p ->Optional.ofNullable(p.getSchemaTableList()).orElse(new ArrayList<>()).stream().flatMap(q -> Optional.ofNullable(q.getShuJuJMXZDDtos()).orElse(new ArrayList<>()).stream())).toList();
 
-        fieldList.forEach(e -> e.setAlias(aliasMap.entrySet().stream().filter(p -> p.getKey().contains(formatBiaoMing(e.getMoShi(), e.getBiaoMing()))).map(Map.Entry::getValue).findFirst().orElse(Tuple.of("", "", false, false)).item1()));
+        fieldList.forEach(e -> e.setAlias(aliasMap.entrySet().stream().filter(p -> p.getKey().contains(formatBiaoMing(e.getShiTuID(), e.getMoShi(), e.getBiaoMing()))).map(Map.Entry::getValue).findFirst().orElse(Tuple.of("", "", false, false)).item1()));
         //转化sql树
         Map<String, ShuJuJMXZDDto> fieldMap = fieldList.stream().collect(Collectors.toMap(f ->Optional.ofNullable(f.getShiTuID()).orElse("").toLowerCase() + "|" + Optional.ofNullable(f.getZiDuanBM()).orElse("").toLowerCase(), e -> e));
         SQLQueryNode condition = transform(root, fieldMap);
@@ -927,7 +927,9 @@ public class FangAnServiceImpl implements FangAnService {
         FangAnCondition condition = node.getCondition();
         String operator = condition == null ? node.getRelation() : condition.getOperator();
         SQLBinaryOperator sqlOperator = SQLBinaryOperator.getSQLBinaryOperator(operator);
-
+        if(sqlOperator==null&&StringUtil.isBlank(operator)){
+            log.error("操作符{}不正确", operator);
+        }
         SQLQueryNode sqlNode = new SQLQueryNode();
         if (condition == null || NodeTypeEnum.RELATION_NODE.getType().equals(node.getNodeType())) {
             sqlNode = new SQLQueryNode(new SQLQueryObject(sqlOperator));
@@ -1076,13 +1078,13 @@ public class FangAnServiceImpl implements FangAnService {
             if (CollUtil.isEmpty(table.getSchemaTableList())) {
                 continue;
             }
-            String tableName = StringUtils.join(table.getSchemaTableList().stream().map(p -> formatBiaoMing(p.getMoShi(), p.getBiaoMing())).collect(Collectors.toSet()), ",");
+            String tableName = StringUtils.join(table.getSchemaTableList().stream().map(p -> formatBiaoMing(p.getShiTuID(), p.getMoShi(), p.getBiaoMing())).collect(Collectors.toSet()), ",");
             String shiTuBGX = getShiTuBGX(table, tableName);
-            aliasMap.put(tableName, Tuple.of("t_" + i, shiTuBGX, false, tableName.equals(formatBiaoMing(jiChuBiao.getMoShi(), jiChuBiao.getBiaoMing()))));
+            aliasMap.put(tableName, Tuple.of("t_" + i, shiTuBGX, false, tableName.equals(formatBiaoMing("", jiChuBiao.getMoShi(), jiChuBiao.getBiaoMing()))));
         }
 
-        if (ObjectUtils.isNotEmpty(jiChuBiao) && !StringUtils.isBlank(jiChuBiao.getBiaoMing()) && !aliasMap.containsKey(formatBiaoMing(jiChuBiao.getMoShi(), jiChuBiao.getBiaoMing()))) {
-            aliasMap.put(formatBiaoMing(jiChuBiao.getMoShi(), jiChuBiao.getBiaoMing()), Tuple.of("t_" + aliasMap.size(), formatBiaoMing(jiChuBiao.getMoShi(), jiChuBiao.getBiaoMing()), false, true));
+        if (ObjectUtils.isNotEmpty(jiChuBiao) && !StringUtils.isBlank(jiChuBiao.getBiaoMing()) && !aliasMap.containsKey(formatBiaoMing("", jiChuBiao.getMoShi(), jiChuBiao.getBiaoMing()))) {
+            aliasMap.put(formatBiaoMing("", jiChuBiao.getMoShi(), jiChuBiao.getBiaoMing()), Tuple.of("t_" + aliasMap.size(), formatBiaoMing("", jiChuBiao.getMoShi(), jiChuBiao.getBiaoMing()), false, true));
         }
 
         return aliasMap;
@@ -1194,7 +1196,7 @@ public class FangAnServiceImpl implements FangAnService {
             }
             String filterCondition = e.getFilterConditionList();
             for (SchemaTable f : e.getSchemaTableList()) {
-                String key = formatBiaoMing(f.getMoShi(), f.getBiaoMing());
+                String key = formatBiaoMing(f.getShiTuID(), f.getMoShi(), f.getBiaoMing());
                 if (Objects.isNull(filterCondition)) {
                     return;
                 }
@@ -1278,11 +1280,8 @@ public class FangAnServiceImpl implements FangAnService {
         Set<String> zhuJianList=new HashSet<>();
         //数据元
         for (FangAnSC e : Optional.ofNullable(fangAnSCList).orElse(new ArrayList<>())) {
-            String key = aliasMap.keySet().stream().filter(p -> p.contains(formatBiaoMing(e.getMoShi(), e.getBiaoMing()))).findFirst().orElse("");
-            String alias = aliasMap.containsKey(key) ? aliasMap.get(key).item1() : "";
-            if(StringUtil.isBlank(alias)){
-                continue;
-            }
+            String key = "";
+            String alias = "";
             switch (Optional.ofNullable(e.getZhiBiaoLXDM()).orElse("")) {
                 case "2": //检验
                     key = aliasMap.keySet().stream().filter(p -> p.contains("jy_bg_baogaomx")).findFirst().orElse("");
@@ -1313,6 +1312,8 @@ public class FangAnServiceImpl implements FangAnService {
                     }
                     break;
                 default:
+                    key = aliasMap.keySet().stream().filter(p -> p.contains(formatBiaoMing(e.getZhiBiaoFLID(), e.getMoShi(), e.getBiaoMing()))).findFirst().orElse("");
+                    alias = aliasMap.containsKey(key) ? aliasMap.get(key).item1() : "";
                     fields.add(alias + "." + e.getZhiBiaoID() + " as zd_" + fangAnSCList.indexOf(e));
                     break;
             }
@@ -1341,8 +1342,11 @@ public class FangAnServiceImpl implements FangAnService {
      * @param biaoMing
      * @return String
      */
-    private String formatBiaoMing(String moShi, String biaoMing) {
+    private String formatBiaoMing(String shiTuID,String moShi, String biaoMing) {
         StringBuilder builder = new StringBuilder();
+        if (StringUtils.isNotBlank(shiTuID)) {
+            builder.append(shiTuID + ".");
+        }
         if (StringUtils.isNotBlank(moShi)) {
             builder.append(moShi + ".");
         }
@@ -1391,7 +1395,8 @@ public class FangAnServiceImpl implements FangAnService {
         String filterCondition = Optional.ofNullable(table.getFilterConditionList()).orElse("");
         int index = 0;
         for (SchemaTable f : table.getSchemaTableList()) {
-            String key = formatBiaoMing(f.getMoShi(), f.getBiaoMing());
+            //视图内联，不传shiTuID拼接
+            String key = formatBiaoMing("", f.getMoShi(), f.getBiaoMing());
             for (ShuJuJMXZDDto p : Optional.ofNullable(f.getShuJuJMXZDDtos()).orElse(new ArrayList<>())) {
                 ziDuanMingList.add("l" + index + "." + p.getZiDuanBM());
             }

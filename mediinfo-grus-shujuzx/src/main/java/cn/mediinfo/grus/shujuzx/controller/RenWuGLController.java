@@ -70,6 +70,19 @@ public class RenWuGLController {
 
         return MsfResponse.success(renWuGLService.getRenWuXXById(id));
     }
+    /**
+     * 批量执行根据IDs查询任务基本信息列表
+     *
+     * @param ids
+     * @return
+     * @throws TongYongYWException
+     */
+    @Operation(summary = "根据ID查询任务基本信息列表")
+    @GetMapping(path = "GetRenWuXXListByIds")
+    public MsfResponse<List<SC_RW_JiBenXXDto>> GetRenWuXXListByIds(@RequestParam List<String> ids) throws TongYongYWException {
+
+        return MsfResponse.success(renWuGLService.getRenWuXXByIds(ids));
+    }
 
     /**
      * 新增基本信息
@@ -140,10 +153,18 @@ public class RenWuGLController {
     /**
      * 执行保存
      */
-    @Operation(summary = "获取执行日志列表")
-    @PostMapping(path = "SaveZhiXingRZList")
-    public MsfResponse<Boolean> saveZhiXingRZList(String RenWuID){
+    @Operation(summary = "单条数据执行")
+    @PostMapping(path = "SaveZhiXingRZ")
+    public MsfResponse<Boolean> saveZhiXingRZ(String RenWuID) throws TongYongYWException {
         return MsfResponse.success(renWuGLService.saveZhiXingRZ(RenWuID));
+    }
+    /**
+     * 批量执行保存
+     */
+    @Operation(summary = "批量执行")
+    @PostMapping(path = "SaveZhiXingRZList")
+    public MsfResponse<Boolean> saveZhiXingRZList(List<SC_RW_ZhiXingRZCreateDto> createDto) throws TongYongYWException {
+        return MsfResponse.success(renWuGLService.saveZhiXingRZList(createDto));
     }
 
     /**

@@ -78,12 +78,6 @@ public class RenWuGLServiceImpl implements RenWuGLService {
                 .whereIf(Objects.equals(queryDto.getQiYongBZ(), 1), t -> t.qiYongBZ.eq(1));
     }
 
-    /**
-     * 根据ID查询任务基本信息
-     * @param id
-     * @return
-     * @throws TongYongYWException
-     */
     @Override
     public SC_RW_JiBenXXDto getRenWuXXById(String id) throws TongYongYWException {
         var result= jiBenXXRepository.findById(id).orElse(null);
@@ -91,8 +85,23 @@ public class RenWuGLServiceImpl implements RenWuGLService {
             throw new TongYongYWException("该任务基本信息不存在！");
         }
         return BeanUtil.copyProperties(result,SC_RW_JiBenXXDto::new);
-
     }
+    /**
+     * 根据ID查询任务基本信息
+     * @param ids
+     * @return
+     * @throws TongYongYWException
+     */
+    @Override
+    public List<SC_RW_JiBenXXDto> getRenWuXXByIds(List<String> ids) throws TongYongYWException {
+        var result= jiBenXXRepository.findAllById(ids);
+        if (result.size()==0){
+            throw new TongYongYWException("该任务基本信息不存在！");
+        }
+        return BeanUtil.copyListProperties(result,SC_RW_JiBenXXDto::new);
+    }
+
+
 
     /**
      * 新增任务基本信息
@@ -340,18 +349,42 @@ public class RenWuGLServiceImpl implements RenWuGLService {
      * @return
      */
     @Override
-    public Boolean saveZhiXingRZ(String id){
+    public Boolean saveZhiXingRZ(String id) throws TongYongYWException {
         var jiBenxx=jiBenXXRepository.findById(id).orElse(null);
         var zhixingkssj=new Date();
+        if (Objects.isNull(jiBenxx)){
+            throw new TongYongYWException("该任务基本信息不存在！");
+        }
 
         var entity = BeanUtil.copyProperties(jiBenxx, SC_RW_ZhiXingRZModel::new, (s, t) -> {
 
             t.setZuZhiJGID(lyraIdentityService.getJiGouID());
             t.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
             t.setZhiXingKSSJ(zhixingkssj);
+
             t.setRuCan(jiBenxx.getRenWuCS());
+
         });
         zhiXingRZRepository.save(entity);
         return true;
     }
+
+    @Override
+    public Boolean saveZhiXingRZList(List<SC_RW_ZhiXingRZCreateDto> creatDto){
+        var renWuIDs=creatDto.stream().map(SC_RW_ZhiXingRZCreateDto::getRenWuID).toList();
+        var zhixingkssj=new Date();
+
+        var jiBenXXList=jiBenXXRepository.asQuerydsl().where(t->t.renWuID.in(renWuIDs)).fetch();
+        var entity = BeanUtil.copyProperties(jiBenXXList, SC_RW_ZhiXingRZModel::new, (s, t) -> {
+            t.setZuZhiJGID(lyraIdentityService.getJiGouID());
+            t.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
+            t.setZhiXingKSSJ(zhixingkssj);
+            var item=creatDto.stream().filter(q->Objects.equals(q.getRenWuID(),t.getRenWuID())).findFirst();
+            t.setRuCan(item.get().getRuCan());
+        });
+        zhiXingRZRepository.save(entity);
+        return true;
+    }
+
+
 }

@@ -2,10 +2,9 @@ package cn.mediinfo.grus.shujuzx.service.impl;
 
 import aj.org.objectweb.asm.TypeReference;
 import cn.hutool.core.collection.CollUtil;
+import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
-import cn.mediinfo.cyan.msf.core.util.BeanUtil;
-import cn.mediinfo.cyan.msf.core.util.JsonUtil;
-import cn.mediinfo.cyan.msf.core.util.Tuple;
+import cn.mediinfo.cyan.msf.core.util.*;
 import cn.mediinfo.grus.shujuzx.dto.bihuandy.SC_BH_DiaoYongPZDto;
 import cn.mediinfo.grus.shujuzx.dto.bihuansz.SC_BH_JieDianXXDto;
 import cn.mediinfo.grus.shujuzx.dto.bihuansz.SC_BH_ZiBiHXXDto;
@@ -35,6 +34,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.Console;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.time.Period;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -280,7 +281,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
        List<JieDianList> jieDianLists=new ArrayList<>();
         biHuanJDXXList.forEach(j->{
             //获取节点下的 节点时效
-            List<SC_BH_JieDianSXModel> jieDianSXList = biHuanJDSXList.stream().filter(n -> n.getJieDianID().equals(j.getJieDianID())).toList();
+            //SC_BH_JieDianSXModel jieDianSXList = biHuanJDSXList.stream().filter(n -> n.getJieDianID().equals(j.getJieDianID())).findFirst().orElse(null);
             //获取节点下的 子闭环信信息
             List<SC_BH_ZiBiHXXModel> ziBiHXXList = ziBiHXXRepository.findByBiHuanIDAndZuZhiJGIDAndZuZhiJGMC(biHuanID, zuZhiJGID, j.getJieDianMC());
             //获取子闭环的显示列
@@ -330,11 +331,16 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
                 biHuanJDNr.setYunXuWKBZ(f.getYunXuWKBZ());
                 biHuanJDNr.setKongZhiSJBZ(f.getKongZhiSJBZ());
                 biHuanJDNr.setZiDuanZhi(value);
-
+                if (Objects.equals( f.getKongZhiSJBZ(),1))
+                {
+                    jieDianList.setKongZhiSJ(Converter.toDate(value));
+                }
                 // 将对象添加到列表中
                 jieDianNRList.add(biHuanJDNr);
             });
 
+             jieDianList.setBingXingBZ(j.getBingXingBZ());
+             jieDianList.setId(j.getJieDianID());
             //是 并行节点，用控制时间排序， 否者用节点顺序，时效问题，用控制时间字段 做比较
 
             //获取是否有子闭环
@@ -358,25 +364,64 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
             {
                 jieDianList.setQueShiBZ("1");
             }
-            //时效异常标志
-            jieDianList.setShiXiaoYCBZ("");
-            //时效异常描述
-            jieDianList.setShiXiaoYCMS("");
             //未执行标志
             if (jieDianNRList.isEmpty())
             {
                 jieDianList.setWeiZhiXBZ("1");
             }
 
-
-
            // jieDianNRList.stream().sorted(Comparator.comparing(jieDianNRList::getZiDuanZhi).reversed());
             jieDianList.setJieDianList(jieDianNRList);
             jieDianLists.add(jieDianList);
 
         });
+
+        //处理时效问题，用控制时间字段 做比较
+        //循环 得出的节点信息，在去找时效，中的数据 对应比较 如果有异常就给异常标志
+        jieDianLists.forEach(j-> {
+            //当前这个节点下 的时效
+            List<SC_BH_JieDianSXModel> jieDianSXList = biHuanJDSXList.stream().filter(n -> n.getJieDianID().equals(j.getId())).toList();
+            //遍历 节点时效
+            List<ShiXiaoList> shiXiaoLists=new ArrayList<>();
+            jieDianSXList.forEach(p->{
+                var jieDianList = jieDianLists.stream().filter(d -> d.getId().equals(p.getGuanLianJDID())).findFirst().orElse(null);
+                if (jieDianList!=null)
+                {
+                    //时效秒
+                    int shiXiaoM = DateUtil.getSecondsBetween(j.getKongZhiSJ(), jieDianList.getKongZhiSJ());
+                    if (isTimeInvalid(p.getYunSuanFDM(),p.getDanWeiDM(), p.getShiXiao(), shiXiaoM)) {
+                        ShiXiaoList shiXiaoList=new ShiXiaoList();
+                        shiXiaoList.setShiXiaoYCBZ("1");
+                        shiXiaoList.setShiXiaoYCMS("时效异常"+shiXiaoM +"秒");
+                        shiXiaoLists.add(shiXiaoList);
+                    }
+                }
+            });
+            j.setShiXiaoLists(shiXiaoLists);
+        });
+
         biHuanXQDto.setJieDianList(jieDianLists);
         return biHuanXQDto;
+    }
+    private boolean isTimeInvalid(String operator, String yunSuanFDM, BigDecimal time, int value) {
+        // 转换time为秒
+        if ("时".equals(yunSuanFDM)) {
+            time = time.multiply(BigDecimal.valueOf(3600)); // 将小时转换为秒
+        } else if ("分".equals(yunSuanFDM)) {
+            time = time.multiply(BigDecimal.valueOf(60)); // 将分钟转换为秒
+        }
+        switch (operator) {
+            case ">":
+                return time.compareTo(BigDecimal.valueOf(value)) <= 0;
+            case "<":
+                return time.compareTo(BigDecimal.valueOf(value)) >= 0;
+            case ">=":
+                return time.compareTo(BigDecimal.valueOf(value)) < 0;
+            case "<=":
+                return time.compareTo(BigDecimal.valueOf(value)) > 0;
+            default:
+                return false;
+        }
     }
 
     /**

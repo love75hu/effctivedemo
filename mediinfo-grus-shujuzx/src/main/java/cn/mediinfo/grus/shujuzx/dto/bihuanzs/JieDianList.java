@@ -2,10 +2,13 @@ package cn.mediinfo.grus.shujuzx.dto.bihuanzs;
 
 import lombok.Data;
 
+import java.util.Date;
 import java.util.List;
 
 @Data
 public class JieDianList {
+
+    private String id;
     /**
      * 节点列表
      * */
@@ -36,17 +39,16 @@ public class JieDianList {
      * 缺失标志
      * */
     private String queShiBZ;
-    /**
-     * 时效异常标志
-     * */
-    private String shiXiaoYCBZ;
-    /**
-     * 时效异常描述
-     * */
-    private String shiXiaoYCMS;
+
+    private List<ShiXiaoList> shiXiaoLists;
+
     /**
      * 未执行标志
      * */
     private String weiZhiXBZ;
+
+    private Integer bingXingBZ;
+
+    private Date kongZhiSJ;
 
 }

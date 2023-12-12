@@ -24,4 +24,5 @@ public class jieDianNRList {
      * 允许为空标志
      */
     private Integer yunXuWKBZ;
+
 }

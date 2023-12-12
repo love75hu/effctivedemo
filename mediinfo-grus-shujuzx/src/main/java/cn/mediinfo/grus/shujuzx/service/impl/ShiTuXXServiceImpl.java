@@ -97,6 +97,7 @@ class ShiTuXXServiceImpl implements ShiTuXXService {
         shiTuXXModel.setFuLeiMC(Fu_LEI_MC);
         shiTuXXModel.setZuZhiJGID(ShuJuZXConstant.TONGYONG_JGID);
         shiTuXXModel.setZuZhiJGMC(ShuJuZXConstant.TONGYONG_JGMC);
+        shiTuXXModel.setShiTuMC(dto.getShiTuFLMC());
         shiTuXXModel.setShiTuID(sequenceService.getXuHao("SC_CX_ShiTuxx_ShiTuID", 6));
         var shunXuHao=shiTuXXRepository.getMaxShunXuHao();
         //设置顺序号

@@ -66,7 +66,7 @@ public interface SC_CX_ShiTuXXRepository extends MsfJpaRepository<QSC_CX_ShiTuXX
                 .whereIf(StringUtil.hasText(likeQuery), s -> s.fuLeiMC.like(likeQuery)).orderBy(n->n.shunXuHao.asc())
                 .select(e-> QueryDSLUtils.bean(
                         ShiTuFLDto.class,
-                        e.id,
+                        e.shiTuID.as("id"),
                         e.shunXuHao,
                         e.shiTuMC.as("shiTuFLMC"))).fetch();
     }

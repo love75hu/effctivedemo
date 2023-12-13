@@ -369,9 +369,10 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
             {
                 jieDianList.setWeiZhiXBZ("1");
             }
+            jieDianList.setJieDianMC(StringUtil.hasText(j.getXianShiMC())?j.getXianShiMC():j.getJieDianMC());
 
            // jieDianNRList.stream().sorted(Comparator.comparing(jieDianNRList::getZiDuanZhi).reversed());
-            jieDianList.setJieDianList(jieDianNRList);
+            jieDianList.setJieDianNRList(jieDianNRList);
             jieDianLists.add(jieDianList);
 
         });

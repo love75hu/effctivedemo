@@ -9,10 +9,12 @@ import java.util.List;
 public class JieDianList {
 
     private String id;
+
+    private String jieDianMC;
     /**
      * 节点列表
      * */
-    private List<jieDianNRList> jieDianList;
+    private List<jieDianNRList> jieDianNRList;
     /**
      * 子闭环标志
      * */

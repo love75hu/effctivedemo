@@ -1032,13 +1032,17 @@ public class FangAnServiceImpl implements FangAnService {
             return "";
         }
         StringBuilder builder = new StringBuilder();
-        relatedFieldConditions.forEach(e -> {
+        for(RelatedFieldCondition e:relatedFieldConditions){
             ShuJuJMXZDDto field = fieldMap.get(e.getShiTuID().toLowerCase()+"|"+e.getZiDuanBM().toLowerCase());
+            if(Objects.isNull(field)){
+                log.error("根据{},{}获取条件字段信息失败", e.getShiTuID(),e.getZiDuanBM());
+                return null;
+            }
             List<String> valList = List.of(Optional.ofNullable(e.getValues()).orElse("").replaceAll("'","''").split(","));
             SQLQueryObject obj = toSQLQueryObject(e.getOperator(), field, valList, e.getRelatedFangAnQueryCondition());
             builder.append(obj.getText());
             builder.append(" AND ");
-        });
+        }
 
         return builder.toString();
     }
@@ -1078,12 +1082,15 @@ public class FangAnServiceImpl implements FangAnService {
             if (CollUtil.isEmpty(table.getSchemaTableList())) {
                 continue;
             }
-            String tableName = StringUtils.join(table.getSchemaTableList().stream().map(p -> formatBiaoMing(p.getShiTuID(), p.getMoShi(), p.getBiaoMing())).collect(Collectors.toSet()), ",");
+            //获取模式和表名拼接后的表名
+            String tableName = StringUtils.join(table.getSchemaTableList().stream().map(p -> formatBiaoMing("", p.getMoShi(), p.getBiaoMing())).collect(Collectors.toSet()), ",");
+            //获取shiTuID，模式和表名拼接后的表名
+            String shiTuBM=StringUtils.join(table.getSchemaTableList().stream().map(p -> formatBiaoMing(p.getShiTuID(), p.getMoShi(), p.getBiaoMing())).collect(Collectors.toSet()), ",");
             String shiTuBGX = getShiTuBGX(table, tableName);
-            aliasMap.put(tableName, Tuple.of("t_" + i, shiTuBGX, false, tableName.equals(formatBiaoMing("", jiChuBiao.getMoShi(), jiChuBiao.getBiaoMing()))));
+            aliasMap.put(shiTuBM, Tuple.of("t_" + i, shiTuBGX, false, tableName.equals(formatBiaoMing("", jiChuBiao.getMoShi(), jiChuBiao.getBiaoMing()))));
         }
 
-        if (ObjectUtils.isNotEmpty(jiChuBiao) && !StringUtils.isBlank(jiChuBiao.getBiaoMing()) && !aliasMap.containsKey(formatBiaoMing("", jiChuBiao.getMoShi(), jiChuBiao.getBiaoMing()))) {
+        if (ObjectUtils.isNotEmpty(jiChuBiao) && !StringUtils.isBlank(jiChuBiao.getBiaoMing()) && !aliasMap.containsKey(formatBiaoMing("", jiChuBiao.getMoShi(), jiChuBiao.getBiaoMing())) && aliasMap.values().stream().noneMatch(Tuple.Tuple4::item4)) {
             aliasMap.put(formatBiaoMing("", jiChuBiao.getMoShi(), jiChuBiao.getBiaoMing()), Tuple.of("t_" + aliasMap.size(), formatBiaoMing("", jiChuBiao.getMoShi(), jiChuBiao.getBiaoMing()), false, true));
         }
 

@@ -20,5 +20,9 @@ public class BiHuanXQDto {
       * */
      private List<JieDianList> jieDianList;
 
+    private List<ZiDuanBMMC> ziBiHXSLList;
+
+
+
 
 }

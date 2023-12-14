@@ -25,14 +25,22 @@ public class JieDianList {
     private String ziBiHDCZXBZ;
 
     /**
+     * 子闭环关联字段
+     * */
+    private String ziBiHGLZD;
+
+    /**
+     * 子闭环关联字段值
+     */
+    private String ziBiHGLZDZ;
+
+
+    /**
      * 子闭环显示列
      * */
     private List<ZiDuanBMMC> ziBiHXSLList;
 
-    /**
-     * 子闭环信息
-     * */
-    private JieDianList jieDianXX;
+
     /**
      * 逆节点标志
      * */

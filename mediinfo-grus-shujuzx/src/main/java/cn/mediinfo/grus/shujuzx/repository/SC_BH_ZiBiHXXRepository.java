@@ -19,7 +19,10 @@ public interface SC_BH_ZiBiHXXRepository extends MsfJpaRepository<QSC_BH_ZiBiHXX
  List<SC_BH_ZiBiHXXModel> findByBiHuanIDAndZuZhiJGIDAndZuZhiJGMC(String biHuanID,String zuZhiJGID,String zuZhiJGMC);
 
  List<SC_BH_ZiBiHXXModel> findByBiHuanIDAndZuZhiJGID(String biHuanID,String zuZhiJGID);
+
  SC_BH_ZiBiHXXModel findFirstByBiHuanIDAndZuZhiJGID(String biHuanID,String zuZhiJGID);
+
+ List<SC_BH_ZiBiHXXModel> findByBiHuanIDIn(List<String> biHuanID);
 
  default  List<SC_BH_ZiBiHXXDto> ziBiHXXList(String biHuanID,String jiGouID)
  {

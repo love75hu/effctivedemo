@@ -23,6 +23,8 @@ default List<SC_BH_JieDianXXModel> jieDianXXList(List<String> biHuanID)
 
     List<SC_BH_JieDianXXModel> findByBiHuanIDAndZuZhiJGIDOrderByShunXuHao(String biHuanID,String zuZhiJGID);
 
+    List<SC_BH_JieDianXXModel> findByBiHuanIDIn(List<String> biHuanID);
+
     default List<BiHuanSZXXDto> jieDianXXList(String biHuanID,String jiGouID)
     {
         return this.asQuerydsl()

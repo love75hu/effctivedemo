@@ -52,4 +52,6 @@ public interface SC_BH_JiBenXXRepository extends MsfJpaRepository<QSC_BH_JiBenXX
 
 
     SC_BH_JiBenXXModel findFirstByBiHuanIDAndZuZhiJGID(String biHuanID, String zuZhiJGID);
+
+    List<SC_BH_JiBenXXModel> findByBiHuanIDIn(List<String> biHuanID);
 }

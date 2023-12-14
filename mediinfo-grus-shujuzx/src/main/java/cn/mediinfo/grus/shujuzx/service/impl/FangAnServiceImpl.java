@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.StopWatch;
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
 import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
@@ -939,7 +940,7 @@ public class FangAnServiceImpl implements FangAnService {
                 log.error("根据{},{}获取条件字段信息失败", condition.getShiTuID(),condition.getZiDuanBM());
                 return null;
             }
-            List<String> valList = List.of(Optional.ofNullable(condition.getValues()).orElse("").replaceAll("'","''").split(","));
+            List<String> valList = Arrays.stream(StrUtil.nullToDefault(condition.getValues(),"").replaceAll("'","''").split(",")).filter(StringUtils::isNoneBlank).toList();
             SQLQueryObject obj = toSQLQueryObject(condition.getOperator(), field, valList, condition.getRelatedFangAnQueryCondition());
             //子条件
             if (CollUtil.isNotEmpty(condition.getRelatedFieldConditions())) {
@@ -1038,8 +1039,11 @@ public class FangAnServiceImpl implements FangAnService {
                 log.error("根据{},{}获取条件字段信息失败", e.getShiTuID(),e.getZiDuanBM());
                 return null;
             }
-            List<String> valList = List.of(Optional.ofNullable(e.getValues()).orElse("").replaceAll("'","''").split(","));
+            List<String> valList = Arrays.stream(StrUtil.nullToDefault(e.getValues(), "").replaceAll("'", "''").split(",")).filter(StringUtils::isNoneBlank).toList();
             SQLQueryObject obj = toSQLQueryObject(e.getOperator(), field, valList, e.getRelatedFangAnQueryCondition());
+            if (obj.getText() == null) {
+                continue;
+            }
             builder.append(obj.getText());
             builder.append(" AND ");
         }

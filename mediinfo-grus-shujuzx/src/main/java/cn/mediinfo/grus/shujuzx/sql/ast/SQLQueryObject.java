@@ -1,10 +1,10 @@
 package cn.mediinfo.grus.shujuzx.sql.ast;
 
-import cn.hutool.core.util.StrUtil;
 import cn.mediinfo.grus.shujuzx.sql.enums.SQLBinaryOperator;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.apache.commons.lang3.StringUtils;
 
 @Getter
 @Setter
@@ -65,15 +65,21 @@ public class SQLQueryObject {
         if (!this.operator.isRelational()) {
             return this.operator.getSymbol();
         }
+        String subSqlStr="";
         if (this.operator == SQLBinaryOperator.IN || this.operator == SQLBinaryOperator.NOTIN) {
-            return StrUtil.nullToDefault(this.subSql, "") + this.fieldName + " " + this.operator.getSymbol() + " (" + this.val + " )";
+            subSqlStr = this.fieldName + " " + this.operator.getSymbol() + " (" + this.val + " )";
         } else if (this.operator == SQLBinaryOperator.LIKE || this.operator == SQLBinaryOperator.NOTLIKE) {
-            return StrUtil.nullToDefault(this.subSql, "") + this.fieldName + " " + this.operator.getSymbol() + " '%" + this.val + "%'";
-        } else if(this.operator==SQLBinaryOperator.ISNULL||this.operator==SQLBinaryOperator.ISNOTNULL){
-            return StrUtil.nullToDefault(this.subSql, "") + this.fieldName + " " + this.operator.getSymbol();
+            subSqlStr = this.fieldName + " " + this.operator.getSymbol() + " '%" + this.val + "%'";
+        } else if (this.operator == SQLBinaryOperator.ISNULL || this.operator == SQLBinaryOperator.ISNOTNULL) {
+            subSqlStr = this.fieldName + " " + this.operator.getSymbol();
         } else {
-            return StrUtil.nullToDefault(this.subSql, "") + this.fieldName + " " + this.operator.getSymbol() + " " + this.val + " ";
+            subSqlStr = this.fieldName + " " + this.operator.getSymbol() + " " + this.val + " ";
         }
+        if (StringUtils.isNoneBlank(this.subSql)) {
+            subSqlStr = "(" + subSql + subSqlStr + ")";
+        }
+
+        return subSqlStr;
     }
 
 

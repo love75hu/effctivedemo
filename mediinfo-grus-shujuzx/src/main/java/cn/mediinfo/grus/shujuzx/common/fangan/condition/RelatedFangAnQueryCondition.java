@@ -14,6 +14,9 @@ public class RelatedFangAnQueryCondition {
     @Schema(description = "方案id")
     private String fangAnId;
 
+    @Schema(description = "方案名称")
+    private String fangAnMC;
+
     @Schema(description = "方案输出id")
     private String fangAnSCId;
 

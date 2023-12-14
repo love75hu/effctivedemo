@@ -864,7 +864,7 @@ public class FangAnServiceImpl implements FangAnService {
         return jdbcTemplate.queryForObject(guanJianZDSql, Long.class);
     }
 
-    private void subFangAn(List<FangAnCondition> conditionList) {
+    private void subFangAn(List<FangAnCondition> conditionList) throws TongYongYWException {
         List<RelatedFangAnQueryCondition> list = ListUtil.toList();
         //方案
         List<RelatedFangAnQueryCondition> relatedFangAnQueryConditions = conditionList.stream().map(FangAnCondition::getRelatedFangAnQueryCondition).filter(Objects::nonNull).toList();
@@ -898,18 +898,18 @@ public class FangAnServiceImpl implements FangAnService {
         Map<String, FangAnSqlDTO> map = fangAnSqlList.stream().collect(Collectors.toMap(FangAnSqlDTO::getFangAnId, e -> e));
 
 
-        conditionList.forEach(e -> {
+        for (FangAnCondition e : conditionList) {
             if (e.getRelatedFangAnQueryCondition() == null) {
-                return;
+                continue;
             }
             RelatedFangAnQueryCondition relatedFangAnQueryCondition = e.getRelatedFangAnQueryCondition();
             FangAnSqlDTO fangAnSql = map.get(relatedFangAnQueryCondition.getFangAnId());
-            if (Objects.isNull(fangAnSql)) {
-                return;
+            if (Objects.isNull(fangAnSql) || StringUtils.isBlank(fangAnSql.getSql())) {
+                throw new TongYongYWException("条件方案：" + relatedFangAnQueryCondition.getFangAnMC() + "不存在");
             }
             relatedFangAnQueryCondition.setSql(fangAnSql.getSql());
             relatedFangAnQueryCondition.setZiDuanBM(fangAnSql.getZiDuanBM());
-        });
+        }
     }
 
     /**

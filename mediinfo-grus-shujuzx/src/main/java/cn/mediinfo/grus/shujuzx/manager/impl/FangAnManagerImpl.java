@@ -11,6 +11,7 @@ import cn.mediinfo.grus.shujuzx.dto.fangan.FangAnSCDTO;
 import cn.mediinfo.grus.shujuzx.dto.shitumx.SchemaTable;
 import cn.mediinfo.grus.shujuzx.dto.shitumx.ShuJuSTDto;
 import cn.mediinfo.grus.shujuzx.manager.FangAnManager;
+import cn.mediinfo.grus.shujuzx.model.BR_ZD_HeBingQZPZModel;
 import cn.mediinfo.grus.shujuzx.model.SC_CX_FangAnNRModel;
 import cn.mediinfo.grus.shujuzx.model.SC_CX_FangAnSCModel;
 import cn.mediinfo.grus.shujuzx.model.SC_CX_FangAnXXModel;
@@ -28,10 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -212,6 +210,7 @@ public class FangAnManagerImpl implements FangAnManager {
         }
         //装载输出字段信息
         List<SC_CX_FangAnSCModel> fangAnSCModelList = fangAnSCRepository.findByFangAnID(fangAnId);
+        fangAnSCModelList.sort(Comparator.comparingInt(SC_CX_FangAnSCModel::getShunXuHao));
         List<ShuJuSTDto> shuJuSTList= fangAnSCModelList.stream().filter(p->"1".equals(p.getZhiBiaoLXDM())).collect(Collectors.groupingBy(SC_CX_FangAnSCModel::getZhiBiaoFLID)).entrySet().stream().map(p->{
             ShuJuSTDto shuJuST=new ShuJuSTDto();
             shuJuST.setShiTuID(p.getKey());

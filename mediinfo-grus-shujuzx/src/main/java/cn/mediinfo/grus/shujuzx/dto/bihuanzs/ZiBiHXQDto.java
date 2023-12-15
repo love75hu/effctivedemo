@@ -28,5 +28,5 @@ public class ZiBiHXQDto {
    private String jieDianID;
 
 
-   private List<ZiDuanBMMC> ruCanList;
+   private List<ZiDuanRCDto> ruCanList;
 }

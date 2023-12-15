@@ -13,5 +13,5 @@ public class BiHuanGNDPZ {
     /**
      * 入参字段
      */
-    List<ZiDuanBMMC> ruCanList;
+    List<ZiDuanRCDto> ruCanList;
 }

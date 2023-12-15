@@ -177,7 +177,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
         //获取闭环入参信息
         var biHuanRCXXList=ruCanXXRepository.findByBiHuanIDIn(biHuanIDs);
         //入参字段
-        var ziDuanBM=biHuanGNDPZ.getRuCanList().stream().map(ZiDuanBMMC::getZiDuanBM).toList();
+        var ziDuanBM=biHuanGNDPZ.getRuCanList().stream().map(ZiDuanRCDto::getZiDuanBM).toList();
         //匹配 闭环调用的  的所有闭环，匹配入参是否一致
         var zuiZhongBiHuanID=new ArrayList<String>();
         for (var b:guoLuhuanIDs)
@@ -201,7 +201,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
      * 根据闭环id获取闭配置信息去执行sql
      *
      */
-    public BiHuanXQDto getBiHuanZXJG(String biHuanID,String ziBiHDCZXBZ,String jieDianID,String zuZhiJGID, List<ZiDuanBMMC> ruCanList) throws YuanChengException
+    public BiHuanXQDto getBiHuanZXJG(String biHuanID,String ziBiHDCZXBZ,String jieDianID,String zuZhiJGID, List<ZiDuanRCDto> ruCanList) throws YuanChengException
     {
         //获取闭环基本信息
         //1.获取闭环基本信息 SELECT * FROM SC_BH_JIBENXX;-- 闭环基本信息
@@ -260,7 +260,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
             for (int i=0;i<shujMX.size();i++)
             {
                 int finalI = i;
-                ZiDuanBMMC ziDuanBMMC = ruCanList.stream().filter(n ->
+                ZiDuanRCDto ziDuanBMMC = ruCanList.stream().filter(n ->
                         n.getZiDuanBM().equals(shujMX.get(finalI).getZiDuanBM())).findFirst().orElse(null);
                 builder.append(p.getMoShi())
                         .append(".")

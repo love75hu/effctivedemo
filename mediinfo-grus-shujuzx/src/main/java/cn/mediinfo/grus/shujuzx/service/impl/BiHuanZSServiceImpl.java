@@ -284,15 +284,21 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
         List<Map<String, Object>> maps = jdbcTemplate.queryForList(sql);
         //执行完视图 获取节点的数据集合
        List<JieDianList> jieDianLists=new ArrayList<>();
-
+        List<ZiDuanBMMC> ziDuanBMMCList=new ArrayList<>();
        if (Objects.equals(ziBiHDCZXBZ,"1"))
        {
+
            for (Map<String, Object> dataMap : maps) {
                List<SC_BH_ZiBiHXSLModel> ziBiHXSLList = biHuanZBHXSLList.stream().filter(n -> n.getJieDianID().equals(jieDianID)).toList();
                ziBiHXSLList.forEach(z -> {
                    ZiDuanBMMC ziDuanBMMC = new ZiDuanBMMC();
                    ziDuanBMMC.setZiDuanBM(z.getZiDuanBM());
-                   ziDuanBMMC.setZiDuanZhi(dataMap.getOrDefault(z.getZiDuanBM(), "").toString());
+                   ziDuanBMMC.setZiDuanMC(z.getZiDuanMC());
+                   var ziDuanZ= dataMap.getOrDefault(z.getZiDuanBM(), "");
+                   if (ziDuanZ != null)
+                   {
+                       ziDuanBMMC.setZiDuanZhi(ziDuanZ.toString());
+                   }
                    List<JieDianList> jieDianList1=new ArrayList<>();
 
                    biHuanJDXXList.forEach(j->{
@@ -383,6 +389,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
                        jieDianList1.add(jieDianList);
                    });
                    ziDuanBMMC.setJieDianXX(jieDianList1);
+                   ziDuanBMMCList.add(ziDuanBMMC);
                });
            }
 
@@ -502,6 +509,9 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
         });
 
         biHuanXQDto.setJieDianList(jieDianLists);
+        biHuanXQDto.setZiBiHXSLList(ziDuanBMMCList);
+
+
         return biHuanXQDto;
     }
     private boolean isTimeInvalid(String operator, String yunSuanFDM, BigDecimal time, int value) {

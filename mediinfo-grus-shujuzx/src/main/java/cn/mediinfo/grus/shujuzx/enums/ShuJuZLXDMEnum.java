@@ -12,6 +12,8 @@ public enum ShuJuZLXDMEnum {
 
     NUMBER("1", "数字"),
     STRING("2", "字符串"),
+    ZIDIAN("3", "字典"),
+    ENUM("4", "枚举"),
     TIME("5", "时间"),
     DATE("6", "日期"),
     DATETIME("7", "日期时间");

@@ -207,13 +207,16 @@ public class FangAnServiceImpl implements FangAnService {
     @Override
     public String getSql(FangAnTreeNode root, List<FangAnSC> fangAnSCList, String fangAnLXDM, String guanJianZi) throws YuanChengException, TongYongYWException {
         if (StringUtils.isBlank(fangAnLXDM)) {
-            return "";
+            throw new TongYongYWException("方案类型代码不能为空");
         }
         if (Objects.isNull(root) && CollUtil.isEmpty(fangAnSCList)) {
-            return "";
+            throw new TongYongYWException("方案条件或方案输出不能为空");
         }
         List<FangAnCondition> conditionList = ListUtil.toList();
         FangAnTreeUtils.getConditionList(root, conditionList);
+        if(ObjectUtils.isEmpty(conditionList)||conditionList.stream().noneMatch(Objects::nonNull)){
+            throw new TongYongYWException("方案条件不能为空");
+        }
         //子方案
         subFangAn(conditionList);
 
@@ -1017,6 +1020,18 @@ public class FangAnServiceImpl implements FangAnService {
                 val = "date'" + valList.get(0) + "'";
             } else {
                 val = "'" + valList.get(0) + "'";
+            }
+        }
+        if((ShuJuZLXDMEnum.ZIDIAN.getType().equals(field.getShuJuZLXDM())||ShuJuZLXDMEnum.ENUM.getType().equals(field.getShuJuZLXDM()))&&ObjectUtils.isNotEmpty(sqlOperator)) {
+            switch (sqlOperator) {
+                case LIKE:
+                    sqlOperator = SQLBinaryOperator.IN;
+                    break;
+                case NOTLIKE:
+                    sqlOperator = SQLBinaryOperator.NOTIN;
+                    break;
+                default:
+                    break;
             }
         }
 

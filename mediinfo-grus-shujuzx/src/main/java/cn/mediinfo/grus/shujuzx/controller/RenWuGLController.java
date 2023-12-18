@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -36,25 +37,32 @@ public class RenWuGLController {
     /**
      * 获取基本信息列表
      *
-     * @param queryDto
+
      * @return
      */
     @Operation(summary = "获取基本信息列表")
-    @PostMapping(path = "GetJiBenXXList")
-    public MsfResponse<List<SC_RW_JiBenXXListDto>> getJiBenXXList(@RequestBody SC_RW_JiBenXXQueryDto queryDto) {
-        return MsfResponse.success(renWuGLService.getJiBenXXList(queryDto));
+    @GetMapping(path = "GetJiBenXXList")
+    public MsfResponse<List<SC_RW_JiBenXXListDto>> getJiBenXXList(@RequestParam(required = false) String likeQuery,
+                                                                  @RequestParam(required = false)String fenLeiDM,
+                                                                  @RequestParam Integer qiYongBZ,
+                                                                  @RequestParam(required = false,defaultValue = "1") Integer pageIndex,
+                                                                  @RequestParam(required = false,defaultValue = "10") Integer pageSize) {
+        return MsfResponse.success(renWuGLService.getJiBenXXList(likeQuery,fenLeiDM,qiYongBZ,pageIndex,pageSize));
     }
 
     /**
      * 获取基本信息数量
-     *
-     * @param queryDto
+     * @param likeQuery
+     * @param fenLeiDM
+     * @param qiYongBZ
      * @return
      */
     @Operation(summary = "获取基本信息数量")
-    @PostMapping(path = "GetJiBenXXCount")
-    public MsfResponse<Long> getJiBenXXCount(@RequestBody SC_RW_JiBenXXQueryDto queryDto) {
-        return MsfResponse.success(renWuGLService.getJiBenXXCount(queryDto));
+    @GetMapping(path = "GetJiBenXXCount")
+    public MsfResponse<Long> getJiBenXXCount(@RequestParam(required = false) String likeQuery,
+                                             @RequestParam(required = false)String fenLeiDM,
+                                             @RequestParam Integer qiYongBZ) {
+        return MsfResponse.success(renWuGLService.getJiBenXXCount(likeQuery,fenLeiDM,qiYongBZ));
     }
 
     /**
@@ -140,16 +148,36 @@ public class RenWuGLController {
 
     /**
      * 获取执行列表
-     *
-     * @param queryDto
+     * @param renWuID
+     * @param zhiXingKSSJ
+     * @param zhiXingJSSJ
+     * @param pageIndex
+     * @param pageSize
      * @return
      */
     @Operation(summary = "获取执行日志列表")
-    @PostMapping(path = "GetZhiXingRZList")
-    public MsfResponse<List<SC_RW_ZhiXingRZListDto>> getZhiXingRZList(@RequestBody SC_RW_ZhiXingRZQueryDto queryDto) {
-        return MsfResponse.success(renWuGLService.getZhiXingRZList(queryDto));
+    @GetMapping(path = "GetZhiXingRZList")
+    public MsfResponse<List<SC_RW_ZhiXingRZListDto>> getZhiXingRZList(@RequestParam String renWuID,
+                                                                      @RequestParam Date zhiXingKSSJ,
+                                                                      @RequestParam Date zhiXingJSSJ,
+                                                                      @RequestParam(required = false,defaultValue = "1") Integer pageIndex,
+                                                                      @RequestParam(required = false,defaultValue = "10") Integer pageSize) {
+        return MsfResponse.success(renWuGLService.getZhiXingRZList(renWuID,zhiXingKSSJ,zhiXingJSSJ,pageIndex,pageSize));
     }
-
+    /**
+     * 获取执行列表数量
+     * @param renWuID
+     * @param zhiXingKSSJ
+     * @param zhiXingJSSJ
+     * @return
+     */
+    @Operation(summary = "获取执行日志列表")
+    @GetMapping(path = "getZhiXingRZCount")
+    public MsfResponse<Long> getZhiXingRZCount(@RequestParam String renWuID,
+                                                                      @RequestParam Date zhiXingKSSJ,
+                                                                      @RequestParam Date zhiXingJSSJ) {
+        return MsfResponse.success(renWuGLService.getZhiXingRZCount(renWuID,zhiXingKSSJ,zhiXingJSSJ));
+    }
     /**
      * 执行保存
      */

@@ -6,14 +6,16 @@ import cn.mediinfo.grus.shujuzx.dto.renwugls.*;
 import cn.mediinfo.grus.shujuzx.model.QSC_RW_JiBenXXModel;
 import cn.mediinfo.grus.shujuzx.model.SC_RW_JiBenXXModel;
 
+import java.util.Date;
 import java.util.List;
 
 public interface RenWuGLService {
-    List<SC_RW_JiBenXXListDto> getJiBenXXList(SC_RW_JiBenXXQueryDto queryDto);
 
-    long getJiBenXXCount(SC_RW_JiBenXXQueryDto queryDto);
 
-    MsfQuerydslExpression<QSC_RW_JiBenXXModel, SC_RW_JiBenXXModel> getQuery(SC_RW_JiBenXXQueryDto queryDto);
+    List<SC_RW_JiBenXXListDto> getJiBenXXList(String likeQuery, String fenLeiDM, Integer qiYongBZ, Integer pageIndex, Integer pageSize);
+
+
+    long getJiBenXXCount(String likeQuery, String fenLeiDM, Integer qiYongBZ);
 
     SC_RW_JiBenXXDto getRenWuXXById(String id) throws TongYongYWException;
 
@@ -25,7 +27,11 @@ public interface RenWuGLService {
 
     Boolean qiYongRW(String id, Integer qiYongBZ) throws TongYongYWException;
 
-    List<SC_RW_ZhiXingRZListDto> getZhiXingRZList(SC_RW_ZhiXingRZQueryDto queryDto);
+
+
+    List<SC_RW_ZhiXingRZListDto> getZhiXingRZList(String renWuID, Date zhiXingKSSJ, Date zhiXingJSSJ, Integer pageIndex, Integer pageSize);
+
+    Long getZhiXingRZCount(String renWuID, Date zhiXingKSSJ, Date zhiXingJSSJ);
 
     List<SC_RW_JiBenXXDto> getJiBenXXDtoList(String ids);
 

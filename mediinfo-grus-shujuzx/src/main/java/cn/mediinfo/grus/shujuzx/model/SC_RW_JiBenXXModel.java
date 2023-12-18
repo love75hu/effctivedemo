@@ -5,12 +5,15 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
 @Data
 @Entity
+
 @Table(name="sc_rw_jibenxx")
 public class SC_RW_JiBenXXModel  extends StringMTEntity {
     @Column(columnDefinition = "组织机构ID")
@@ -42,9 +45,9 @@ public class SC_RW_JiBenXXModel  extends StringMTEntity {
     @Column(columnDefinition = "执行耗时")
     private Integer zhiXingHS;
     @Column(columnDefinition = "执行状态代码")
-    private Integer zhiXingZTDM;
+    private String zhiXingZTDM;
     @Column(columnDefinition = "执行状态名称")
-    private Integer zhiXingZTMC;
+    private String zhiXingZTMC;
     @Column(columnDefinition = "最近执行日志id")
     private String zuiJinZXRZID;
     @Column(columnDefinition = "启用标志")

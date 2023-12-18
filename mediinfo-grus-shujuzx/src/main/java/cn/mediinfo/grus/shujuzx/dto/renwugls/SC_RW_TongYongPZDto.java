@@ -19,4 +19,6 @@ public class SC_RW_TongYongPZDto {
     private String fenLeiMC;
     @Schema(description = "服务器IP")
     private String fuWuQIP;
+    @Schema(description = "服务器端口")
+    private String fuWuQDK;
 }

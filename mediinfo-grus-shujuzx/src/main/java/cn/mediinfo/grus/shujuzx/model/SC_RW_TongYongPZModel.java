@@ -22,4 +22,6 @@ public class SC_RW_TongYongPZModel extends StringMTEntity {
     private String fenLeiMC;
     @Column(columnDefinition = "服务器IP")
     private String fuWuQIP;
+    @Column(columnDefinition = "服务器端口")
+    private String fuWuQDK;
 }

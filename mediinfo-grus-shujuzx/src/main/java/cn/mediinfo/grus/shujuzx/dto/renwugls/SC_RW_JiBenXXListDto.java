@@ -2,9 +2,13 @@ package cn.mediinfo.grus.shujuzx.dto.renwugls;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 
 @Data
+
 public class SC_RW_JiBenXXListDto {
 
     @Schema(description = "主键")
@@ -24,7 +28,7 @@ public class SC_RW_JiBenXXListDto {
     @Schema(description = "执行耗时")
     private Integer zhiXingHS;
     @Schema(description = "执行状态名称")
-    private Integer zhiXingZTMC;
+    private String zhiXingZTMC;
     @Column(columnDefinition = "启用标志")
     private Integer qiYongBZ;
     @Column(columnDefinition = "备注")

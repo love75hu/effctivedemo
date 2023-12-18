@@ -290,15 +290,22 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
 
            for (Map<String, Object> dataMap : maps) {
                List<SC_BH_ZiBiHXSLModel> ziBiHXSLList = biHuanZBHXSLList.stream().filter(n -> n.getJieDianID().equals(jieDianID)).toList();
+
+              ZiDuanBMMC ziDuanBMMC = new ZiDuanBMMC();
+               List<ZhanShiLList> zhanShiLLists=new ArrayList<>();
                ziBiHXSLList.forEach(z -> {
-                   ZiDuanBMMC ziDuanBMMC = new ZiDuanBMMC();
-                   ziDuanBMMC.setZiDuanBM(z.getZiDuanBM());
-                   ziDuanBMMC.setZiDuanMC(z.getZiDuanMC());
+                   ZhanShiLList zhanShiL=new ZhanShiLList();
+                   zhanShiL.setZiDuanBM(z.getZiDuanBM());
                    var ziDuanZ= dataMap.getOrDefault(z.getZiDuanBM(), "");
-                   if (ziDuanZ != null)
-                   {
-                       ziDuanBMMC.setZiDuanZhi(ziDuanZ.toString());
-                   }
+                  if (ziDuanZ != null)
+                 {
+                     zhanShiL.setZiDuanZhi(ziDuanZ.toString());
+                  }
+
+                   zhanShiL.setZiDuanMC(z.getZiDuanMC());
+                   zhanShiLLists.add(zhanShiL);
+               });
+               ziDuanBMMC.setZhanShiLLists(zhanShiLLists);
                    List<JieDianList> jieDianList1=new ArrayList<>();
 
                    biHuanJDXXList.forEach(j->{
@@ -390,7 +397,6 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
                    });
                    ziDuanBMMC.setJieDianXX(jieDianList1);
                    ziDuanBMMCList.add(ziDuanBMMC);
-               });
            }
 
        }
@@ -459,7 +465,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
                         .findFirst()
                         .orElse(""));
             }
-            if (ziBiHXSLList.isEmpty())
+            if (!ziBiHXSLList.isEmpty())
             {
                 jieDianList.setZiBiHDCZXBZ("1");
             }

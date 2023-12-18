@@ -16,6 +16,11 @@ public class ZiDuanBMMC {
     private String ziDuanZhi;
 
     /**
+     * 字段名称
+     * */
+    private String ziDuanMC;
+
+    /**
      * 子闭环信息
      * */
       private List<JieDianList> jieDianXX;

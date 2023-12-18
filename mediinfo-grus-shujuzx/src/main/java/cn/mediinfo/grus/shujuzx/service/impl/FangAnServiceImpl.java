@@ -603,7 +603,7 @@ public class FangAnServiceImpl implements FangAnService {
         }
 
         List<FangAnSCDTO> jiBenXXSCList = fangAnSCList.stream().filter(p -> "br_da_jibenxx".equals(p.getBiaoMing())).toList();
-        var qiTaSCList = fangAnSCList.stream().filter(p -> !"br_da_jibenxx".equals(p.getBiaoMing())&&StringUtil.hasText(p.getBieMing())).collect(Collectors.groupingBy(FangAnSCDTO::getBieMing,Collectors.toList()));
+        var qiTaSCList = fangAnSCList.stream().filter(p -> !"br_da_jibenxx".equals(p.getBiaoMing())&&StringUtil.hasText(p.getBieMing())).collect(Collectors.groupingBy(FangAnSCDTO::getBieMing, LinkedHashMap::new, Collectors.toList()));
 
         //结果分组除重 患者基本信息表：br_da_jibenxx，该表相关字段分组后只显示1次，其它按就诊显示
         return jieGuoList.stream().collect(Collectors.groupingBy(p -> p.get("bingrenid"))).entrySet().stream().map(p -> {

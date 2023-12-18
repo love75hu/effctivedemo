@@ -1,19 +1,18 @@
 package cn.mediinfo.grus.shujuzx.dto.bihuanzs;
 
+import cn.mediinfo.grus.shujuzx.dto.bihuansz.ZiBiHXSLDto;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
 public class ZiDuanBMMC {
+
+
     /**
-     * 字段编码
+     * 子闭环展示列
      */
-    private String ziDuanBM;
-    /**
-     * 字段值
-     */
-    private String ziDuanZhi;
+    private List<ZhanShiLList> zhanShiLLists;
 
     /**
      * 字段名称

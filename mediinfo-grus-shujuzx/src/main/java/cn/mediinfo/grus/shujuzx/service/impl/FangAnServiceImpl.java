@@ -207,15 +207,15 @@ public class FangAnServiceImpl implements FangAnService {
     @Override
     public String getSql(FangAnTreeNode root, List<FangAnSC> fangAnSCList, String fangAnLXDM, String guanJianZi) throws YuanChengException, TongYongYWException {
         if (StringUtils.isBlank(fangAnLXDM)) {
-            throw new TongYongYWException("方案类型代码不能为空");
+            return "";
         }
         if (Objects.isNull(root) && CollUtil.isEmpty(fangAnSCList)) {
-            throw new TongYongYWException("方案条件或方案输出不能为空");
+            return "";
         }
         List<FangAnCondition> conditionList = ListUtil.toList();
         FangAnTreeUtils.getConditionList(root, conditionList);
         if(ObjectUtils.isEmpty(conditionList)||conditionList.stream().noneMatch(Objects::nonNull)){
-            throw new TongYongYWException("方案条件不能为空");
+            return "";
         }
         //子方案
         subFangAn(conditionList);

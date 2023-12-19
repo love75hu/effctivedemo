@@ -189,6 +189,8 @@ class ShiTuXXServiceImpl implements ShiTuXXService {
      */
     @Override
     public Boolean zuoFeiShiTuFL(String id) throws WeiZhaoDSJException {
+        var data=shiTuXXRepository.findById(id).orElseThrow(()->new WeiZhaoDSJException("未获取到数据"));
+        shiTuXXRepository.deleteAll(shiTuXXRepository.findByFuLeiID(data.getShiTuID()));
         shiTuXXRepository.deleteById(id);
         return true;
     }

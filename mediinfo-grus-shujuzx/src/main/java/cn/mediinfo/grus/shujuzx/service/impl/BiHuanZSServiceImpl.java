@@ -18,6 +18,7 @@ import cn.mediinfo.grus.shujuzx.remotedto.GongYong.LingChuangJSPZZDXXRso;
 import cn.mediinfo.grus.shujuzx.remotedto.GongYong.ShuJuXXMSRso;
 import cn.mediinfo.grus.shujuzx.remoteservice.GongYongRemoteService;
 import cn.mediinfo.grus.shujuzx.repository.*;
+import cn.mediinfo.lyra.extension.service.LyraIdentityService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cn.mediinfo.grus.shujuzx.service.BiHuanZSService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -49,6 +50,8 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
      * 闭环调用
      */
     private SC_BH_DiaoYongPZRepository  diaoYongPZRepository;
+
+    private final LyraIdentityService lyraIdentityService;
 
     /**
      * 闭环入参
@@ -194,7 +197,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
         {
            return new BiHuanXQDto();
         }
-       return getBiHuanZXJG(biHuanIDs.get(0),"0","0","0",biHuanGNDPZ.getRuCanList());
+       return getBiHuanZXJG(biHuanIDs.get(0),"0","0",lyraIdentityService.getJiGouID(),biHuanGNDPZ.getRuCanList());
     }
 
     /**

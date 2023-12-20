@@ -6,6 +6,7 @@ import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
 import cn.mediinfo.grus.shujuzx.dto.shitumx.*;
 import cn.mediinfo.grus.shujuzx.dto.zonghecx.*;
 import cn.mediinfo.grus.shujuzx.model.SC_CX_ShiTuMXModel;
+import cn.mediinfo.grus.shujuzx.remotedto.GongYong.YuanSuJXXRso;
 
 import java.util.List;
 import java.util.Set;
@@ -90,5 +91,7 @@ public interface ShiTuMXService {
 
 
    public ShuJuXSTXQDto getShuJuSTXQDto(List<String> shiTuIds) throws YuanChengException;
+
+    List<YuanSuJXXRso> getZiDuanXXList(String id, String leiXing, String likeQuery,String shiTuSTID) throws YuanChengException;
 
 }

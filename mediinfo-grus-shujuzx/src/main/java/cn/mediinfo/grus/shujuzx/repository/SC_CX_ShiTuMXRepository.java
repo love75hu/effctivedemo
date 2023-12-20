@@ -110,4 +110,12 @@ public interface SC_CX_ShiTuMXRepository extends MsfJpaRepository<QSC_CX_ShiTuMX
                 .whereIf(ziDuanBMs.stream().count()>0, o->o.ziDuanBM.toUpperCase().in(ziDuanBMs))
                 .fetchDetach();
     }
+
+    default List<String> getShiTuMXZD(String shiTuID)
+    {
+        return this.asQuerydsl().where(n->n.shiTuID.eq(shiTuID))
+                .select(n->n.ziDuanBM)
+                .fetch();
+    }
+
 }

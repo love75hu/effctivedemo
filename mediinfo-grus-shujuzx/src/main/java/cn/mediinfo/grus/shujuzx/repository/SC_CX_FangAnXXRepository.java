@@ -1,5 +1,6 @@
 package cn.mediinfo.grus.shujuzx.repository;
 
+import cn.mediinfo.cyan.msf.core.util.BeanUtil;
 import cn.mediinfo.cyan.msf.core.util.StringUtil;
 import cn.mediinfo.cyan.msf.orm.MsfJpaRepository;
 import cn.mediinfo.cyan.msf.orm.datasource.MsfDataSource;
@@ -7,8 +8,10 @@ import cn.mediinfo.grus.shujuzx.dto.chaxunfaxx.FangAnXXDto;
 import cn.mediinfo.grus.shujuzx.model.QSC_CX_FangAnXXModel;
 import cn.mediinfo.grus.shujuzx.model.SC_CX_FangAnXXModel;
 import com.querydsl.core.types.Projections;
+import org.apache.commons.lang3.ObjectUtils;
 
 import java.util.List;
+import java.util.Objects;
 
 @MsfDataSource("datasourcesjzx")
 public interface SC_CX_FangAnXXRepository extends MsfJpaRepository<QSC_CX_FangAnXXModel, SC_CX_FangAnXXModel, String> {
@@ -28,7 +31,7 @@ public interface SC_CX_FangAnXXRepository extends MsfJpaRepository<QSC_CX_FangAn
                         p.fangAnMC.as("fangAnMC"),
                         p.guanJianZi.as("guanJianZi"),
                         p.chaXunTJMS.as("chaXunTJMS"),
-                        p.fangAnMC.append("+").append(p.guanJianZi).as("biaoTiMC")
+                        p.guanJianZi.when("").then(p.fangAnMC).otherwise(p.fangAnMC.append("+").append(p.guanJianZi)).as("biaoTiMC")
                 ))
                 .fetchPage(pageIndex, pageSize);
     }

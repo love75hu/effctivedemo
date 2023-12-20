@@ -46,22 +46,26 @@ public class ChaXunFAXXServiceImpl implements ChaXunFAXXService {
     //region 获取方案列表，方案下拉，方案历史，在某方案的方案下拉
     @Override
     public List<FangAnXXDto> getChaXunFAXXSelect(String likeQuery, String fangAnLXDM, Integer pageIndex, Integer pageSize) {
-        return fangAnXXRepository.getFangAnXX(lyraIdentityService.getJiGouID(),likeQuery, fangAnLXDM, pageIndex, pageSize);
+        return fangAnXXRepository.getFangAnXX(lyraIdentityService.getJiGouID(), likeQuery, fangAnLXDM, pageIndex, pageSize);
     }
 
     @Override
     public List<FangAnXXDto> getFangAnXXList(String likeQuery, Integer pageIndex, Integer pageSize) {
-        return fangAnXXRepository.getFangAnXX(lyraIdentityService.getJiGouID(),likeQuery, "", pageIndex, pageSize);
+        return fangAnXXRepository.getFangAnXX(lyraIdentityService.getJiGouID(), likeQuery, "", pageIndex, pageSize);
     }
 
     @Override
     public List<FangAnCXLSDto> getFangAnCXLSList(Integer pageIndex, Integer pageSize) {
         return BeanUtil.copyListProperties(fangAnCXLSRepository.getFangAnCXLSList(lyraIdentityService.getJiGouID(), pageIndex, pageSize),
                 FangAnCXLSDto::new, (model, dto) -> {
-                    if (model.getChaXunLXDM().equals("2")) {
-                        dto.setBiaoTiMC(StringUtil.concat("高级查询", model.getGuanJianZi()));
+                    if (StringUtil.hasText(model.getFangAnMC())) {
+                        if (StringUtil.hasText(model.getGuanJianZi())) {
+                            dto.setBiaoTiMC(StringUtil.concat(model.getFangAnMC(), "+", model.getGuanJianZi()));
+                        } else {
+                            dto.setBiaoTiMC(model.getFangAnMC());
+                        }
                     } else {
-                        dto.setBiaoTiMC(StringUtil.concat(model.getFangAnMC(), model.getGuanJianZi()));
+                        dto.setBiaoTiMC(model.getGuanJianZi());
                     }
                     dto.setId(model.getId());
                     dto.setFangAnID(model.getFangAnID());
@@ -71,18 +75,19 @@ public class ChaXunFAXXServiceImpl implements ChaXunFAXXService {
 
     /**
      * 在某方案的方案下拉
+     *
      * @param likeQuery
      * @param fangAnLXDM
      * @return
      */
     @Override
     public List<FangAnSelectXXDto> getZaiMouFAXXSelect(String likeQuery, String fangAnLXDM) {
-        List<SC_CX_FangAnXXModel> fangAnXXModelList= fangAnXXRepository.getFangAnXXList(lyraIdentityService.getJiGouID(),likeQuery, fangAnLXDM);
-        List<String> fangAnIDs=fangAnXXModelList.stream().map(SC_CX_FangAnXXModel::getFangAnID).toList();
-        List<SC_CX_FangAnSCModel> fangAnSCModelList=fangAnSCRepository.findByFangAnIDIn(fangAnIDs);
-        List<FangAnSelectXXDto> fangAnSelectXXDtoList=BeanUtil.copyListProperties(fangAnXXModelList,FangAnSelectXXDto::new,(model,dto)->{
-            List<FangAnSCDTO> fangAnSCDTOList=BeanUtil.copyListProperties(fangAnSCModelList.stream().filter(x->x.getFangAnID().equals(model.getFangAnID())).toList()
-                    ,FangAnSCDTO::new);
+        List<SC_CX_FangAnXXModel> fangAnXXModelList = fangAnXXRepository.getFangAnXXList(lyraIdentityService.getJiGouID(), likeQuery, fangAnLXDM);
+        List<String> fangAnIDs = fangAnXXModelList.stream().map(SC_CX_FangAnXXModel::getFangAnID).toList();
+        List<SC_CX_FangAnSCModel> fangAnSCModelList = fangAnSCRepository.findByFangAnIDIn(fangAnIDs);
+        List<FangAnSelectXXDto> fangAnSelectXXDtoList = BeanUtil.copyListProperties(fangAnXXModelList, FangAnSelectXXDto::new, (model, dto) -> {
+            List<FangAnSCDTO> fangAnSCDTOList = BeanUtil.copyListProperties(fangAnSCModelList.stream().filter(x -> x.getFangAnID().equals(model.getFangAnID())).toList()
+                    , FangAnSCDTO::new);
             dto.setFangAnSCDTOList(fangAnSCDTOList);
         });
         return fangAnSelectXXDtoList;
@@ -102,7 +107,7 @@ public class ChaXunFAXXServiceImpl implements ChaXunFAXXService {
     public String saveFangAnCXLS(FangAnCXLSSaveRequest request, String sql) {
         String chaXunLXDM = "2";
         String chaXunLXMC = "高级查询";
-        if (StringUtils.hasText(request.getFangAnID())||StringUtils.hasText(request.getFangAnMC()) || CollUtil.isNotEmpty(request.getFangAnSCList())) {
+        if (StringUtils.hasText(request.getFangAnID()) || StringUtils.hasText(request.getFangAnMC()) || CollUtil.isNotEmpty(request.getFangAnSCList())) {
             chaXunLXDM = "1";
             chaXunLXMC = "方案查询";
         }

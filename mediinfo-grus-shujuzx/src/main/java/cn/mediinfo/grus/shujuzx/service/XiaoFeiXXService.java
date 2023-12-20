@@ -11,5 +11,9 @@ public interface XiaoFeiXXService {
      * @param eventDto 消息入参(按照消息标准规范)
      * @return
      */
-    MsfJpaRepository xiaoFeiGXJZCSXX(BaseEventDto<Integer> eventDto) throws TongYongYWException;
+    void WanChengJZ(BaseEventDto<Integer> eventDto) throws TongYongYWException;
+
+    void RuYuanDJ(BaseEventDto<Integer> eventDto) throws TongYongYWException;
+
+    void QuXiaoRY(BaseEventDto<Integer> eventDto) throws TongYongYWException;
 }

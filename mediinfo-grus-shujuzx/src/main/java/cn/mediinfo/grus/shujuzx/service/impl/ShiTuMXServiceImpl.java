@@ -198,6 +198,10 @@ public class ShiTuMXServiceImpl implements ShiTuMXService {
                 shiTuMXModel.setZuZhiJGID(ShuJuZXConstant.TONGYONG_JGID);
                 shiTuMXModel.setZuZhiJGMC(ShuJuZXConstant.TONGYONG_JGMC);
                 BeanUtil.copyProperties(s, shiTuMXModel);
+                if (Objects.equals(s.getShuChuBZ(),"1") )
+                {
+                    shiTuMXModel.setShuChuBXBZ(0);
+                }
                 shiTuMXModels.add(shiTuMXModel);
             }
         });

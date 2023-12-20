@@ -16,6 +16,7 @@ public interface SC_CX_FangAnCXLSRepository extends MsfJpaRepository<QSC_CX_Fang
     default List<SC_CX_FangAnCXLSModel> getFangAnCXLSList(String zuZhiJGID, int pageIndex, int pageSize) {
         return this.asQuerydsl()
                 .where(x->x.zuZhiJGID.eq(zuZhiJGID))
+                .orderBy(p -> p.chuangJianSJ.desc())
                 .fetchPage(pageIndex, pageSize);
     }
 }

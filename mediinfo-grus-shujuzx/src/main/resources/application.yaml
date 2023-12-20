@@ -60,8 +60,6 @@ spring:
       port: 6379
   lifecycle:
     timeout-per-shutdown-phase: 30s #设置缓冲时间 默认30s
-  application:
-    name:
   profiles:
     active: ${ASPNETCORE_ENVIRONMENT}
 management:

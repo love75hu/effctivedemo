@@ -9,7 +9,7 @@ import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
 import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
 import cn.mediinfo.cyan.msf.core.util.*;
-import cn.mediinfo.cyan.msf.tenant.security.TenantIdentityService;
+import cn.mediinfo.cyan.msf.security.IdentityService;
 import cn.mediinfo.grus.shujuzx.bo.RelatedFangAnBO;
 import cn.mediinfo.grus.shujuzx.common.fangan.condition.FangAnCondition;
 import cn.mediinfo.grus.shujuzx.common.fangan.condition.FangAnTreeNode;
@@ -99,7 +99,7 @@ public class FangAnServiceImpl implements FangAnService {
     @Autowired
     private FangAnManager fangAnManager;
     @Autowired
-    private TenantIdentityService tenantIdentityService;
+    private IdentityService identityService;
     @Autowired
     private FangAnNRService fangAnNRService;
     @Autowired
@@ -1250,7 +1250,7 @@ public class FangAnServiceImpl implements FangAnService {
      * @return 默认条件
      */
     private String getDefaultCondition(Map<String, Tuple.Tuple4<String, String, Boolean, Boolean>> aliasMap) {
-        String tenantId = tenantIdentityService.getCurrentTenant().TenantId();
+        String tenantId = identityService.getTenantId();
 
         StringBuilder builder = new StringBuilder();
         aliasMap.values().forEach(e -> {
@@ -1465,7 +1465,7 @@ public class FangAnServiceImpl implements FangAnService {
         StringBuilder builder = new StringBuilder();
         builder.append(MessageFormat.format("select a.bingrenid,a.xingming,a.xingbiedm,a.xingbiemc,a.chushengrq,a.menzhencs,a.zhuyuancs,b.jiuzhenywid,b.jiuzhenywlxdm,b.zuzhijgid,b.zuzhijgmc,b.jiuzhenrq,b.jiuzhenksid,b.jiuzhenksmc,b.binglijlid from {0} a inner join (select c1.zuhuid,c1.bingrenid,c1.id as binglijlid,c1.jiuzhenid as jiuzhenywid,''1'' as jiuzhenywlxdm,c1.zuzhijgid,c1.zuzhijgmc,c1.jilunr,c2.jiuzhenrq,c2.jiuzhenksid,c2.jiuzhenksmc from {1} c1 inner join {3} c2 on c1.zuzhijgid =c2.zuzhijgid and c1.jiuzhenid=c2.id and c1.zuhuid=c2.zuhuid and c1.zuofeibz=0 and c2.zuofeibz=0 union select c3.zuhuid,c3.bingrenid,c3.id as binglijlid,c3.zhuyuanjzid as jiuzhenywid,''3'' as jiuzhenywlxdm,c3.zuzhijgid,c3.zuzhijgmc,c3.jilunr,c4.ruyuansj as jiuzhenrq,c4.dangqianksid as jiuzhenksid,c4.dangqianksmc as jiuzhenksmc from {2} c3 inner join {4} c4 on c3.zuzhijgid =c3.zuzhijgid and c3.zhuyuanjzid =c4.id and c3.zuhuid=c4.zuhuid and c3.zuofeibz=0 and c4.zuofeibz=0) b " +
                         "on a.bingrenid=b.bingrenid and a.zuhuid=b.zuhuid where a.zuofeibz=0 and a.zuhuid=''{5}'' and ",
-                formatBiaoMingByBXX("SC_LC_BINGRENYLSJ", biaoXinXiList), formatBiaoMingByBXX("BL_MZ_BINGLIJLTEXT", biaoXinXiList), formatBiaoMingByBXX("BL_WS_JILUTEXT", biaoXinXiList), formatBiaoMingByBXX("JZ_MZ_JIUZHENXX", biaoXinXiList), formatBiaoMingByBXX("JZ_ZY_JIUZHENXX", biaoXinXiList),tenantIdentityService.getCurrentTenant().TenantId()));
+                formatBiaoMingByBXX("SC_LC_BINGRENYLSJ", biaoXinXiList), formatBiaoMingByBXX("BL_MZ_BINGLIJLTEXT", biaoXinXiList), formatBiaoMingByBXX("BL_WS_JILUTEXT", biaoXinXiList), formatBiaoMingByBXX("JZ_MZ_JIUZHENXX", biaoXinXiList), formatBiaoMingByBXX("JZ_ZY_JIUZHENXX", biaoXinXiList),identityService.getTenantId()));
         if(StringUtils.isBlank(chaXunSQL)&&Objects.equals(1,quanWenJSConfig.getState())){
             builder.append(" to_tsvector('zhcfg',b.jilunr) @@ to_tsquery('zhcfg','").append(guanJianZi).append("')");
         }else if (StringUtils.isBlank(chaXunSQL)) {

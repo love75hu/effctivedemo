@@ -8,6 +8,7 @@ import cn.mediinfo.cyan.msf.core.response.MsfResponse;
 import cn.mediinfo.cyan.msf.util.tree.TreeNode;
 import cn.mediinfo.grus.shujuzx.dto.shitumx.ShuJuXSTXQDto;
 import cn.mediinfo.grus.shujuzx.dto.zonghecx.*;
+import cn.mediinfo.grus.shujuzx.remotedto.GongYong.YuanSuJXXRso;
 import cn.mediinfo.grus.shujuzx.service.ShiTuMXService;
 import cn.mediinfo.grus.shujuzx.service.ShiTuXXService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -176,5 +177,11 @@ public class linChuangJSPZController {
     public MsfResponse<ShuJuXSTXQDto> getShuJuSTXQDto(String shiTuIds) throws YuanChengException {
         List<String> shiTuIdList= Arrays.stream(shiTuIds.split(",")).toList();
         return MsfResponse.success(shiTuMXService.getShuJuSTXQDto(shiTuIdList));
+    }
+
+    @Operation(summary = "根据视图类型获取数据视图中字段信息列表")
+    @GetMapping("getZiDuanXXList")
+    public MsfResponse<List<YuanSuJXXRso>> getZiDuanXXList(String shiTuSTID, String id, String leiXing, String likeQuery) throws YuanChengException {
+        return MsfResponse.success(shiTuMXService.getZiDuanXXList(id,leiXing,likeQuery,shiTuSTID));
     }
 }

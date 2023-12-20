@@ -2,10 +2,7 @@ package cn.mediinfo.grus.shujuzx.remoteservice;
 
 import cn.mediinfo.cyan.msf.core.response.MsfResponse;
 import cn.mediinfo.grus.shujuzx.dto.shitumx.*;
-import cn.mediinfo.grus.shujuzx.remotedto.GongYong.GY_ZD_ShuJuSTXXRso;
-import cn.mediinfo.grus.shujuzx.remotedto.GongYong.GY_ZD_ShuJuYuanTreeRso;
-import cn.mediinfo.grus.shujuzx.remotedto.GongYong.LingChuangJSPZZDXXRso;
-import cn.mediinfo.grus.shujuzx.remotedto.GongYong.ShuJuXXMSRso;
+import cn.mediinfo.grus.shujuzx.remotedto.GongYong.*;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -52,5 +49,9 @@ public interface GongYongRemoteService {
      */
     @GetMapping("api/v1.0/shujuyuan/GetShuJuYFLTree")
     MsfResponse<List<GY_ZD_ShuJuYuanTreeRso>> getShuJuYFLTree();
+
+    @GetMapping("api/v1.0/shujust/getZiDuanXXList")
+    MsfResponse<List<YuanSuJXXRso>> getZiDuanXXList(@RequestParam("id") String id,@RequestParam("leiXing") String leiXing,@RequestParam("likeQuery") String likeQuery);
+
 
 }

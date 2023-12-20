@@ -15,6 +15,7 @@ import cn.mediinfo.grus.shujuzx.model.SC_CX_ShiTuMXModel;
 import cn.mediinfo.grus.shujuzx.model.SC_CX_ShiTuXXModel;
 import cn.mediinfo.grus.shujuzx.po.shituxx.ShiTuXXPo;
 import cn.mediinfo.grus.shujuzx.remotedto.GongYong.LingChuangJSPZZDXXRso;
+import cn.mediinfo.grus.shujuzx.remotedto.GongYong.YuanSuJXXRso;
 import cn.mediinfo.grus.shujuzx.remoteservice.GongYongRemoteService;
 import cn.mediinfo.grus.shujuzx.repository.SC_CX_ShiTuMXRepository;
 import cn.mediinfo.grus.shujuzx.repository.SC_CX_ShiTuXXRepository;
@@ -355,6 +356,16 @@ public class ShiTuMXServiceImpl implements ShiTuMXService {
             }
         }
         return result;
+    }
+
+    @Override
+    public List<YuanSuJXXRso> getZiDuanXXList(String id, String leiXing, String likeQuery,String shiTuSTID) throws YuanChengException {
+        List<YuanSuJXXRso> ziDuanXXList = gongYongRemoteService.getZiDuanXXList(id, leiXing, likeQuery).getData("获取功能服务字段信息失败");
+        List<String> shiTuMXZD = shiTuMXRepository.getShiTuMXZD(shiTuSTID);
+        // 将列表转换为集合以优化查找性能
+        Set<String> shiTuMXZDSet = new HashSet<>(shiTuMXZD);
+
+        return ziDuanXXList.stream().filter(n->!shiTuMXZDSet.contains(n.getZiDuanBM())).toList();
     }
 
 

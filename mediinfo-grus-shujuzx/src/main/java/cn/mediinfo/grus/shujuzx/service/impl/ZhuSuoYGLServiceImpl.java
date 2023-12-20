@@ -599,7 +599,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
         //获取筛选开始时间
         var hasGengXinSJ =  springCache.get("GengXinSJ");
 
-        Date gengXinSJ =DateUtil.offsetHour(DateUtil.offsetDay(DateUtil.beginOfDay(DateUtil.date()),-1),1);
+        Date gengXinSJ =DateUtil.offsetHour(DateUtil.offsetDay(DateUtil.beginOfDay(DateUtil.getCurrentDate()),-1),1);
 
         if (StringUtil.hasText(hasGengXinSJ))
         {

@@ -25,19 +25,19 @@ public class XiaoFeiXXServiceImpl implements XiaoFeiXXService {
 
 
     @Override
-    @EventSubscription(topic = "JZ_MZ_WanChengJZ")
+    @EventSubscription(topic = "JZ_MZ_WanChengJZ_O", source = "mediinfo-vela-jiuzhen")
     public void WanChengJZ(BaseEventDto<Integer> eventDto) throws TongYongYWException {
         updateBingRenYLSJForJZCS(eventDto);
     }
 
     @Override
-    @EventSubscription(topic = "JZ_ZY_RuYuanDJ")
+    @EventSubscription(topic = "JZ_ZY_RuYuanDJ_O", source = "mediinfo-vela-jiuzhen")
     public void RuYuanDJ(BaseEventDto<Integer> eventDto) throws TongYongYWException {
         updateBingRenYLSJForJZCS(eventDto);
     }
 
     @Override
-    @EventSubscription(topic = "JZ_ZY_QuXiaoRY")
+    @EventSubscription(topic = "JZ_ZY_QuXiaoRY_O", source = "mediinfo-vela-jiuzhen")
     public void QuXiaoRY(BaseEventDto<Integer> eventDto) throws TongYongYWException {
         updateBingRenYLSJForJZCS(eventDto);
     }

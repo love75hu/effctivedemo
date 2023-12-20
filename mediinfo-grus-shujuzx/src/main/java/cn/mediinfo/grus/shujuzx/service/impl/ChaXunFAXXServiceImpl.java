@@ -107,7 +107,7 @@ public class ChaXunFAXXServiceImpl implements ChaXunFAXXService {
     public String saveFangAnCXLS(FangAnCXLSSaveRequest request, String sql) {
         String chaXunLXDM = "2";
         String chaXunLXMC = "高级查询";
-        if (StringUtils.hasText(request.getFangAnID()) || StringUtils.hasText(request.getFangAnMC()) || CollUtil.isNotEmpty(request.getFangAnSCList())) {
+        if (StringUtils.hasText(request.getFangAnID())) {
             chaXunLXDM = "1";
             chaXunLXMC = "方案查询";
         }

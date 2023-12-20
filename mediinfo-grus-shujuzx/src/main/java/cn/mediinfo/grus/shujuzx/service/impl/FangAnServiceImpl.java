@@ -1079,7 +1079,7 @@ public class FangAnServiceImpl implements FangAnService {
         Map<String, Tuple.Tuple4<String, String, Boolean, Boolean>> aliasMap = new LinkedHashMap<>();
         //基础表
         SchemaTable jiChuBiao = new SchemaTable();
-
+        //区分方案类型，可根据方案类型对应基础表
         switch (fangAnLXDM) {
             case "1":
                 ShuJuXXMSRso menZhen = jiChuBiaoXXList.stream().filter(p -> p.getBiaoMing().equals("JZ_MZ_JIUZHENXX")).findFirst().orElse(new ShuJuXXMSRso());
@@ -1149,6 +1149,7 @@ public class FangAnServiceImpl implements FangAnService {
             return CharSequenceUtil.replaceLast(builder.toString(), " AND ", " ");
         }
         Map<String, String> jiChuBGX = new HashMap<>(); //基础表关系 first:基础表字段 second:关联表字段，默认同种方案类型于基础表的关联关系一致
+        //根据方案类型设置基础表与其它视图/表关系
         switch (fangAnLXDM) {
             case "0":
                 jiChuBGX.put("jiuzhenywid", "jiuzhenywid");
@@ -1279,6 +1280,7 @@ public class FangAnServiceImpl implements FangAnService {
         Tuple.Tuple4<String, String, Boolean, Boolean> jiChuTable = aliasMap.values().stream().filter(Tuple.Tuple4::item4).findFirst().orElse(null);
         String jiuZhenYWLX = "'' as jiuzhenywlx";
         String jiuZhenRQ = "";
+        //根据方案类型区分jiuzhenywlx和jiuzhenrq
         switch (fangAnLXDM) {
             case "1": //门诊
                 jiuZhenYWLX = "'1' as jiuzhenywlx";
@@ -1322,6 +1324,7 @@ public class FangAnServiceImpl implements FangAnService {
                     fields.add(MessageFormat.format("(case when {0}.jianchabwid=''{1}'' then {2}.zhenduanjg else '''' end) as {3}", shenQingBWAlias, e.getZhiBiaoID(), alias, "zd_" + fangAnSCList.indexOf(e)));
                     break;
                 case "4": //药品
+                    //根据方案类型代码，区分医嘱信息对应的表和取值逻辑
                     switch (fangAnLXDM) {
                         case "1": //门诊
                             key = aliasMap.keySet().stream().filter(p -> p.contains("yz_mz_yizhuxx")).findFirst().orElse("");

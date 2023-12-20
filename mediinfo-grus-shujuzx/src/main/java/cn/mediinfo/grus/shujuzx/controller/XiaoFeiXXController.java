@@ -21,31 +21,29 @@ import org.springframework.web.bind.annotation.RestController;
 public class XiaoFeiXXController {
     private final XiaoFeiXXService xiaoFeiXXService;
 
-    public XiaoFeiXXController(XiaoFeiXXService xiaoFeiXXService)
-    {
-        this.xiaoFeiXXService=xiaoFeiXXService;
+    public XiaoFeiXXController(XiaoFeiXXService xiaoFeiXXService) {
+        this.xiaoFeiXXService = xiaoFeiXXService;
     }
 
     //todo  [EventSubscription("JZ_MZ_WanChengJZ")]
     @Operation(summary = "消费完成接诊信息")
     @PostMapping("XiaoFeiWCJZXX")
-    public MsfJpaRepository XiaoFeiWCJZXX(@RequestBody BaseEventDto<Integer> eventDto) throws TongYongYWException
-    {
-        return xiaoFeiXXService.xiaoFeiGXJZCSXX(eventDto);
+    public void XiaoFeiWCJZXX(@RequestBody BaseEventDto<Integer> eventDto) throws TongYongYWException {
+        xiaoFeiXXService.WanChengJZ(eventDto);
     }
+
     //todo  [EventSubscription("JZ_ZY_RuYuanDJ")]
     @Operation(summary = "消费入院信息")
     @PostMapping("XiaoFeiCYXX")
-    public MsfJpaRepository XiaoFeiCYXX(@RequestBody BaseEventDto<Integer> eventDto) throws TongYongYWException
-    {
-        return xiaoFeiXXService.xiaoFeiGXJZCSXX(eventDto);
+    public void XiaoFeiCYXX(@RequestBody BaseEventDto<Integer> eventDto) throws TongYongYWException {
+        xiaoFeiXXService.RuYuanDJ(eventDto);
     }
+
     //todo  [EventSubscription("JZ_ZY_QuXiaoRY")]
     @Operation(summary = "消费取消入院信息")
     @PostMapping("XiaoFeiQXCYXX")
-    public MsfJpaRepository XiaoFeiQXCYXX(@RequestBody BaseEventDto<Integer> eventDto) throws TongYongYWException
-    {
-        return xiaoFeiXXService.xiaoFeiGXJZCSXX(eventDto);
+    public void XiaoFeiQXCYXX(@RequestBody BaseEventDto<Integer> eventDto) throws TongYongYWException {
+        xiaoFeiXXService.QuXiaoRY(eventDto);
     }
 
 }

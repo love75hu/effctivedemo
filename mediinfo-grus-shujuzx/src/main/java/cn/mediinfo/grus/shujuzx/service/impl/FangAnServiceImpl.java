@@ -32,6 +32,7 @@ import cn.mediinfo.grus.shujuzx.enums.FangAnOperator;
 import cn.mediinfo.grus.shujuzx.enums.NodeTypeEnum;
 import cn.mediinfo.grus.shujuzx.enums.ShuJuZLXDMEnum;
 import cn.mediinfo.grus.shujuzx.manager.FangAnManager;
+import cn.mediinfo.grus.shujuzx.model.SC_CX_FangAnSCModel;
 import cn.mediinfo.grus.shujuzx.remotedto.GongYong.ShuJuXXMSRso;
 import cn.mediinfo.grus.shujuzx.remotedto.JiuZhenXXs.JiuZhenIDYWLXIDRso;
 import cn.mediinfo.grus.shujuzx.remotedto.JiuZhenXXs.ZhuYuanMZJZXXRso;
@@ -39,6 +40,7 @@ import cn.mediinfo.grus.shujuzx.remotedto.linchuang.JiuluTextRso;
 import cn.mediinfo.grus.shujuzx.remoteservice.GongYongRemoteService;
 import cn.mediinfo.grus.shujuzx.remoteservice.JiuZhenRemoteService;
 import cn.mediinfo.grus.shujuzx.remoteservice.LinChuangRemoteService;
+import cn.mediinfo.grus.shujuzx.repository.SC_CX_FangAnSCRepository;
 import cn.mediinfo.grus.shujuzx.repository.SC_SC_ShouCangJMXRepository;
 import cn.mediinfo.grus.shujuzx.request.fangan.FangAnSC;
 import cn.mediinfo.grus.shujuzx.request.fangan.FangAnXXSaveRequest;
@@ -121,6 +123,9 @@ public class FangAnServiceImpl implements FangAnService {
 
     @Autowired
     private QuanWenJSConfig quanWenJSConfig;
+
+    @Autowired
+    private SC_CX_FangAnSCRepository fangAnSCRepository;
 
     /**
      * 保存方案
@@ -1002,7 +1007,16 @@ public class FangAnServiceImpl implements FangAnService {
             //子方案查询
             if (FangAnOperator.IN_FANGAN.getType().equals(operator)) {
                 sqlOperator = SQLBinaryOperator.IN;
-                val = SqlUtils.replaceOutputField(relatedFangAnQueryCondition.getSql(), relatedFangAnQueryCondition.getZiDuanBM());
+                //获取子方案输出信息
+                List<SC_CX_FangAnSCModel> relatedFangAnSCList=fangAnSCRepository.findByFangAnID(relatedFangAnQueryCondition.getFangAnId());
+                relatedFangAnSCList.sort(Comparator.comparingInt(SC_CX_FangAnSCModel::getShunXuHao));
+                SC_CX_FangAnSCModel shuChuZDXX=relatedFangAnSCList.stream().filter(p->Objects.equals(relatedFangAnQueryCondition.getFangAnSCId(),p.getId())).findFirst().orElse(null);
+                String ziDuanBM=relatedFangAnQueryCondition.getZiDuanBM();
+                if(shuChuZDXX!=null){
+                    ziDuanBM="zd_"+relatedFangAnSCList.indexOf(shuChuZDXX);
+                }
+
+                val = SqlUtils.replaceOutputField(relatedFangAnQueryCondition.getSql(), ziDuanBM);
             }
         } else if (valList.size() > 1) {
             sqlOperator = SQLBinaryOperator.getSQLBinaryOperator(operator);

@@ -137,7 +137,7 @@ class JiBenXXServiceImpl implements JiBenXXService {
         List<String> jiGouid=xiaFaJGIdGList.stream().map(BiHuanZZJGDto::getZuZhiJGID).collect(Collectors.toList());
 
             List<SC_BH_JiBenXXModel> jiBenTYX = jiBenXXRepository.jiBenTYX();
-            List<SC_BH_JiBenXXModel> jiBenJGX = jiBenXXRepository.jiBenJGX(jiGouid);
+                List<SC_BH_JiBenXXModel> jiBenJGX = jiBenXXRepository.jiBenJGX(jiGouid);
             //闭环设置基本信息
             List<SC_BH_JiBenXXModel> jiBenXXList=new ArrayList<>();
 
@@ -154,13 +154,18 @@ class JiBenXXServiceImpl implements JiBenXXService {
             List<SC_BH_ZiBiHXSLModel> addziBiHXSL=new ArrayList<>();
             for (var j:xiaFaJGIdGList)
             {
-                //通用机构下有的，机构下没有的下发e
-                List<String> biHuanID = jiBenJGX.stream().filter(n -> n.getZuZhiJGID().equals(j.getZuZhiJGID())).map(SC_BH_JiBenXXModel::getBiHuanID).toList();
 
-                jiBenTYX.stream().filter(n->!biHuanID.contains(n.getBiHuanID())).forEach(a->{
+                //通用机构下有的，机构下没有的下发e
+                List<String> biHuanID = jiBenJGX.stream()
+                        .filter(n -> n.getZuZhiJGID().equals(j.getZuZhiJGID()))
+                        .filter(n->dto.getBiHuanID().contains(n.getBiHuanID()))
+                        .map(SC_BH_JiBenXXModel::getBiHuanID).toList();
+
+                jiBenTYX.stream().filter(n->!biHuanID.contains(n.getBiHuanID()))
+                        .filter(n->dto.getBiHuanID().contains(n.getBiHuanID())).forEach(a->{
                      var jiBenxx=BeanUtil.copyProperties(a,SC_BH_JiBenXXModel.class);
                     jiBenxx.setId(null);
-                    String newbiHuanID=stringGenerator.Create();
+                    var newbiHuanID= a.getBiHuanID(); //闭环id
                     String newbiHuanMC=a.getBiHuanMC();
                     jiBenxx.setZuZhiJGID(j.getZuZhiJGID());
                     jiBenxx.setZuZhiJGMC(j.getZuZhiJGMC());
@@ -202,11 +207,11 @@ class JiBenXXServiceImpl implements JiBenXXService {
                 });
             }
 
-            jiBenXXRepository.insertAll(jiBenXXList);
-            jieDianXXRepository.insertAll(addjieDianXXList);
-            jieDianSXRepository.insertAll(addjieDianSXList);
-            ziBiHXXRepository.insertAll(addziBiHXX);
-            ziBiHXSLRepository.insertAll(addziBiHXSL);
+            jiBenXXRepository.saveAll(jiBenXXList);
+            jieDianXXRepository.saveAll(addjieDianXXList);
+            jieDianSXRepository.saveAll(addjieDianSXList);
+            ziBiHXXRepository.saveAll(addziBiHXX);
+            ziBiHXSLRepository.saveAll(addziBiHXSL);
             return true;
 
 

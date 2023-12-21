@@ -19,6 +19,7 @@ import jakarta.transaction.Transactional;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -93,8 +94,7 @@ public class BingRenYLSJServiceImpl implements BingRenYLSJService {
                 n.setZhuYuanCS(dto.getZhuYuanCS() + shouCiZX == 0 ? 0 : n.getZhuYuanCS());
                 n.setJiZhenCS(dto.getJiZhenCS() + shouCiZX == 0 ? 0 : n.getJiZhenCS());
                 n.setGongWeiCS(dto.getGongWeiCS() + shouCiZX == 0 ? 0 : n.getGongWeiCS());
-            }
-            else {
+            } else {
                 n.setMenZhenCS(shouCiZX == 0 ? 0 : n.getMenZhenCS());
                 n.setZhuYuanCS(shouCiZX == 0 ? 0 : n.getZhuYuanCS());
                 n.setJiZhenCS(shouCiZX == 0 ? 0 : n.getJiZhenCS());
@@ -124,17 +124,16 @@ public class BingRenYLSJServiceImpl implements BingRenYLSJService {
      * @return 是否成功
      */
     @Override
-    public Boolean updateBingRenYLSJForJZCS(BaseEventDto<Integer> eventDto) {
+    public Boolean updateBingRenYLSJForJZCS(BaseEventDto<Integer> eventDto) throws YuanChengException {
         var xiaoXiTou = eventDto.getXiaoXiTou();
         BingRenXXEventDto bingRenXX = eventDto.getYeWuXX().getBingRenXX();
         SC_LC_BingRenYLSJModel bingRenYLSJXX = sc_lc_bingRenYLSJRepository.findFirstByBingRenID(bingRenXX.getBingRenID());
         if (ObjectUtils.isEmpty(bingRenYLSJXX)) {
             var jiuZhenSLXX = new JZ_LC_JiuZhenSLRso();
-
-            MsfResponse<List<JZ_LC_JiuZhenSLRso>> jiuZhenResult = jiuZhenRemoteService.GetJiuZhenCSByBRIDs(Collections.singletonList(bingRenXX.getBingRenID()));
-            if (jiuZhenResult.getCode() >= 0) {
-                jiuZhenSLXX = jiuZhenResult.getData().get(0);
-            }
+            List<String> bingRenIDs = new ArrayList<>();
+            bingRenIDs.add(bingRenXX.getBingRenID());
+            List<JZ_LC_JiuZhenSLRso> jiuZhenResult = jiuZhenRemoteService.GetJiuZhenCSByBRIDs(bingRenIDs).getData("获取患者就诊信息失败！");
+            jiuZhenSLXX = jiuZhenResult.get(0);
             JZ_LC_JiuZhenSLRso finalJiuZhenSLXX = jiuZhenSLXX;
             SC_LC_BingRenYLSJModel addBingRenYLSJ = MapUtils.copyProperties(bingRenXX, SC_LC_BingRenYLSJModel::new, (a, b) -> {
                 b.setZuZhiJGID(ShuJuZXConstant.TONGYONG_JGID);
@@ -145,7 +144,7 @@ public class BingRenYLSJServiceImpl implements BingRenYLSJService {
                 b.setJiZhenCS(finalJiuZhenSLXX.getJiZhenJZCS() == null ? 0 : finalJiuZhenSLXX.getJiZhenJZCS());
                 b.setGongWeiCS(finalJiuZhenSLXX.getGongWeiJZCS() == null ? 0 : finalJiuZhenSLXX.getGongWeiJZCS());
             });
-            sc_lc_bingRenYLSJRepository.save(addBingRenYLSJ);
+            sc_lc_bingRenYLSJRepository.insert(addBingRenYLSJ);
 
         } else {
             if (Objects.equals(xiaoXiTou.getXiaoXiLX(), "JZ_MZ_WanChengJZ")) {
@@ -155,8 +154,10 @@ public class BingRenYLSJServiceImpl implements BingRenYLSJService {
             } else if (Objects.equals(xiaoXiTou.getXiaoXiLX(), "JZ_ZY_QuXiaoRY")) {
                 bingRenYLSJXX.setZhuYuanCS(bingRenYLSJXX.getZhuYuanCS() > 0 ? bingRenYLSJXX.getZhuYuanCS() - 1 : 0);
             }
+            sc_lc_bingRenYLSJRepository.asUpdateDsl().set(n -> n.menZhenCS, bingRenYLSJXX.getMenZhenCS())
+                    .set(n -> n.zhuYuanCS, bingRenYLSJXX.getZhuYuanCS())
+                    .where(n -> n.bingRenID.eq(bingRenYLSJXX.getBingRenID())).execute();
         }
-        sc_lc_bingRenYLSJRepository.save(bingRenYLSJXX);
         return true;
     }
 }

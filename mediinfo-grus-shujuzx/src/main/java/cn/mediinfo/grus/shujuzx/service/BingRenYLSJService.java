@@ -11,7 +11,7 @@ public interface BingRenYLSJService {
      * @param eventDto 事件参数
      * @return 是否成功
      */
-    Boolean updateBingRenYLSJForJZCS(BaseEventDto<Integer> eventDto);
+    Boolean updateBingRenYLSJForJZCS(BaseEventDto<Integer> eventDto) throws YuanChengException;
 
     /**
      * 新增病人医疗事件

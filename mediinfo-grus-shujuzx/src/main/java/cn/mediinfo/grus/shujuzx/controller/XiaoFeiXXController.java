@@ -1,6 +1,7 @@
 package cn.mediinfo.grus.shujuzx.controller;
 
 import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
+import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
 import cn.mediinfo.cyan.msf.orm.MsfJpaRepository;
 import cn.mediinfo.grus.shujuzx.events.BaseEventDto;
 import cn.mediinfo.grus.shujuzx.service.XiaoFeiXXService;
@@ -28,21 +29,21 @@ public class XiaoFeiXXController {
     //todo  [EventSubscription("JZ_MZ_WanChengJZ")]
     @Operation(summary = "消费完成接诊信息")
     @PostMapping("XiaoFeiWCJZXX")
-    public void XiaoFeiWCJZXX(@RequestBody BaseEventDto<Integer> eventDto) throws TongYongYWException {
+    public void XiaoFeiWCJZXX(@RequestBody BaseEventDto<Integer> eventDto) throws TongYongYWException, YuanChengException {
         xiaoFeiXXService.WanChengJZ(eventDto);
     }
 
     //todo  [EventSubscription("JZ_ZY_RuYuanDJ")]
     @Operation(summary = "消费入院信息")
     @PostMapping("XiaoFeiCYXX")
-    public void XiaoFeiCYXX(@RequestBody BaseEventDto<Integer> eventDto) throws TongYongYWException {
+    public void XiaoFeiCYXX(@RequestBody BaseEventDto<Integer> eventDto) throws TongYongYWException, YuanChengException {
         xiaoFeiXXService.RuYuanDJ(eventDto);
     }
 
     //todo  [EventSubscription("JZ_ZY_QuXiaoRY")]
     @Operation(summary = "消费取消入院信息")
     @PostMapping("XiaoFeiQXCYXX")
-    public void XiaoFeiQXCYXX(@RequestBody BaseEventDto<Integer> eventDto) throws TongYongYWException {
+    public void XiaoFeiQXCYXX(@RequestBody BaseEventDto<Integer> eventDto) throws TongYongYWException, YuanChengException {
         xiaoFeiXXService.QuXiaoRY(eventDto);
     }
 

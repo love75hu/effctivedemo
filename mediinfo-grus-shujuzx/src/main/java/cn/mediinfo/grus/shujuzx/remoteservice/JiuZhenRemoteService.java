@@ -22,7 +22,7 @@ public interface JiuZhenRemoteService {
      * @param bingRenIDs 病人集合
      */
     @PostMapping("/api/v1.0/JiuZhen/GetJiuZhenCSByBRIDs")
-    MsfResponse<List<JZ_LC_JiuZhenSLRso>> GetJiuZhenCSByBRIDs(@SpringQueryMap List<String> bingRenIDs);
+    MsfResponse<List<JZ_LC_JiuZhenSLRso>> GetJiuZhenCSByBRIDs(@RequestBody List<String> bingRenIDs);
 
     /**
      * 统计病人门诊住院就诊次数

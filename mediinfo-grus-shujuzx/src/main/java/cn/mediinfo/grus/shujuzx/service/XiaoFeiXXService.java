@@ -1,6 +1,7 @@
 package cn.mediinfo.grus.shujuzx.service;
 
 import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
+import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
 import cn.mediinfo.cyan.msf.orm.MsfJpaRepository;
 import cn.mediinfo.grus.shujuzx.events.BaseEventDto;
 
@@ -11,9 +12,9 @@ public interface XiaoFeiXXService {
      * @param eventDto 消息入参(按照消息标准规范)
      * @return
      */
-    void WanChengJZ(BaseEventDto<Integer> eventDto) throws TongYongYWException;
+    void WanChengJZ(BaseEventDto<Integer> eventDto) throws TongYongYWException, YuanChengException;
 
-    void RuYuanDJ(BaseEventDto<Integer> eventDto) throws TongYongYWException;
+    void RuYuanDJ(BaseEventDto<Integer> eventDto) throws TongYongYWException, YuanChengException;
 
-    void QuXiaoRY(BaseEventDto<Integer> eventDto) throws TongYongYWException;
+    void QuXiaoRY(BaseEventDto<Integer> eventDto) throws TongYongYWException, YuanChengException;
 }

@@ -206,6 +206,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
      */
     public BiHuanXQDto getBiHuanZXJG(String biHuanID,String ziBiHDCZXBZ,String jieDianID,String zuZhiJGID, List<ZiDuanRCDto> ruCanList) throws YuanChengException
     {
+        zuZhiJGID = StringUtil.hasText(zuZhiJGID)?zuZhiJGID:lyraIdentityService.getJiGouID();
         //获取闭环基本信息
         //1.获取闭环基本信息 SELECT * FROM SC_BH_JIBENXX;-- 闭环基本信息
         //2.获取闭环入参信息  SELECT * FROM SC_BH_RUCANXX;-- 闭环入参信息

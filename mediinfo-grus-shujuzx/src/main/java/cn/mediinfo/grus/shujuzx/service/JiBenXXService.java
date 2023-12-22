@@ -19,7 +19,7 @@ public interface JiBenXXService {
      */
     List<BiHuanJBXXTreeDto> getBiHuanJBXXTree(String zuZhiJGID, String likeQuery );
 
-    boolean addBiHuanJBXX(AddBiHuanXXDto dto) throws WeiZhaoDSJException;
+    String addBiHuanJBXX(AddBiHuanXXDto dto) throws WeiZhaoDSJException;
 
     /**
      * 闭环设置下发

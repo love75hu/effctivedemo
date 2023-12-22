@@ -94,13 +94,13 @@ class JiBenXXServiceImpl implements JiBenXXService {
     }
 
     @Override
-    public boolean addBiHuanJBXX(AddBiHuanXXDto dto) throws WeiZhaoDSJException {
+    public String addBiHuanJBXX(AddBiHuanXXDto dto) throws WeiZhaoDSJException {
         if (StringUtil.hasText(dto.getId())) {
             SC_BH_JiBenXXModel jiBenXXModel = jiBenXXRepository.findById(dto.getId()).orElseThrow(() -> new WeiZhaoDSJException("未获取到数据"));
             BeanUtil.copyProperties(dto, jiBenXXModel);
+            ruCanXXService.addRuCanXX(dto.getRuCanXXDtoList(), dto.getBiHuanLXDM(), dto.getBiHuanLXMC(), jiBenXXModel.getBiHuanID(), dto.getBiHuanMC());
             jiBenXXRepository.save(jiBenXXModel);
-            ruCanXXService.addRuCanXX(dto.getRuCanXXDtoList(), dto.getBiHuanLXDM(), dto.getBiHuanLXMC(), dto.getBiHuanID(), dto.getBiHuanMC());
-            return true;
+            return dto.getId();
         } else {
             var biHuanID = sequenceService.getXuHao("SC_BH_JiBenxx_BiHuanID", 6); //闭环id
             SC_BH_JiBenXXModel shiTuMXModel = new SC_BH_JiBenXXModel();
@@ -109,8 +109,8 @@ class JiBenXXServiceImpl implements JiBenXXService {
             shiTuMXModel.setZuZhiJGMC(ShuJuZXConstant.TONGYONG_JGMC);
             shiTuMXModel.setZuZhiJGID(ShuJuZXConstant.TONGYONG_JGID);
             ruCanXXService.addRuCanXX(dto.getRuCanXXDtoList(), dto.getBiHuanLXDM(), dto.getBiHuanLXMC(), biHuanID, dto.getBiHuanMC());
-            jiBenXXRepository.save(shiTuMXModel);
-            return true;
+          var data=  jiBenXXRepository.save(shiTuMXModel);
+            return data.getId();
         }
     }
 

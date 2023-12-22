@@ -40,7 +40,6 @@ public class JieDianList {
      * */
     private List<ZiDuanBMMC> ziBiHXSLList;
 
-
     /**
      * 逆节点标志
      * */

@@ -1,5 +1,6 @@
 package cn.mediinfo.grus.shujuzx.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import cn.mediinfo.cyan.msf.tenant.orm.entity.StringMTEntity;
 import jakarta.persistence.Column;
@@ -88,4 +89,14 @@ public class SC_CX_FangAnCXLSModel extends StringMTEntity {
      */
     @Column(columnDefinition = "查询人姓名")
     private String chaXunRXM;
+    /**
+     * 方案类型代码;0-全部1-门诊2-急诊3-住院4-公卫
+     */
+    @Column(columnDefinition = "方案类型代码;0-全部1-门诊2-急诊3-住院4-公卫")
+    private String fangAnLXDM;
+    /**
+     * 方案类型名称
+     */
+    @Column(columnDefinition = "方案类型名称")
+    private String fangAnLXMC;
 }

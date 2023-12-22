@@ -39,4 +39,8 @@ public class FangAnCXLSDTO {
     private String chaXunTJ;
     @Column(columnDefinition = "查询输出：JSON字符串")
     private String chaXunSC;
+    @Column(columnDefinition = "方案类型代码;0-全部1-门诊2-急诊3-住院4-公卫")
+    private String fangAnLXDM;
+    @Column(columnDefinition = "方案类型名称")
+    private String fangAnLXMC;
 }

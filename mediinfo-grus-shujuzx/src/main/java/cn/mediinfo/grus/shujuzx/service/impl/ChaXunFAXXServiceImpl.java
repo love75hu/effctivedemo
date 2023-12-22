@@ -69,6 +69,8 @@ public class ChaXunFAXXServiceImpl implements ChaXunFAXXService {
                     }
                     dto.setId(model.getId());
                     dto.setFangAnID(model.getFangAnID());
+                    dto.setFangAnMC(model.getFangAnMC());
+                    dto.setGuanJianZi(model.getGuanJianZi());
                     dto.setChaXunTJMS(model.getChaXunTJMS());
                 });
     }

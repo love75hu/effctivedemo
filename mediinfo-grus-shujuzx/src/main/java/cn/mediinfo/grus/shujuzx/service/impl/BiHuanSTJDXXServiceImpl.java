@@ -142,7 +142,7 @@ public class BiHuanSTJDXXServiceImpl implements BiHuanSTJDXXService {
             b.setGuanLianJD(guanLianJDXXS.stream().filter(n->n.getShiTuID().equals(b.getShiTuID())&&
                     n.getJieDianID().equals(b.getJieDianID())).map(SC_BH_ShiTuJDGXDto::getGuanLianJDMC).toList());
         }
-        return biHuanJDXXList.stream().sorted(Comparator.comparing(BiHuanJDXXListDto::getShunXuHao)).toList();
+        return biHuanJDXXList.stream().sorted(Comparator.comparing(BiHuanJDXXListDto::getShunXuHao,Comparator.nullsLast(Integer::compareTo))).toList();
     }
     /**
      * 获取节点列表数量

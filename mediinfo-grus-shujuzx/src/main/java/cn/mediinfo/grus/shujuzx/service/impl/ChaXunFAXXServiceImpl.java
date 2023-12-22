@@ -128,7 +128,7 @@ public class ChaXunFAXXServiceImpl implements ChaXunFAXXService {
         if (CollUtil.isNotEmpty(request.getFangAnSCList())) {
             model.setChaXunSC(JsonUtil.getBeanToJson(request.getFangAnSCList()));
         }
-        if ("1".equals(chaXunLXDM)) {
+        if (StringUtils.hasText(request.getFangAnID()) || CollUtil.isNotEmpty(request.getFangAnSCList())) {
             model.setChaXunSQL(sql);
         }
         model.setChaXunSJ(new Date());

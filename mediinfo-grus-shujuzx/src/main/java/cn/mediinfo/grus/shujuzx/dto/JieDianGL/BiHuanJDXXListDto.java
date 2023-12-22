@@ -29,4 +29,6 @@ public class BiHuanJDXXListDto {
     List<String> guanLianJD;
     @Schema(description = "启用标志")
     private Integer qiYongBZ;
+    @Schema(description = "顺序号")
+    private Integer ShunXuHao;
 }

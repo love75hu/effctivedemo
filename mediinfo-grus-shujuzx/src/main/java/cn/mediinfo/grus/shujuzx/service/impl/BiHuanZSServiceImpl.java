@@ -419,7 +419,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
             JieDianList jieDianList=new JieDianList();
             List<jieDianNRList> jieDianNRList=new ArrayList<>();
             // 在 forEach 循环之前判断是行存储还是列存储
-            boolean isRowStorage = Objects.equals(biHuanSTXX.getShiTuLXDM(), 2);
+            boolean isRowStorage = Objects.equals(biHuanSTXX.getShiTuLXDM(), "2");
              // 如果是行存储，先过滤出符合条件的映射
             List<Map<String, Object>> filteredMaps = isRowStorage
                     ? maps.stream()

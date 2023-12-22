@@ -3,13 +3,11 @@ package cn.mediinfo.grus.shujuzx.dto.bihuansz;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import java.util.Date;
-
 /**
  * 闭环信息Dto
  */
 @Data
-public class SC_BH_JIBENXXDto {
+public class SC_BH_JiBenXXDto {
     private String  id;
     /**
      * 组织机构ID

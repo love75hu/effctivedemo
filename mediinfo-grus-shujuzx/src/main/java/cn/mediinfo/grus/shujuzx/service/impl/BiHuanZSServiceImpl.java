@@ -136,8 +136,8 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
             //视图id
             List<String> shituIDs=jsonToList.stream().flatMap(guiZeDto -> guiZeDto.getGuiZeList().stream()).map(ShiTu::getShiTuID).distinct().toList();
 
-            if (shituIDs.isEmpty())
-            {
+            if (shituIDs.size() == 1 && shituIDs.get(0) == null) {
+                guoLuhuanIDs.add(b.getBiHuanID());
                 continue;
             }
             //获取数据视图信息
@@ -226,6 +226,11 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
 
         //1.获取闭环基本信息
         SC_BH_JiBenXXModel biHuanJBXX = jiBenXXRepository.findFirstByBiHuanIDAndZuZhiJGID(biHuanID,zuZhiJGID);
+
+        if (biHuanJBXX==null)
+        {
+            return new BiHuanXQDto();
+        }
         //2.获取闭环入参信息
         List<SC_BH_RuCanXXModel> biHuanRCXXList = ruCanXXRepository.findByBiHuanIDAndZuZhiJGID(biHuanID,zuZhiJGID);
         //3.获取闭环下的节点信息
@@ -622,17 +627,18 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
         }
         builder.append(CollUtil.join(ziDuanMingList, ","));
         builder.append(" from ");
-        builder.append(CollUtil.join(biaoMingList, " INNER JOIN "));
-
-        if (StringUtils.isNotBlank(relationCondition)) {
-            builder.append(" ON ");
-            builder.append(relationCondition);
-        }
+        builder.append(CollUtil.join(biaoMingList, ", "));
         builder.append(" where 1=1 ");
         if (StringUtils.isNotBlank(filterCondition)) {
             builder.append(" AND ");
             builder.append(filterCondition);
         }
+
+        if (StringUtils.isNotBlank(relationCondition)) {
+            builder.append(" and ");
+            builder.append(relationCondition);
+        }
+
 
         return builder.toString();
     }

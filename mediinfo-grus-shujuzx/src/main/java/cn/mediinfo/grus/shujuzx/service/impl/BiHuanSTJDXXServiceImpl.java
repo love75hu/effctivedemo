@@ -13,6 +13,7 @@ import cn.mediinfo.grus.shujuzx.dto.bihuansz.KeXuanJDDto;
 import cn.mediinfo.grus.shujuzx.dto.bihuansz.KeXuanJDXXDto;
 import cn.mediinfo.grus.shujuzx.model.SC_BH_ShiTuJDXXModel;
 import cn.mediinfo.grus.shujuzx.model.SC_BH_ShiTuXXModel;
+import cn.mediinfo.grus.shujuzx.model.SC_ZD_BiHuanLCModel;
 import cn.mediinfo.grus.shujuzx.repository.SC_BH_JiBenXXRepository;
 import cn.mediinfo.grus.shujuzx.repository.SC_BH_JieDianXXRepository;
 import cn.mediinfo.grus.shujuzx.repository.SC_BH_ShiTuJDXXRepository;
@@ -24,10 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -144,7 +142,7 @@ public class BiHuanSTJDXXServiceImpl implements BiHuanSTJDXXService {
             b.setGuanLianJD(guanLianJDXXS.stream().filter(n->n.getShiTuID().equals(b.getShiTuID())&&
                     n.getJieDianID().equals(b.getJieDianID())).map(SC_BH_ShiTuJDGXDto::getGuanLianJDMC).toList());
         }
-        return biHuanJDXXList;
+        return biHuanJDXXList.stream().sorted(Comparator.comparing(BiHuanJDXXListDto::getShunXuHao)).toList();
     }
     /**
      * 获取节点列表数量

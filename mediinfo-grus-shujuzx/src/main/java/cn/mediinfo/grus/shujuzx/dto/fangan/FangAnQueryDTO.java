@@ -37,4 +37,7 @@ public class FangAnQueryDTO {
 
     @Schema(description = "关键字")
     private String guanJianZi;
+
+    @Schema(description = "查询条件描述")
+    private String chaXunTJMS;
 }

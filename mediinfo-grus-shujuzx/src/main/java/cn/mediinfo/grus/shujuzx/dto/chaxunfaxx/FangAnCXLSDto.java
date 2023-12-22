@@ -9,6 +9,10 @@ public class FangAnCXLSDto {
     private String id;
     @Schema(description = "方案ID")
     private String fangAnID;
+    @Schema(description = "方案名称")
+    private String fangAnMC;
+    @Schema(description = "关键字")
+    private String GuanJianZi;
     @Schema(description = "标题名称")
     private String biaoTiMC;
     @Schema(description = "查询条件描述")

@@ -3,8 +3,6 @@ package cn.mediinfo.grus.shujuzx.request;
 import cn.mediinfo.grus.shujuzx.common.fangan.condition.FangAnTreeNode;
 import cn.mediinfo.grus.shujuzx.request.fangan.FangAnSC;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -39,4 +37,6 @@ public class FangAnCXLSSaveRequest {
     @Schema(description = "方案输出项")
     private List<FangAnSC> fangAnSCList;
 
+    @Schema(description = "查询条件描述")
+    private String chaXunTJMS;
 }

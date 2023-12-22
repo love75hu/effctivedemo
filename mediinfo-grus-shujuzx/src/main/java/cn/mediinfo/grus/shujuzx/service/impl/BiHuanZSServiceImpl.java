@@ -136,6 +136,10 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
             //视图id
             List<String> shituIDs=jsonToList.stream().flatMap(guiZeDto -> guiZeDto.getGuiZeList().stream()).map(ShiTu::getShiTuID).distinct().toList();
 
+            if (shituIDs.isEmpty())
+            {
+                continue;
+            }
             //获取数据视图信息
             List<GY_ZD_ShuJuSTXXRso> shuJuSTXXList  = gongYongRemoteService.getShuJuSTXXList(shituIDs).getData("获取数据视图信息");
             //获取数据视图明细信息
@@ -538,14 +542,23 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
                 var jieDianList = jieDianLists.stream().filter(d -> d.getId().equals(p.getGuanLianJDID())).findFirst().orElse(null);
                 if (jieDianList!=null)
                 {
-                    //时效秒
-                    int shiXiaoM = DateUtil.getSecondsBetween(j.getKongZhiSJ(), jieDianList.getKongZhiSJ());
-                    if (isTimeInvalid(p.getYunSuanFDM(),p.getDanWeiDM(), p.getShiXiao(), shiXiaoM)) {
+                    if (j.getKongZhiSJ()==null||jieDianList.getKongZhiSJ()==null)
+                    {
                         ShiXiaoList shiXiaoList=new ShiXiaoList();
                         shiXiaoList.setShiXiaoYCBZ("1");
-                        shiXiaoList.setShiXiaoYCMS("时效异常"+shiXiaoM +"秒");
+                        shiXiaoList.setShiXiaoYCMS("时效异常配置控制时间异常");
                         shiXiaoLists.add(shiXiaoList);
+                    }else {
+                        //时效秒
+                        int shiXiaoM = DateUtil.getSecondsBetween(j.getKongZhiSJ(), jieDianList.getKongZhiSJ());
+                        if (isTimeInvalid(p.getYunSuanFDM(),p.getDanWeiDM(), p.getShiXiao(), shiXiaoM)) {
+                            ShiXiaoList shiXiaoList=new ShiXiaoList();
+                            shiXiaoList.setShiXiaoYCBZ("1");
+                            shiXiaoList.setShiXiaoYCMS("时效异常"+shiXiaoM +"秒");
+                            shiXiaoLists.add(shiXiaoList);
+                        }
                     }
+
                 }
             });
             j.setShiXiaoLists(shiXiaoLists);

@@ -6,6 +6,7 @@ import cn.mediinfo.grus.shujuzx.dto.bihuansz.SC_BH_JiBenXXDto;
 import cn.mediinfo.grus.shujuzx.model.QSC_BH_JiBenXXModel;
 import cn.mediinfo.grus.shujuzx.model.SC_BH_JiBenXXModel;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -42,7 +43,7 @@ public interface SC_BH_JiBenXXRepository extends MsfJpaRepository<QSC_BH_JiBenXX
      */
     default List<SC_BH_JiBenXXDto> getJiBenXXList(String zuZhiJGID, String likeQuery) {
         return asQuerydsl().where(n->n.zuZhiJGID.eq(zuZhiJGID))
-                .whereIf(likeQuery != null, n -> n.biHuanMC.contains(likeQuery))
+                .whereIf(StringUtils.hasText(likeQuery), n -> n.biHuanMC.contains(likeQuery))
                 .select(SC_BH_JiBenXXDto.class).fetch();
     }
     default  void biHuanSZQY(String biHuanID,Integer qiyongBZ)

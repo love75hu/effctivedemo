@@ -49,7 +49,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
     /**
      * 闭环调用
      */
-    private SC_BH_DiaoYongPZRepository  diaoYongPZRepository;
+    private SC_BH_DiaoYongPZRepository diaoYongPZRepository;
 
     private final LyraIdentityService lyraIdentityService;
 
@@ -114,28 +114,26 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
 
     /**
      * 根据闭环功能点和相关入参获取闭环详情
-     *
      */
     public BiHuanXQDto getBiHuanXQ(BiHuanGNDPZ biHuanGNDPZ) throws YuanChengException {
 
         //当前功能点的调用配置
-        List<SC_BH_DiaoYongPZDto> biHuanPZList = diaoYongPZRepository.getBiHuanPZList(biHuanGNDPZ.getBiHuanGNDDM());
+        List<SC_BH_DiaoYongPZDto> biHuanPZList = diaoYongPZRepository.getBiHuanPZList(lyraIdentityService.getJiGouID(), biHuanGNDPZ.getBiHuanGNDDM(), 1);
         //获取配的闭环
-        var biHuanIDs=biHuanPZList.stream().map(SC_BH_DiaoYongPZDto::getBiHuanID).toList();
+        var biHuanIDs = biHuanPZList.stream().map(SC_BH_DiaoYongPZDto::getBiHuanID).toList();
 
         //闭环调用信息
-        List<String>  guoLuhuanIDs=new ArrayList<>();
-        for (var b:biHuanPZList)
-        {
+        List<String> guoLuhuanIDs = new ArrayList<>();
+        for (var b : biHuanPZList) {
             List<GuiZeDto> jsonToList = JsonUtil.getJsonToList(b.getTiaoJian(), GuiZeDto.class);
 
             //视图id
-            List<String> shituIDs=jsonToList.stream().flatMap(guiZeDto -> guiZeDto.getGuiZeList().stream()).map(ShiTu::getShiTuID).distinct().toList();
+            List<String> shituIDs = jsonToList.stream().flatMap(guiZeDto -> guiZeDto.getGuiZeList().stream()).map(ShiTu::getShiTuID).distinct().toList();
 
             //获取数据视图信息
-            List<GY_ZD_ShuJuSTXXRso> shuJuSTXXList  = gongYongRemoteService.getShuJuSTXXList(shituIDs).getData("获取数据视图信息");
+            List<GY_ZD_ShuJuSTXXRso> shuJuSTXXList = gongYongRemoteService.getShuJuSTXXList(shituIDs).getData("获取数据视图信息");
             //获取数据视图明细信息
-            var biaoMing=extractTableNames(jsonToList);
+            var biaoMing = extractTableNames(jsonToList);
 
             List<ShuJuXXMSRso> biaoMoshi = gongYongRemoteService.getShuJXXMS(new ArrayList<>(biaoMing)).getData("获取表模式失败");
 
@@ -172,41 +170,35 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
             String sql = "SELECT COUNT(*) FROM " + fullTableName + " " + joinBuilder + " WHERE " + tiaoJian;
 
             Long count = jdbcTemplate.queryForObject(sql, Long.class);
-            if (count!=null && count>0)
-            {
+            if (count != null && count > 0) {
                 guoLuhuanIDs.add(b.getBiHuanID());
             }
         }
         //获取闭环入参信息
-        var biHuanRCXXList=ruCanXXRepository.findByBiHuanIDIn(biHuanIDs);
+        var biHuanRCXXList = ruCanXXRepository.findByBiHuanIDIn(biHuanIDs);
         //入参字段
-        var ziDuanBM=biHuanGNDPZ.getRuCanList().stream().map(ZiDuanRCDto::getZiDuanBM).toList();
+        var ziDuanBM = biHuanGNDPZ.getRuCanList().stream().map(ZiDuanRCDto::getZiDuanBM).toList();
         //匹配 闭环调用的  的所有闭环，匹配入参是否一致
-        var zuiZhongBiHuanID=new ArrayList<String>();
-        for (var b:guoLuhuanIDs)
-        {
+        var zuiZhongBiHuanID = new ArrayList<String>();
+        for (var b : guoLuhuanIDs) {
             long count = biHuanRCXXList.stream().filter(n -> n.getBiHuanID().equals(b) && ziDuanBM.contains(n.getZiDuanBM())).count();
-            if(count==ziDuanBM.size())
-            {
+            if (count == ziDuanBM.size()) {
                 zuiZhongBiHuanID.add(b);
             }
         }
         //闭环 执行的逻辑
 
-        if (biHuanIDs.size()==0)
-        {
-           return new BiHuanXQDto();
+        if (biHuanIDs.size() == 0) {
+            return new BiHuanXQDto();
         }
-       return getBiHuanZXJG(biHuanIDs.get(0),"0","0",lyraIdentityService.getJiGouID(),biHuanGNDPZ.getRuCanList());
+        return getBiHuanZXJG(biHuanIDs.get(0), "0", "0", lyraIdentityService.getJiGouID(), biHuanGNDPZ.getRuCanList());
     }
 
     /**
      * 根据闭环id获取闭配置信息去执行sql
-     *
      */
-    public BiHuanXQDto getBiHuanZXJG(String biHuanID,String ziBiHDCZXBZ,String jieDianID,String zuZhiJGID, List<ZiDuanRCDto> ruCanList) throws YuanChengException
-    {
-        zuZhiJGID = StringUtil.hasText(zuZhiJGID)?zuZhiJGID:lyraIdentityService.getJiGouID();
+    public BiHuanXQDto getBiHuanZXJG(String biHuanID, String ziBiHDCZXBZ, String jieDianID, String zuZhiJGID, List<ZiDuanRCDto> ruCanList) throws YuanChengException {
+        zuZhiJGID = StringUtil.hasText(zuZhiJGID) ? zuZhiJGID : lyraIdentityService.getJiGouID();
         //获取闭环基本信息
         //1.获取闭环基本信息 SELECT * FROM SC_BH_JIBENXX;-- 闭环基本信息
         //2.获取闭环入参信息  SELECT * FROM SC_BH_RUCANXX;-- 闭环入参信息
@@ -216,11 +208,11 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
         //6.在获取子闭环的显示列
 
         //1.获取闭环基本信息
-        SC_BH_JiBenXXModel biHuanJBXX = jiBenXXRepository.findFirstByBiHuanIDAndZuZhiJGID(biHuanID,zuZhiJGID);
+        SC_BH_JiBenXXModel biHuanJBXX = jiBenXXRepository.findFirstByBiHuanIDAndZuZhiJGID(biHuanID, zuZhiJGID);
         //2.获取闭环入参信息
-        List<SC_BH_RuCanXXModel> biHuanRCXXList = ruCanXXRepository.findByBiHuanIDAndZuZhiJGID(biHuanID,zuZhiJGID);
+        List<SC_BH_RuCanXXModel> biHuanRCXXList = ruCanXXRepository.findByBiHuanIDAndZuZhiJGID(biHuanID, zuZhiJGID);
         //3.获取闭环下的节点信息
-        List<SC_BH_JieDianXXModel> biHuanJDXXList = jieDianXXRepository.findByBiHuanIDAndZuZhiJGIDOrderByShunXuHao(biHuanID,zuZhiJGID);
+        List<SC_BH_JieDianXXModel> biHuanJDXXList = jieDianXXRepository.findByBiHuanIDAndZuZhiJGIDOrderByShunXuHao(biHuanID, zuZhiJGID);
         //4.在获取节点下的 节点时效
         List<SC_BH_JieDianSXModel> biHuanJDSXList = jieDianSXRepository.findByBiHuanIDAndZuZhiJGID(biHuanID, zuZhiJGID);
         //5.在获取节点下的 子闭环信信息
@@ -231,9 +223,9 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
 
         List<String> ruCanZDBMs = biHuanRCXXList.stream().map(n -> n.getZiDuanBM()).distinct().toList();
         //视图id 整理
-        List<String> shituIDs=biHuanJDXXList.stream().map(SC_BH_JieDianXXModel::getShiTuID).distinct().toList();
+        List<String> shituIDs = biHuanJDXXList.stream().map(SC_BH_JieDianXXModel::getShiTuID).distinct().toList();
         //节点id 整理
-        List<String> jieDianIDs=biHuanJDXXList.stream().map(SC_BH_JieDianXXModel::getJieDianID).distinct().toList();
+        List<String> jieDianIDs = biHuanJDXXList.stream().map(SC_BH_JieDianXXModel::getJieDianID).distinct().toList();
         //获取闭环视图数据
         List<SC_BH_ShiTuXXModel> biHuanSTXXList = shiTuXXRepository.findByShiTuIDIn(shituIDs);
         //获取闭环节点数据
@@ -241,28 +233,27 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
         //获取节点明细数据
         List<SC_BH_ShiTuJDMXModel> biHuanSTJDMXList = shiTuJDMXRepository.findByJieDianIDIn(jieDianIDs);
 
-        BiHuanXQDto biHuanXQDto=new BiHuanXQDto();
+        BiHuanXQDto biHuanXQDto = new BiHuanXQDto();
         biHuanXQDto.setBiHuanID(biHuanID);
         biHuanXQDto.setBiHuanMC(biHuanJBXX.getBiHuanMC());
 
 
-        List<LingChuangJSPZDto> shuJuLYDtos=new ArrayList<>();
-        biHuanSTXXList.forEach(s->{
-            LingChuangJSPZDto shuJuLYDto=new LingChuangJSPZDto();
+        List<LingChuangJSPZDto> shuJuLYDtos = new ArrayList<>();
+        biHuanSTXXList.forEach(s -> {
+            LingChuangJSPZDto shuJuLYDto = new LingChuangJSPZDto();
             shuJuLYDto.setShuJuLYID(s.getShuJuLYID());
             shuJuLYDto.setShuJuLYLXDM(s.getShuJuLYLXDM());
             val list = biHuanSTJDMXList.stream().filter(n -> n.getShiTuID().equals(s.getShiTuID())).toList();
             shuJuLYDto.setShuJuJMXZDDtos(BeanUtil.copyListProperties(list, ShuJuJMXZDDto::new));
             shuJuLYDtos.add(shuJuLYDto);
         });
-        List<TableDTO>  tableList = gongYongRemoteService.getShiTuGLFSGLTJ(shuJuLYDtos).getData("获取功能服务字段信息失败");
+        List<TableDTO> tableList = gongYongRemoteService.getShiTuGLFSGLTJ(shuJuLYDtos).getData("获取功能服务字段信息失败");
 
         StringBuilder builder = new StringBuilder();
-        tableList.get(0).getSchemaTableList().forEach(p->{
+        tableList.get(0).getSchemaTableList().forEach(p -> {
             List<ShuJuJMXZDDto> shujMX = p.getShuJuJMXZDDtos().stream().filter(n -> ruCanZDBMs.contains(n.getZiDuanBM())).toList();
 
-            for (int i=0;i<shujMX.size();i++)
-            {
+            for (int i = 0; i < shujMX.size(); i++) {
                 int finalI = i;
                 ZiDuanRCDto ziDuanBMMC = ruCanList.stream().filter(n ->
                         n.getZiDuanBM().equals(shujMX.get(finalI).getZiDuanBM())).findFirst().orElse(null);
@@ -287,125 +278,118 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
         //执行sql 得出结果
         List<Map<String, Object>> maps = jdbcTemplate.queryForList(sql);
         //执行完视图 获取节点的数据集合
-       List<JieDianList> jieDianLists=new ArrayList<>();
-        List<ZiDuanBMMC> ziDuanBMMCList=new ArrayList<>();
-       if (Objects.equals(ziBiHDCZXBZ,"1"))
-       {
+        List<JieDianList> jieDianLists = new ArrayList<>();
+        List<ZiDuanBMMC> ziDuanBMMCList = new ArrayList<>();
+        if (Objects.equals(ziBiHDCZXBZ, "1")) {
 
-           for (Map<String, Object> dataMap : maps) {
-               List<SC_BH_ZiBiHXSLModel> ziBiHXSLList = biHuanZBHXSLList.stream().filter(n -> n.getJieDianID().equals(jieDianID)).toList();
+            for (Map<String, Object> dataMap : maps) {
+                List<SC_BH_ZiBiHXSLModel> ziBiHXSLList = biHuanZBHXSLList.stream().filter(n -> n.getJieDianID().equals(jieDianID)).toList();
 
-              ZiDuanBMMC ziDuanBMMC = new ZiDuanBMMC();
-               List<ZhanShiLList> zhanShiLLists=new ArrayList<>();
-               ziBiHXSLList.forEach(z -> {
-                   ZhanShiLList zhanShiL=new ZhanShiLList();
-                   zhanShiL.setZiDuanBM(z.getZiDuanBM());
-                   var ziDuanZ= dataMap.getOrDefault(z.getZiDuanBM(), "");
-                  if (ziDuanZ != null)
-                 {
-                     zhanShiL.setZiDuanZhi(ziDuanZ.toString());
-                  }
+                ZiDuanBMMC ziDuanBMMC = new ZiDuanBMMC();
+                List<ZhanShiLList> zhanShiLLists = new ArrayList<>();
+                ziBiHXSLList.forEach(z -> {
+                    ZhanShiLList zhanShiL = new ZhanShiLList();
+                    zhanShiL.setZiDuanBM(z.getZiDuanBM());
+                    var ziDuanZ = dataMap.getOrDefault(z.getZiDuanBM(), "");
+                    if (ziDuanZ != null) {
+                        zhanShiL.setZiDuanZhi(ziDuanZ.toString());
+                    }
 
-                   zhanShiL.setZiDuanMC(z.getZiDuanMC());
-                   zhanShiLLists.add(zhanShiL);
-               });
-               ziDuanBMMC.setZhanShiLLists(zhanShiLLists);
-                   List<JieDianList> jieDianList1=new ArrayList<>();
+                    zhanShiL.setZiDuanMC(z.getZiDuanMC());
+                    zhanShiLLists.add(zhanShiL);
+                });
+                ziDuanBMMC.setZhanShiLLists(zhanShiLLists);
+                List<JieDianList> jieDianList1 = new ArrayList<>();
 
-                   biHuanJDXXList.forEach(j->{
-                       //获取节点下的 子闭环信信息
-                       List<SC_BH_ZiBiHXXModel> ziBiHXXList = ziBiHXX.stream().filter(n -> n.getJieDianID().equals(j.getJieDianID())).toList();
-                       //获取子闭环的显示列
-                       List<SC_BH_ZiBiHXSLModel> ziBiHXSLList1 = biHuanZBHXSLList.stream().filter(n -> n.getJieDianID().equals(j.getJieDianID())).toList();
-                       //查询 视图信息
-                       SC_BH_ShiTuXXModel biHuanSTXX = biHuanSTXXList.stream().filter(n -> n.getShiTuID().equals(j.getShiTuID())).findFirst().orElse(new SC_BH_ShiTuXXModel());
-                       //查询 视图节点信息
-                       SC_BH_ShiTuJDXXModel biHuanSTJDXXByJieID = biHuanSTJDXXList.stream().filter(n -> n.getJieDianID().equals(j.getJieDianID())).findFirst().orElse(new SC_BH_ShiTuJDXXModel());
-                       //查询 视图下下的字段信息
-                       List<SC_BH_ShiTuJDMXModel> biHuanJDMXByJieID = biHuanSTJDMXList.stream().filter(n -> n.getJieDianID().equals(j.getJieDianID())).toList();
-                       JieDianList jieDianList=new JieDianList();
-                       List<jieDianNRList> jieDianNRList=new ArrayList<>();
-                       // 在 forEach 循环之前判断是行存储还是列存储
-                       boolean isRowStorage = Objects.equals(biHuanSTXX.getShiTuLXDM(), 2);
-                       // 如果是行存储，先过滤出符合条件的映射
-                       // 如果是行存储，先过滤出符合条件的映射
-                       List<Map<String, Object>> filteredMaps = isRowStorage
-                               ? maps.stream()
-                               .filter(map -> Objects.equals(map.get(biHuanSTJDXXByJieID.getShiJianZDBM()), biHuanSTJDXXByJieID.getShiJianDM()))
-                               .toList()
-                               : maps;
+                biHuanJDXXList.forEach(j -> {
+                    //获取节点下的 子闭环信信息
+                    List<SC_BH_ZiBiHXXModel> ziBiHXXList = ziBiHXX.stream().filter(n -> n.getJieDianID().equals(j.getJieDianID())).toList();
+                    //获取子闭环的显示列
+                    List<SC_BH_ZiBiHXSLModel> ziBiHXSLList1 = biHuanZBHXSLList.stream().filter(n -> n.getJieDianID().equals(j.getJieDianID())).toList();
+                    //查询 视图信息
+                    SC_BH_ShiTuXXModel biHuanSTXX = biHuanSTXXList.stream().filter(n -> n.getShiTuID().equals(j.getShiTuID())).findFirst().orElse(new SC_BH_ShiTuXXModel());
+                    //查询 视图节点信息
+                    SC_BH_ShiTuJDXXModel biHuanSTJDXXByJieID = biHuanSTJDXXList.stream().filter(n -> n.getJieDianID().equals(j.getJieDianID())).findFirst().orElse(new SC_BH_ShiTuJDXXModel());
+                    //查询 视图下下的字段信息
+                    List<SC_BH_ShiTuJDMXModel> biHuanJDMXByJieID = biHuanSTJDMXList.stream().filter(n -> n.getJieDianID().equals(j.getJieDianID())).toList();
+                    JieDianList jieDianList = new JieDianList();
+                    List<jieDianNRList> jieDianNRList = new ArrayList<>();
+                    // 在 forEach 循环之前判断是行存储还是列存储
+                    boolean isRowStorage = Objects.equals(biHuanSTXX.getShiTuLXDM(), 2);
+                    // 如果是行存储，先过滤出符合条件的映射
+                    // 如果是行存储，先过滤出符合条件的映射
+                    List<Map<String, Object>> filteredMaps = isRowStorage
+                            ? maps.stream()
+                            .filter(map -> Objects.equals(map.get(biHuanSTJDXXByJieID.getShiJianZDBM()), biHuanSTJDXXByJieID.getShiJianDM()))
+                            .toList()
+                            : maps;
 
-                       biHuanJDMXByJieID.forEach(f -> {
-                           String value;
-                           if (isRowStorage) {
-                               // 行存储情况
-                               value = filteredMaps.stream()
-                                       .map(k -> k.getOrDefault(f.getZiDuanBM(), "").toString())
-                                       .findFirst()
-                                       .orElse("");
-                           } else {
-                               // 列存储情况
-                               value = maps.stream()
-                                       .map(k -> k.getOrDefault(f.getZiDuanBM(), "").toString())
-                                       .findFirst()
-                                       .orElse("");
-                           }
+                    biHuanJDMXByJieID.forEach(f -> {
+                        String value;
+                        if (isRowStorage) {
+                            // 行存储情况
+                            value = filteredMaps.stream()
+                                    .map(k -> k.getOrDefault(f.getZiDuanBM(), "").toString())
+                                    .findFirst()
+                                    .orElse("");
+                        } else {
+                            // 列存储情况
+                            value = maps.stream()
+                                    .map(k -> k.getOrDefault(f.getZiDuanBM(), "").toString())
+                                    .findFirst()
+                                    .orElse("");
+                        }
 
-                           // 创建并配置 jieDianNRList 对象
-                           jieDianNRList biHuanJDNr = new jieDianNRList();
-                           biHuanJDNr.setZiDuanBM(f.getZiDuanBM());
-                           biHuanJDNr.setZiDuanMC(f.getZiDuanMC());
-                           biHuanJDNr.setYunXuWKBZ(f.getYunXuWKBZ());
-                           biHuanJDNr.setKongZhiSJBZ(f.getKongZhiSJBZ());
-                           biHuanJDNr.setZiDuanZhi(value);
-                           if (Objects.equals( f.getKongZhiSJBZ(),1))
-                           {
-                               jieDianList.setKongZhiSJ(Converter.toDate(value));
-                           }
-                           // 将对象添加到列表中
-                           jieDianNRList.add(biHuanJDNr);
-                       });
-                       //获取是否有子闭环
-                       val ziBiHXXModel = ziBiHXXList.stream().filter(n -> n.getJieDianID().equals(j.getJieDianID())).findFirst().orElse(null);
-                       if (ziBiHXXModel!=null)
-                       {
-                           //子闭环标志
-                           jieDianList.setZiBiHBZ("1");
-                           jieDianList.setZiBiHGLZD(ziBiHXXModel.getGuanLianZDBM());
-                           jieDianList.setZiBiHGLZDZ(maps.stream()
-                                   .map(k -> k.getOrDefault(ziBiHXXModel.getGuanLianZDBM(), "").toString())
-                                   .findFirst()
-                                   .orElse(""));
-                       }
-                       if (ziBiHXSLList1.isEmpty())
-                       {
-                           jieDianList.setZiBiHDCZXBZ("1");
-                       }
-                       jieDianList.setBingXingBZ(j.getBingXingBZ());
-                       jieDianList.setId(j.getJieDianID());
-                       //逆节点标志
-                       jieDianList.setNiJieDBZ("");
-                       //缺失标志
-                       if (Objects.equals(j.getBiXuBZ(),1)&&jieDianNRList.isEmpty())
-                       {
-                           jieDianList.setQueShiBZ("1");
-                       }
-                       //未执行标志
-                       if (jieDianNRList.isEmpty())
-                       {
-                           jieDianList.setWeiZhiXBZ("1");
-                       }
-                       jieDianList.setJieDianMC(StringUtil.hasText(j.getXianShiMC())?j.getXianShiMC():j.getJieDianMC());
-                       jieDianList.setJieDianNRList(jieDianNRList);
-                       jieDianList1.add(jieDianList);
-                   });
-                   ziDuanBMMC.setJieDianXX(jieDianList1);
-                   ziDuanBMMCList.add(ziDuanBMMC);
-           }
+                        // 创建并配置 jieDianNRList 对象
+                        jieDianNRList biHuanJDNr = new jieDianNRList();
+                        biHuanJDNr.setZiDuanBM(f.getZiDuanBM());
+                        biHuanJDNr.setZiDuanMC(f.getZiDuanMC());
+                        biHuanJDNr.setYunXuWKBZ(f.getYunXuWKBZ());
+                        biHuanJDNr.setKongZhiSJBZ(f.getKongZhiSJBZ());
+                        biHuanJDNr.setZiDuanZhi(value);
+                        if (Objects.equals(f.getKongZhiSJBZ(), 1)) {
+                            jieDianList.setKongZhiSJ(Converter.toDate(value));
+                        }
+                        // 将对象添加到列表中
+                        jieDianNRList.add(biHuanJDNr);
+                    });
+                    //获取是否有子闭环
+                    val ziBiHXXModel = ziBiHXXList.stream().filter(n -> n.getJieDianID().equals(j.getJieDianID())).findFirst().orElse(null);
+                    if (ziBiHXXModel != null) {
+                        //子闭环标志
+                        jieDianList.setZiBiHBZ("1");
+                        jieDianList.setZiBiHGLZD(ziBiHXXModel.getGuanLianZDBM());
+                        jieDianList.setZiBiHGLZDZ(maps.stream()
+                                .map(k -> k.getOrDefault(ziBiHXXModel.getGuanLianZDBM(), "").toString())
+                                .findFirst()
+                                .orElse(""));
+                    }
+                    if (ziBiHXSLList1.isEmpty()) {
+                        jieDianList.setZiBiHDCZXBZ("1");
+                    }
+                    jieDianList.setBingXingBZ(j.getBingXingBZ());
+                    jieDianList.setId(j.getJieDianID());
+                    //逆节点标志
+                    jieDianList.setNiJieDBZ("");
+                    //缺失标志
+                    if (Objects.equals(j.getBiXuBZ(), 1) && jieDianNRList.isEmpty()) {
+                        jieDianList.setQueShiBZ("1");
+                    }
+                    //未执行标志
+                    if (jieDianNRList.isEmpty()) {
+                        jieDianList.setWeiZhiXBZ("1");
+                    }
+                    jieDianList.setJieDianMC(StringUtil.hasText(j.getXianShiMC()) ? j.getXianShiMC() : j.getJieDianMC());
+                    jieDianList.setJieDianNRList(jieDianNRList);
+                    jieDianList1.add(jieDianList);
+                });
+                ziDuanBMMC.setJieDianXX(jieDianList1);
+                ziDuanBMMCList.add(ziDuanBMMC);
+            }
 
-       }
+        }
 
-        biHuanJDXXList.forEach(j->{
+        biHuanJDXXList.forEach(j -> {
             //获取节点下的 子闭环信信息
             List<SC_BH_ZiBiHXXModel> ziBiHXXList = ziBiHXX.stream().filter(n -> n.getJieDianID().equals(j.getJieDianID())).toList();
             //获取子闭环的显示列
@@ -416,11 +400,11 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
             SC_BH_ShiTuJDXXModel biHuanSTJDXXByJieID = biHuanSTJDXXList.stream().filter(n -> n.getJieDianID().equals(j.getJieDianID())).findFirst().orElse(new SC_BH_ShiTuJDXXModel());
             //查询 视图下下的字段信息
             List<SC_BH_ShiTuJDMXModel> biHuanJDMXByJieID = biHuanSTJDMXList.stream().filter(n -> n.getJieDianID().equals(j.getJieDianID())).toList();
-            JieDianList jieDianList=new JieDianList();
-            List<jieDianNRList> jieDianNRList=new ArrayList<>();
+            JieDianList jieDianList = new JieDianList();
+            List<jieDianNRList> jieDianNRList = new ArrayList<>();
             // 在 forEach 循环之前判断是行存储还是列存储
             boolean isRowStorage = Objects.equals(biHuanSTXX.getShiTuLXDM(), "2");
-             // 如果是行存储，先过滤出符合条件的映射
+            // 如果是行存储，先过滤出符合条件的映射
             List<Map<String, Object>> filteredMaps = isRowStorage
                     ? maps.stream()
                     .filter(map -> Objects.equals(map.get(biHuanSTJDXXByJieID.getShiJianZDBM()), biHuanSTJDXXByJieID.getShiJianDM()))
@@ -450,8 +434,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
                 biHuanJDNr.setYunXuWKBZ(f.getYunXuWKBZ());
                 biHuanJDNr.setKongZhiSJBZ(f.getKongZhiSJBZ());
                 biHuanJDNr.setZiDuanZhi(value);
-                if (Objects.equals( f.getKongZhiSJBZ(),1))
-                {
+                if (Objects.equals(f.getKongZhiSJBZ(), 1)) {
                     jieDianList.setKongZhiSJ(Converter.toDate(value));
                 }
                 // 将对象添加到列表中
@@ -459,8 +442,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
             });
             //获取是否有子闭环
             val ziBiHXXModel = ziBiHXXList.stream().filter(n -> n.getJieDianID().equals(j.getJieDianID())).findFirst().orElse(null);
-            if (ziBiHXXModel!=null)
-            {
+            if (ziBiHXXModel != null) {
                 //子闭环标志
                 jieDianList.setZiBiHBZ("1");
                 jieDianList.setZiBiHGLZD(ziBiHXXModel.getGuanLianZDBM());
@@ -469,25 +451,22 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
                         .findFirst()
                         .orElse(""));
             }
-            if (!ziBiHXSLList.isEmpty())
-            {
+            if (!ziBiHXSLList.isEmpty()) {
                 jieDianList.setZiBiHDCZXBZ("1");
             }
-             jieDianList.setBingXingBZ(j.getBingXingBZ());
-             jieDianList.setId(j.getJieDianID());
+            jieDianList.setBingXingBZ(j.getBingXingBZ());
+            jieDianList.setId(j.getJieDianID());
             //逆节点标志
             jieDianList.setNiJieDBZ("");
             //缺失标志
-            if (Objects.equals(j.getBiXuBZ(),1)&&jieDianNRList.isEmpty())
-            {
+            if (Objects.equals(j.getBiXuBZ(), 1) && jieDianNRList.isEmpty()) {
                 jieDianList.setQueShiBZ("1");
             }
             //未执行标志
-            if (jieDianNRList.isEmpty())
-            {
+            if (jieDianNRList.isEmpty()) {
                 jieDianList.setWeiZhiXBZ("1");
             }
-            jieDianList.setJieDianMC(StringUtil.hasText(j.getXianShiMC())?j.getXianShiMC():j.getJieDianMC());
+            jieDianList.setJieDianMC(StringUtil.hasText(j.getXianShiMC()) ? j.getXianShiMC() : j.getJieDianMC());
             jieDianList.setJieDianNRList(jieDianNRList);
             jieDianLists.add(jieDianList);
 
@@ -496,21 +475,20 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
 
         //处理时效问题，用控制时间字段 做比较
         //循环 得出的节点信息，在去找时效，中的数据 对应比较 如果有异常就给异常标志
-        jieDianLists.forEach(j-> {
+        jieDianLists.forEach(j -> {
             //当前这个节点下 的时效
             List<SC_BH_JieDianSXModel> jieDianSXList = biHuanJDSXList.stream().filter(n -> n.getJieDianID().equals(j.getId())).toList();
             //遍历 节点时效
-            List<ShiXiaoList> shiXiaoLists=new ArrayList<>();
-            jieDianSXList.forEach(p->{
+            List<ShiXiaoList> shiXiaoLists = new ArrayList<>();
+            jieDianSXList.forEach(p -> {
                 var jieDianList = jieDianLists.stream().filter(d -> d.getId().equals(p.getGuanLianJDID())).findFirst().orElse(null);
-                if (jieDianList!=null)
-                {
+                if (jieDianList != null) {
                     //时效秒
                     int shiXiaoM = DateUtil.getSecondsBetween(j.getKongZhiSJ(), jieDianList.getKongZhiSJ());
-                    if (isTimeInvalid(p.getYunSuanFDM(),p.getDanWeiDM(), p.getShiXiao(), shiXiaoM)) {
-                        ShiXiaoList shiXiaoList=new ShiXiaoList();
+                    if (isTimeInvalid(p.getYunSuanFDM(), p.getDanWeiDM(), p.getShiXiao(), shiXiaoM)) {
+                        ShiXiaoList shiXiaoList = new ShiXiaoList();
                         shiXiaoList.setShiXiaoYCBZ("1");
-                        shiXiaoList.setShiXiaoYCMS("时效异常"+shiXiaoM +"秒");
+                        shiXiaoList.setShiXiaoYCMS("时效异常" + shiXiaoM + "秒");
                         shiXiaoLists.add(shiXiaoList);
                     }
                 }
@@ -524,6 +502,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
 
         return biHuanXQDto;
     }
+
     private boolean isTimeInvalid(String operator, String yunSuanFDM, BigDecimal time, int value) {
         // 转换time为秒
         if ("时".equals(yunSuanFDM)) {
@@ -548,11 +527,11 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
     /**
      * 获取视图表关系
      *
-     * @param table     表信息
+     * @param table 表信息
      * @return String
      */
     private String getShiTuBGX(TableDTO table) {
-            StringBuilder builder = new StringBuilder();
+        StringBuilder builder = new StringBuilder();
 
         builder.append("select ");
         //字段名列表
@@ -608,7 +587,8 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
     }
 
     /**
-     *  取所有表明 用于查询
+     * 取所有表明 用于查询
+     *
      * @param guiZeList 规则
      * @return 表明
      */
@@ -620,8 +600,10 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
                 .map(ShiTu::getBiaoMing)
                 .collect(Collectors.toSet());
     }
+
     /**
      * 解析规则
+     *
      * @param guiZeList 规则
      * @return sql
      */

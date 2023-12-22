@@ -135,7 +135,7 @@ public class BiHuanDYServicelmpl implements BiHuanDYService {
 
     @Override
     public List<SC_BH_DiaoYongPZDto> getBiHuanPZList(String gongNengDDM) {
-        return sc_bh_diaoYongPZRepository.getBiHuanPZList(gongNengDDM);
+        return sc_bh_diaoYongPZRepository.getBiHuanPZList(_lyraIdentityService.getJiGouID(), gongNengDDM,null);
     }
 
     @Override

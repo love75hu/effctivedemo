@@ -2,6 +2,9 @@ package cn.mediinfo.grus.shujuzx.controller;
 
 import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
 import cn.mediinfo.cyan.msf.core.response.MsfResponse;
+import cn.mediinfo.cyan.msf.core.response.XiTongResponseCode;
+import cn.mediinfo.cyan.msf.core.util.CollectionUtil;
+import cn.mediinfo.cyan.msf.core.util.StringUtil;
 import cn.mediinfo.grus.shujuzx.dto.bihuanzs.BiHuanGNDPZ;
 import cn.mediinfo.grus.shujuzx.dto.bihuanzs.BiHuanRCXXDto;
 import cn.mediinfo.grus.shujuzx.dto.bihuanzs.BiHuanXQDto;
@@ -32,6 +35,9 @@ public class BiHuanZSController {
     @PostMapping("getBiHuanXQ")
     public MsfResponse<BiHuanXQDto> getBiHuanXQ(@RequestBody BiHuanGNDPZ biHuanGNDPZ) throws YuanChengException
     {
+        if (!StringUtil.hasText(biHuanGNDPZ.getBiHuanGNDDM()) || CollectionUtil.isEmpty(biHuanGNDPZ.getRuCanList())) {
+            return MsfResponse.fail(XiTongResponseCode.CANSHUYC,"入参异常检查入参！");
+        }
         return MsfResponse.success(biHuanZSService.getBiHuanXQ(biHuanGNDPZ));
     }
 

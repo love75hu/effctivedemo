@@ -21,6 +21,7 @@ import cn.mediinfo.grus.shujuzx.service.BiHuanSTJDXXService;
 import cn.mediinfo.lyra.extension.service.LyraIdentityService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
@@ -171,7 +172,12 @@ public class BiHuanSTJDXXServiceImpl implements BiHuanSTJDXXService {
                 .where(n -> n.biHuanLXDM.eq(biHuanLXDM).and(n.qiYongBZ.eq(1)))
                 .select(SC_BH_ShiTuJDXXDto.class).fetch();
         List<String> shiTuIDs = shiTuJDXXList.stream().map(SC_BH_ShiTuJDXXDto::getShiTuID).distinct().toList();
+        List<String> jieDianIDs = shiTuJDXXList.stream().map(SC_BH_ShiTuJDXXDto::getJieDianID).distinct().toList();
+        List<String> guanLianJDIDs = biHuanSTJDGXService.getGuanLianJDXXs(jieDianIDs).stream().map(SC_BH_ShiTuJDGXDto::getGuanLianJDID).toList();
         List<KeXuanJDDto> keXuanJDDtoList=new ArrayList<>();
+        if(!CollectionUtils.isEmpty(guanLianJDIDs)) {
+            shiTuJDXXList.removeIf(x -> guanLianJDIDs.contains(x.getJieDianID()));
+        }
         for (var s :shiTuIDs)
         {
             KeXuanJDDto keXuanJDDto=new KeXuanJDDto();

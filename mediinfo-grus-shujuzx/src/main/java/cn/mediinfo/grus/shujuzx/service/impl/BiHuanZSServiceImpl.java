@@ -16,7 +16,9 @@ import cn.mediinfo.grus.shujuzx.remotedto.GongYong.GY_ZD_ShuJuSTXXRso;
 import cn.mediinfo.grus.shujuzx.remotedto.GongYong.GuanLianGXDto;
 import cn.mediinfo.grus.shujuzx.remotedto.GongYong.LingChuangJSPZZDXXRso;
 import cn.mediinfo.grus.shujuzx.remotedto.GongYong.ShuJuXXMSRso;
+import cn.mediinfo.grus.shujuzx.remotedto.linchuang.ChaXunDto;
 import cn.mediinfo.grus.shujuzx.remoteservice.GongYongRemoteService;
+import cn.mediinfo.grus.shujuzx.remoteservice.LinChuangRemoteService;
 import cn.mediinfo.grus.shujuzx.repository.*;
 import cn.mediinfo.lyra.extension.service.LyraIdentityService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -107,10 +109,8 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
      */
     private SC_BH_ShiTuJDGXRepository shiTuJDGXRepository;
 
+    private LinChuangRemoteService linChuangRemoteService;
 
-    @Resource
-    @Qualifier("datasourcesjzx_jdbcTemplateFactory")
-    JdbcTemplate jdbcTemplate;
 
     /**
      * 根据闭环功能点和相关入参获取闭环详情
@@ -179,7 +179,8 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
 
             String sql = "SELECT COUNT(*) FROM " + fullTableName + " " + joinBuilder + " WHERE " + tiaoJian;
 
-            Long count = jdbcTemplate.queryForObject(sql, Long.class);
+
+            Long count = linChuangRemoteService.getShuLiang(new ChaXunDto(sql)).getData("执行sql报错");
             if (count!=null && count>0)
             {
                 guoLuhuanIDs.add(b.getBiHuanID());
@@ -296,7 +297,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
         String sql = getShiTuBGX(tableList.get(0));
 
         //执行sql 得出结果
-        List<Map<String, Object>> maps = jdbcTemplate.queryForList(sql);
+        List<Map<String, Object>> maps =  linChuangRemoteService.getZiDianList(new ChaXunDto(sql)).getData("执行sql报错");
         //执行完视图 获取节点的数据集合
        List<JieDianList> jieDianLists=new ArrayList<>();
         List<ZiDuanBMMC> ziDuanBMMCList=new ArrayList<>();

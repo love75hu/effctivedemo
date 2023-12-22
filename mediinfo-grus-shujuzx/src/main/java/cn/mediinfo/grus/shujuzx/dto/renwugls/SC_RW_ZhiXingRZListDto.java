@@ -26,7 +26,8 @@ public class SC_RW_ZhiXingRZListDto {
     private String zhiXingFSDM;
     @Schema(description = "执行方式名称")
     private String zhiXingFSMC;
-
+    @Schema(description = "执行状态代码")
+    private String zhiXingZTDM;
     @Schema(description = "执行状态名称")
     private String zhiXingZTMC;
     @Schema(description = "入参")
@@ -35,5 +36,4 @@ public class SC_RW_ZhiXingRZListDto {
     private String zhiXingRXM;
     @Schema(description = "任务地址")
     private String renWuDZ;
-
 }

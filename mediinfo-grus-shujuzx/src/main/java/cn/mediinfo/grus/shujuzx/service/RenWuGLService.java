@@ -28,6 +28,7 @@ public interface RenWuGLService {
     Boolean qiYongRW(String id, Integer qiYongBZ) throws TongYongYWException;
 
 
+    SC_RW_ZhiXingRZDto getZhiXingRZDto(String id);
 
     List<SC_RW_ZhiXingRZListDto> getZhiXingRZList(String renWuID, Date zhiXingKSSJ, Date zhiXingJSSJ, Integer pageIndex, Integer pageSize);
 
@@ -46,4 +47,6 @@ public interface RenWuGLService {
     Boolean saveZhiXingRZ(String id) throws TongYongYWException;
 
     Boolean saveZhiXingRZList(List<SC_RW_ZhiXingRZCreateDto> creatDto);
+
+    SC_RW_TongYongPZDto getTongYongPZByFLDM(String fenLeiDM);
 }

@@ -147,6 +147,17 @@ public class RenWuGLController {
     }
 
     /**
+     * 根据获取执行日志详情
+     * @param id 主键id
+     * @return
+     */
+    @Operation(summary = "根据获取执行日志详情")
+    @GetMapping(path = "GetZhiXingRZDto")
+    public MsfResponse<SC_RW_ZhiXingRZDto> getZhiXingRZDto(@RequestParam String id){
+        return MsfResponse.success(renWuGLService.getZhiXingRZDto(id));
+    }
+
+    /**
      * 获取执行列表
      * @param renWuID
      * @param zhiXingKSSJ
@@ -164,6 +175,7 @@ public class RenWuGLController {
                                                                       @RequestParam(required = false,defaultValue = "10") Integer pageSize) {
         return MsfResponse.success(renWuGLService.getZhiXingRZList(renWuID,zhiXingKSSJ,zhiXingJSSJ,pageIndex,pageSize));
     }
+
     /**
      * 获取执行列表数量
      * @param renWuID
@@ -250,5 +262,20 @@ public class RenWuGLController {
         return MsfResponse.success(renWuGLService.saveTongYongPZ(creatDto));
     }
 
+    /**
+     * 根据分类id获取任务地址
+     * @param fenLeiDM
+     * @return
+     */
+    @Operation(summary = "根据分类id获取任务地址")
+    @GetMapping(path = "GetTongYongPZByFLDM")
+    public  MsfResponse<SC_RW_TongYongPZDto> getTongYongPZByFLDM(@RequestParam String fenLeiDM){
+        return MsfResponse.success(renWuGLService.getTongYongPZByFLDM(fenLeiDM));
+    }
+    @Operation(summary = "数据源列表")
+    @GetMapping(path = "GetShuJuYuanList")
+    public  MsfResponse<List<SC_RW_ShuJuYuanDto>> getShuJuYuanList(@RequestParam String RenWuID){
+        return MsfResponse.success(renWuGLService.getShuJuYuanList(RenWuID));
+    }
 
 }

@@ -7,7 +7,7 @@ import cn.mediinfo.grus.shujuzx.dto.bihuandy.SC_BH_DiaoYongPZAddDto;
 import cn.mediinfo.grus.shujuzx.dto.bihuandy.SC_BH_DiaoYongPZDto;
 import cn.mediinfo.grus.shujuzx.dto.bihuandy.SC_BH_DiaoYongPZUpdateDto;
 import cn.mediinfo.grus.shujuzx.dto.bihuandy.ShiTuMXBHPZDto;
-import cn.mediinfo.grus.shujuzx.dto.bihuansz.SC_BH_JIBENXXDto;
+import cn.mediinfo.grus.shujuzx.dto.bihuansz.SC_BH_JiBenXXDto;
 import cn.mediinfo.grus.shujuzx.service.BiHuanDYService;
 import cn.mediinfo.grus.shujuzx.service.JiBenXXService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -56,7 +56,7 @@ public class BiHuanDYController {
      */
     @Operation(summary = "获取闭环列表")
     @GetMapping("getBiHuanList")
-    public MsfResponse<List<SC_BH_JIBENXXDto>> getBiHuanList(@RequestParam(required = false) String likeQuery) {
+    public MsfResponse<List<SC_BH_JiBenXXDto>> getBiHuanList(@RequestParam(required = false) String likeQuery) {
         return MsfResponse.success(_jiBenXXService.getBiHuanJBXXList(likeQuery));
     }
 

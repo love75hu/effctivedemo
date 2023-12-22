@@ -12,7 +12,7 @@ public interface JiBenXXService {
     /**
      * 根据ID获取闭环信息     *     * @return
      */
-    SC_BH_JIBENXXDto getJIBENXXByID(String id) throws MsfResponseException, WeiZhaoDSJException;
+    SC_BH_JiBenXXDto getJIBENXXByID(String id) throws MsfResponseException, WeiZhaoDSJException;
 
     /**
      * 闭环设置左侧树
@@ -46,5 +46,5 @@ public interface JiBenXXService {
      * @param likeQuery
      * @return
      */
-    List<SC_BH_JIBENXXDto> getBiHuanJBXXList(String likeQuery);
+    List<SC_BH_JiBenXXDto> getBiHuanJBXXList(String likeQuery);
 }

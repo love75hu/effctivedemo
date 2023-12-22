@@ -19,6 +19,6 @@ public class AddBiHuanSZXXDto {
     @Schema(description = "闭环名称")
     private String biHuanMC;
 
-    JieDianXXSZDto jieDianXXSZDtoList;
+    List<JieDianXXSZDto> jieDianXXSZDtoList;
 
 }

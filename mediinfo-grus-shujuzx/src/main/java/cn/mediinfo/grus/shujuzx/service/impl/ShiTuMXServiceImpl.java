@@ -364,6 +364,7 @@ public class ShiTuMXServiceImpl implements ShiTuMXService {
         List<String> shiTuMXZD = shiTuMXRepository.getShiTuMXZD(shiTuSTID);
         // 将列表转换为集合以优化查找性能
         Set<String> shiTuMXZDSet = new HashSet<>(shiTuMXZD);
+        //循环视图明细zd
 
         return ziDuanXXList.stream().filter(n->!shiTuMXZDSet.contains(n.getZiDuanBM())).toList();
     }

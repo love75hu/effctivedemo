@@ -61,47 +61,8 @@ public class JieDianXXServiceImpl implements JieDianXXService {
     @Transactional(rollbackOn = Exception.class)
     public String addBiHuanSZXX(AddBiHuanSZXXDto dto) {
 
-        SC_BH_JieDianXXModel scBhJieDianXXModel = jieDianXXRepository.findById(dto.getJieDianXXSZDtoList().getShangJiJDID()).orElse(null);
-
-          SC_BH_JieDianXXModel jieDianXX = null; //todo 实例化
-
-        SC_BH_JieDianXXModel jieDianXXModel = BeanUtil.copyProperties(dto.getJieDianXXSZDtoList(), SC_BH_JieDianXXModel.class);
-        jieDianXXModel.setBiHuanID(dto.getBiHuanID());
-        jieDianXXModel.setBiHuanMC(dto.getBiHuanMC());
-        if (scBhJieDianXXModel==null)
-        {
-            if (dto.getJieDianXXSZDtoList().getId()!=null)
-            {
-                SC_BH_JieDianXXModel scBhJieDianXXModel1 = jieDianXXRepository.findById(dto.getJieDianXXSZDtoList().getId()).orElse(new SC_BH_JieDianXXModel());
-                BeanUtil.copyProperties(scBhJieDianXXModel1,jieDianXXModel);
-
-                jieDianXX= jieDianXXRepository.save(scBhJieDianXXModel1);
-            }else {
-                jieDianXXModel.setShunXuHao(1);
-                jieDianXX = jieDianXXRepository.save(jieDianXXModel);
-            }
-
-        }else {
-            if (!StringUtil.hasText(dto.getJieDianXXSZDtoList().getId()) ) {
-                //todo 查询操作修改
-                jieDianXXRepository.asDeleteDsl().where(n->n.biHuanID.eq(dto.getBiHuanID()))
-                        .where(n->n.jieDianID.eq(dto.getJieDianXXSZDtoList().getJieDianID())).execute();
-
-                jieDianXXModel.setShunXuHao(scBhJieDianXXModel.getShunXuHao() + 1);
-                //todo
-                List<SC_BH_JieDianXXModel> fetch = jieDianXXRepository.asQuerydsl().where(n -> n.shunXuHao.gt(scBhJieDianXXModel.getShunXuHao())).fetch();
-                for (var a : fetch) {
-                    a.setShunXuHao(a.getShunXuHao() + 1);
-                }
-                jieDianXXRepository.saveAll(fetch);
-                jieDianXX = jieDianXXRepository.save(jieDianXXModel);
-            }else {
-                SC_BH_JieDianXXModel scBhJieDianXXModel1 = jieDianXXRepository.findById(dto.getJieDianXXSZDtoList().getId()).orElse(new SC_BH_JieDianXXModel());
-               BeanUtil.copyProperties(scBhJieDianXXModel1,jieDianXXModel);
-
-                jieDianXX= jieDianXXRepository.save(scBhJieDianXXModel1);
-            }
-        }
+        //节点信息
+        List<SC_BH_JieDianXXModel> jieDianXX = new ArrayList<>();
         //节点时效
         List<SC_BH_JieDianSXModel> jieDianSX=new ArrayList<>();
         //子闭环信息
@@ -109,35 +70,48 @@ public class JieDianXXServiceImpl implements JieDianXXService {
         //子闭环显示列
         List<SC_BH_ZiBiHXSLModel> ziBiHXSL=new ArrayList<>();
 
-            var jieDianXXSZ=dto.getJieDianXXSZDtoList();
-            if (BeanUtil.isNotEmpty(jieDianXXSZ.getZiBiHXXDto()))
+        for (var b:dto.getJieDianXXSZDtoList())
+        {
+            if (BeanUtil.isNotEmpty(b.getZiBiHXXDto()))
             {
-              var ziBiHXXModel=  BeanUtil.copyProperties(jieDianXXSZ.getZiBiHXXDto(),SC_BH_ZiBiHXXModel.class);
-
+                var ziBiHXXModel=  BeanUtil.copyProperties(b.getZiBiHXXDto(),SC_BH_ZiBiHXXModel.class);
                 ziBiHXXModel.setBiHuanID(dto.getBiHuanID());
                 ziBiHXXModel.setBiHuanMC(dto.getBiHuanMC());
-                ziBiHXXModel.setJieDianID(jieDianXXSZ.getJieDianID());
-                ziBiHXXModel.setJieDianMC(jieDianXXSZ.getJieDianMC());
+                ziBiHXXModel.setJieDianID(b.getJieDianID());
+                ziBiHXXModel.setJieDianMC(b.getJieDianMC());
                 ziBiHXX.add(ziBiHXXModel);
             }
+            //子闭环信息
+            SC_BH_JieDianXXModel jieDianXXModel = BeanUtil.copyProperties(b, SC_BH_JieDianXXModel.class);
+            jieDianXXModel.setId("");
+            jieDianXXModel.setBiHuanID(dto.getBiHuanID());
+            jieDianXXModel.setBiHuanMC(dto.getBiHuanMC());
+            jieDianXX.add(jieDianXXModel);
             //时效
-            for (var s :jieDianXXSZ.getJieDianSXList())
+            for (var s :b.getJieDianSXList())
             {
-               var jieDianSXModel= BeanUtil.copyProperties(s,SC_BH_JieDianSXModel.class);
+                var jieDianSXModel= BeanUtil.copyProperties(s,SC_BH_JieDianSXModel.class);
+                jieDianSXModel.setId("");
                 jieDianSXModel.setBiHuanID(dto.getBiHuanID());
                 jieDianSXModel.setBiHuanMC(dto.getBiHuanMC());
 
                 jieDianSX.add(jieDianSXModel);
             }
             //显示字段
-            for (var x:jieDianXXSZ.getZiBiHXSLDtoList())
+            for (var x:b.getZiBiHXSLDtoList())
             {
                 var ziBiHXSLModel=BeanUtil.copyProperties(x,SC_BH_ZiBiHXSLModel.class);
+                ziBiHXSLModel.setId("");
                 ziBiHXSLModel.setBiHuanID(dto.getBiHuanID());
                 ziBiHXSLModel.setBiHuanMC(dto.getBiHuanMC());
                 ziBiHXSL.add(ziBiHXSLModel);
             }
+        }
+        //
+        //节点信息
+        jieDianXXRepository.asDeleteDsl().where(n->n.biHuanID.eq(dto.getBiHuanID())).execute();
 
+        jieDianXXRepository.saveAll(jieDianXX);
         //节点失效
         jieDianSXRepository.asDeleteDsl().where(n->n.biHuanID.eq(dto.getBiHuanID())).execute();
         jieDianSXRepository.saveAll(jieDianSX);
@@ -147,8 +121,102 @@ public class JieDianXXServiceImpl implements JieDianXXService {
         //子闭环显示列
         ziBiHXSLRepository.asDeleteDsl().where(n->n.biHuanID.eq(dto.getBiHuanID())).execute();
         ziBiHXSLRepository.saveAll(ziBiHXSL);
-        return jieDianXX.getId();
+        return dto.getBiHuanID();
     }
+
+//添加闭环设置信息
+//    @Override
+//    @Transactional(rollbackOn = Exception.class)
+//    public String addBiHuanSZXX(AddBiHuanSZXXDto dto) {
+//
+//        SC_BH_JieDianXXModel scBhJieDianXXModel = jieDianXXRepository.findById(dto.getJieDianXXSZDtoList().getShangJiJDID()).orElse(null);
+//
+//          SC_BH_JieDianXXModel jieDianXX = null; //todo 实例化
+//
+//        SC_BH_JieDianXXModel jieDianXXModel = BeanUtil.copyProperties(dto.getJieDianXXSZDtoList(), SC_BH_JieDianXXModel.class);
+//        jieDianXXModel.setBiHuanID(dto.getBiHuanID());
+//        jieDianXXModel.setBiHuanMC(dto.getBiHuanMC());
+//        if (scBhJieDianXXModel==null)
+//        {
+//            if (dto.getJieDianXXSZDtoList().getId()!=null)
+//            {
+//                SC_BH_JieDianXXModel scBhJieDianXXModel1 = jieDianXXRepository.findById(dto.getJieDianXXSZDtoList().getId()).orElse(new SC_BH_JieDianXXModel());
+//                BeanUtil.copyProperties(scBhJieDianXXModel1,jieDianXXModel);
+//
+//                jieDianXX= jieDianXXRepository.save(scBhJieDianXXModel1);
+//            }else {
+//                jieDianXXModel.setShunXuHao(1);
+//                jieDianXX = jieDianXXRepository.save(jieDianXXModel);
+//            }
+//
+//        }else {
+//            if (!StringUtil.hasText(dto.getJieDianXXSZDtoList().getId()) ) {
+//                //todo 查询操作修改
+//                jieDianXXRepository.asDeleteDsl().where(n->n.biHuanID.eq(dto.getBiHuanID()))
+//                        .where(n->n.jieDianID.eq(dto.getJieDianXXSZDtoList().getJieDianID())).execute();
+//
+//                jieDianXXModel.setShunXuHao(scBhJieDianXXModel.getShunXuHao() + 1);
+//                //todo
+//                List<SC_BH_JieDianXXModel> fetch = jieDianXXRepository.asQuerydsl().where(n -> n.shunXuHao.gt(scBhJieDianXXModel.getShunXuHao())).fetch();
+//                for (var a : fetch) {
+//                    a.setShunXuHao(a.getShunXuHao() + 1);
+//                }
+//                jieDianXXRepository.saveAll(fetch);
+//                jieDianXX = jieDianXXRepository.save(jieDianXXModel);
+//            }else {
+//                SC_BH_JieDianXXModel scBhJieDianXXModel1 = jieDianXXRepository.findById(dto.getJieDianXXSZDtoList().getId()).orElse(new SC_BH_JieDianXXModel());
+//               BeanUtil.copyProperties(scBhJieDianXXModel1,jieDianXXModel);
+//
+//                jieDianXX= jieDianXXRepository.save(scBhJieDianXXModel1);
+//            }
+//        }
+//        //节点时效
+//        List<SC_BH_JieDianSXModel> jieDianSX=new ArrayList<>();
+//        //子闭环信息
+//        List<SC_BH_ZiBiHXXModel> ziBiHXX= new ArrayList<>();
+//        //子闭环显示列
+//        List<SC_BH_ZiBiHXSLModel> ziBiHXSL=new ArrayList<>();
+//
+//            var jieDianXXSZ=dto.getJieDianXXSZDtoList();
+//            if (BeanUtil.isNotEmpty(jieDianXXSZ.getZiBiHXXDto()))
+//            {
+//              var ziBiHXXModel=  BeanUtil.copyProperties(jieDianXXSZ.getZiBiHXXDto(),SC_BH_ZiBiHXXModel.class);
+//
+//                ziBiHXXModel.setBiHuanID(dto.getBiHuanID());
+//                ziBiHXXModel.setBiHuanMC(dto.getBiHuanMC());
+//                ziBiHXXModel.setJieDianID(jieDianXXSZ.getJieDianID());
+//                ziBiHXXModel.setJieDianMC(jieDianXXSZ.getJieDianMC());
+//                ziBiHXX.add(ziBiHXXModel);
+//            }
+//            //时效
+//            for (var s :jieDianXXSZ.getJieDianSXList())
+//            {
+//               var jieDianSXModel= BeanUtil.copyProperties(s,SC_BH_JieDianSXModel.class);
+//                jieDianSXModel.setBiHuanID(dto.getBiHuanID());
+//                jieDianSXModel.setBiHuanMC(dto.getBiHuanMC());
+//
+//                jieDianSX.add(jieDianSXModel);
+//            }
+//            //显示字段
+//            for (var x:jieDianXXSZ.getZiBiHXSLDtoList())
+//            {
+//                var ziBiHXSLModel=BeanUtil.copyProperties(x,SC_BH_ZiBiHXSLModel.class);
+//                ziBiHXSLModel.setBiHuanID(dto.getBiHuanID());
+//                ziBiHXSLModel.setBiHuanMC(dto.getBiHuanMC());
+//                ziBiHXSL.add(ziBiHXSLModel);
+//            }
+//
+//        //节点失效
+//        jieDianSXRepository.asDeleteDsl().where(n->n.biHuanID.eq(dto.getBiHuanID())).execute();
+//        jieDianSXRepository.saveAll(jieDianSX);
+//        //子闭环信息
+//        ziBiHXXRepository.asDeleteDsl().where(n -> n.biHuanID.eq(dto.getBiHuanID())).execute();
+//        ziBiHXXRepository.saveAll(ziBiHXX);
+//        //子闭环显示列
+//        ziBiHXSLRepository.asDeleteDsl().where(n->n.biHuanID.eq(dto.getBiHuanID())).execute();
+//        ziBiHXSLRepository.saveAll(ziBiHXSL);
+//        return jieDianXX.getId();
+//    }
 
     /**
      * 根据闭环ID获取闭环设置信息

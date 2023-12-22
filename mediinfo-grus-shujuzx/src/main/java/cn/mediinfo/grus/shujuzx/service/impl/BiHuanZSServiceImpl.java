@@ -491,7 +491,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
             }
             var shiFouSGLJD = scBhShiTuJDGXModel.stream().filter(n -> n.getJieDianID().equals(j.getJieDianID())).findFirst().orElse(null);
             //逆节点标志
-            jieDianList.setNiJieDBZ(shiFouSGLJD!=null?"1":"0");
+            // jieDianList.setNiJieDBZ(shiFouSGLJD!=null?"1":"0");
 
              jieDianList.setBingXingBZ(j.getBingXingBZ());
              jieDianList.setId(j.getJieDianID());
@@ -521,6 +521,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
                 if (Objects.nonNull(shiFouSGLJD) &&jieDianNR )
                 {
                     jieDianList.setJieDianNRList(jieDianNRList);
+                    jieDianList.setNiJieDBZ("1");
                     jieDianLists.add(jieDianList);
                 }
             }else {

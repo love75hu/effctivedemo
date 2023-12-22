@@ -42,7 +42,7 @@ public class SC_RW_ZhiXingRZModel extends StringMTEntity {
     private String ruCan;
 
     @Column(columnDefinition = "执行前业务最新时间")
-    private Date zhiXingGYWZXSJ;
+    private Date zhiXingQYWZXSJ;
     @Column(columnDefinition = "执行后业务最新时间")
     private Date zhiXingHYWZXSJ;
 

@@ -27,6 +27,8 @@ public class SC_RW_JiBenXXListDto {
     private String zuiJinZXRZID;
     @Schema(description = "执行耗时")
     private Integer zhiXingHS;
+    @Schema(description = "执行状态代码")
+    private String zhiXingZTDM;
     @Schema(description = "执行状态名称")
     private String zhiXingZTMC;
     @Column(columnDefinition = "启用标志")

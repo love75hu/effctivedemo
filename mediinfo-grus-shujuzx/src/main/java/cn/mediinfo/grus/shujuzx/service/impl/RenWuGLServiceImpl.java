@@ -1,12 +1,14 @@
 package cn.mediinfo.grus.shujuzx.service.impl;
 
+import cn.hutool.core.date.DateUtil;
 import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 import cn.mediinfo.cyan.msf.core.util.BeanUtil;
-import cn.mediinfo.cyan.msf.core.util.MapUtils;
 import cn.mediinfo.cyan.msf.core.util.StringUtil;
 import cn.mediinfo.grus.shujuzx.dto.renwugls.*;
 import cn.mediinfo.grus.shujuzx.model.*;
 import cn.mediinfo.grus.shujuzx.po.renwugl.TongYongPZPO;
+import cn.mediinfo.grus.shujuzx.remotedto.GongYong.GY_ZD_ShuJuYuanTreeRso;
+import cn.mediinfo.grus.shujuzx.remoteservice.GongYongRemoteService;
 import cn.mediinfo.grus.shujuzx.repository.*;
 import cn.mediinfo.grus.shujuzx.service.RenWuGLService;
 import cn.mediinfo.lyra.extension.service.LyraIdentityService;
@@ -16,6 +18,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 @Service
 public class RenWuGLServiceImpl implements RenWuGLService {
@@ -27,11 +30,12 @@ public class RenWuGLServiceImpl implements RenWuGLService {
     private final SC_RW_TongYongPZRepository tongYongPZRepository;
     private final SC_ZD_ShuJuYZYRepository shuJuYZYRepository;
     private final SC_ZD_ShuJuYLBRepository shuJuYLBRepository;
+    private final GongYongRemoteService gongYongRemoteService;
 
 
     public RenWuGLServiceImpl(SequenceService sequenceService, SC_RW_JiBenXXRepository jiBenXXRepository, LyraIdentityService lyraIdentityService,
                               SC_RW_ZhiXingRZRepository zhiXingRZRepository, SC_RW_ShuJuYuanRepository shuJuYuanRepository, SC_RW_TongYongPZRepository tongYongPZRepository,
-                              SC_ZD_ShuJuYZYRepository shuJuYZYRepository,SC_ZD_ShuJuYLBRepository shuJuYLBRepository) {
+                              SC_ZD_ShuJuYZYRepository shuJuYZYRepository, SC_ZD_ShuJuYLBRepository shuJuYLBRepository, GongYongRemoteService gongYongRemoteService) {
         this.lyraIdentityService = lyraIdentityService;
         this.jiBenXXRepository = jiBenXXRepository;
         this.sequenceService = sequenceService;
@@ -39,10 +43,13 @@ public class RenWuGLServiceImpl implements RenWuGLService {
         this.shuJuYuanRepository = shuJuYuanRepository;
         this.tongYongPZRepository = tongYongPZRepository;
         this.shuJuYZYRepository = shuJuYZYRepository;
-        this.shuJuYLBRepository=shuJuYLBRepository;
+        this.shuJuYLBRepository = shuJuYLBRepository;
+        this.gongYongRemoteService = gongYongRemoteService;
     }
+
     /**
      * 获取列表
+     *
      * @param likeQuery
      * @param fenLeiDM
      * @param qiYongBZ
@@ -52,10 +59,11 @@ public class RenWuGLServiceImpl implements RenWuGLService {
      */
     @Override
     public List<SC_RW_JiBenXXListDto> getJiBenXXList(String likeQuery, String fenLeiDM, Integer qiYongBZ, Integer pageIndex, Integer pageSize) {
-        var result= jiBenXXRepository.asQuerydsl()
+        var result = jiBenXXRepository.asQuerydsl()
                 .whereIf(StringUtil.hasText(likeQuery), t -> t.renWuMC.contains(likeQuery))
                 .whereIf(StringUtil.hasText(fenLeiDM), t -> t.fenLeiDM.eq(fenLeiDM))
-                .where(t->t.qiYongBZ.eq(qiYongBZ))
+                .whereIf(Objects.equals(qiYongBZ, 1), t -> t.qiYongBZ.eq(qiYongBZ))
+                //.where(t->t.qiYongBZ.eq(qiYongBZ))
                 .select(SC_RW_JiBenXXListDto.class)
                 .fetchPage(pageIndex, pageSize);
         return result;
@@ -63,6 +71,7 @@ public class RenWuGLServiceImpl implements RenWuGLService {
 
     /**
      * 获取列表数量
+     *
      * @param likeQuery
      * @param fenLeiDM
      * @param qiYongBZ
@@ -73,31 +82,34 @@ public class RenWuGLServiceImpl implements RenWuGLService {
         return jiBenXXRepository.asQuerydsl()
                 .whereIf(StringUtil.hasText(likeQuery), t -> t.renWuMC.contains(likeQuery))
                 .whereIf(StringUtil.hasText(fenLeiDM), t -> t.fenLeiDM.eq(fenLeiDM))
-                .where(t->t.qiYongBZ.eq(qiYongBZ)).count();
+                .whereIf(Objects.equals(qiYongBZ, 1), t -> t.qiYongBZ.eq(qiYongBZ)).count();
     }
 
     @Override
     public SC_RW_JiBenXXDto getRenWuXXById(String id) throws TongYongYWException {
-        var result= jiBenXXRepository.findById(id).orElse(null);
-        if (Objects.isNull(result)){
+        var result = jiBenXXRepository.findById(id).orElse(null);
+        if (Objects.isNull(result)) {
             throw new TongYongYWException("该任务基本信息不存在！");
         }
-        return BeanUtil.copyProperties(result,SC_RW_JiBenXXDto::new);
+        return BeanUtil.copyProperties(result, SC_RW_JiBenXXDto::new);
     }
+
     /**
      * 根据ID查询任务基本信息
+     *
      * @param ids
      * @return
      * @throws TongYongYWException
      */
     @Override
     public List<SC_RW_JiBenXXDto> getRenWuXXByIds(List<String> ids) throws TongYongYWException {
-        var result= jiBenXXRepository.findAllById(ids);
-        if (result.size()==0){
+        var result = jiBenXXRepository.findAllById(ids);
+        if (result.size() == 0) {
             throw new TongYongYWException("该任务基本信息不存在！");
         }
-        return BeanUtil.copyListProperties(result,SC_RW_JiBenXXDto::new);
+        return BeanUtil.copyListProperties(result, SC_RW_JiBenXXDto::new);
     }
+
     /**
      * 新增任务基本信息
      *
@@ -115,8 +127,8 @@ public class RenWuGLServiceImpl implements RenWuGLService {
         if (shiFouCZ) {
             throw new TongYongYWException("该任务名称已存在:" + createDto.getRenWuMC() + "!");
         }
-        if (!StringUtil.hasText(createDto.getZhiXingPLDM()) && StringUtil.hasText(createDto.getZhiXingPLMC())){
-            var dto=BeanUtil.copyProperties(createDto,SC_RW_JiBenXXDto::new);
+        if (!StringUtil.hasText(createDto.getZhiXingPLDM()) && StringUtil.hasText(createDto.getZhiXingPLMC())) {
+            var dto = BeanUtil.copyProperties(createDto, SC_RW_JiBenXXDto::new);
             createDto.setZhiXingPLDM(saveZhiXingPZZD(dto));
         }
 
@@ -124,7 +136,6 @@ public class RenWuGLServiceImpl implements RenWuGLService {
             t.setRenWuID(sequenceService.getXuHao("SC_RW_JiBenXX_RenWuID", 7));
             t.setZuZhiJGID(lyraIdentityService.getJiGouID());
             t.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
-            t.setQiYongBZ(1);
         });
         jiBenXXRepository.save(entity);
         return entity.getId();
@@ -150,8 +161,8 @@ public class RenWuGLServiceImpl implements RenWuGLService {
         if (shiFouCZ) {
             throw new TongYongYWException("该任务名称已存在!");
         }
-        if (!StringUtil.hasText(updateDto.getZhiXingPLDM()) && StringUtil.hasText(updateDto.getZhiXingPLMC())){
-            var dto=BeanUtil.copyProperties(updateDto,SC_RW_JiBenXXDto::new);
+        if (!StringUtil.hasText(updateDto.getZhiXingPLDM()) && StringUtil.hasText(updateDto.getZhiXingPLMC())) {
+            var dto = BeanUtil.copyProperties(updateDto, SC_RW_JiBenXXDto::new);
             updateDto.setZhiXingPLDM(saveZhiXingPZZD(dto));
         }
         //把dto赋值到entity
@@ -180,7 +191,18 @@ public class RenWuGLServiceImpl implements RenWuGLService {
     }
 
     /**
+     * 根据id查询日志详情
+     * @param id
+     * @return
+     */
+    @Override
+    public SC_RW_ZhiXingRZDto getZhiXingRZDto(String id){
+        var entity= zhiXingRZRepository.findById(id).orElse(null);
+        return BeanUtil.copyProperties(entity,SC_RW_ZhiXingRZDto::new);
+    }
+    /**
      * 获取列表
+     *
      * @param renWuID
      * @param zhiXingKSSJ
      * @param zhiXingJSSJ
@@ -195,12 +217,14 @@ public class RenWuGLServiceImpl implements RenWuGLService {
                 .select(SC_RW_ZhiXingRZListDto.class)
                 .fetchPage(pageIndex, pageSize);
     }
+
     @Override
     public Long getZhiXingRZCount(String renWuID, Date zhiXingKSSJ, Date zhiXingJSSJ) {
         return zhiXingRZRepository.asQuerydsl().where(t -> t.renWuID.eq(renWuID).and(t.zhiXingKSSJ.after(zhiXingKSSJ)).and(t.zhiXingJSSJ.before(zhiXingJSSJ)))
-                .orderBy(t -> t.zhiXingSJ.desc())
+                .select(SC_RW_ZhiXingRZListDto.class)
                 .count();
     }
+
     /**
      * 根据idList获取任务基本信息
      *
@@ -222,7 +246,21 @@ public class RenWuGLServiceImpl implements RenWuGLService {
      */
     @Override
     public List<SC_RW_ShuJuYuanDto> getShuJuYuanList(String renWuID) {
-        return shuJuYuanRepository.asQuerydsl().where(t -> t.renWuID.eq(renWuID)).select(SC_RW_ShuJuYuanDto.class).fetch();
+
+        List<GY_ZD_ShuJuYuanTreeRso> ShuJuYuanTree = gongYongRemoteService.getShuJuYFLTree().getData();
+        List<GY_ZD_ShuJuYuanTreeRso> treeChild = new ArrayList<>();
+        ShuJuYuanTree.forEach(item->{
+           //var array=  Stream.concat(item.getChildren().stream(), treeChild.stream()).toList();
+           treeChild.addAll(Stream.concat(item.getChildren().stream(), treeChild.stream()).toList());
+        });
+        var result=shuJuYuanRepository.asQuerydsl().where(t -> t.renWuID.eq(renWuID)).fetch();
+       var entity=  BeanUtil.copyListProperties(result,SC_RW_ShuJuYuanDto::new,(s,t)->{
+            var itemchild=treeChild.stream().filter(q->Objects.equals(q.getId(),t.getShuJuYID())).findFirst().get();
+            t.setChangShangMC(itemchild.getChangShangMC());
+            t.setXiTongMC(itemchild.getXiTongMC());
+        });
+
+        return entity;
     }
 
 
@@ -236,7 +274,7 @@ public class RenWuGLServiceImpl implements RenWuGLService {
     @Override
     @Transactional(rollbackOn = Exception.class)
     public Boolean saveShuJuYuanList(SC_RW_ShuJuYuanCreateDto createDto) throws TongYongYWException {
-        var renWuDto = jiBenXXRepository.asQuerydsl().where(t -> t.renWuID.eq(createDto.getRenWuID())).fetchOne();
+        var renWuDto=jiBenXXRepository.findFirstByRenWuID(createDto.getRenWuID());
         if (renWuDto == null) {
             throw new TongYongYWException("当前任务基本信息不存在！");
         }
@@ -254,7 +292,9 @@ public class RenWuGLServiceImpl implements RenWuGLService {
         var entity = BeanUtil.copyProperties(addList, SC_RW_ShuJuYuanModel::new, (s, t) -> {
             t.setZuZhiJGID(lyraIdentityService.getJiGouID());
             t.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
-            t.setQiYongBZ(1);//默认启用
+            t.setRenWuID(renWuDto.getRenWuID());
+            t.setRenWuMC(renWuDto.getRenWuMC());
+            //t.setQiYongBZ(1);//默认启用
         });
         shuJuYuanRepository.save(entity);
         //需删除的数据源
@@ -288,6 +328,7 @@ public class RenWuGLServiceImpl implements RenWuGLService {
 
     /**
      * 保存通用配置
+     *
      * @param creatDto
      * @return
      */
@@ -304,11 +345,11 @@ public class RenWuGLServiceImpl implements RenWuGLService {
         tongYongPZRepository.saveAll(addEntity);
         //修改
         var updateDto = creatDto.stream().filter(t -> !Objects.isNull(t.getId())).toList();
-        var ids=updateDto.stream().map(t->t.getId()).toList();
-        var tongYongPZList=tongYongPZRepository.asQuerydsl().where(t->t.id.in(ids)).fetch();
+        var ids = updateDto.stream().map(t -> t.getId()).toList();
+        var tongYongPZList = tongYongPZRepository.asQuerydsl().where(t -> t.id.in(ids)).fetch();
         for (var item : tongYongPZList) {
-            var tongYongPZItem=updateDto.stream().filter(q->Objects.equals(q.getId(),item.getId())).findFirst().orElse(null);
-          BeanUtil.mergeProperties(tongYongPZItem,item,true);
+            var tongYongPZItem = updateDto.stream().filter(q -> Objects.equals(q.getId(), item.getId())).findFirst().orElse(null);
+            BeanUtil.mergeProperties(tongYongPZItem, item, true);
         }
 
         tongYongPZRepository.saveAll(tongYongPZList);
@@ -317,37 +358,41 @@ public class RenWuGLServiceImpl implements RenWuGLService {
 
     /**
      * 保存执行频率字典
+     *
      * @param dto
      * @return
      * @throws TongYongYWException
      */
     public String saveZhiXingPZZD(SC_RW_JiBenXXDto dto) throws TongYongYWException {
-        String zhiYuID="";
+        String zhiYuID = "";
         //region 判断执行频率是否存在 不存在的话 新增到值域表
 
-            var shuJuYLBDto=shuJuYLBRepository.asQuerydsl().where(t->t.shuJuYLBID.eq("SC0018")).fetchOne();
-            if (!Objects.isNull(shuJuYLBDto)){
-                //查询最大的顺序号
-                var shuJuYZYList=shuJuYZYRepository.asQuerydsl().where(t->t.shuJuYLBID.eq("SC0018")).select(SC_ZD_ShuJuYZYModel.class).fetch();
-                // 获取hgZdHuLiDYMXModelList集合中的JG_ZZ_HuLiDYMXModel对象中的shunXuHao的最大值
-                Optional<SC_ZD_ShuJuYZYModel> maxModel = shuJuYZYList.stream()
-                        .max(Comparator.comparing(SC_ZD_ShuJuYZYModel::getShunXuHao));
-                // 获取最大值
-                int maxShunXuHao = maxModel.map(SC_ZD_ShuJuYZYModel::getShunXuHao).orElse(0);
-                var zhuYuID=sequenceService.getXuHao("SC_ZD_ShuJuYZY_ZiYuID", 7);
-                SC_ZD_ShuJuYZYModel shuJuYZYDto=new SC_ZD_ShuJuYZYModel();
-                shuJuYZYDto.setShuJuYLBID(shuJuYLBDto.getShuJuYLBID());
-                shuJuYZYDto.setShuJuYLBMC(shuJuYLBDto.getShuJuYLBMC());
-                shuJuYZYDto.setZhiYuMC(dto.getZhiXingPLMC());
-                shuJuYZYDto.setZhiYuID(zhuYuID);
-                shuJuYZYDto.setBiaoZhunDM(zhuYuID);
-                shuJuYZYDto.setBiaoZhunMC(dto.getZhiXingPLMC());
-                shuJuYZYDto.setShunXuHao(maxShunXuHao+1);
-                shuJuYZYRepository.save(shuJuYZYDto);
-                zhiYuID=shuJuYZYDto.getZhiYuID();
-            }else{
-                throw new TongYongYWException("执行频率数据源类别不存在！");
-            }
+        var shuJuYLBDto = shuJuYLBRepository.asQuerydsl().where(t -> t.shuJuYLBID.eq("SC0018")).fetchOne();
+        if (!Objects.isNull(shuJuYLBDto)) {
+            //查询最大的顺序号
+            var shuJuYZYList = shuJuYZYRepository.asQuerydsl().where(t -> t.shuJuYLBID.eq("SC0018")).select(SC_ZD_ShuJuYZYModel.class).fetch();
+            // 获取shuJuYZYList集合中的SC_ZD_ShuJuYZYModel对象中的shunXuHao的最大值
+            Optional<SC_ZD_ShuJuYZYModel> maxModel = shuJuYZYList.stream()
+                    .max(Comparator.comparing(SC_ZD_ShuJuYZYModel::getShunXuHao));
+            // 获取最大值
+            int maxShunXuHao = maxModel.map(SC_ZD_ShuJuYZYModel::getShunXuHao).orElse(0);
+            var zhuYuID = sequenceService.getXuHao("SC_ZD_ShuJuYZY_ZhiYuID", 7);
+            SC_ZD_ShuJuYZYModel shuJuYZYDto = new SC_ZD_ShuJuYZYModel();
+            shuJuYZYDto.setZuZhiJGID(lyraIdentityService.getJiGouID());
+            shuJuYZYDto.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
+            shuJuYZYDto.setShuJuYLBID(shuJuYLBDto.getShuJuYLBID());
+            shuJuYZYDto.setShuJuYLBMC(shuJuYLBDto.getShuJuYLBMC());
+            shuJuYZYDto.setZhiYuMC(dto.getZhiXingPLMC());
+            shuJuYZYDto.setMoJiBZ(1);
+            shuJuYZYDto.setZhiYuID(zhuYuID);
+            shuJuYZYDto.setBiaoZhunDM(zhuYuID);
+            shuJuYZYDto.setBiaoZhunMC(dto.getZhiXingPLMC());
+            shuJuYZYDto.setShunXuHao(maxShunXuHao + 1);
+            shuJuYZYRepository.save(shuJuYZYDto);
+            zhiYuID = shuJuYZYDto.getZhiYuID();
+        } else {
+            throw new TongYongYWException("执行频率数据源类别不存在！");
+        }
 
         return zhiYuID;
 
@@ -356,23 +401,27 @@ public class RenWuGLServiceImpl implements RenWuGLService {
 
     /**
      * 保存执行信息
+     *
      * @param id
      * @return
      */
     @Override
     public Boolean saveZhiXingRZ(String id) throws TongYongYWException {
-        var jiBenxx=jiBenXXRepository.findById(id).orElse(null);
-        var zhixingkssj=new Date();
-        if (Objects.isNull(jiBenxx)){
+        //var jiBenxx=jiBenXXRepository.findById(id).orElse(null);
+        //var jiBenxx=jiBenXXRepository.asQuerydsl().where(t->t.renWuID.eq(id)).select(SC_RW_JiBenXXDto.class).fetchOne();
+        var jiBenxx = jiBenXXRepository.findFirstByRenWuID(id);
+        var zhixingkssj = new Date();
+        if (Objects.isNull(jiBenxx)) {
             throw new TongYongYWException("该任务基本信息不存在！");
         }
 
         var entity = BeanUtil.copyProperties(jiBenxx, SC_RW_ZhiXingRZModel::new, (s, t) -> {
-
+            t.setId(null);
             t.setZuZhiJGID(lyraIdentityService.getJiGouID());
             t.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
             t.setZhiXingKSSJ(zhixingkssj);
-
+            t.setZhiXingQYWZXSJ(zhixingkssj);
+            t.setZhiXingHYWZXSJ(new Date());
             t.setRuCan(jiBenxx.getRenWuCS());
 
         });
@@ -381,20 +430,40 @@ public class RenWuGLServiceImpl implements RenWuGLService {
     }
 
     @Override
-    public Boolean saveZhiXingRZList(List<SC_RW_ZhiXingRZCreateDto> creatDto){
-        var renWuIDs=creatDto.stream().map(SC_RW_ZhiXingRZCreateDto::getRenWuID).toList();
-        var zhixingkssj=new Date();
+    public Boolean saveZhiXingRZList(List<SC_RW_ZhiXingRZCreateDto> creatDto) {
+        var renWuIDs = creatDto.stream().map(SC_RW_ZhiXingRZCreateDto::getRenWuID).toList();
+        var zhixingkssj = new Date();
 
-        var jiBenXXList=jiBenXXRepository.asQuerydsl().where(t->t.renWuID.in(renWuIDs)).fetch();
+        var jiBenXXList = jiBenXXRepository.asQuerydsl().where(t -> t.renWuID.in(renWuIDs)).fetch();
         var entity = BeanUtil.copyProperties(jiBenXXList, SC_RW_ZhiXingRZModel::new, (s, t) -> {
             t.setZuZhiJGID(lyraIdentityService.getJiGouID());
             t.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
             t.setZhiXingKSSJ(zhixingkssj);
-            var item=creatDto.stream().filter(q->Objects.equals(q.getRenWuID(),t.getRenWuID())).findFirst();
+            var item = creatDto.stream().filter(q -> Objects.equals(q.getRenWuID(), t.getRenWuID())).findFirst();
             t.setRuCan(item.get().getRuCan());
         });
         zhiXingRZRepository.save(entity);
         return true;
+    }
+
+    @Override
+    public SC_RW_TongYongPZDto getTongYongPZByFLDM(String fenLeiDM) {
+        return shuJuYZYRepository.asQuerydsl()
+                .where(q -> q.shuJuYLBID.eq("SC0021").and(q.zhiYuID.eq(fenLeiDM)))
+                .orderBy(q -> q.shunXuHao.asc())
+                .leftJoin(tongYongPZRepository.asQuerydsl(), (shuJuYZY, tongYongPZ) -> shuJuYZY.zhiYuID.eq(tongYongPZ.fenLeiDM), TongYongPZPO::new)
+                .select(q -> new Expression<?>[]{
+                        q.tongYongPZ().zuZhiJGID,
+                        q.tongYongPZ().zuZhiJGMC,
+//                        q.tongYongPZ().renWuDZ,
+                        q.tongYongPZ().fuWuQIP,
+                        q.tongYongPZ().fuWuQIP.concat(":").concat(q.tongYongPZ().fuWuQDK).concat("/").concat(q.tongYongPZ().renWuDZ).as("renWuDZ"),
+                        q.tongYongPZ().id,
+                        q.tongYongPZ().fuWuQDK,
+                        q.shuJuYZY().zhiYuID.as("fenLeiDM"),
+                        q.shuJuYZY().zhiYuMC.as("fenLeiMC")
+                }, SC_RW_TongYongPZDto.class).fetchOne();
+
     }
 
 

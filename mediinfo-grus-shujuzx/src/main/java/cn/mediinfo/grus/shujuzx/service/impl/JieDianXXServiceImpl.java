@@ -230,7 +230,7 @@ public class JieDianXXServiceImpl implements JieDianXXService {
         //节点信息
         List<BiHuanSZXXDto> jieDianXXList =jieDianXXRepository.jieDianXXList(biHuanID,jiGouID);
         //节点失效
-        List< SC_BH_JieDianSXDto> biHuanSZXXList = jieDianSXRepository.biHuanSZXXList(biHuanID,lyraIdentityService.getJiGouID());
+        List< SC_BH_JieDianSXDto> biHuanSZXXList = jieDianSXRepository.biHuanSZXXList(biHuanID,jiGouID);
 
         //子闭环信息
         var ziBiHXXList = ziBiHXXRepository.ziBiHXXList(biHuanID,jiGouID);

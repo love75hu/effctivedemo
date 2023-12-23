@@ -185,6 +185,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
                     //拼接入参条件
                     long count1 = shuJuSTXXList.get(0).getShiTuMXZDDtos().stream().filter(n -> ruCanZD.contains(n.getZiDuanBM())).count();
 
+
                     if (count1==ruCanZD.size())
                     {
                         GuiZeDto guiZeDto=new GuiZeDto();
@@ -275,6 +276,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
         List<String> jieDianIDs=biHuanJDXXList.stream().map(SC_BH_JieDianXXModel::getJieDianID).distinct().toList();
         //获取闭环视图数据
         List<SC_BH_ShiTuXXModel> biHuanSTXXList = shiTuXXRepository.findByShiTuIDIn(shituIDs);
+        List<SC_BH_ShiTuMXModel> biHuanSTMXList = shiTuMXRepository.findByShiTuIDIn(shituIDs);
         //获取闭环节点数据
         List<SC_BH_ShiTuJDXXModel> biHuanSTJDXXList = shiTuJDXXRepository.findByJieDianIDIn(jieDianIDs);
         //获取节点明细数据
@@ -291,34 +293,21 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
             LingChuangJSPZDto shuJuLYDto=new LingChuangJSPZDto();
             shuJuLYDto.setShuJuLYID(s.getShuJuLYID());
             shuJuLYDto.setShuJuLYLXDM(s.getShuJuLYLXDM());
-            val list = biHuanSTJDMXList.stream().filter(n -> n.getShiTuID().equals(s.getShiTuID())).toList();
+            val list = biHuanSTMXList.stream().filter(n -> n.getShiTuID().equals(s.getShiTuID())).toList();
             shuJuLYDto.setShuJuJMXZDDtos(BeanUtil.copyListProperties(list, ShuJuJMXZDDto::new));
             shuJuLYDtos.add(shuJuLYDto);
         });
         List<TableDTO>  tableList = gongYongRemoteService.getShiTuGLFSGLTJ(shuJuLYDtos).getData("获取功能服务字段信息失败");
 
         StringBuilder builder = new StringBuilder();
-        tableList.get(0).getSchemaTableList().forEach(p->{
-            List<ShuJuJMXZDDto> shujMX = p.getShuJuJMXZDDtos().stream().filter(n -> ruCanZDBMs.contains(n.getZiDuanBM())).toList();
-            //拼接入参条件
-            for (int i=0;i<shujMX.size();i++)
-            {
-                int finalI = i;
-                ZiDuanRCDto ziDuanBMMC = ruCanList.stream().filter(n ->
-                        n.getZiDuanBM().equals(shujMX.get(finalI).getZiDuanBM())).findFirst().orElse(null);
-                builder.append(p.getMoShi())
-                        .append(".")
-                        .append(p.getBiaoMing())
-                        .append(".")
-                        .append(shujMX.get(finalI).getZiDuanBM())
-                        .append("=")
-                        .append("'")
-                        .append(ziDuanBMMC.getZiDuanZhi())
-                        .append("'");
-                if (i < shujMX.size() - 1) { // 如果不是最后一个元素，则添加"and"
-                    builder.append(" and ");
-                }
-            }
+        //拼接入参条件
+        ruCanList.forEach(r->{
+            ShuJuJMXZDDto shuJuJMXZDDto = tableList.get(0).getSchemaTableList().get(0).getShuJuJMXZDDtos().stream().filter(n -> n.getZiDuanBM().equals(r.getZiDuanBM())).findFirst().orElse(null);
+            if (shuJuJMXZDDto != null) {
+                String itemString = shuJuJMXZDDto.getShuJuYMC() + "." + shuJuJMXZDDto.getBiaoMing() + "." + r.getZiDuanBM()+ "='" + r.getZiDuanZhi() + "'";
+                builder.append(itemString);
+              //  builder.append(" and ");
+            };
         });
         tableList.get(0).setFilterConditionList(builder.toString());
 
@@ -738,6 +727,6 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
             }
         }
 
-        return String.join(" OR ", orConditions);
+        return String.join(" AND ", orConditions);
     }
 }

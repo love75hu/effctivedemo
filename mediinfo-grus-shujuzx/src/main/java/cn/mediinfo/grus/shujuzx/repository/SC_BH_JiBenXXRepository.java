@@ -46,9 +46,9 @@ public interface SC_BH_JiBenXXRepository extends MsfJpaRepository<QSC_BH_JiBenXX
                 .whereIf(StringUtils.hasText(likeQuery), n -> n.biHuanMC.contains(likeQuery))
                 .select(SC_BH_JiBenXXDto.class).fetch();
     }
-    default  void biHuanSZQY(String biHuanID,Integer qiyongBZ)
+    default  void biHuanSZQY(String id,Integer qiyongBZ)
     {
-        asUpdateDsl().where(n->n.biHuanID.eq(biHuanID)).set(n->n.qiYongBZ,qiyongBZ).execute();
+        asUpdateDsl().where(n->n.id.eq(id)).set(n->n.qiYongBZ,qiyongBZ).execute();
     }
 
     SC_BH_JiBenXXModel  findFirstByBiHuanID(String biHuanID);

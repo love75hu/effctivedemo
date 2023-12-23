@@ -1,13 +1,25 @@
 package cn.mediinfo.grus.shujuzx.dto.bihuansz;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
 public class BiHuanXXDto {
- 
+
+
+    /**
+     * 组织机构ID
+     */
+    @Column(columnDefinition = "组织机构ID")
+    private String zuZhiJGID;
+    /**
+     * 组织机构名称
+     */
+    @Column(columnDefinition = "组织机构名称")
+    private String zuZhiJGMC;
     private String id;
     /**
      * 闭环类型代码

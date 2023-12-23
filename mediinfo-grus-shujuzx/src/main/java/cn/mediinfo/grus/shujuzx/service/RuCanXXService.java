@@ -11,9 +11,9 @@ import cn.mediinfo.grus.shujuzx.model.SC_BH_RuCanXXModel;
 import java.util.List;
 
 public interface RuCanXXService {
-    Boolean addRuCanXX(List<AddRuCanXXDto> dto, String biHuanLXDM, String biHuanLXMC, String biHuanID, String biHuanMC);
-    List<RuCanXXDto> getRuCanXXByBiHuanID(String biHuanID);
-    List<SC_BH_RuCanXXModel> getRuCanXX(String biHuanID);
+    Boolean addRuCanXX(List<AddRuCanXXDto> dto, String zuZhiJGID,String zuZhiJGMC, String biHuanLXDM, String biHuanLXMC, String biHuanID, String biHuanMC);
+    List<RuCanXXDto> getRuCanXXByBHID(String biHuanID, String zuZhiJGID);
+    List<SC_BH_RuCanXXModel> getRuCanXX(String biHuanID, String zuZhiJGID);
     List<BiHuanSTRCZDDto> getBiHuanSTRCZD(String biHuanID, String jiGouID);
     Boolean addFuZhiRCXX(List<SC_BH_RuCanXXModel> canXXModels);
 }

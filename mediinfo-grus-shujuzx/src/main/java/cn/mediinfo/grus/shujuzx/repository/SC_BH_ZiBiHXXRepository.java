@@ -14,7 +14,7 @@ import java.util.List;
 public interface SC_BH_ZiBiHXXRepository extends MsfJpaRepository<QSC_BH_ZiBiHXXModel, SC_BH_ZiBiHXXModel, String>, JpaSpecificationExecutor<SC_BH_ZiBiHXXModel> {
  default List<SC_BH_ZiBiHXXModel>  getZiBiHXXList(List<String> biHuanID)
  {
-     return asQuerydsl().where(n->n.biHuanID.in(biHuanID)).fetch();
+     return asQuerydsl().where(n->n.zuZhiJGID.eq("0").and(n.biHuanID.in(biHuanID))).fetch();
  }
  List<SC_BH_ZiBiHXXModel> findByBiHuanIDAndZuZhiJGIDAndZuZhiJGMC(String biHuanID,String zuZhiJGID,String zuZhiJGMC);
 

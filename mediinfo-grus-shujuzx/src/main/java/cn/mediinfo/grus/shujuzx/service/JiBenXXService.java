@@ -33,14 +33,14 @@ public interface JiBenXXService {
     /**
      * 闭环设置删除
      */
-    boolean biHuanSZSC(String biHuanID);
+    boolean biHuanSZSC(String id);
 
     /**
      * 闭环设置启用
      */
-    boolean biHuanSZQY(String biHuanID,Integer qiyongBZ);
+    boolean biHuanSZQY(String id, Integer qiyongBZ);
 
-    BiHuanXXDto getBiHuanXXBYID(String biHuanID);
+    BiHuanXXDto getBiHuanXXBYID(String id);
     /**
      * 获取闭环基本信息列表
      * @param likeQuery

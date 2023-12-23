@@ -27,14 +27,14 @@ public class RuCanXXServiceImpl implements RuCanXXService {
     }
 
     @Override
-    public List<RuCanXXDto> getRuCanXXByBiHuanID(String biHuanID)
+    public List<RuCanXXDto> getRuCanXXByBHID(String biHuanID,String zuZhiJGID)
     {
-        return BeanUtil.copyListProperties(ruCanXXRepository.findByBiHuanID(biHuanID),RuCanXXDto::new);
+        return BeanUtil.copyListProperties(ruCanXXRepository.findByBiHuanIDAndZuZhiJGID(biHuanID,zuZhiJGID),RuCanXXDto::new);
     }
     @Override
-    public List<SC_BH_RuCanXXModel> getRuCanXX(String biHuanID)
+    public List<SC_BH_RuCanXXModel> getRuCanXX(String biHuanID,String zuZhiJGID)
     {
-        return ruCanXXRepository.findByBiHuanID(biHuanID);
+        return ruCanXXRepository.findByBiHuanIDAndZuZhiJGID(biHuanID,zuZhiJGID);
     }
 
     @Override
@@ -63,16 +63,16 @@ public class RuCanXXServiceImpl implements RuCanXXService {
     /**
      * 新增闭环入参信息
      */
-    public Boolean addRuCanXX(List<AddRuCanXXDto> dto, String biHuanLXDM, String biHuanLXMC, String biHuanID, String biHuanMC)
+    public Boolean addRuCanXX(List<AddRuCanXXDto> dto, String zuZhiJGID,String zuZhiJGMC,String biHuanLXDM, String biHuanLXMC, String biHuanID, String biHuanMC)
     {
         ruCanXXRepository.asDeleteDsl().where(n->n.biHuanID.eq(biHuanID)).execute();
         ruCanXXRepository.saveAll(BeanUtil.copyListProperties(dto, SC_BH_RuCanXXModel::new, (d, s) -> {
-            s.setZuZhiJGID("0");
-            s.setZuZhiJGMC("通用");
+            s.setZuZhiJGID(zuZhiJGID);
+            s.setZuZhiJGMC(zuZhiJGMC);
             s.setBiHuanID(biHuanID);
+            s.setBiHuanMC(biHuanMC);
             s.setBiHuanLXDM(biHuanLXDM);
             s.setBiHuanLXMC(biHuanLXMC);
-            s.setBiHuanMC(biHuanMC);
         }));
         return true;
     }

@@ -23,4 +23,5 @@ public interface SC_BH_ShiTuJDMXRepository extends MsfJpaRepository<QSC_BH_ShiTu
     }
 
     List<SC_BH_ShiTuJDMXModel> findByJieDianIDIn(List<String> jieDianID);
+    List<SC_BH_ShiTuJDMXModel> findByShiTuIDIn(List<String> shiTuID);
 }

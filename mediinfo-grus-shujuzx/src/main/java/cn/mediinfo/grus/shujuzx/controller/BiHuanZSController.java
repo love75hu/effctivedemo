@@ -1,5 +1,6 @@
 package cn.mediinfo.grus.shujuzx.controller;
 
+import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
 import cn.mediinfo.cyan.msf.core.response.MsfResponse;
 import cn.mediinfo.cyan.msf.core.response.XiTongResponseCode;
@@ -33,8 +34,7 @@ public class BiHuanZSController {
 
     @Operation(summary = "根据闭环功能点和相关入参获取闭环详情")
     @PostMapping("getBiHuanXQ")
-    public MsfResponse<BiHuanXQDto> getBiHuanXQ(@RequestBody BiHuanGNDPZ biHuanGNDPZ) throws YuanChengException
-    {
+    public MsfResponse<BiHuanXQDto> getBiHuanXQ(@RequestBody BiHuanGNDPZ biHuanGNDPZ) throws YuanChengException, TongYongYWException {
         if (!StringUtil.hasText(biHuanGNDPZ.getBiHuanGNDDM()) || CollectionUtil.isEmpty(biHuanGNDPZ.getRuCanList())) {
             return MsfResponse.fail(XiTongResponseCode.CANSHUYC,"入参异常检查入参！");
         }

@@ -60,6 +60,7 @@ public interface SC_BH_ShiTuMXRepository extends MsfJpaRepository<QSC_BH_ShiTuMX
     default List<KeXuanZDDto> getShiTuMXList(String biHuanLXDM,List<String> shiTuIDs) {
         return this.asQuerydsl().where(e->e.biHuanLXDM.eq(biHuanLXDM)).where(e->e.shiTuID.in(shiTuIDs) ).select(KeXuanZDDto.class).fetch();
     }
+    List<SC_BH_ShiTuMXModel> findByShiTuIDIn(List<String> shiTuID);
 
 
 

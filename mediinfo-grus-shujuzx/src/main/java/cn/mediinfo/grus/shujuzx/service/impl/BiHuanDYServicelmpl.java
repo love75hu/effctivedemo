@@ -104,7 +104,7 @@ public class BiHuanDYServicelmpl implements BiHuanDYService {
             return new ArrayList<>();
         }
         List<ShiTuMXBHPZDto> results = new ArrayList<>();
-        for (SC_BH_ShiTuXXDto shiTuXX : shiTuXXs) {
+            for (SC_BH_ShiTuXXDto shiTuXX : shiTuXXs) {
             var cunZaiJSPZ = lingChuangJSPZZDList.stream().filter(t -> t.getShuJuLYID().equals(shiTuXX.getShuJuLYID())).findFirst().orElse(null);
             //根据视图来源ID组装数据给前端
             if (cunZaiJSPZ != null) {

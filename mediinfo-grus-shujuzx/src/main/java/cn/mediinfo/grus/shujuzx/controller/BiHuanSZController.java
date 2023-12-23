@@ -98,23 +98,23 @@ public class BiHuanSZController {
     }
     @Operation(summary = "闭环设置删除")
     @DeleteMapping("biHuanSZSC")
-    public MsfResponse<Boolean> biHuanSZSC(@RequestParam  String biHuanID)
+    public MsfResponse<Boolean> biHuanSZSC(@RequestParam  String id)
     {
-        return MsfResponse.success(jiBenXXService.biHuanSZSC(biHuanID));
+        return MsfResponse.success(jiBenXXService.biHuanSZSC(id));
     }
 
     @Operation(summary = "闭环设置启用")
     @PutMapping("biHuanSZQY")
-    public MsfResponse<Boolean> biHuanSZQY(@RequestParam  String biHuanID,@RequestParam  Integer qiyongBZ)
+    public MsfResponse<Boolean> biHuanSZQY(@RequestParam  String id,@RequestParam  Integer qiyongBZ)
     {
-        return MsfResponse.success(jiBenXXService.biHuanSZQY(biHuanID,qiyongBZ));
+        return MsfResponse.success(jiBenXXService.biHuanSZQY(id,qiyongBZ));
     }
 
     @Operation(summary = "获取闭环信息")
     @GetMapping("getBiHuanXXBYID")
-    public MsfResponse<BiHuanXXDto> getBiHuanXXBYID(@NotEmpty(message = "闭环ID不能为空")  String biHuanID)
+    public MsfResponse<BiHuanXXDto> getBiHuanXXBYID(@NotEmpty(message = "闭环ID不能为空")  String id)
     {
-        return MsfResponse.success(jiBenXXService.getBiHuanXXBYID(biHuanID));
+        return MsfResponse.success(jiBenXXService.getBiHuanXXBYID(id));
     }
 
 

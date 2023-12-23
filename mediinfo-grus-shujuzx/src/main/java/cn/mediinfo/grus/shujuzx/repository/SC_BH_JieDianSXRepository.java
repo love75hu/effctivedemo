@@ -13,7 +13,7 @@ import java.util.List;
 @MsfDataSource("datasourcesjzx")
 public interface SC_BH_JieDianSXRepository extends MsfJpaRepository<QSC_BH_JieDianSXModel, SC_BH_JieDianSXModel, String>, JpaSpecificationExecutor<SC_BH_JieDianSXModel> {
     default List<SC_BH_JieDianSXModel> jieDianSXList(List<String> biHuanID) {
-        return asQuerydsl().where(n -> n.biHuanID.in(biHuanID)).fetch();
+        return asQuerydsl().where(n ->n.zuZhiJGID.eq("0").and(n.biHuanID.in(biHuanID))).fetch();
     }
 
     List<SC_BH_JieDianSXModel>  findByBiHuanIDAndZuZhiJGIDAndZuZhiJGMC(String biHuanID,String zuZhiJGID,String zuZhiJGMC);

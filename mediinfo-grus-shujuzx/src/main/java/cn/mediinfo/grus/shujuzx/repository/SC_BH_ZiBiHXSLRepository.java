@@ -12,7 +12,7 @@ import java.util.List;
 @MsfDataSource("datasourcesjzx")
 public interface SC_BH_ZiBiHXSLRepository extends MsfJpaRepository<QSC_BH_ZiBiHXSLModel, SC_BH_ZiBiHXSLModel, String>, JpaSpecificationExecutor<SC_BH_ZiBiHXSLModel> {
     default List<SC_BH_ZiBiHXSLModel> getZiBiHXXList(List<String> biHuanID) {
-        return asQuerydsl().where(n -> n.biHuanID.in(biHuanID)).fetch();
+        return asQuerydsl().where(n -> n.zuZhiJGID.eq("0").and(n.biHuanID.in(biHuanID))).fetch();
     }
 
     List<SC_BH_ZiBiHXSLModel> findByBiHuanIDAndZuZhiJGIDAndZuZhiJGMC(String biHuanID, String zuZhiJGID, String zuZhiJGMC);

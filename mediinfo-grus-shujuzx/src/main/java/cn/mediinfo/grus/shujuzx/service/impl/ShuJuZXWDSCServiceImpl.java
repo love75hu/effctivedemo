@@ -90,7 +90,7 @@ public class ShuJuZXWDSCServiceImpl implements ShuJuZXWDSCService {
     @Override
     public Integer addBatchShouCangJMX(SC_SC_ShouCangJMXBatchInDto BatchDto) {
         //获取入参的病人list和收藏夹list
-        var bingRenList = BatchDto.getBingRenIDList();
+        var bingRenList = BatchDto.getBingRenIDList().stream().distinct().toList();
         var shouCangJList = BatchDto.getShouCangJIDList();
 
         //获取已经有的收藏夹信息
@@ -127,7 +127,7 @@ public class ShuJuZXWDSCServiceImpl implements ShuJuZXWDSCService {
             });
         });
         
-        sc_sc_shouCangJMXRepository.saveAll(addModelList);
+        sc_sc_shouCangJMXRepository.insertAll(addModelList);
         return 1;
     }
 

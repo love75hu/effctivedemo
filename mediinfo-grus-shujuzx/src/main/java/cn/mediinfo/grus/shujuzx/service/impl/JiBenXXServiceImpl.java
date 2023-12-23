@@ -328,7 +328,7 @@ class JiBenXXServiceImpl implements JiBenXXService {
      */
     @Override
     public BiHuanXXDto getBiHuanXXBYID(String id) {
-        var biHuanXX = BeanUtil.copyProperties(jiBenXXRepository.findById(id), BiHuanXXDto.class);
+        var biHuanXX = BeanUtil.copyProperties(jiBenXXRepository.findById(id).orElse(null), BiHuanXXDto.class);
         //todo 判断空
         if (biHuanXX != null) {
             biHuanXX.setRuCanXXDtoList(ruCanXXService.getRuCanXXByBHID(biHuanXX.getBiHuanID(),biHuanXX.getZuZhiJGID()));

@@ -321,7 +321,7 @@ public class FangAnServiceImpl implements FangAnService {
      * @param mergeType 合并类型，1-患者，2-就诊
      * @param pageIndex 页码
      * @param pageSize 每页数量
-     * @param isShowBQ 是否显示标签
+     * @param isShowBQ 是否显示标签(Excel导出不显示标签)
      * @return List<List<QueryResultDTO>>
      * @throws TongYongYWException
      */
@@ -343,7 +343,8 @@ public class FangAnServiceImpl implements FangAnService {
             List<String> bingRenIDList=bingRenFZList.stream().map(FangAnCXBRFZDto::getBingRenID).distinct().toList();
             shouChangJMXList= BeanUtil.copyListProperties(scScShouCangJMXRepository.findByShouCangRIDAndBingRenIDIn(lyraIdentityService.getYongHuId(),bingRenIDList), SC_SC_ShouCangJMXListDto::new);
         }
-
+        //列表时最大支持列数
+        Integer maxRecordCols=100;
         //药品
         if (fangAnSCList.stream().anyMatch(p -> "4".equals(p.getZhiBiaoLXDM()))) {
             //获取输出字段部分按就诊/患者合并的最大长度
@@ -381,6 +382,11 @@ public class FangAnServiceImpl implements FangAnService {
                         row0.addAll(kongBaiZDList);
                         row1.addAll(kongBaiZDList);
                     }
+                    //列表时限制列数
+                    if(isShowBQ){
+                        row0=row0.subList(0,Math.min(maxRecordCols, row0.size()));
+                        row1=row1.subList(0,Math.min(maxRecordCols, row1.size()));
+                    }
                     result.add(row0);
                     result.add(row1);
                     continue;
@@ -409,6 +415,11 @@ public class FangAnServiceImpl implements FangAnService {
                             }
                         }
                     }
+                    //列表时限制列数
+                    if(isShowBQ){
+                        row0=row0.subList(0,Math.min(maxRecordCols, row0.size()));
+                        row1=row1.subList(0,Math.min(maxRecordCols, row1.size()));
+                    }
                     result.add(row0);
                     result.add(row1);
                 }
@@ -435,7 +446,7 @@ public class FangAnServiceImpl implements FangAnService {
         //按患者合并
         if (isHuanZheHB) {
             //按就诊次数视图次数获取每个字段次数分组
-            bingRenSXFZList=binRenSXFZStream.collect(Collectors.groupingBy(br->ListUtil.toList(br.getJiuZhenSXH(),br.getShiTuBM(),br.getShiTuSXH(),br.getShiTuZJSXH(),br.getZiDuanDM(),br.getZiDuanYDM(),br.getZiDuanMC(),br.getZiDuanSXH()))).entrySet().stream().map(br-> {
+            bingRenSXFZList=binRenSXFZStream.collect(Collectors.groupingBy(br->ListUtil.toList(br.getJiuZhenSXH(),br.getShiTuBM(),br.getShiTuSXH(),br.getShiTuZJSXH(),br.getZiDuanDM(),br.getZiDuanYDM(),br.getZiDuanMC(),br.getZiDuanSXH()),LinkedHashMap::new, Collectors.toList())).entrySet().stream().map(br-> {
                 Integer ziDuanMaxCount = br.getValue().stream().map(FangAnCXJGFZDto::getZiDuanCD).reduce(0, Integer::max);
                 FangAnCXJGFZDto binRenSXFZ=new FangAnCXJGFZDto();
                 binRenSXFZ.setJiuZhenSXH((Integer) br.getKey().get(0));
@@ -452,7 +463,7 @@ public class FangAnServiceImpl implements FangAnService {
         }
         else{
             //按视图次数获取每个字段次数分组
-            bingRenSXFZList=binRenSXFZStream.collect(Collectors.groupingBy(br->ListUtil.toList(br.getShiTuBM(),br.getShiTuSXH(),br.getShiTuZJSXH(),br.getZiDuanDM(),br.getZiDuanYDM(),br.getZiDuanMC(),br.getZiDuanSXH()))).entrySet().stream().map(br-> {
+            bingRenSXFZList=binRenSXFZStream.collect(Collectors.groupingBy(br->ListUtil.toList(br.getShiTuBM(),br.getShiTuSXH(),br.getShiTuZJSXH(),br.getZiDuanDM(),br.getZiDuanYDM(),br.getZiDuanMC(),br.getZiDuanSXH()),LinkedHashMap::new, Collectors.toList())).entrySet().stream().map(br-> {
                 Integer ziDuanMaxCount = br.getValue().stream().map(FangAnCXJGFZDto::getZiDuanCD).reduce(0, Integer::max);
                 FangAnCXJGFZDto binRenSXFZ=new FangAnCXJGFZDto();
                 binRenSXFZ.setJiuZhenSXH(1);
@@ -486,6 +497,10 @@ public class FangAnServiceImpl implements FangAnService {
                         row.add(new QueryResultDTO(bingRenSXFZ.getZiDuanDM(),bingRenSXFZ.getZiDuanYDM(), bingRenSXFZ.getZiDuanMC(), zhi));
                     }
                 }
+                //列表时限制列数
+                if(isShowBQ){
+                    row=row.subList(0,Math.min(maxRecordCols, row.size()));
+                }
                 result.add(row);
                 continue;
             }
@@ -506,6 +521,10 @@ public class FangAnServiceImpl implements FangAnService {
                         }
                         row.add(new QueryResultDTO(bingRenSXFZ.getZiDuanDM(), bingRenSXFZ.getZiDuanYDM(), bingRenSXFZ.getZiDuanMC(), zhi));
                     }
+                }
+                //列表时限制列数
+                if(isShowBQ){
+                    row=row.subList(0,Math.min(maxRecordCols, row.size()));
                 }
                 result.add(row);
             }
@@ -609,7 +628,7 @@ public class FangAnServiceImpl implements FangAnService {
         var qiTaSCList = fangAnSCList.stream().filter(p -> !"br_da_jibenxx".equals(p.getBiaoMing())&&StringUtil.hasText(p.getBieMing())).collect(Collectors.groupingBy(FangAnSCDTO::getBieMing, LinkedHashMap::new, Collectors.toList()));
 
         //结果分组除重 患者基本信息表：br_da_jibenxx，该表相关字段分组后只显示1次，其它按就诊显示
-        return jieGuoList.stream().collect(Collectors.groupingBy(p -> p.get("bingrenid"))).entrySet().stream().map(p -> {
+        return jieGuoList.stream().collect(Collectors.groupingBy(p -> p.get("bingrenid"),LinkedHashMap::new, Collectors.toList())).entrySet().stream().map(p -> {
             FangAnCXBRFZDto bingRenFZ = new FangAnCXBRFZDto();
             bingRenFZ.setBingRenID(String.valueOf(p.getKey()));
             //绑定患者基本信息
@@ -625,7 +644,7 @@ public class FangAnServiceImpl implements FangAnService {
                 return bingRenFZ;
             }
             AtomicInteger shunXuHao= new AtomicInteger();
-            List<FangAnCXJZFZDto> jiuZhenFZList = p.getValue().stream().sorted(Comparator.comparing(jz->DateUtil.parse(Optional.ofNullable(jz.get("jiuzhenrq")).orElse("").toString()),Comparator.nullsLast(Date::compareTo))).collect(Collectors.groupingBy(jz -> CollUtil.toList(jz.get("zuzhijgid"), jz.get("jiuzhenid")))).entrySet().stream().map(jz -> {
+            List<FangAnCXJZFZDto> jiuZhenFZList = p.getValue().stream().sorted(Comparator.comparing(jz->DateUtil.parse(Optional.ofNullable(jz.get("jiuzhenrq")).orElse("").toString()),Comparator.nullsLast(Comparator.reverseOrder()))).collect(Collectors.groupingBy(jz -> CollUtil.toList(jz.get("zuzhijgid"), jz.get("jiuzhenid")),LinkedHashMap::new, Collectors.toList())).entrySet().stream().map(jz -> {
                 FangAnCXJZFZDto jiuZhenFZ = new FangAnCXJZFZDto();
                 jiuZhenFZ.setZuZhiJGID(String.valueOf(jz.getKey().get(0)));
                 jiuZhenFZ.setJiuZhenID(String.valueOf(jz.getKey().get(1)));
@@ -639,7 +658,7 @@ public class FangAnServiceImpl implements FangAnService {
                     shiTuFZ.setShiTuDM(qiTaSC.getKey());
                     shiTuFZ.setShiTuSXH(shiTuSXH++);
                     AtomicInteger shiTuZJSXH= new AtomicInteger();
-                    List<FangAnCXSTZJFZDto> shiTuZJFZList=jz.getValue().stream().collect(Collectors.groupingBy(st ->st.get("zj_"+shiTuFZ.getShiTuDM()))).entrySet().stream().map(st->{
+                    List<FangAnCXSTZJFZDto> shiTuZJFZList=jz.getValue().stream().collect(Collectors.groupingBy(st ->st.get("zj_"+shiTuFZ.getShiTuDM()),LinkedHashMap::new, Collectors.toList())).entrySet().stream().map(st->{
                         FangAnCXSTZJFZDto shiTuZJFZ=new FangAnCXSTZJFZDto();
                         shiTuZJFZ.setShiTuZJZ(String.valueOf(st.getKey()));
                         shiTuZJFZ.setShiTuZJSXH(shiTuZJSXH.getAndIncrement());
@@ -814,7 +833,7 @@ public class FangAnServiceImpl implements FangAnService {
 
         List<BingLiSCDTO> bingLiSCList = BeanUtil.copyListProperties(linChuangRemoteService.getZiDianList(new ChaXunDto(bingLiCXSql)).getData(),BingLiSCDTO::new);
 
-        return bingLiSCList.stream().collect(Collectors.groupingBy(p -> ListUtil.toList(p.getBingRenID(), p.getXingMing(), p.getXingBieDM(), p.getXingBieMC(), p.getChuShengRQ(), p.getMenZhenCS(), p.getZhuYuanCS()))).entrySet().stream().map(p -> {
+        return bingLiSCList.stream().collect(Collectors.groupingBy(p -> ListUtil.toList(p.getBingRenID(), p.getXingMing(), p.getXingBieDM(), p.getXingBieMC(), p.getChuShengRQ(), p.getMenZhenCS(), p.getZhuYuanCS()),LinkedHashMap::new, Collectors.toList())).entrySet().stream().map(p -> {
             BingRenJBXXDTO item = new BingRenJBXXDTO();
             item.setBingRenID(String.valueOf(p.getKey().get(0)));
             item.setXingMing(String.valueOf(p.getKey().get(1)));
@@ -824,7 +843,7 @@ public class FangAnServiceImpl implements FangAnService {
             item.setNianLing(DateUtil.getAge(DateFormatUtils.format(DateUtil.parse(Optional.ofNullable(p.getKey().get(4)).orElse("").toString()), "yyyy-MM-dd")));
             item.setMzJiuZhenNum((Integer) p.getKey().get(5));
             item.setZhuYuanNum((Integer) p.getKey().get(6));
-            List<JiuZhenXXDTO> jiuZhenXXList = p.getValue().stream().collect(Collectors.groupingBy(q -> ListUtil.toList(q.getJiuZhenYWID(), q.getJiuZhenYWLXDM(), q.getZuZhiJGID(), q.getZuZhiJGMC(), q.getJiuZhenRQ(), q.getJiuZhenKSID(), q.getJiuZhenKSMC()))).entrySet().stream().map(q -> {
+            List<JiuZhenXXDTO> jiuZhenXXList = p.getValue().stream().collect(Collectors.groupingBy(q -> ListUtil.toList(q.getJiuZhenYWID(), q.getJiuZhenYWLXDM(), q.getZuZhiJGID(), q.getZuZhiJGMC(), q.getJiuZhenRQ(), q.getJiuZhenKSID(), q.getJiuZhenKSMC()),LinkedHashMap::new, Collectors.toList())).entrySet().stream().map(q -> {
                 JiuZhenXXDTO jiuZhenBLXX = new JiuZhenXXDTO();
                 jiuZhenBLXX.setJiuZhenYWID(String.valueOf(q.getKey().get(0)));
                 jiuZhenBLXX.setJiuZhenYWLXDM(String.valueOf(q.getKey().get(1)));

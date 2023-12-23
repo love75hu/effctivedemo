@@ -224,7 +224,7 @@ class JiBenXXServiceImpl implements JiBenXXService {
 
         SC_BH_JiBenXXModel jiBenXXModel = jiBenXXRepository.findFirstByBiHuanIDAndZuZhiJGID(biHuanID, zuZhiJGID);
 
-        String newbiHuanID = stringGenerator.Create();
+        String newbiHuanID = sequenceService.getXuHao("SC_BH_JiBenxx_BiHuanID", 6); //闭环id
         String newbiHuanMc = StringUtil.concat(jiBenXXModel.getBiHuanMC(), "(-副本)");
         jiBenXXModel.setId(null);
         jiBenXXModel.setZuZhiJGID(zuZhiJGID);

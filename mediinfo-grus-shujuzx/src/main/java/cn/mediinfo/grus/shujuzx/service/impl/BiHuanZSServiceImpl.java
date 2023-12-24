@@ -132,7 +132,6 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
         //闭环入参字段集合
         var ruCanXXList = ruCanXXRepository.findByBiHuanIDIn(biHuanIDs);
         List<String> shituIDList = new ArrayList<>();
-        List<String> guoLuhuanIDs = new ArrayList<>();
         List<String> biaoMingList = new ArrayList<>();
         boolean kongTiaoJFH=false;
         //循环判断入参字段是否一致
@@ -145,7 +144,6 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
             List<GuiZeDto> jsonToList = JsonUtil.getJsonToList(sc_bh_diaoYongPZDto.getTiaoJian(), GuiZeDto.class);
             List<String> shituIDs = jsonToList.stream().flatMap(guiZeDto -> guiZeDto.getGuiZeList().stream()).map(ShiTu::getShiTuID).distinct().toList();
             if (shituIDs.isEmpty() || (shituIDs.size() == 1 && shituIDs.get(0) == null)) {
-                guoLuhuanIDs.add(sc_bh_diaoYongPZDto.getBiHuanID());
                 kongTiaoJFH=true;
                 break;
             }
@@ -217,7 +215,6 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
                     String sql = "SELECT COUNT(*) FROM " + fullTableName + " WHERE " + tiaoJian;
                     Long count = linChuangRemoteService.getShuLiang(new ChaXunDto(sql)).getData("执行sql报错");
                     if (count > 0) {
-                        guoLuhuanIDs.add(biHuanID);
                         break;
                     }
                 }
@@ -314,7 +311,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
         String sql = getShiTuBGX(tableList.get(0));
 
         //执行sql 得出结果
-        List<Map<String, Object>> maps =  linChuangRemoteService.getZiDianList(new ChaXunDto(sql)).getData("执行sql报错");
+        List<Map<String, Object>> maps =  linChuangRemoteService.getZiDianList(new ChaXunDto(sql.toLowerCase())).getData("执行sql报错");
         //执行完视图 获取节点的数据集合
        List<JieDianList> jieDianLists=new ArrayList<>();
         List<ZiDuanBMMC> ziDuanBMMCList=new ArrayList<>();
@@ -454,7 +451,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
              // 如果是行存储，先过滤出符合条件的映射
             List<Map<String, Object>> filteredMaps = isRowStorage
                     ? maps.stream()
-                    .filter(map -> Objects.equals(map.get(biHuanSTJDXXByJieID.getShiJianZDBM()), biHuanSTJDXXByJieID.getShiJianDM()))
+                    .filter(map -> Objects.equals(map.get(biHuanSTJDXXByJieID.getShiJianZDBM().toLowerCase()), biHuanSTJDXXByJieID.getShiJianDM()))
                     .toList()
                     : maps;
 
@@ -465,13 +462,13 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
                 if (isRowStorage) {
                     // 行存储情况
                     value = filteredMaps.stream()
-                            .map(k -> k.getOrDefault(f.getZiDuanBM(), "").toString())
+                            .map(k -> k.getOrDefault(f.getZiDuanBM().toLowerCase(), "").toString())
                             .findFirst()
                             .orElse("");
                 } else {
                     // 列存储情况
                     value = maps.stream()
-                            .map(k -> k.getOrDefault(f.getZiDuanBM(), "").toString())
+                            .map(k -> k.getOrDefault(f.getZiDuanBM().toLowerCase(), "").toString())
                             .findFirst()
                             .orElse("");
                 }

@@ -276,7 +276,7 @@ public class ShiTuMXServiceImpl implements ShiTuMXService {
     @Transactional(rollbackFor = Exception.class)
     public Boolean zuoFeiShiTMX(String id) throws WeiZhaoDSJException {
         SC_CX_ShiTuMXDto shiTuMXByID = getShiTuMXByID(id);
-        shiTuMXGXService.delectShiTuMXGX(shiTuMXByID.getShiTuID());
+        shiTuMXGXService.delectShiTuMXGX(shiTuMXByID.getShiTuID(),shiTuMXByID.getZiDuanBM());
         shiTuMXRepository.asDeleteDsl().where(n -> n.id.eq(id)).execute();
         return true;
 

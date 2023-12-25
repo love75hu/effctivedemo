@@ -7,7 +7,6 @@ import cn.mediinfo.grus.shujuzx.dto.zonghecx.GuanLianTJZD;
 import cn.mediinfo.grus.shujuzx.dto.zonghecx.SC_CX_ShiTuMXGXDto;
 
 import java.util.List;
-import java.util.Set;
 
 public interface ShiTuMXGXService {
     /**
@@ -17,7 +16,7 @@ public interface ShiTuMXGXService {
 
     List<GuanLianTJZD> getShiTuMXGXList(String shiTuID,String ziDuanBM,String ziDuanMC);
 
-    Boolean delectShiTuMXGX(String id);
+    Boolean delectShiTuMXGX(String id,String ziDuanBM);
     List<cn.mediinfo.grus.shujuzx.dto.shitumx.SC_CX_ShiTuMXGXDto> getShiTuMXGXByShiTuID(List<String> shiTuID);
 
     Boolean addShiTuMXGX(String shiTuID,String ziDuanBM,String ziDuanMC, List<GuanLianTJZD> guanLianZDList);

@@ -42,6 +42,9 @@ public class JieDianXXSZDto {
      */
     @Schema(description = "显示名称")
     private String xianShiMC;
+    @Schema(description = "顺序号")
+    private String shunXuHao;
+
     /**
      * 隐藏标志
      */

@@ -60,4 +60,6 @@ public class JieDianList {
 
     private Date kongZhiSJ;
 
+    private Integer biXuBZ;
+
 }

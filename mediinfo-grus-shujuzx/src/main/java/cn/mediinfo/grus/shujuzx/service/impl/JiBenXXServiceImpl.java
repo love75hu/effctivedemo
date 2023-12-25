@@ -107,8 +107,8 @@ class JiBenXXServiceImpl implements JiBenXXService {
             SC_BH_JiBenXXModel shiTuMXModel = new SC_BH_JiBenXXModel();
             BeanUtil.copyProperties(dto, shiTuMXModel);
             shiTuMXModel.setBiHuanID(biHuanID);
-            shiTuMXModel.setZuZhiJGMC(dto.getZuZhiJGID());
-            shiTuMXModel.setZuZhiJGID(dto.getZuZhiJGMC());
+            shiTuMXModel.setZuZhiJGMC(dto.getZuZhiJGMC());
+            shiTuMXModel.setZuZhiJGID(dto.getZuZhiJGID());
             ruCanXXService.addRuCanXX(dto.getRuCanXXDtoList(), dto.getZuZhiJGID(), dto.getZuZhiJGMC(), dto.getBiHuanLXDM(), dto.getBiHuanLXMC(), biHuanID, dto.getBiHuanMC());
             var data = jiBenXXRepository.save(shiTuMXModel);
             return data.getId();

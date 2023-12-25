@@ -462,13 +462,28 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
                 if (isRowStorage) {
                     // 行存储情况
                     value = filteredMaps.stream()
-                            .map(k -> k.getOrDefault(f.getZiDuanBM().toLowerCase(), "").toString())
+                            .map(k ->{
+                                var quZhi= k.getOrDefault(f.getZiDuanBM().toLowerCase(), "");
+                                         if (Objects.isNull(quZhi))
+                                         {
+                                             return "";
+                                         }
+                                        return quZhi.toString();
+                                    }
+                                    )
                             .findFirst()
                             .orElse("");
                 } else {
                     // 列存储情况
                     value = maps.stream()
-                            .map(k -> k.getOrDefault(f.getZiDuanBM().toLowerCase(), "").toString())
+                            .map(k ->{
+                                var quZhi= k.getOrDefault(f.getZiDuanBM().toLowerCase(), "");
+                                if (Objects.isNull(quZhi))
+                                {
+                                    return "";
+                                }
+                                return quZhi.toString();
+                            })
                             .findFirst()
                             .orElse("");
                 }

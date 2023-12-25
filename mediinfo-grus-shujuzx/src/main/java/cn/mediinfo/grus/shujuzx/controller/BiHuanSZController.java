@@ -1,5 +1,6 @@
 package cn.mediinfo.grus.shujuzx.controller;
 
+import cn.mediinfo.cyan.msf.core.exception.CanShuException;
 import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
 import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
@@ -86,7 +87,7 @@ public class BiHuanSZController {
 
     @Operation(summary = "闭环设置下发")
     @PostMapping("biHuanSZXF")
-    public MsfResponse<Boolean> biHuanSZXF(@RequestBody @Validated  BiHuanSZXFDto dto) throws TongYongYWException, YuanChengException {
+    public MsfResponse<Boolean> biHuanSZXF(@RequestBody @Validated  BiHuanSZXFDto dto) throws YuanChengException, CanShuException {
         return MsfResponse.success(jiBenXXService.biHuanSZXF(dto));
     }
 

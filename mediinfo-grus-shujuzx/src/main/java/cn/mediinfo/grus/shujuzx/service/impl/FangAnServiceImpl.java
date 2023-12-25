@@ -232,7 +232,7 @@ public class FangAnServiceImpl implements FangAnService {
         List<TableDTO> tableList = Optional.ofNullable(shuJuXSTXQ.getTableDTO()).orElse(ListUtil.toList());
 
         //基础表信息
-        List<ShuJuXXMSRso> jiChuBiaoXXList = gongYongRemoteService.getShuJXXMS(ListUtil.toList("JZ_MZ_JIUZHENXX", "JZ_ZY_JIUZHENXX", "BL_MZ_BINGLIJLTEXT", "BL_WS_JILUTEXT")).getData("获取基础信息表模式信息失败");
+        List<ShuJuXXMSRso> jiChuBiaoXXList = gongYongRemoteService.getShuJXXMS(ListUtil.toList("JZ_MZ_JIUZHENXX", "JZ_ZY_JIUZHENXX", "BL_MZ_BINGLIJLTEXT", "BL_WS_JILUTEXT", "BR_DA_JIBENXX")).getData("获取基础信息表模式信息失败");
 
         //生成别名 T1：别名，T2: 表关联，T3:是否外连表，T4:是否基础表
         Map<String, Tuple.Tuple4<String, String, Boolean, Boolean>> aliasMap = getAliasMap(tableList, fangAnLXDM, jiChuBiaoXXList);
@@ -485,7 +485,7 @@ public class FangAnServiceImpl implements FangAnService {
                 //加入基本信息空值行
                 row.add(new QueryResultDTO("bingrenid", "bingrenid", bingRenIDXSMC, bingRenFZ.getBingRenID()));
                 if(CollUtil.isNotEmpty(bingRenFZ.getBingRenJBXX())) {
-                    row.addAll(new ArrayList<>(Collections.nCopies(bingRenFZ.getBingRenJBXX().size(), new QueryResultDTO())));
+                    row.addAll(bingRenFZ.getBingRenJBXX());
                 }
                 for(var bingRenSXFZ:bingRenSXFZList) {
                     for (int zdTuple = 0; zdTuple < bingRenSXFZ.getZiDuanCD(); zdTuple++) {
@@ -510,7 +510,7 @@ public class FangAnServiceImpl implements FangAnService {
                 //加入基本信息
                 row.add(new QueryResultDTO("bingrenid", "bingrenid", bingRenIDXSMC, bingRenFZ.getBingRenID()));
                 if(CollUtil.isNotEmpty(bingRenFZ.getBingRenJBXX())) {
-                    row.addAll(new ArrayList<>(Collections.nCopies(bingRenFZ.getBingRenJBXX().size(), new QueryResultDTO())));
+                    row.addAll(bingRenFZ.getBingRenJBXX());
                 }
                 for(var bingRenSXFZ:bingRenSXFZList) {
                     for (int zdTuple = 0; zdTuple < bingRenSXFZ.getZiDuanCD(); zdTuple++) {
@@ -624,8 +624,8 @@ public class FangAnServiceImpl implements FangAnService {
             }
         }
 
-        List<FangAnSCDTO> jiBenXXSCList = fangAnSCList.stream().filter(p -> "br_da_jibenxx".equals(p.getBiaoMing())).toList();
-        var qiTaSCList = fangAnSCList.stream().filter(p -> !"br_da_jibenxx".equals(p.getBiaoMing())&&StringUtil.hasText(p.getBieMing())).collect(Collectors.groupingBy(FangAnSCDTO::getBieMing, LinkedHashMap::new, Collectors.toList()));
+        List<FangAnSCDTO> jiBenXXSCList = fangAnSCList.stream().filter(p -> "br_da_jibenxx".equalsIgnoreCase(p.getBiaoMing())).toList();
+        var qiTaSCList = fangAnSCList.stream().filter(p -> !"br_da_jibenxx".equalsIgnoreCase(p.getBiaoMing())&&StringUtil.hasText(p.getBieMing())).collect(Collectors.groupingBy(FangAnSCDTO::getBieMing, LinkedHashMap::new, Collectors.toList()));
 
         //结果分组除重 患者基本信息表：br_da_jibenxx，该表相关字段分组后只显示1次，其它按就诊显示
         return jieGuoList.stream().collect(Collectors.groupingBy(p -> p.get("bingrenid"),LinkedHashMap::new, Collectors.toList())).entrySet().stream().map(p -> {
@@ -641,6 +641,7 @@ public class FangAnServiceImpl implements FangAnService {
                 bingRenFZ.setBingRenJBXX(jiBenXXSCJGList);
             }
             if (CollUtil.isEmpty(qiTaSCList)) {
+                bingRenFZ.setFangAnCXJZFZList(new ArrayList<>());
                 return bingRenFZ;
             }
             AtomicInteger shunXuHao= new AtomicInteger();
@@ -1142,6 +1143,12 @@ public class FangAnServiceImpl implements FangAnService {
             aliasMap.put(formatBiaoMing("", jiChuBiao.getMoShi(), jiChuBiao.getBiaoMing()), Tuple.of("t_" + aliasMap.size(), formatBiaoMing("", jiChuBiao.getMoShi(), jiChuBiao.getBiaoMing()), false, true));
         }
 
+        //添加基本信息表
+        ShuJuXXMSRso jiBenXX = jiChuBiaoXXList.stream().filter(p -> p.getBiaoMing().equals("BR_DA_JIBENXX")).findFirst().orElse(new ShuJuXXMSRso());
+        if (ObjectUtils.isNotEmpty(jiBenXX) && !StringUtils.isBlank(jiBenXX.getBiaoMing()) && !aliasMap.containsKey(formatBiaoMing("", jiBenXX.getShuJuYMC(), jiBenXX.getBiaoMing()))) {
+            aliasMap.put(formatBiaoMing("", jiBenXX.getShuJuYMC(), jiBenXX.getBiaoMing()), Tuple.of("t_" + aliasMap.size(), formatBiaoMing("", jiBenXX.getShuJuYMC(), jiBenXX.getBiaoMing()), false, false));
+        }
+
         return aliasMap;
     }
 
@@ -1196,14 +1203,14 @@ public class FangAnServiceImpl implements FangAnService {
             default:
                 break;
         }
-
+        ShuJuXXMSRso jiBenXX = jiChuBiaoXXList.stream().filter(p -> p.getBiaoMing().equals("BR_DA_JIBENXX")).findFirst().orElse(new ShuJuXXMSRso());
         aliasMap.forEach((k, v) -> {
             //外连暂不考虑,基础表排除
             if (v.item3() || v.item1().equals(jiChuTable.item1())) {
                 return;
             }
             //病人基本信息特殊处理
-            if ("br_da_jibenxx".equals(v.item1())) {
+            if (ObjectUtils.isNotEmpty(jiBenXX) && !StringUtils.isBlank(jiBenXX.getBiaoMing()) && formatBiaoMing("", jiBenXX.getShuJuYMC(), jiBenXX.getBiaoMing()).equals(k)) {
                 builder.append(jiChuTable.item1()).append(".").append("bingrenid");
                 builder.append("=");
                 builder.append(v.item1()).append(".").append("id");
@@ -1371,6 +1378,10 @@ public class FangAnServiceImpl implements FangAnService {
                     break;
                 default:
                     key = aliasMap.keySet().stream().filter(p -> p.contains(formatBiaoMing(e.getZhiBiaoFLID(), e.getMoShi(), e.getBiaoMing()))).findFirst().orElse("");
+                    //如果key为空且为BR_DA_JIBENXX则去基本信息表中字段
+                    if(StringUtils.isBlank(key)&&Objects.equals(e.getBiaoMing().toLowerCase(),"br_da_jibenxx")){
+                        key = aliasMap.keySet().stream().filter(p -> p.equals(formatBiaoMing("", e.getMoShi(), e.getBiaoMing()))).findFirst().orElse("");
+                    }
                     alias = aliasMap.containsKey(key) ? aliasMap.get(key).item1() : "";
                     fields.add(alias + "." + e.getZhiBiaoID() + " as zd_" + fangAnSCList.indexOf(e));
                     break;

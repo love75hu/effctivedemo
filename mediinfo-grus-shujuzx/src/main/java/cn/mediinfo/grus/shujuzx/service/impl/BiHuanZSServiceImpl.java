@@ -216,6 +216,8 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
                     Long count = linChuangRemoteService.getShuLiang(new ChaXunDto(sql)).getData("执行sql报错");
                     if (count > 0) {
                         break;
+                    }else {
+                        biHuanIDs.remove(biHuanID);
                     }
                 }
 
@@ -431,24 +433,24 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
 
        }
 
-        biHuanJDXXList.forEach(j->{
-            //获取节点下的 子闭环信信息
-            List<SC_BH_ZiBiHXXModel> ziBiHXXList = ziBiHXX.stream().filter(n -> n.getJieDianID().equals(j.getJieDianID())).toList();
+        for (SC_BH_JieDianXXModel scBhJieDianXXModel : biHuanJDXXList) {//获取节点下的 子闭环信信息
+            List<SC_BH_ZiBiHXXModel> ziBiHXXList = ziBiHXX.stream().filter(n -> n.getJieDianID().equals(scBhJieDianXXModel.getJieDianID())).toList();
             //获取子闭环的显示列
-            List<SC_BH_ZiBiHXSLModel> ziBiHXSLList = biHuanZBHXSLList.stream().filter(n -> n.getJieDianID().equals(j.getJieDianID())).toList();
+            List<SC_BH_ZiBiHXSLModel> ziBiHXSLList = biHuanZBHXSLList.stream().filter(n -> n.getJieDianID().equals(scBhJieDianXXModel.getJieDianID())).toList();
             //查询 视图信息
-            SC_BH_ShiTuXXModel biHuanSTXX = biHuanSTXXList.stream().filter(n -> n.getShiTuID().equals(j.getShiTuID())).findFirst().orElse(new SC_BH_ShiTuXXModel());
+            SC_BH_ShiTuXXModel biHuanSTXX = biHuanSTXXList.stream().filter(n -> n.getShiTuID().equals(scBhJieDianXXModel.getShiTuID())).findFirst().orElse(new SC_BH_ShiTuXXModel());
             //查询 视图节点信息
-            SC_BH_ShiTuJDXXModel biHuanSTJDXXByJieID = biHuanSTJDXXList.stream().filter(n -> n.getJieDianID().equals(j.getJieDianID())).findFirst().orElse(new SC_BH_ShiTuJDXXModel());
+            SC_BH_ShiTuJDXXModel biHuanSTJDXXByJieID = biHuanSTJDXXList.stream().filter(n -> n.getJieDianID().equals(scBhJieDianXXModel.getJieDianID())).findFirst().orElse(new SC_BH_ShiTuJDXXModel());
             //查询 视图下下的字段信息
-            List<SC_BH_ShiTuJDMXModel> biHuanJDMXByJieID = biHuanSTJDMXList.stream().filter(n -> n.getJieDianID().equals(j.getJieDianID())).toList();
+            List<SC_BH_ShiTuJDMXModel> biHuanJDMXByJieID = biHuanSTJDMXList.stream().filter(n -> n.getJieDianID().equals(scBhJieDianXXModel.getJieDianID())).toList();
             //节点管理中的关联节点
-            List<SC_BH_ShiTuJDGXModel> scBhShiTuJDGXModel = jieDianGXList.stream().filter(n -> n.getJieDianID().equals(j.getJieDianID())).toList();
-            JieDianList jieDianList=new JieDianList();
-            List<jieDianNRList> jieDianNRList=new ArrayList<>();
+            List<SC_BH_ShiTuJDGXModel> scBhShiTuJDGXModel = jieDianGXList.stream().filter(n -> n.getJieDianID().equals(scBhJieDianXXModel.getJieDianID())).toList();
+            JieDianList jieDianList = new JieDianList();
+            List<jieDianNRList> jieDianNRList = new ArrayList<>();
             // 在 forEach 循环之前判断是行存储还是列存储
             boolean isRowStorage = Objects.equals(biHuanSTXX.getShiTuLXDM(), "2");
-             // 如果是行存储，先过滤出符合条件的映射
+            // 如果是行存储，先过滤出符合条件的映射
+            if (isRowStorage &&!StringUtil.hasText(biHuanSTJDXXByJieID.getShiJianZDBM())) continue;
             List<Map<String, Object>> filteredMaps = isRowStorage
                     ? maps.stream()
                     .filter(map -> Objects.equals(map.get(biHuanSTJDXXByJieID.getShiJianZDBM().toLowerCase()), biHuanSTJDXXByJieID.getShiJianDM()))
@@ -462,24 +464,22 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
                 if (isRowStorage) {
                     // 行存储情况
                     value = filteredMaps.stream()
-                            .map(k ->{
-                                var quZhi= k.getOrDefault(f.getZiDuanBM().toLowerCase(), "");
-                                         if (Objects.isNull(quZhi))
-                                         {
-                                             return "";
-                                         }
+                            .map(k -> {
+                                        var quZhi = k.getOrDefault(f.getZiDuanBM().toLowerCase(), "");
+                                        if (Objects.isNull(quZhi)) {
+                                            return "";
+                                        }
                                         return quZhi.toString();
                                     }
-                                    )
+                            )
                             .findFirst()
                             .orElse("");
                 } else {
                     // 列存储情况
                     value = maps.stream()
-                            .map(k ->{
-                                var quZhi= k.getOrDefault(f.getZiDuanBM().toLowerCase(), "");
-                                if (Objects.isNull(quZhi))
-                                {
+                            .map(k -> {
+                                var quZhi = k.getOrDefault(f.getZiDuanBM().toLowerCase(), "");
+                                if (Objects.isNull(quZhi)) {
                                     return "";
                                 }
                                 return quZhi.toString();
@@ -495,17 +495,15 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
                 biHuanJDNr.setYunXuWKBZ(f.getYunXuWKBZ());
                 biHuanJDNr.setKongZhiSJBZ(f.getKongZhiSJBZ());
                 biHuanJDNr.setZiDuanZhi(value);
-                if (Objects.equals( f.getKongZhiSJBZ(),1))
-                {
+                if (Objects.equals(f.getKongZhiSJBZ(), 1)) {
                     jieDianList.setKongZhiSJ(Converter.toDate(value));
                 }
                 // 将对象添加到列表中
                 jieDianNRList.add(biHuanJDNr);
             });
             //获取是否有子闭环
-            val ziBiHXXModel = ziBiHXXList.stream().filter(n -> n.getJieDianID().equals(j.getJieDianID())).findFirst().orElse(null);
-            if (ziBiHXXModel!=null)
-            {
+            val ziBiHXXModel = ziBiHXXList.stream().filter(n -> n.getJieDianID().equals(scBhJieDianXXModel.getJieDianID())).findFirst().orElse(null);
+            if (ziBiHXXModel != null) {
                 //子闭环标志
                 jieDianList.setZiBiHBZ("1");
                 jieDianList.setZiBiHGLZD(ziBiHXXModel.getGuanLianZDBM());
@@ -514,16 +512,15 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
                         .findFirst()
                         .orElse(""));
             }
-            if (!ziBiHXSLList.isEmpty())
-            {
+            if (!ziBiHXSLList.isEmpty()) {
                 jieDianList.setZiBiHDCZXBZ("1");
             }
-            var shiFouSGLJD = scBhShiTuJDGXModel.stream().filter(n -> n.getJieDianID().equals(j.getJieDianID())).findFirst().orElse(null);
+            var shiFouSGLJD = scBhShiTuJDGXModel.stream().filter(n -> n.getJieDianID().equals(scBhJieDianXXModel.getJieDianID())).findFirst().orElse(null);
             //逆节点标志
             // jieDianList.setNiJieDBZ(shiFouSGLJD!=null?"1":"0");
 
-             jieDianList.setBingXingBZ(j.getBingXingBZ());
-             jieDianList.setId(j.getJieDianID());
+            jieDianList.setBingXingBZ(scBhJieDianXXModel.getBingXingBZ());
+            jieDianList.setId(scBhJieDianXXModel.getJieDianID());
 
             //缺失标志
 //            if (Objects.equals(j.getBiXuBZ(),1)&&jieDianNRList.isEmpty())
@@ -531,35 +528,31 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
 //                jieDianList.setQueShiBZ("1");
 //            }
             //未执行标志
-            if (jieDianNRList.isEmpty())
-            {
+            if (jieDianNRList.isEmpty()) {
                 jieDianList.setWeiZhiXBZ("1");
             }
-            jieDianList.setJieDianMC(StringUtil.hasText(j.getXianShiMC())?j.getXianShiMC():j.getJieDianMC());
+            jieDianList.setJieDianMC(StringUtil.hasText(scBhJieDianXXModel.getXianShiMC()) ? scBhJieDianXXModel.getXianShiMC() : scBhJieDianXXModel.getJieDianMC());
             //缺失标志
 
-            if (Objects.equals(j.getBingXingBZ(),1))
-            {
-                if (jieDianNRList.stream().noneMatch(e->Objects.equals(1,e.getYunXuWKBZ()) ||
-                        (Objects.equals(0,e.getYunXuWKBZ())  && !ObjectUtils.isEmpty(e.getZiDuanZhi()))))
-                {
+            if (Objects.equals(scBhJieDianXXModel.getBingXingBZ(), 1)) {
+                if (jieDianNRList.stream().noneMatch(e -> Objects.equals(1, e.getYunXuWKBZ()) ||
+                        (Objects.equals(0, e.getYunXuWKBZ()) && !ObjectUtils.isEmpty(e.getZiDuanZhi())))) {
                     jieDianList.setQueShiBZ("1");
                 }
-                var jieDianNR= jieDianNRList.stream().allMatch(e->Objects.equals(1,e.getYunXuWKBZ()) ||
-                    (Objects.equals(0,e.getYunXuWKBZ())  && !ObjectUtils.isEmpty(e.getZiDuanZhi())));
-                if (Objects.nonNull(shiFouSGLJD) &&jieDianNR )
-                {
+                var jieDianNR = jieDianNRList.stream().allMatch(e -> Objects.equals(1, e.getYunXuWKBZ()) ||
+                        (Objects.equals(0, e.getYunXuWKBZ()) && !ObjectUtils.isEmpty(e.getZiDuanZhi())));
+                if (Objects.nonNull(shiFouSGLJD) && jieDianNR) {
                     jieDianList.setJieDianNRList(jieDianNRList);
                     jieDianList.setNiJieDBZ("1");
                     jieDianLists.add(jieDianList);
                 }
-            }else {
+            } else {
                 jieDianList.setJieDianNRList(jieDianNRList);
                 jieDianLists.add(jieDianList);
             }
             //关联节点处理
 
-        });
+        }
 
 
         //处理时效问题，用控制时间字段 做比较

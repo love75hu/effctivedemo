@@ -45,6 +45,9 @@ public class BiHuanZSController {
     @PostMapping("getZiBiHXQ")
     public MsfResponse<BiHuanXQDto> getZiBiHXQ(@RequestBody ZiBiHXQDto ziBiHXQDto) throws YuanChengException
     {
+        if (!StringUtil.hasText(ziBiHXQDto.getJieDianID()) || CollectionUtil.isEmpty(ziBiHXQDto.getRuCanList())) {
+            return MsfResponse.fail(XiTongResponseCode.CANSHUYC,"入参异常检查入参！");
+        }
         return MsfResponse.success(biHuanZSService.getBiHuanZXJG(ziBiHXQDto.getBiHuanID(),ziBiHXQDto.getZiBiHDCZXBZ(),ziBiHXQDto.getJieDianID(),ziBiHXQDto.getZuZhiJGID(),ziBiHXQDto.getRuCanList()));
     }
 

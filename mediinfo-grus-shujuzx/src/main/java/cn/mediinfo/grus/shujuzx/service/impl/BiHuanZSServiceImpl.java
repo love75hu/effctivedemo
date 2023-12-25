@@ -513,7 +513,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
                         .findFirst()
                         .orElse(""));
             }
-            if (!ziBiHXSLList.isEmpty()) {
+            if (!CollectionUtil.isEmpty(ziBiHXSLList)) {
                 jieDianList.setZiBiHDCZXBZ("1");
             }
             var shiFouSGLJD = scBhShiTuJDGXModel.stream().filter(n -> n.getJieDianID().equals(scBhJieDianXXModel.getJieDianID())).findFirst().orElse(null);

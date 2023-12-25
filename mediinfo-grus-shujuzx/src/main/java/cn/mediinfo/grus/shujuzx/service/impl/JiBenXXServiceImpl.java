@@ -1,5 +1,6 @@
 package cn.mediinfo.grus.shujuzx.service.impl;
 
+import cn.mediinfo.cyan.msf.core.exception.CanShuException;
 import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
 import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
@@ -18,6 +19,7 @@ import cn.mediinfo.lyra.extension.service.LyraIdentityService;
 import cn.mediinfo.lyra.extension.service.SequenceService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -118,24 +120,28 @@ class JiBenXXServiceImpl implements JiBenXXService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean biHuanSZXF(BiHuanSZXFDto dto) throws TongYongYWException, YuanChengException {
+    public boolean biHuanSZXF(BiHuanSZXFDto dto) throws YuanChengException, CanShuException {
         List<BiHuanZZJGDto> xiaFaJGIdGList = new ArrayList<>();
+        List<SC_BH_JiBenXXModel> jiBenTYX = jiBenXXRepository.jiBenTYX();
 
         if ("0".equals(dto.getXiaFaFS())) {
             //全部下发 获取全部组织机构id
             List<JG_ZZ_JiGouXXRso> zuZhiJGResult = diZuoRemoteService.getJiGouXXAllList().getData("获取全部组织机构失败");
-
             xiaFaJGIdGList = BeanUtil.copyListProperties(zuZhiJGResult, BiHuanZZJGDto::new);
+            if (CollectionUtils.isEmpty(dto.getBiHuanID())) {
+                dto.setBiHuanID(jiBenTYX.stream().map(SC_BH_JiBenXXModel::getBiHuanID).toList());
+            }
         }
         if ("1".equals(dto.getXiaFaFS())) {
             //部分下发
             xiaFaJGIdGList = dto.getXiaFaJG();
+            if (CollectionUtils.isEmpty(dto.getBiHuanID())) {
+                throw new CanShuException("部分下发闭环ID不能为空！");
+            }
         }
-
         List<String> jiGouid = xiaFaJGIdGList.stream().map(BiHuanZZJGDto::getZuZhiJGID).collect(Collectors.toList());
-
-        List<SC_BH_JiBenXXModel> jiBenTYX = jiBenXXRepository.jiBenTYX();
         List<SC_BH_JiBenXXModel> jiBenJGX = jiBenXXRepository.jiBenJGX(jiGouid);
+
         //闭环设置基本信息
         List<SC_BH_JiBenXXModel> jiBenXXList = new ArrayList<>();
 
@@ -204,11 +210,11 @@ class JiBenXXServiceImpl implements JiBenXXService {
                     });
         }
 
-        jiBenXXRepository.saveAll(jiBenXXList);
-        jieDianXXRepository.saveAll(addjieDianXXList);
-        jieDianSXRepository.saveAll(addjieDianSXList);
-        ziBiHXXRepository.saveAll(addziBiHXX);
-        ziBiHXSLRepository.saveAll(addziBiHXSL);
+        jiBenXXRepository.insertAll(jiBenXXList);
+        jieDianXXRepository.insertAll(addjieDianXXList);
+        jieDianSXRepository.insertAll(addjieDianSXList);
+        ziBiHXXRepository.insertAll(addziBiHXX);
+        ziBiHXSLRepository.insertAll(addziBiHXSL);
         return true;
 
 
@@ -331,7 +337,7 @@ class JiBenXXServiceImpl implements JiBenXXService {
         var biHuanXX = BeanUtil.copyProperties(jiBenXXRepository.findById(id).orElse(null), BiHuanXXDto.class);
         //todo 判断空
         if (biHuanXX != null) {
-            biHuanXX.setRuCanXXDtoList(ruCanXXService.getRuCanXXByBHID(biHuanXX.getBiHuanID(),biHuanXX.getZuZhiJGID()));
+            biHuanXX.setRuCanXXDtoList(ruCanXXService.getRuCanXXByBHID(biHuanXX.getBiHuanID(), biHuanXX.getZuZhiJGID()));
         }
         return biHuanXX;
     }

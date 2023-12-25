@@ -1,9 +1,6 @@
 package cn.mediinfo.grus.shujuzx.service;
 
-import cn.mediinfo.cyan.msf.core.exception.MsfResponseException;
-import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
-import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
-import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
+import cn.mediinfo.cyan.msf.core.exception.*;
 import cn.mediinfo.grus.shujuzx.dto.bihuansz.*;
 
 import java.util.List;
@@ -24,7 +21,7 @@ public interface JiBenXXService {
     /**
      * 闭环设置下发
      */
-    boolean biHuanSZXF(BiHuanSZXFDto dto) throws TongYongYWException, YuanChengException;
+    boolean biHuanSZXF(BiHuanSZXFDto dto) throws  YuanChengException, CanShuException;
     /**
      * 闭环设置复制
      */

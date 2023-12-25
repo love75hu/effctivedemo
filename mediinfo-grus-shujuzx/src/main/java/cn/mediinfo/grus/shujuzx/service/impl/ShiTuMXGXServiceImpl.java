@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * 视图字段关系服务
@@ -52,8 +51,8 @@ class ShiTuMXGXServiceImpl implements ShiTuMXGXService {
     }
 
     @Override
-    public Boolean delectShiTuMXGX(String shiTuID) {
-        shiTuMXGXRepository.asDeleteDsl().where(s -> s.shiTuID.eq(shiTuID)).execute();
+    public Boolean delectShiTuMXGX(String shiTuID, String ziDuanBM) {
+        shiTuMXGXRepository.asDeleteDsl().where(s -> s.shiTuID.eq(shiTuID).and(s.ziDuanBM.eq(ziDuanBM))).execute();
         return true;
     }
 

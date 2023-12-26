@@ -61,7 +61,7 @@ public class BiHuanSTJDGXServiceImpl implements BiHuanSTJDGXService {
             shiTuJDGXModel.setShiTuMC(shiTuMC);
             shiTuJDGXModels.add(shiTuJDGXModel);
         }
-        shiTuJDGXRepository.saveAll(shiTuJDGXModels);
+        shiTuJDGXRepository.insertAll(shiTuJDGXModels);
         return true;
     }
 }

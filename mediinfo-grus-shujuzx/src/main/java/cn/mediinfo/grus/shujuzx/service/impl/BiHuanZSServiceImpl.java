@@ -42,6 +42,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.Period;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 /**
@@ -126,7 +127,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
         //当前功能点的调用配置
         List<SC_BH_DiaoYongPZDto> biHuanPZList = diaoYongPZRepository.getBiHuanPZList(lyraIdentityService.getJiGouID(), biHuanGNDPZ.getBiHuanGNDDM(), 1);
         //获取配的闭环
-        var biHuanIDs = new ArrayList<>(biHuanPZList.stream().map(SC_BH_DiaoYongPZDto::getBiHuanID).toList());
+        var biHuanIDs = new CopyOnWriteArrayList<>(biHuanPZList.stream().map(SC_BH_DiaoYongPZDto::getBiHuanID).toList());
         //获取入参字段
         var ruCanZD = biHuanGNDPZ.getRuCanList().stream().map(ZiDuanRCDto::getZiDuanBM).toList();
         //闭环入参字段集合
@@ -136,9 +137,12 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
         boolean kongTiaoJFH = false;
         //循环判断入参字段是否一致
         for (SC_BH_DiaoYongPZDto sc_bh_diaoYongPZDto : biHuanPZList) {
-            long count = ruCanXXList.stream().filter(n -> ruCanZD.contains(n.getZiDuanBM()) && n.getBiHuanID().equals(sc_bh_diaoYongPZDto.getBiHuanID())).count();
+            long count = ruCanXXList.stream().filter(n ->
+                    ruCanZD.contains(n.getZiDuanBM())
+                            && n.getBiHuanID().equals(sc_bh_diaoYongPZDto.getBiHuanID())).count();
             if (count != ruCanZD.size()) {
                 biHuanIDs.remove(sc_bh_diaoYongPZDto.getBiHuanID());
+                continue;
             }
             //解析条件
             List<GuiZeDto> jsonToList = JsonUtil.getJsonToList(sc_bh_diaoYongPZDto.getTiaoJian(), GuiZeDto.class);
@@ -233,7 +237,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
     /**
      * 根据闭环id获取闭配置信息去执行sql
      */
-    public BiHuanXQDto getBiHuanZXJG(String biHuanID, String ziBiHDCZXBZ, String jieDianID, String zuZhiJGID, List<ZiDuanRCDto> ruCanList) throws YuanChengException {
+    public BiHuanXQDto getBiHuanZXJG(String biHuanID, String ziBiHDCZXBZ, String jieDianID, String zuZhiJGID, List<ZiDuanRCDto> ruCanList) throws YuanChengException, TongYongYWException {
         zuZhiJGID = StringUtil.hasText(zuZhiJGID) ? zuZhiJGID : lyraIdentityService.getJiGouID();
         //获取闭环基本信息
         //1.获取闭环基本信息 SELECT * FROM SC_BH_JIBENXX;-- 闭环基本信息
@@ -507,27 +511,28 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
             if (ziBiHXXModel != null) {
                 //子闭环标志
                 jieDianList.setZiBiHBZ("1");
-                jieDianList.setZiBiHGLZD(ziBiHXXModel.getGuanLianZDBM());
-                jieDianList.setZiBiHGLZDZ(maps.stream()
-                        .map(k -> k.getOrDefault(ziBiHXXModel.getGuanLianZDBM(), "").toString())
-                        .findFirst()
-                        .orElse(""));
+                jieDianList.setZiBiHGLZD(ziBiHXXModel.getZiBiHZDBM());
+                jieDianList.setZiBiHGLZDZ(maps.stream().map(k->{
+                    var quZhi = k.getOrDefault(ziBiHXXModel.getZiBiHZDBM().toLowerCase(), "");
+                    if (Objects.isNull(quZhi)) {
+                        return "";
+                    }
+                    return quZhi.toString();
+                }).findFirst().orElse(""));
+                if (ObjectUtils.equals(jieDianList.getZiBiHGLZDZ(),""))
+                {
+                    throw new TongYongYWException("子闭环关联字段值为空");
+                }
             }
             if (!CollectionUtil.isEmpty(ziBiHXSLList)) {
                 jieDianList.setZiBiHDCZXBZ("1");
             }
             var shiFouSGLJD = scBhShiTuJDGXModel.stream().filter(n -> n.getJieDianID().equals(scBhJieDianXXModel.getJieDianID())).findFirst().orElse(null);
             //逆节点标志
-            // jieDianList.setNiJieDBZ(shiFouSGLJD!=null?"1":"0");
             jieDianList.setBiXuBZ(scBhJieDianXXModel.getBiXuBZ());
             jieDianList.setBingXingBZ(scBhJieDianXXModel.getBingXingBZ());
             jieDianList.setId(scBhJieDianXXModel.getJieDianID());
 
-            //缺失标志
-//            if (Objects.equals(j.getBiXuBZ(),1)&&jieDianNRList.isEmpty())
-//            {
-//                jieDianList.setQueShiBZ("1");
-//            }
             //未执行标志
             if (jieDianNRList.isEmpty()) {
                 jieDianList.setWeiZhiXBZ("1");
@@ -535,7 +540,8 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
             jieDianList.setJieDianMC(StringUtil.hasText(scBhJieDianXXModel.getXianShiMC()) ? scBhJieDianXXModel.getXianShiMC() : scBhJieDianXXModel.getJieDianMC());
             //缺失标志
 
-            if (Objects.equals(scBhJieDianXXModel.getBingXingBZ(), 1)) {
+            //闭环
+            if (Objects.equals(scBhJieDianXXModel.getBiXuBZ(), 1)) {
                 if (jieDianNRList.stream().noneMatch(e -> Objects.equals(1, e.getYunXuWKBZ()) ||
                         (Objects.equals(0, e.getYunXuWKBZ()) && !ObjectUtils.isEmpty(e.getZiDuanZhi())))) {
                     jieDianList.setQueShiBZ("1");
@@ -548,6 +554,11 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
                     jieDianLists.add(jieDianList);
                 }
             } else {
+                if (jieDianNRList.stream().noneMatch(e -> Objects.equals(0, e.getYunXuWKBZ())&& ObjectUtils.isEmpty(e.getZiDuanZhi()))) {
+                    jieDianList.setXianShiBZ(0);
+                }
+
+                jieDianList.setXianShiBZ(1);
                 jieDianList.setJieDianNRList(jieDianNRList);
                 jieDianLists.add(jieDianList);
             }

@@ -62,4 +62,6 @@ public class JieDianList {
 
     private Integer biXuBZ;
 
+    private Integer xianShiBZ;
+
 }

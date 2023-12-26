@@ -47,7 +47,7 @@ public class BiHuanZSController {
         if (!StringUtil.hasText(ziBiHXQDto.getJieDianID()) || CollectionUtil.isEmpty(ziBiHXQDto.getRuCanList())) {
             return MsfResponse.fail(XiTongResponseCode.CANSHUYC,"入参异常检查入参！");
         }
-        return MsfResponse.success(biHuanZSService.getBiHuanZXJG(ziBiHXQDto.getBiHuanID(),ziBiHXQDto.getZiBiHDCZXBZ(),ziBiHXQDto.getJieDianID(),ziBiHXQDto.getZuZhiJGID(),ziBiHXQDto.getRuCanList()));
+        return MsfResponse.success(biHuanZSService.getBiHuanZXJG(ziBiHXQDto.getZiBiHID(),ziBiHXQDto.getBiHuanID(),ziBiHXQDto.getZiBiHDCZXBZ(),ziBiHXQDto.getJieDianID(),ziBiHXQDto.getZuZhiJGID(),ziBiHXQDto.getRuCanList()));
     }
 
     @Operation(summary = "获取闭环入参信息列表")

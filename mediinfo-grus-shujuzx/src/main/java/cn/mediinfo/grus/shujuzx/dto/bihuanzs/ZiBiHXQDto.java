@@ -7,6 +7,7 @@ import java.util.List;
 @Data
 public class ZiBiHXQDto {
 
+   private String ziBiHID;
    /**
     * 闭环id
     */

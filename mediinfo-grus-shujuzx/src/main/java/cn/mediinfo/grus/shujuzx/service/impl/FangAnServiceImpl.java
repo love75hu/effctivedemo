@@ -1470,7 +1470,7 @@ public class FangAnServiceImpl implements FangAnService {
                 case "2": //检验
                     key = aliasMap.keySet().stream().filter(p -> p.contains("jy_bg_baogaomx")).findFirst().orElse("");
                     alias = aliasMap.containsKey(key) ? aliasMap.get(key).item1() : "";
-                    fields.add(MessageFormat.format("(case when {0}.shiyanxmdm=''{1}'' and {0}.jianyanxmid=''{1}'' then concat({0}.shiyanjg,{0}.danwei) else '''' end) as {3}", alias, e.getZhiBiaoID(), e.getZhiBiaoFLID(), "zd_" + fangAnSCList.indexOf(e)));
+                    fields.add(MessageFormat.format("(case when {0}.shiyanxmdm=''{1}'' and {0}.jianyanxmid=''{2}'' then concat({0}.shiyanjg,{0}.danwei) else '''' end) as {3}", alias, e.getZhiBiaoID(), e.getZhiBiaoFLID(), "zd_" + fangAnSCList.indexOf(e)));
                     break;
                 case "3": //检查
                     key = aliasMap.keySet().stream().filter(p -> p.contains("jc_bg_baogaoxx")).findFirst().orElse("");

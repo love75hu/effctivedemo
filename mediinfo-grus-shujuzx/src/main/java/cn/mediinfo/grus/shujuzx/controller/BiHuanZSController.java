@@ -43,8 +43,7 @@ public class BiHuanZSController {
 
     @Operation(summary = "根据闭环ID和组织机构ID获取子闭环详情")
     @PostMapping("getZiBiHXQ")
-    public MsfResponse<BiHuanXQDto> getZiBiHXQ(@RequestBody ZiBiHXQDto ziBiHXQDto) throws YuanChengException
-    {
+    public MsfResponse<BiHuanXQDto> getZiBiHXQ(@RequestBody ZiBiHXQDto ziBiHXQDto) throws YuanChengException, TongYongYWException {
         if (!StringUtil.hasText(ziBiHXQDto.getJieDianID()) || CollectionUtil.isEmpty(ziBiHXQDto.getRuCanList())) {
             return MsfResponse.fail(XiTongResponseCode.CANSHUYC,"入参异常检查入参！");
         }

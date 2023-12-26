@@ -522,6 +522,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
                     }
                     return quZhi.toString();
                 }).findFirst().orElse(""));
+                jieDianList.setZiBiHID(ziBiHXXModel.getZiBiHID());
                 if (ObjectUtils.equals(jieDianList.getZiBiHGLZDZ(),""))
                 {
                     throw new TongYongYWException("子闭环关联字段值为空");

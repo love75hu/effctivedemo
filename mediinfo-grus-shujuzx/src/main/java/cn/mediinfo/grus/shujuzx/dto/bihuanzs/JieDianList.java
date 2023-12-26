@@ -64,4 +64,6 @@ public class JieDianList {
 
     private Integer xianShiBZ;
 
+    private String ziBiHID;
+
 }

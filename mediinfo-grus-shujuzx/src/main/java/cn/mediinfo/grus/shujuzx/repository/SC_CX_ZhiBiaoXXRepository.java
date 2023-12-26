@@ -32,4 +32,6 @@ public interface SC_CX_ZhiBiaoXXRepository extends MsfJpaRepository<QSC_CX_ZhiBi
                         p -> p.zhiBiaoMC.contains(likeQuery).or(p.zhiBiaoFLMC.contains(likeQuery)))
                 .fetch();
     }
+
+    List<SC_CX_ZhiBiaoXXModel> findByZuZhiJGIDAndZhiBiaoLXDMAndZhiBiaoFLMCAndZhiBiaoIDIsNull(String zuZhiJGID,String zhiBiaoLXDM,String zhiBiaoFLMC);
 }

@@ -90,7 +90,7 @@ public class ZhiBiaoXXServiceImpl implements ZhiBiaoXXService {
      */
     @Override
     public Boolean zuoFeiZhiBiaoFL(String zhiBiaoLXDM, String zhiBiaoFLID) {
-        zhiBiaoXXRepository.asDeleteDsl().where(p->p.zuZhiJGID.eq(lyraIdentityService.getJiGouID()).and(p.zhiBiaoLXDM.eq(zhiBiaoLXDM)).and(p.zhiBiaoFLID.eq(zhiBiaoFLID))).execute();
+        zhiBiaoXXRepository.asDeleteDsl().where(p -> p.zuZhiJGID.eq(lyraIdentityService.getJiGouID()).and(p.zhiBiaoLXDM.eq(zhiBiaoLXDM)).and(p.zhiBiaoFLID.eq(zhiBiaoFLID))).execute();
         return true;
     }
 
@@ -144,9 +144,9 @@ public class ZhiBiaoXXServiceImpl implements ZhiBiaoXXService {
      */
     @Override
     public Boolean updateZhiBiaoXX(ZhiBiaoXXUpdateDto updateDto) throws TongYongYWException {
-        boolean existZhiBiaoMC = zhiBiaoXXRepository.existsByZuZhiJGIDAndZhiBiaoLXDMAndZhiBiaoFLMC(lyraIdentityService.getJiGouID(),
+        List<SC_CX_ZhiBiaoXXModel> zhiBiaoModelList = zhiBiaoXXRepository.findByZuZhiJGIDAndZhiBiaoLXDMAndZhiBiaoFLMCAndZhiBiaoIDIsNull(lyraIdentityService.getJiGouID(),
                 ZhiBiaoLXDMEnum.YAO_PIN.getZhiBiaoLXDM(), updateDto.getZhiBiaoFLMC());
-        if (existZhiBiaoMC) {
+        if (zhiBiaoModelList.stream().anyMatch(x -> !Objects.equals(updateDto.getId(), x.getId()) && Objects.equals(x.getZhiBiaoFLMC(), updateDto.getZhiBiaoFLMC()))) {
             throw new TongYongYWException("指标分类名称已存在，请重新确认! ");
         }
         zhiBiaoXXRepository.asUpdateDsl()

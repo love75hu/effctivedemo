@@ -16,7 +16,7 @@ public interface SC_BH_DiaoYongPZRepository extends MsfJpaRepository<QSC_BH_Diao
     default List<SC_BH_DiaoYongPZDto> getBiHuanPZList(String zuZhiJGID, String gongNengDDM, Integer qiYongBZ) {
         return asQuerydsl().where(x -> x.zuZhiJGID.eq(zuZhiJGID)).where(x -> x.gongNengDDM.eq(gongNengDDM))
                 .whereIf(qiYongBZ == 1, x -> x.qiYongBZ.eq(1))
-                .orderBy(n->n.shunXuHao.asc())
+                .orderBy(n->n.qiYongBZ.desc()).orderBy(n->n.shunXuHao.asc())
                 .select(SC_BH_DiaoYongPZDto.class).fetch();
     }
 }

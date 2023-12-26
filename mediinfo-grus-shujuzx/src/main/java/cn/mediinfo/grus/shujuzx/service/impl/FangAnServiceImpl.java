@@ -376,7 +376,10 @@ public class FangAnServiceImpl implements FangAnService {
                     row0.add(new QueryResultDTO("bingrenid","bingrenid",bingRenIDXSMC,""));
                     row1.add(new QueryResultDTO("bingrenid","bingrenid", bingRenIDXSMC, bingRenFZ.getBingRenID()));
                     if(CollUtil.isNotEmpty(bingRenFZ.getBingRenJBXX())) {
-                        row0.addAll(new ArrayList<>(Collections.nCopies(bingRenFZ.getBingRenJBXX().size(), new QueryResultDTO())));
+                        row0.addAll(BeanUtil.copyListProperties(bingRenFZ.getBingRenJBXX(), QueryResultDTO::new).stream().map(q-> {
+                            q.setZiDuanZhi("");
+                            return q;
+                        }).toList());
                         row1.addAll(bingRenFZ.getBingRenJBXX());
                     }
                     //字段数量
@@ -417,7 +420,10 @@ public class FangAnServiceImpl implements FangAnService {
                     row0.add(new QueryResultDTO("bingrenid","bingrenid",bingRenIDXSMC,""));
                     row1.add(new QueryResultDTO("bingrenid", "bingrenid", bingRenIDXSMC, bingRenFZ.getBingRenID()));
                     if(CollUtil.isNotEmpty(bingRenFZ.getBingRenJBXX())) {
-                        row0.addAll(new ArrayList<>(Collections.nCopies(bingRenFZ.getBingRenJBXX().size(), new QueryResultDTO())));
+                        row0.addAll(BeanUtil.copyListProperties(bingRenFZ.getBingRenJBXX(), QueryResultDTO::new).stream().map(q-> {
+                            q.setZiDuanZhi("");
+                            return q;
+                        }).toList());
                         row1.addAll(bingRenFZ.getBingRenJBXX());
                     }
                     //字段数量

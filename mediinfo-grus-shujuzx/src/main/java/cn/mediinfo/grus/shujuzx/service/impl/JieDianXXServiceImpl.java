@@ -17,6 +17,7 @@ import cn.mediinfo.grus.shujuzx.service.JieDianXXService;
 import cn.mediinfo.lyra.extension.service.LyraIdentityService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -64,17 +65,15 @@ public class JieDianXXServiceImpl implements JieDianXXService {
         //节点信息
         List<SC_BH_JieDianXXModel> jieDianXX = new ArrayList<>();
         //节点时效
-        List<SC_BH_JieDianSXModel> jieDianSX=new ArrayList<>();
+        List<SC_BH_JieDianSXModel> jieDianSX = new ArrayList<>();
         //子闭环信息
-        List<SC_BH_ZiBiHXXModel> ziBiHXX= new ArrayList<>();
+        List<SC_BH_ZiBiHXXModel> ziBiHXX = new ArrayList<>();
         //子闭环显示列
-        List<SC_BH_ZiBiHXSLModel> ziBiHXSL=new ArrayList<>();
+        List<SC_BH_ZiBiHXSLModel> ziBiHXSL = new ArrayList<>();
 
-        for (var b:dto.getJieDianXXSZDtoList())
-        {
-            if (BeanUtil.isNotEmpty(b.getZiBiHXXDto()))
-            {
-                var ziBiHXXModel=  BeanUtil.copyProperties(b.getZiBiHXXDto(),SC_BH_ZiBiHXXModel.class);
+        for (var b : dto.getJieDianXXSZDtoList()) {
+            if (BeanUtil.isNotEmpty(b.getZiBiHXXDto())) {
+                var ziBiHXXModel = BeanUtil.copyProperties(b.getZiBiHXXDto(), SC_BH_ZiBiHXXModel.class);
                 ziBiHXXModel.setBiHuanID(dto.getBiHuanID());
                 ziBiHXXModel.setBiHuanMC(dto.getBiHuanMC());
                 ziBiHXXModel.setJieDianID(b.getJieDianID());
@@ -88,9 +87,8 @@ public class JieDianXXServiceImpl implements JieDianXXService {
             jieDianXXModel.setBiHuanMC(dto.getBiHuanMC());
             jieDianXX.add(jieDianXXModel);
             //时效
-            for (var s :b.getJieDianSXList())
-            {
-                var jieDianSXModel= BeanUtil.copyProperties(s,SC_BH_JieDianSXModel.class);
+            for (var s : b.getJieDianSXList()) {
+                var jieDianSXModel = BeanUtil.copyProperties(s, SC_BH_JieDianSXModel.class);
                 jieDianSXModel.setId("");
                 jieDianSXModel.setBiHuanID(dto.getBiHuanID());
                 jieDianSXModel.setBiHuanMC(dto.getBiHuanMC());
@@ -98,28 +96,30 @@ public class JieDianXXServiceImpl implements JieDianXXService {
                 jieDianSX.add(jieDianSXModel);
             }
             //显示字段
-            for (var x:b.getZiBiHXSLDtoList())
-            {
-                var ziBiHXSLModel=BeanUtil.copyProperties(x,SC_BH_ZiBiHXSLModel.class);
-                ziBiHXSLModel.setId("");
-                ziBiHXSLModel.setBiHuanID(dto.getBiHuanID());
-                ziBiHXSLModel.setBiHuanMC(dto.getBiHuanMC());
-                ziBiHXSL.add(ziBiHXSLModel);
+            if (!CollectionUtils.isEmpty(b.getZiBiHXSLDtoList())) {
+                var ziBiHuanXSLLiust = b.getZiBiHXSLDtoList().stream().filter(x -> StringUtil.hasText(x.getZiDuanBM()) && StringUtil.hasText(x.getZiDuanMC())).toList();
+                for (var x : ziBiHuanXSLLiust) {
+                    var ziBiHXSLModel = BeanUtil.copyProperties(x, SC_BH_ZiBiHXSLModel.class);
+                    ziBiHXSLModel.setId("");
+                    ziBiHXSLModel.setBiHuanID(dto.getBiHuanID());
+                    ziBiHXSLModel.setBiHuanMC(dto.getBiHuanMC());
+                    ziBiHXSL.add(ziBiHXSLModel);
+                }
             }
         }
         //
         //节点信息
-        jieDianXXRepository.asDeleteDsl().where(n->n.biHuanID.eq(dto.getBiHuanID())).execute();
+        jieDianXXRepository.asDeleteDsl().where(n -> n.biHuanID.eq(dto.getBiHuanID())).execute();
 
         jieDianXXRepository.saveAll(jieDianXX);
         //节点失效
-        jieDianSXRepository.asDeleteDsl().where(n->n.biHuanID.eq(dto.getBiHuanID())).execute();
+        jieDianSXRepository.asDeleteDsl().where(n -> n.biHuanID.eq(dto.getBiHuanID())).execute();
         jieDianSXRepository.saveAll(jieDianSX);
         //子闭环信息
         ziBiHXXRepository.asDeleteDsl().where(n -> n.biHuanID.eq(dto.getBiHuanID())).execute();
         ziBiHXXRepository.saveAll(ziBiHXX);
         //子闭环显示列
-        ziBiHXSLRepository.asDeleteDsl().where(n->n.biHuanID.eq(dto.getBiHuanID())).execute();
+        ziBiHXSLRepository.asDeleteDsl().where(n -> n.biHuanID.eq(dto.getBiHuanID())).execute();
         ziBiHXSLRepository.saveAll(ziBiHXSL);
         return dto.getBiHuanID();
     }
@@ -225,48 +225,44 @@ public class JieDianXXServiceImpl implements JieDianXXService {
      * @return
      */
     @Override
-    public List<BiHuanSZXXDto> getBiHuanSZXXBybiHuanID(String biHuanID ,String jiGouID)
-    {
+    public List<BiHuanSZXXDto> getBiHuanSZXXBybiHuanID(String biHuanID, String jiGouID) {
         //节点信息
-        List<BiHuanSZXXDto> jieDianXXList =jieDianXXRepository.jieDianXXList(biHuanID,jiGouID);
+        List<BiHuanSZXXDto> jieDianXXList = jieDianXXRepository.jieDianXXList(biHuanID, jiGouID);
         //节点失效
-        List< SC_BH_JieDianSXDto> biHuanSZXXList = jieDianSXRepository.biHuanSZXXList(biHuanID,jiGouID);
+        List<SC_BH_JieDianSXDto> biHuanSZXXList = jieDianSXRepository.biHuanSZXXList(biHuanID, jiGouID);
 
         //子闭环信息
-        var ziBiHXXList = ziBiHXXRepository.ziBiHXXList(biHuanID,jiGouID);
+        var ziBiHXXList = ziBiHXXRepository.ziBiHXXList(biHuanID, jiGouID);
 
         //子闭环显示列
-        List<SC_BH_ZiBiHXSLDto> ziBiHXSLList = ziBiHXSLRepository.ziBiHXSLList(biHuanID,jiGouID);
+        List<SC_BH_ZiBiHXSLDto> ziBiHXSLList = ziBiHXSLRepository.ziBiHXSLList(biHuanID, jiGouID);
 
-        for (var a:jieDianXXList)
-        {
-            a.setZiBiHXXDto(BeanUtil.copyProperties(ziBiHXXList.stream().filter(x->x.getJieDianID().equals(a.getJieDianID())).findFirst().orElse(null),ZiBiHXXDto.class));
+        for (var a : jieDianXXList) {
+            a.setZiBiHXXDto(BeanUtil.copyProperties(ziBiHXXList.stream().filter(x -> x.getJieDianID().equals(a.getJieDianID())).findFirst().orElse(null), ZiBiHXXDto.class));
 
-            a.setJieDianSXList(BeanUtil.copyToList(biHuanSZXXList.stream().filter(x->x.getJieDianID().equals(a.getJieDianID())).collect(Collectors.toList()),JieDianSXDto.class));
+            a.setJieDianSXList(BeanUtil.copyToList(biHuanSZXXList.stream().filter(x -> x.getJieDianID().equals(a.getJieDianID())).collect(Collectors.toList()), JieDianSXDto.class));
 
-            a.setZiBiHXSLDtoList(BeanUtil.copyToList(ziBiHXSLList.stream().filter(x->x.getJieDianID().equals(a.getJieDianID())).collect(Collectors.toList()), ZiBiHXSLDto.class));
+            a.setZiBiHXSLDtoList(BeanUtil.copyToList(ziBiHXSLList.stream().filter(x -> x.getJieDianID().equals(a.getJieDianID())).collect(Collectors.toList()), ZiBiHXSLDto.class));
         }
         return jieDianXXList;
     }
 
 
     @Override
-    public List<JieDianSXXXDto> getJieDianSXXX(String biHuanID,String jieDianID ,String jiGouID) {
-        return jieDianXXRepository.byJieDianIDBiHuanID(biHuanID, jieDianID,jiGouID);
+    public List<JieDianSXXXDto> getJieDianSXXX(String biHuanID, String jieDianID, String jiGouID) {
+        return jieDianXXRepository.byJieDianIDBiHuanID(biHuanID, jieDianID, jiGouID);
     }
 
     /**
      * 获取闭环信息
-     *
      */
     @Override
     public BiHuanSZXXDto getBiHuanJDNRXX(String jieDianXXID) throws WeiZhaoDSJException {
 
         SC_BH_JieDianXXModel jieDianSXXXDto = jieDianXXRepository.findById(jieDianXXID).orElse(null);
-         //todo  直接抛出异常
+        //todo  直接抛出异常
 
-        if (jieDianSXXXDto!=null)
-        {
+        if (jieDianSXXXDto != null) {
             BiHuanSZXXDto biHuanSZXXDto = BeanUtil.copyProperties(jieDianSXXXDto, BiHuanSZXXDto.class);
             biHuanSZXXDto.setJieDianSXList(jieDianSXRepository.
                     JieDianSXList(jieDianSXXXDto.getBiHuanID(),
@@ -274,13 +270,13 @@ public class JieDianXXServiceImpl implements JieDianXXService {
                             jieDianSXXXDto.getZuZhiJGID()));
 
             biHuanSZXXDto.setZiBiHXXDto(ziBiHXXRepository.ziBiHXXDto(jieDianSXXXDto.getBiHuanID(),
-                            jieDianSXXXDto.getJieDianID(),
-                            jieDianSXXXDto.getZuZhiJGID()));
+                    jieDianSXXXDto.getJieDianID(),
+                    jieDianSXXXDto.getZuZhiJGID()));
             biHuanSZXXDto.setZiBiHXSLDtoList(ziBiHXSLRepository.ziBiHXSLDtoList(jieDianSXXXDto.getBiHuanID(),
                     jieDianSXXXDto.getJieDianID(),
                     jieDianSXXXDto.getZuZhiJGID()));
             return biHuanSZXXDto;
-        }else {
+        } else {
             throw new WeiZhaoDSJException("未找到数据");
         }
     }
@@ -290,8 +286,7 @@ public class JieDianXXServiceImpl implements JieDianXXService {
     public boolean zuoFeiBiHuanJDXX(String jieDianXXID) throws WeiZhaoDSJException {
 
         SC_BH_JieDianXXModel jieDianXXModel = jieDianXXRepository.findById(jieDianXXID).orElse(null);
-        if(jieDianXXModel==null)
-        {
+        if (jieDianXXModel == null) {
             throw new WeiZhaoDSJException("未找到数据");
         }
         jieDianXXRepository.delete(jieDianXXModel);
@@ -308,8 +303,8 @@ public class JieDianXXServiceImpl implements JieDianXXService {
     }
 
     @Override
-    public boolean jieDianYC(String jieDianXXID,String yinCangBZ) {
-        jieDianXXRepository.jieDianYC(jieDianXXID,yinCangBZ);
+    public boolean jieDianYC(String jieDianXXID, String yinCangBZ) {
+        jieDianXXRepository.jieDianYC(jieDianXXID, yinCangBZ);
         return true;
     }
 

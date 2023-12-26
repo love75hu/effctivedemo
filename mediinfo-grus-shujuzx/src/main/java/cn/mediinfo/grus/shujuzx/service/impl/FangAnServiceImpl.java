@@ -1260,7 +1260,7 @@ public class FangAnServiceImpl implements FangAnService {
             //获取shiTuID，模式和表名拼接后的表名
             String shiTuBM=StringUtils.join(table.getSchemaTableList().stream().map(p -> formatBiaoMing(p.getShiTuID(), p.getMoShi(), p.getBiaoMing())).collect(Collectors.toSet()), ",");
             String shiTuBGX = getShiTuBGX(table, tableName);
-            if(Objects.equals(shiTuBGX,formatBiaoMing("", jiChuBiao.getMoShi(), jiChuBiao.getBiaoMing()))){
+            if(Objects.equals(shiTuBGX,formatBiaoMing("", jiBenXX.getShuJuYMC(), jiBenXX.getBiaoMing()))){
                 continue;
             }
             aliasMap.put(shiTuBM, Tuple.of("t_" + i, shiTuBGX, false, tableName.equals(formatBiaoMing("", jiChuBiao.getMoShi(), jiChuBiao.getBiaoMing()))));
@@ -1539,6 +1539,9 @@ public class FangAnServiceImpl implements FangAnService {
      */
     private String formatBiaoMing(String shiTuID,String moShi, String biaoMing) {
         StringBuilder builder = new StringBuilder();
+        if(Objects.equals("br_da_jibenxx",biaoMing.toLowerCase())){
+            shiTuID="";
+        }
         if (StringUtils.isNotBlank(shiTuID)) {
             builder.append(shiTuID + ".");
         }

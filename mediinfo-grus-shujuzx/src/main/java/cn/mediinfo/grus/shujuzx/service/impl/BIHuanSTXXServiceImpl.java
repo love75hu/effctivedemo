@@ -10,6 +10,9 @@ import cn.mediinfo.grus.shujuzx.dto.JieDianGL.BiHuanSTXXTree;
 import cn.mediinfo.grus.shujuzx.dto.bihuangl.SC_BH_ShiTuXXDto;
 import cn.mediinfo.grus.shujuzx.dto.shujuyzys.SC_ZD_ShuJuYZYDto;
 import cn.mediinfo.grus.shujuzx.model.SC_BH_ShiTuXXModel;
+import cn.mediinfo.grus.shujuzx.repository.SC_BH_ShiTuJDGXRepository;
+import cn.mediinfo.grus.shujuzx.repository.SC_BH_ShiTuJDMXRepository;
+import cn.mediinfo.grus.shujuzx.repository.SC_BH_ShiTuJDXXRepository;
 import cn.mediinfo.grus.shujuzx.repository.SC_BH_ShiTuXXRepository;
 import cn.mediinfo.grus.shujuzx.service.BIHuanSTXXService;
 import cn.mediinfo.grus.shujuzx.service.ShuJuYZYService;
@@ -31,14 +34,20 @@ public class BIHuanSTXXServiceImpl implements BIHuanSTXXService {
     private final SC_BH_ShiTuXXRepository shiTuXXRepository;
     private final LyraIdentityService lyraIdentityService;
     private final  BiHuanSTMXServiceImpl biHuanSTMXService;
+    private final SC_BH_ShiTuJDXXRepository biHuanSTJDXXRepository;
+    private final SC_BH_ShiTuJDMXRepository biHuanSTJDMXRepository;
+    private final SC_BH_ShiTuJDGXRepository biHuanSTJDGXRepository;
     private final ShuJuYZYService shuJuYZYService;
     private final SequenceService sequenceService;
 
-    public BIHuanSTXXServiceImpl(StringGenerator stringGenerator, SC_BH_ShiTuXXRepository shiTuXXRepository, LyraIdentityService lyraIdentityService, BiHuanSTMXServiceImpl biHuanSTMXService, ShuJuYZYService shuJuYZYService, SequenceService sequenceService) {
+    public BIHuanSTXXServiceImpl(StringGenerator stringGenerator, SC_BH_ShiTuXXRepository shiTuXXRepository, LyraIdentityService lyraIdentityService, BiHuanSTMXServiceImpl biHuanSTMXService,  SC_BH_ShiTuJDXXRepository biHuanSTJDXXRepository, SC_BH_ShiTuJDMXRepository biHuanSTJDMXRepository, SC_BH_ShiTuJDGXRepository biHuanSTJDGXRepository, ShuJuYZYService shuJuYZYService, SequenceService sequenceService) {
         this.stringGenerator = stringGenerator;
         this.shiTuXXRepository = shiTuXXRepository;
         this.lyraIdentityService = lyraIdentityService;
         this.biHuanSTMXService = biHuanSTMXService;
+        this.biHuanSTJDXXRepository = biHuanSTJDXXRepository;
+        this.biHuanSTJDMXRepository = biHuanSTJDMXRepository;
+        this.biHuanSTJDGXRepository = biHuanSTJDGXRepository;
         this.shuJuYZYService = shuJuYZYService;
         this.sequenceService = sequenceService;
     }
@@ -109,8 +118,11 @@ public class BIHuanSTXXServiceImpl implements BIHuanSTXXService {
         {
             throw new WeiZhaoDSJException("未获取到数据");
         }
-        biHuanSTMXService.delectBiHuanSTZDByShiTuID(shiTuxx.getShiTuID());
         shiTuXXRepository.asDeleteDsl().where(n->n.id.eq(id)).execute();
+        biHuanSTMXService.delectBiHuanSTZDByShiTuID(shiTuxx.getShiTuID());
+        biHuanSTJDXXRepository.asDeleteDsl().where(x->x.shiTuID.eq(shiTuxx.getShiTuID())).execute();
+        biHuanSTJDMXRepository.asDeleteDsl().where(x->x.shiTuID.eq(shiTuxx.getShiTuID())).execute();
+        biHuanSTJDGXRepository.asDeleteDsl().where(x->x.shiTuID.eq(shiTuxx.getShiTuID())).execute();
         return true;
     }
 

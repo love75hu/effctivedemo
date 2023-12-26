@@ -81,7 +81,7 @@ return result;
             shiTuJDMXModel.setShiTuMC(shiTuMC);
             shiTuJDMXList.add(shiTuJDMXModel);
         }
-        shiTuJDMXRepository.saveAll(shiTuJDMXList);
+        shiTuJDMXRepository.insertAll(shiTuJDMXList);
         return true;
     }
 

@@ -294,6 +294,9 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
             shuJuLYDto.setShuJuJMXZDDtos(BeanUtil.copyListProperties(list, ShuJuJMXZDDto::new));
             shuJuLYDtos.add(shuJuLYDto);
         });
+        if (shuJuLYDtos.isEmpty()) {
+            return new BiHuanXQDto();
+        }
         List<TableDTO> tableList = gongYongRemoteService.getShiTuGLFSGLTJ(shuJuLYDtos).getData("获取功能服务字段信息失败");
 
         StringBuilder builder = new StringBuilder();
@@ -513,7 +516,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
                 jieDianList.setZiBiHBZ("1");
                 jieDianList.setZiBiHGLZD(ziBiHXXModel.getZiBiHZDBM());
                 jieDianList.setZiBiHGLZDZ(maps.stream().map(k->{
-                    var quZhi = k.getOrDefault(ziBiHXXModel.getZiBiHZDBM().toLowerCase(), "");
+                    var quZhi = k.getOrDefault(ziBiHXXModel.getGuanLianZDBM().toLowerCase(), "");
                     if (Objects.isNull(quZhi)) {
                         return "";
                     }
@@ -524,7 +527,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
                     throw new TongYongYWException("子闭环关联字段值为空");
                 }
             }
-            if (!CollectionUtil.isEmpty(ziBiHXSLList)) {
+            if (!CollectionUtil.isEmpty(ziBiHXSLList.stream().filter(n->n.getJieDianID().equals(scBhJieDianXXModel.getJieDianID())).toList())) {
                 jieDianList.setZiBiHDCZXBZ("1");
             }
             var shiFouSGLJD = scBhShiTuJDGXModel.stream().filter(n -> n.getJieDianID().equals(scBhJieDianXXModel.getJieDianID())).findFirst().orElse(null);

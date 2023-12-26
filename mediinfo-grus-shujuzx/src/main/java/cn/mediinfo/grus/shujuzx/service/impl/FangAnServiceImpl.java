@@ -311,6 +311,10 @@ public class FangAnServiceImpl implements FangAnService {
         }
         String sql = MessageFormat.format("select count(1) from (select {0} from ({1}) tt group by {0}) tt1",
                 guanJianZD, fangAnCXLS.getChaXunSQL());
+        if(Objects.isNull(mergeType)||Objects.equals(0,mergeType)){
+            sql = MessageFormat.format("select count(1) from (select distinct * from ({0}) tt) tt1",
+                    fangAnCXLS.getChaXunSQL());
+        }
         return linChuangRemoteService.getShuLiang(new ChaXunDto(sql)).getData();
     }
 
@@ -328,6 +332,21 @@ public class FangAnServiceImpl implements FangAnService {
     public List<List<QueryResultDTO>> getFangAnJGList(String fangAnCXLSId, Integer mergeType, Integer pageIndex, Integer pageSize, boolean isShowBQ) throws TongYongYWException {
         List<List<QueryResultDTO>> result = new ArrayList<>();
         List<FangAnSCDTO> fangAnSCList = new ArrayList<>();
+        //收藏夹明细
+        List<SC_SC_ShouCangJMXListDto> shouChangJMXList = new ArrayList<>();
+        List<String> bingRenIDList=new ArrayList<>();
+        //结果平铺
+        if(Objects.isNull(mergeType)||Objects.equals(0,mergeType)){
+            result=getFangAnCXQueryResultList(fangAnCXLSId, pageIndex, pageSize, fangAnSCList, bingRenIDList);
+            //获取病人收藏夹列表
+            if(isShowBQ){
+                shouChangJMXList= BeanUtil.copyListProperties(scScShouCangJMXRepository.findByShouCangRIDAndBingRenIDIn(lyraIdentityService.getYongHuId(),bingRenIDList), SC_SC_ShouCangJMXListDto::new);
+            }
+
+            //添加收藏夹标签
+            return getShouCangJiaList(isShowBQ, result, shouChangJMXList);
+        }
+
         //根据查询结果按病人进行分组
         List<FangAnCXBRFZDto> bingRenFZList = getFangAnCXBRFZList(fangAnCXLSId, mergeType, pageIndex, pageSize, fangAnSCList);
         if (CollUtil.isEmpty(bingRenFZList)) {
@@ -335,12 +354,11 @@ public class FangAnServiceImpl implements FangAnService {
         }
         String bingRenIDXSMC = "MPI";
         boolean isHuanZheHB=Objects.equals(mergeType, 1);
-        //收藏夹明细
-        List<SC_SC_ShouCangJMXListDto> shouChangJMXList = new ArrayList<>();
+
         //获取病人收藏夹列表
         if(isShowBQ){
             //获取病人ID列表
-            List<String> bingRenIDList=bingRenFZList.stream().map(FangAnCXBRFZDto::getBingRenID).distinct().toList();
+            bingRenIDList=bingRenFZList.stream().map(FangAnCXBRFZDto::getBingRenID).distinct().toList();
             shouChangJMXList= BeanUtil.copyListProperties(scScShouCangJMXRepository.findByShouCangRIDAndBingRenIDIn(lyraIdentityService.getYongHuId(),bingRenIDList), SC_SC_ShouCangJMXListDto::new);
         }
         //列表时最大支持列数
@@ -505,6 +523,19 @@ public class FangAnServiceImpl implements FangAnService {
                 continue;
             }
             //按就诊分组
+            if(CollectionUtil.isEmpty(bingRenFZ.getFangAnCXJZFZList())){
+                List<QueryResultDTO> row = new ArrayList<>();
+                //加入基本信息
+                row.add(new QueryResultDTO("bingrenid", "bingrenid", bingRenIDXSMC, bingRenFZ.getBingRenID()));
+                if(CollUtil.isNotEmpty(bingRenFZ.getBingRenJBXX())) {
+                    row.addAll(bingRenFZ.getBingRenJBXX());
+                }
+                //列表时限制列数
+                if(isShowBQ){
+                    row=row.subList(0,Math.min(maxRecordCols, row.size()));
+                }
+                result.add(row);
+            }
             for (FangAnCXJZFZDto jiuZhenFZ : bingRenFZ.getFangAnCXJZFZList()) {
                 List<QueryResultDTO> row = new ArrayList<>();
                 //加入基本信息
@@ -690,6 +721,87 @@ public class FangAnServiceImpl implements FangAnService {
             bingRenFZ.setFangAnCXJZFZList(jiuZhenFZList);
             bingRenFZ.setJiuZhenCount(jiuZhenFZList.size());
             return bingRenFZ;
+        }).toList();
+    }
+
+    /**
+     * 分页获取方案查询结果集
+     *
+     * @param fangAnCXLSId 方案查询历史id
+     * @param pageIndex 页码
+     * @param pageSize  每页数量
+     * @param fangAnSCList  方案输出项
+     * @param bingRenIDList 病人ID列表
+     * @return List<FangAnCXBRFZDto>
+     * @throws TongYongYWException
+     */
+    private List<List<QueryResultDTO>> getFangAnCXQueryResultList(String fangAnCXLSId, Integer pageIndex, Integer pageSize, List<FangAnSCDTO> fangAnSCList,List<String> bingRenIDList) throws TongYongYWException {
+        FangAnCXLSDTO fangAnCXLS = chaXunFAXXService.getFangAnCXLSByID(fangAnCXLSId);
+        if (ObjectUtils.isEmpty(fangAnCXLS)) {
+            throw new TongYongYWException("查询方案历史不存在");
+        }
+        if (StringUtil.isBlank(fangAnCXLS.getChaXunSQL())) {
+            throw new TongYongYWException("查询方案不存在");
+        }
+        String jieGuoSql = MessageFormat.format("select distinct * from ({0}) tt limit {1,number,#} offset {2,number,#}", fangAnCXLS.getChaXunSQL(), pageSize, pageSize * (pageIndex - 1));
+        log.info("结果查询语句：{}", jieGuoSql);
+        List<Map<String, Object>> jieGuoList = linChuangRemoteService.getZiDianList(new ChaXunDto(jieGuoSql)).getData();
+        if (CollUtil.isEmpty(jieGuoList)) {
+            return null;
+        }
+        bingRenIDList.addAll(jieGuoList.stream().map(p->Optional.ofNullable(p.get("bingrenid")).orElse("").toString()).toList());
+        //解析sql,获取字段与表的关系
+        Pattern pattern = Pattern.compile("t_\\d+|zd_\\d+");
+        Matcher matcher = pattern.matcher(fangAnCXLS.getChaXunSQL());
+        List<String> matCherList=new ArrayList<>();
+        while (matcher.find()) {
+            matCherList.add(matcher.group());
+        }
+
+        //区分方案查询类型是否为住院（药品时会用到）
+        boolean isZhuYuan = "3".equals(jieGuoList.get(0).get("jiuzhenywlx"));
+        fangAnSCList.addAll(JsonUtil.getJsonToList(fangAnCXLS.getChaXunSC(), FangAnSCDTO.class));
+        for (FangAnSCDTO fangAnSC : fangAnSCList) {
+            fangAnSC.setId("zd_" + fangAnSCList.indexOf(fangAnSC));
+            if(StringUtil.hasText(fangAnSC.getZhiBiaoLXDM())) {
+                switch (fangAnSC.getZhiBiaoLXDM()) {
+                    case "2":
+                        fangAnSC.setBiaoMing("jy_bg_baogaomx");
+                        fangAnSC.setZhiBiaoID("");
+                        break;
+                    case "3":
+                        fangAnSC.setBiaoMing("jc_bg_baogaoxx");
+                        fangAnSC.setZhiBiaoID("");
+                        break;
+                    case "4":
+                        fangAnSC.setBiaoMing(isZhuYuan ? "yz_zy_yizhuxx" : "yz_mz_yizhuxx");
+                        fangAnSC.setZhiBiaoID("");
+                        break;
+                    default:
+                        break;
+                }
+            }
+            if (StringUtils.isBlank(fangAnSC.getBiaoMing())) {
+                continue;
+            }
+            fangAnSC.setBiaoMing(Optional.ofNullable(fangAnSC.getBiaoMing()).orElse("").toLowerCase());
+            int index= matCherList.indexOf(fangAnSC.getId())-1;
+            if(index>=0) {
+                fangAnSC.setBieMing(matCherList.get(index));
+            }
+        }
+
+        return jieGuoList.stream().map(p -> {
+            List<QueryResultDTO> queryResultList=new ArrayList<>();
+            for (FangAnSCDTO fangAnSC : fangAnSCList) {
+                QueryResultDTO ziDuanXX = new QueryResultDTO();
+                ziDuanXX.setZiDuanDM(fangAnSC.getId());
+                ziDuanXX.setZiDuanYDM(fangAnSC.getZhiBiaoID());
+                ziDuanXX.setZiDuanMC(fangAnSC.getZhiBiaoMC());
+                ziDuanXX.setZiDuanZhi(p.get(fangAnSC.getId()));
+                queryResultList.add(ziDuanXX);
+            }
+            return queryResultList;
         }).toList();
     }
 

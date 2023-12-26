@@ -299,15 +299,17 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
 
         StringBuilder builder = new StringBuilder();
         //拼接入参条件
-        ruCanList.forEach(r -> {
+        for (ZiDuanRCDto r : ruCanList) {
             ShuJuJMXZDDto shuJuJMXZDDto = tableList.get(0).getSchemaTableList().get(0).getShuJuJMXZDDtos().stream().filter(n -> n.getZiDuanBM().equals(r.getZiDuanBM())).findFirst().orElse(null);
             if (shuJuJMXZDDto != null) {
                 String itemString = shuJuJMXZDDto.getShuJuYMC() + "." + shuJuJMXZDDto.getBiaoMing() + "." + r.getZiDuanBM() + "='" + r.getZiDuanZhi() + "'";
                 builder.append(itemString);
                 //  builder.append(" and ");
+            } else {
+                throw new TongYongYWException("数据视图配置没有入参id信息");
             }
             ;
-        });
+        }
         tableList.get(0).setFilterConditionList(builder.toString());
 
         String sql = getShiTuBGX(tableList.get(0));
@@ -317,6 +319,10 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
         //执行完视图 获取节点的数据集合
         List<JieDianList> jieDianLists = new ArrayList<>();
         List<ZiDuanBMMC> ziDuanBMMCList = new ArrayList<>();
+        if (maps.isEmpty())
+        {
+            return new BiHuanXQDto();
+        }
         if (Objects.equals(ziBiHDCZXBZ, "1")) //子闭环信息
         {
 

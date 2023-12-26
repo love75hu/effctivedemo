@@ -71,4 +71,24 @@ public class SC_BH_ZiBiHXXDto{
      */
     @Schema(description = "关联字段名称")
     private String guanLianZDMC;
+    /**
+     * 闭环子表ID
+     */
+    @Schema(description = "闭环子表ID")
+    private String ziBiHSTID;
+    /**
+     * 闭环子表名称
+     */
+    @Schema(description = "子闭环视图名称")
+    private String ziBiHSTMC;
+    /**
+     * 闭环子表代码
+     */
+    @Schema(description = "闭环子表代码")
+    private String ziBiHZDBM;
+    /**
+     * 闭环子表名称
+     */
+    @Schema(description = "子闭环字段名称")
+    private String ziBiHZDMC;
 }

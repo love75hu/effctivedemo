@@ -280,6 +280,10 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
         List<SC_BH_ShiTuJDMXModel> biHuanSTJDMXList = shiTuJDMXRepository.findByJieDianIDIn(jieDianIDs);
         //节点关系
         List<SC_BH_ShiTuJDGXModel> jieDianGXList = shiTuJDGXRepository.findByJieDianIDIn(jieDianIDs);
+        //节点管理下的所有节点
+        List<SC_BH_ShiTuJDXXModel> biHuanPZSYJD=shiTuJDXXRepository.findByShiTuIDIn(shituIDs);
+
+        List<SC_BH_ShiTuJDMXModel> biHuanSTJDMXSYMX=shiTuJDMXRepository.findByShiTuIDIn(shituIDs);
 
         BiHuanXQDto biHuanXQDto = new BiHuanXQDto();
         biHuanXQDto.setBiHuanID(biHuanID);
@@ -531,7 +535,8 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
             if (!CollectionUtil.isEmpty(ziBiHXSLList.stream().filter(n->n.getJieDianID().equals(scBhJieDianXXModel.getJieDianID())).toList())) {
                 jieDianList.setZiBiHDCZXBZ("1");
             }
-            var shiFouSGLJD = scBhShiTuJDGXModel.stream().filter(n -> n.getJieDianID().equals(scBhJieDianXXModel.getJieDianID())).findFirst().orElse(null);
+            var shiFouSGLJD = scBhShiTuJDGXModel.stream().filter(n ->
+                    n.getJieDianID().equals(scBhJieDianXXModel.getJieDianID())).toList();
             //逆节点标志
             jieDianList.setBiXuBZ(scBhJieDianXXModel.getBiXuBZ());
             jieDianList.setBingXingBZ(scBhJieDianXXModel.getBingXingBZ());
@@ -547,18 +552,17 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
             //闭环
             if (Objects.equals(scBhJieDianXXModel.getBiXuBZ(), 1)) {
                 if (jieDianNRList.stream().noneMatch(e -> Objects.equals(1, e.getYunXuWKBZ()) ||
-                        (Objects.equals(0, e.getYunXuWKBZ()) && !ObjectUtils.isEmpty(e.getZiDuanZhi())))) {
+                        (Objects.equals(0, e.getYunXuWKBZ()) && ObjectUtils.isEmpty(e.getZiDuanZhi())))) {
                     jieDianList.setQueShiBZ("1");
-                }
-                var jieDianNR = jieDianNRList.stream().allMatch(e -> Objects.equals(1, e.getYunXuWKBZ()) ||
-                        (Objects.equals(0, e.getYunXuWKBZ()) && !ObjectUtils.isEmpty(e.getZiDuanZhi())));
-                if (Objects.nonNull(shiFouSGLJD) && jieDianNR) {
+                    jieDianList.setJieDianNRList(new ArrayList<>());
+                    jieDianLists.add(jieDianList);
+                }else {
                     jieDianList.setJieDianNRList(jieDianNRList);
-                    jieDianList.setNiJieDBZ("1");
                     jieDianLists.add(jieDianList);
                 }
+
             } else {
-                if (jieDianNRList.stream().noneMatch(e -> Objects.equals(0, e.getYunXuWKBZ())&& ObjectUtils.isEmpty(e.getZiDuanZhi()))) {
+                if (jieDianNRList.stream().noneMatch(e -> !Objects.equals(1, e.getYunXuWKBZ())&& ObjectUtils.isEmpty(e.getZiDuanZhi()))) {
                     jieDianList.setXianShiBZ(0);
                 }
 
@@ -567,6 +571,65 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
                 jieDianLists.add(jieDianList);
             }
             //关联节点处理
+            //处理逆节点内容
+            if (!shiFouSGLJD.isEmpty())
+            {
+
+                shiFouSGLJD.forEach(g->{
+                    JieDianList  niJieDianXX=new JieDianList();
+                    niJieDianXX.setNiJieDBZ("1");
+                    niJieDianXX.setJieDianMC(g.getGuanLianJDMC());
+                    List<SC_BH_ShiTuJDMXModel> niJieDianMX = biHuanSTJDMXSYMX.stream().filter(n -> n.getJieDianID().equals(g.getGuanLianJDID())).toList();
+                    List<jieDianNRList> niJieDianNRList=new ArrayList<>();
+                    niJieDianMX.forEach(bjdmx->{
+
+                        String value;
+                        if (isRowStorage) {
+                            // 行存储情况
+                            value = filteredMaps.stream()
+                                    .map(k -> {
+                                                var quZhi = k.getOrDefault(bjdmx.getZiDuanBM().toLowerCase(), "");
+                                                if (Objects.isNull(quZhi)) {
+                                                    return "";
+                                                }
+                                                return quZhi.toString();
+                                            }
+                                    )
+                                    .findFirst()
+                                    .orElse("");
+                        } else {
+                            // 列存储情况
+                            value = maps.stream()
+                                    .map(k -> {
+                                        var quZhi = k.getOrDefault(bjdmx.getZiDuanBM().toLowerCase(), "");
+                                        if (Objects.isNull(quZhi)) {
+                                            return "";
+                                        }
+                                        return quZhi.toString();
+                                    })
+                                    .findFirst()
+                                    .orElse("");
+                        }
+                        jieDianNRList niJieDianNR=new jieDianNRList();
+                        niJieDianNR.setZiDuanBM(bjdmx.getZiDuanBM());
+                        niJieDianNR.setZiDuanBM(bjdmx.getZiDuanBM());
+                        niJieDianNR.setZiDuanMC(bjdmx.getZiDuanMC());
+                        niJieDianNR.setYunXuWKBZ(bjdmx.getYunXuWKBZ());
+                        niJieDianNR.setKongZhiSJBZ(bjdmx.getKongZhiSJBZ());
+                        niJieDianNR.setZiDuanZhi(value);
+                        if (Objects.equals(bjdmx.getKongZhiSJBZ(), 1) && StringUtil.hasText(value)) {
+                            niJieDianXX.setKongZhiSJ(Converter.toDate(value));
+                        }
+                        niJieDianNRList.add(niJieDianNR);
+                    });
+                    if (niJieDianNRList.stream().noneMatch(e -> !Objects.equals(1, e.getYunXuWKBZ())&& ObjectUtils.isEmpty(e.getZiDuanZhi())) && !niJieDianNRList.isEmpty()) {
+                        niJieDianXX.setJieDianNRList(niJieDianNRList);
+                        jieDianLists.add(niJieDianXX);
+                    }
+
+                });
+
+            }
 
         }
 

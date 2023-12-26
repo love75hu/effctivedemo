@@ -61,7 +61,7 @@ return result;
     }
 
     @Override
-    public Boolean addShiTuJDMX(List<JieDianNRDto> jieDianNRDtos, String shiTuID,String jieDianMC,String jieDianID,String shiTuMC)
+    public Boolean addShiTuJDMX(List<JieDianNRDto> jieDianNRDtos, String shiTuID,String shiTuMC,String jieDianMC,String jieDianID)
     {
         shiTuJDMXRepository.asDeleteDsl().where(n->n.shiTuID.eq(shiTuID)).where(n->n.jieDianID.eq(jieDianID)).execute();
         List<SC_BH_ShiTuJDMXModel> shiTuJDMXList=new ArrayList<>();

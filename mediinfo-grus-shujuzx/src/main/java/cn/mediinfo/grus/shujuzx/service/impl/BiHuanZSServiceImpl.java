@@ -225,13 +225,13 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
         if (biHuanIDs.isEmpty()) {
             return new BiHuanXQDto();
         }
-        return getBiHuanZXJG(biHuanIDs.get(0), "0", "0", lyraIdentityService.getJiGouID(), biHuanGNDPZ.getRuCanList());
+        return getBiHuanZXJG(biHuanIDs.get(0), "0", "0", "0", lyraIdentityService.getJiGouID(), biHuanGNDPZ.getRuCanList());
     }
 
     /**
      * 根据闭环id获取闭配置信息去执行sql
      */
-    public BiHuanXQDto getBiHuanZXJG(String biHuanID, String ziBiHDCZXBZ, String jieDianID, String zuZhiJGID, List<ZiDuanRCDto> ruCanList) throws YuanChengException, TongYongYWException {
+    public BiHuanXQDto getBiHuanZXJG(String ziBiHID,String biHuanID, String ziBiHDCZXBZ, String jieDianID, String zuZhiJGID, List<ZiDuanRCDto> ruCanList) throws YuanChengException, TongYongYWException {
         zuZhiJGID = StringUtil.hasText(zuZhiJGID) ? zuZhiJGID : lyraIdentityService.getJiGouID();
         //获取闭环基本信息
         //1.获取闭环基本信息 SELECT * FROM SC_BH_JIBENXX;-- 闭环基本信息
@@ -242,23 +242,23 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
         //6.在获取子闭环的显示列
 
         //1.获取闭环基本信息
-        SC_BH_JiBenXXModel biHuanJBXX = jiBenXXRepository.findFirstByBiHuanIDAndZuZhiJGID(biHuanID, zuZhiJGID);
+        SC_BH_JiBenXXModel biHuanJBXX = jiBenXXRepository.findFirstByBiHuanIDAndZuZhiJGID(ziBiHID, zuZhiJGID);
 
         if (biHuanJBXX == null) {
             return new BiHuanXQDto();
         }
         //2.获取闭环入参信息
-        List<SC_BH_RuCanXXModel> biHuanRCXXList = ruCanXXRepository.findByBiHuanIDAndZuZhiJGID(biHuanID, zuZhiJGID);
+        List<SC_BH_RuCanXXModel> biHuanRCXXList = ruCanXXRepository.findByBiHuanIDAndZuZhiJGID(ziBiHID, zuZhiJGID);
         //3.获取闭环下的节点信息
-        List<SC_BH_JieDianXXModel> biHuanJDXXList = jieDianXXRepository.findByBiHuanIDAndZuZhiJGIDOrderByShunXuHao(biHuanID, zuZhiJGID);
+        List<SC_BH_JieDianXXModel> biHuanJDXXList = jieDianXXRepository.findByBiHuanIDAndZuZhiJGIDOrderByShunXuHao(ziBiHID, zuZhiJGID);
         //4.在获取节点下的 节点时效
-        List<SC_BH_JieDianSXModel> biHuanJDSXList = jieDianSXRepository.findByBiHuanIDAndZuZhiJGID(biHuanID, zuZhiJGID);
+        List<SC_BH_JieDianSXModel> biHuanJDSXList = jieDianSXRepository.findByBiHuanIDAndZuZhiJGID(ziBiHID, zuZhiJGID);
         //5.在获取节点下的 子闭环信信息
-        List<SC_BH_ZiBiHXXModel> ziBiHXX = ziBiHXXRepository.findByBiHuanIDAndZuZhiJGID(biHuanID, zuZhiJGID);
+        List<SC_BH_ZiBiHXXModel> ziBiHXX = ziBiHXXRepository.findByBiHuanIDAndZuZhiJGID(ziBiHID, zuZhiJGID);
 
 
         //6.在获取子闭环的显示列
-        List<SC_BH_ZiBiHXSLModel> biHuanZBHXSLList = ziBiHXSLRepository.findByBiHuanIDAndZuZhiJGID(biHuanID, zuZhiJGID);
+        List<SC_BH_ZiBiHXSLModel> biHuanZBHXSLList = ziBiHXSLRepository.findByBiHuanIDAndZuZhiJGID(biHuanID , zuZhiJGID);
 
         //List<String> ruCanZDBMs = biHuanRCXXList.stream().map(n -> n.getZiDuanBM()).distinct().toList();
         //视图id 整理
@@ -280,7 +280,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
         List<SC_BH_ShiTuJDMXModel> biHuanSTJDMXSYMX = shiTuJDMXRepository.findByShiTuIDIn(shituIDs);
 
         BiHuanXQDto biHuanXQDto = new BiHuanXQDto();
-        biHuanXQDto.setBiHuanID(biHuanID);
+        biHuanXQDto.setBiHuanID(ziBiHID);
         biHuanXQDto.setBiHuanMC(biHuanJBXX.getBiHuanMC());
         //组装节点管理中的配置的字段和数据视图
         List<LingChuangJSPZDto> shuJuLYDtos = new ArrayList<>();
@@ -334,12 +334,12 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
                 ziBiHXSLList.forEach(z -> {
                     ZhanShiLList zhanShiL = new ZhanShiLList();
                     zhanShiL.setZiDuanBM(z.getZiDuanBM());
-                    var ziDuanZ = dataMap.getOrDefault(z.getZiDuanBM(), "");
+                    var ziDuanZ = dataMap.getOrDefault(z.getZiDuanBM().toLowerCase(), "");
                     if (ziDuanZ != null) {
                         zhanShiL.setZiDuanZhi(ziDuanZ.toString());
                     }
 
-                    zhanShiL.setZiDuanMC(z.getZiDuanMC());
+                    zhanShiL.setZiDuanMC(z.getZiDuanMC().toLowerCase());
                     zhanShiLLists.add(zhanShiL);
                 });
                 ziDuanBMMC.setZhanShiLLists(zhanShiLLists);

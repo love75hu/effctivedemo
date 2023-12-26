@@ -256,9 +256,8 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
         //5.在获取节点下的 子闭环信信息
         List<SC_BH_ZiBiHXXModel> ziBiHXX = ziBiHXXRepository.findByBiHuanIDAndZuZhiJGID(ziBiHID, zuZhiJGID);
 
-
         //6.在获取子闭环的显示列
-        List<SC_BH_ZiBiHXSLModel> biHuanZBHXSLList = ziBiHXSLRepository.findByBiHuanIDAndZuZhiJGID(biHuanID , zuZhiJGID);
+        List<SC_BH_ZiBiHXSLModel> biHuanZBHXSLList = ziBiHXSLRepository.findByBiHuanIDAndZuZhiJGID(Objects.equals(biHuanID,"0")?ziBiHID:biHuanID , zuZhiJGID);
 
         //List<String> ruCanZDBMs = biHuanRCXXList.stream().map(n -> n.getZiDuanBM()).distinct().toList();
         //视图id 整理
@@ -308,7 +307,6 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
             } else {
                 throw new TongYongYWException("数据视图配置没有入参id信息");
             }
-            ;
         }
         tableList.get(0).setFilterConditionList(builder.toString());
 
@@ -578,9 +576,9 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
 
     private boolean isTimeInvalid(String operator, String yunSuanFDM, BigDecimal time, int value) {
         // 转换time为秒
-        if ("时".equals(yunSuanFDM)) {
+        if ("HH".equals(yunSuanFDM)) {
             time = time.multiply(BigDecimal.valueOf(3600)); // 将小时转换为秒
-        } else if ("分".equals(yunSuanFDM)) {
+        } else if ("MM".equals(yunSuanFDM)) {
             time = time.multiply(BigDecimal.valueOf(60)); // 将分钟转换为秒
         }
         switch (operator) {

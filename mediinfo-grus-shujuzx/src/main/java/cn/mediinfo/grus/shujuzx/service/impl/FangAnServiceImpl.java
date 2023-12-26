@@ -1156,7 +1156,7 @@ public class FangAnServiceImpl implements FangAnService {
         } else {
             boolean containFlag = FangAnOperator.isContain(operator);
             //判断字段类型
-            if (containFlag || ShuJuZLXDMEnum.NUMBER.getType().equals(field.getShuJuZLXDM())) {
+            if ((!ShuJuZLXDMEnum.ZIDIAN.getType().equals(field.getShuJuZLXDM())&&!ShuJuZLXDMEnum.ENUM.getType().equals(field.getShuJuZLXDM())&&containFlag) || ShuJuZLXDMEnum.NUMBER.getType().equals(field.getShuJuZLXDM())) {
                 val = valList.get(0);
             } else if (ShuJuZLXDMEnum.DATE.getType().equals(field.getShuJuZLXDM())) {
                 val = "date'" + valList.get(0) + "'";
@@ -1196,7 +1196,12 @@ public class FangAnServiceImpl implements FangAnService {
                 log.error("根据{},{}获取条件字段信息失败", e.getShiTuID(),e.getZiDuanBM());
                 return null;
             }
-            List<String> valList = Arrays.stream(StrUtil.nullToDefault(e.getValues(), "").replaceAll("'", "''").split(",")).filter(StringUtils::isNoneBlank).toList();
+            List<String> valList = new ArrayList<>();
+            if (ShuJuZLXDMEnum.ZIDIAN.getType().equals(field.getShuJuZLXDM()) || ShuJuZLXDMEnum.ENUM.getType().equals(field.getShuJuZLXDM())) {
+                valList.addAll(Arrays.stream(StrUtil.nullToDefault(e.getValues(), "").replaceAll("'", "''").split(",")).filter(StringUtils::isNoneBlank).toList());
+            } else {
+                valList.add(e.getValues());
+            }
             SQLQueryObject obj = toSQLQueryObject(e.getOperator(), field, valList, e.getRelatedFangAnQueryCondition());
             if (obj.getText() == null) {
                 continue;
@@ -1236,6 +1241,7 @@ public class FangAnServiceImpl implements FangAnService {
             default:
                 break;
         }
+        ShuJuXXMSRso jiBenXX = jiChuBiaoXXList.stream().filter(p -> p.getBiaoMing().equals("BR_DA_JIBENXX")).findFirst().orElse(new ShuJuXXMSRso());
 
         //根据条件中涉及的表或视图设置表别名
         for (int i = 0; i < tableList.size(); i++) {
@@ -1248,6 +1254,9 @@ public class FangAnServiceImpl implements FangAnService {
             //获取shiTuID，模式和表名拼接后的表名
             String shiTuBM=StringUtils.join(table.getSchemaTableList().stream().map(p -> formatBiaoMing(p.getShiTuID(), p.getMoShi(), p.getBiaoMing())).collect(Collectors.toSet()), ",");
             String shiTuBGX = getShiTuBGX(table, tableName);
+            if(Objects.equals(shiTuBGX,formatBiaoMing("", jiChuBiao.getMoShi(), jiChuBiao.getBiaoMing()))){
+                continue;
+            }
             aliasMap.put(shiTuBM, Tuple.of("t_" + i, shiTuBGX, false, tableName.equals(formatBiaoMing("", jiChuBiao.getMoShi(), jiChuBiao.getBiaoMing()))));
         }
 
@@ -1256,8 +1265,7 @@ public class FangAnServiceImpl implements FangAnService {
         }
 
         //添加基本信息表
-        ShuJuXXMSRso jiBenXX = jiChuBiaoXXList.stream().filter(p -> p.getBiaoMing().equals("BR_DA_JIBENXX")).findFirst().orElse(new ShuJuXXMSRso());
-        if (ObjectUtils.isNotEmpty(jiBenXX) && !StringUtils.isBlank(jiBenXX.getBiaoMing()) && !aliasMap.containsKey(formatBiaoMing("", jiBenXX.getShuJuYMC(), jiBenXX.getBiaoMing()))) {
+        if (ObjectUtils.isNotEmpty(jiBenXX) && !StringUtils.isBlank(jiBenXX.getBiaoMing())) {
             aliasMap.put(formatBiaoMing("", jiBenXX.getShuJuYMC(), jiBenXX.getBiaoMing()), Tuple.of("t_" + aliasMap.size(), formatBiaoMing("", jiBenXX.getShuJuYMC(), jiBenXX.getBiaoMing()), false, false));
         }
 

@@ -5,6 +5,9 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Data;
+import org.apache.poi.hpsf.Decimal;
+
+import java.math.BigDecimal;
 
 @Data
 @Entity
@@ -15,9 +18,9 @@ public class SC_ZD_ShengMingZQModel extends StringMTEntity {
     @Column(columnDefinition = "生命周期名称")
     private String shengMingZQMC;
     @Column(columnDefinition = "起始年龄")
-    private Integer qiShiNL;
+    private BigDecimal qiShiNL;
     @Column(columnDefinition = "结束年龄")
-    private Integer jieShuNL;
+    private BigDecimal jieShuNL;
     @Column(columnDefinition = "男性图片")
     private String nanXingTP;
     @Column(columnDefinition = "女性图片")

@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -87,7 +88,7 @@ public class RenWuGLController {
      */
     @Operation(summary = "根据ID查询任务基本信息列表")
     @GetMapping(path = "GetRenWuXXListByIds")
-    public MsfResponse<List<SC_RW_JiBenXXDto>> GetRenWuXXListByIds(@RequestParam List<String> ids) throws TongYongYWException {
+    public MsfResponse<JiBenXXListDto> GetRenWuXXListByIds(@RequestParam List<String> ids) throws TongYongYWException {
 
         return MsfResponse.success(renWuGLService.getRenWuXXByIds(ids));
     }
@@ -203,7 +204,7 @@ public class RenWuGLController {
      */
     @Operation(summary = "批量执行")
     @PostMapping(path = "SaveZhiXingRZList")
-    public MsfResponse<Boolean> saveZhiXingRZList(List<SC_RW_ZhiXingRZCreateDto> createDto) throws TongYongYWException {
+    public MsfResponse<Boolean> saveZhiXingRZList(@RequestBody List<SC_RW_ZhiXingRZCreateDto> createDto) throws TongYongYWException {
         return MsfResponse.success(renWuGLService.saveZhiXingRZList(createDto));
     }
 
@@ -231,6 +232,7 @@ public class RenWuGLController {
         if (!StringUtil.hasText(createDto.getRenWuID())) {
             throw new TongYongYWException("任务ID不能为空");
         }
+
         return MsfResponse.success(renWuGLService.saveShuJuYuanList(createDto));
     }
 
@@ -277,5 +279,12 @@ public class RenWuGLController {
     public  MsfResponse<List<SC_RW_ShuJuYuanDto>> getShuJuYuanList(@RequestParam String RenWuID){
         return MsfResponse.success(renWuGLService.getShuJuYuanList(RenWuID));
     }
-
+    /**
+     * 批量执行保存
+     */
+    @Operation(summary = "批量执行测试")
+    @PostMapping(path = "SaveRenWuZXList")
+    public MsfResponse<String> saveRenWuZXList(@RequestBody List<SC_RW_ZhiXingRZCreateDto> createDto) throws TongYongYWException {
+        return MsfResponse.success(renWuGLService.saveRenWuZXList(createDto));
+    }
 }

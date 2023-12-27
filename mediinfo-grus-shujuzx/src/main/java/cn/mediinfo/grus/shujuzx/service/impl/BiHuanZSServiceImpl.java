@@ -553,6 +553,8 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
                     }else
                     {
                         jieDianList.setXianShiBZ(1);
+                        jieDianList.setJieDianNRList(jieDianNRList);
+                        jieDianLists.add(jieDianList);
                     }
                 }
             }

@@ -43,23 +43,31 @@ public class JieDianList {
     /**
      * 逆节点标志
      * */
-    private String niJieDBZ;
+    private Integer niJieDBZ;
     /**
      * 缺失标志
      * */
-    private String queShiBZ;
+    private Integer queShiBZ;
 
     private List<ShiXiaoList> shiXiaoLists;
 
     /**
      * 未执行标志
      * */
-    private String weiZhiXBZ;
+    private Integer weiZhiXBZ;
 
+    /**
+     * 并行标志
+     * */
     private Integer bingXingBZ;
 
+    /**
+     * 控制时间
+     */
     private Date kongZhiSJ;
-
+    /**
+     * 必须标志
+     */
     private Integer biXuBZ;
 
     private Integer xianShiBZ;

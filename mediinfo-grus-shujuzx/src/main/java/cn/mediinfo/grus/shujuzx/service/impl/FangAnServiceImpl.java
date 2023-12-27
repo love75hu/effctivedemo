@@ -336,13 +336,12 @@ public class FangAnServiceImpl implements FangAnService {
         List<SC_SC_ShouCangJMXListDto> shouChangJMXList = new ArrayList<>();
         List<String> bingRenIDList=new ArrayList<>();
         //结果平铺
-        if(Objects.isNull(mergeType)||Objects.equals(0,mergeType)){
-            result=getFangAnCXQueryResultList(fangAnCXLSId, pageIndex, pageSize, fangAnSCList, bingRenIDList);
+        if(Objects.isNull(mergeType)||Objects.equals(0,mergeType)) {
+            result = getFangAnCXQueryResultList(fangAnCXLSId, pageIndex, pageSize, fangAnSCList, bingRenIDList);
             //获取病人收藏夹列表
-            if(isShowBQ){
-                shouChangJMXList= BeanUtil.copyListProperties(scScShouCangJMXRepository.findByShouCangRIDAndBingRenIDIn(lyraIdentityService.getYongHuId(),bingRenIDList), SC_SC_ShouCangJMXListDto::new);
+            if (isShowBQ) {
+                shouChangJMXList = BeanUtil.copyListProperties(scScShouCangJMXRepository.findByShouCangRIDAndBingRenIDIn(lyraIdentityService.getYongHuId(), bingRenIDList), SC_SC_ShouCangJMXListDto::new);
             }
-
             //添加收藏夹标签
             return getShouCangJiaList(isShowBQ, result, shouChangJMXList);
         }
@@ -799,6 +798,8 @@ public class FangAnServiceImpl implements FangAnService {
 
         return jieGuoList.stream().map(p -> {
             List<QueryResultDTO> queryResultList=new ArrayList<>();
+            //加入基本信息空值行
+            queryResultList.add(new QueryResultDTO("bingrenid", "bingrenid", "MPI", p.get("bingrenid")));
             for (FangAnSCDTO fangAnSC : fangAnSCList) {
                 QueryResultDTO ziDuanXX = new QueryResultDTO();
                 ziDuanXX.setZiDuanDM(fangAnSC.getId());

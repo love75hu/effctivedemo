@@ -12,4 +12,5 @@ public interface SC_RW_JiBenXXRepository extends MsfJpaRepository<QSC_RW_JiBenXX
     Boolean existsByRenWuMC(String renWuMC);
     Boolean existsByIdIsNotAndRenWuMC(String id,String renWuMC);
     SC_RW_JiBenXXModel findFirstByRenWuID(String RenWuID);
+    SC_RW_JiBenXXModel findFirstByRenWuIDOrRenWuMC(String renWuID,String renWuMC);
 }

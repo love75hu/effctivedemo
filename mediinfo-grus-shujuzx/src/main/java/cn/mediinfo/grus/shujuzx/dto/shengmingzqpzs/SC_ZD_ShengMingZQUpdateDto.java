@@ -2,6 +2,7 @@ package cn.mediinfo.grus.shujuzx.dto.shengmingzqpzs;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import org.apache.poi.hpsf.Decimal;
 
 @Data
 public class SC_ZD_ShengMingZQUpdateDto {
@@ -10,9 +11,9 @@ public class SC_ZD_ShengMingZQUpdateDto {
     @Schema(description = "生命周期名称")
     private String shengMingZQMC;
     @Schema(description = "起始年龄")
-    private Integer qiShiNL;
+    private Decimal qiShiNL;
     @Schema(description = "结束年龄")
-    private Integer jieShuNL;
+    private Decimal jieShuNL;
     @Schema(description = "男性图片")
     private String nanXingTP;
     @Schema(description = "女性图片")

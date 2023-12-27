@@ -86,6 +86,8 @@ mediinfo:
       mediinfo-lyra-dizuo: "http://mediinfo-lyra-dizuo"
       mediinfo-grus-linchuang-query: "http://mediinfo-grus-linchuang-query"
       mediinfo-grus-gongwei-query: "http://mediinfo-grus-gongwei-query"
+      mediinfo-lyra-nengli: "http://mediinfo-lyra-nengli"
+
   sequence:
     provider: redis
   string-generator:

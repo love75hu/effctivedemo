@@ -7,4 +7,5 @@ import cn.mediinfo.grus.shujuzx.model.SC_RW_TongYongPZModel;
 
 @MsfDataSource("datasourcesjzx")
 public interface SC_RW_TongYongPZRepository extends MsfJpaRepository<QSC_RW_TongYongPZModel, SC_RW_TongYongPZModel, String> {
+    SC_RW_TongYongPZModel findFirstByFenLeiDM(String fenLeiDM);
 }

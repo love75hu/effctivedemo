@@ -403,15 +403,14 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
                     jieDianList.setBiXuBZ(j.getBiXuBZ());
                     jieDianList.setBingXingBZ(j.getBingXingBZ());
                     jieDianList.setId(j.getJieDianID());
-                    //逆节点标志
-                    jieDianList.setNiJieDBZ("");
+
                     //缺失标志
                     if (Objects.equals(j.getBiXuBZ(), 1) && jieDianNRList.isEmpty()) {
-                        jieDianList.setQueShiBZ("1");
+                        jieDianList.setQueShiBZ(1);
                     }
                     //未执行标志
                     if (jieDianNRList.isEmpty()) {
-                        jieDianList.setWeiZhiXBZ("1");
+                        jieDianList.setWeiZhiXBZ(1);
                     }
                     jieDianList.setJieDianMC(StringUtil.hasText(j.getXianShiMC()) ? j.getXianShiMC() : j.getJieDianMC());
                     jieDianList.setJieDianNRList(jieDianNRList);
@@ -492,7 +491,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
 
             //未执行标志
             if (jieDianNRList.isEmpty()) {
-                jieDianList.setWeiZhiXBZ("1");
+                jieDianList.setWeiZhiXBZ(1);
             }
             jieDianList.setJieDianMC(StringUtil.hasText(scBhJieDianXXModel.getXianShiMC()) ? scBhJieDianXXModel.getXianShiMC() : scBhJieDianXXModel.getJieDianMC());
             //缺失标志
@@ -501,9 +500,9 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
 
                 if (jieDianNRList.stream().noneMatch(e -> Objects.equals(1, e.getYunXuWKBZ())
                         || (Objects.equals(0, e.getYunXuWKBZ()) && ObjectUtils.isEmpty(e.getZiDuanZhi())))) {
-                    jieDianList.setQueShiBZ("0");
+                    jieDianList.setQueShiBZ(0);
                 } else {
-                    jieDianList.setQueShiBZ("1");
+                    jieDianList.setQueShiBZ(1);
                 }
                 jieDianList.setJieDianNRList(jieDianNRList);
                 jieDianLists.add(jieDianList);
@@ -525,7 +524,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
 
                 for (SC_BH_ShiTuJDGXModel g : shiFouSGLJD) {
                     JieDianList niJieDianXX = new JieDianList();
-                    niJieDianXX.setNiJieDBZ("1");
+                    niJieDianXX.setNiJieDBZ(1);
                     niJieDianXX.setJieDianMC(g.getGuanLianJDMC());
                     List<SC_BH_ShiTuJDMXModel> niJieDianMX = biHuanSTJDMXSYMX.stream().filter(n -> n.getJieDianID().equals(g.getGuanLianJDID())).toList();
                     List<jieDianNRList> niJieDianNRList = new ArrayList<>();

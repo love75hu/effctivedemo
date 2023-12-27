@@ -321,7 +321,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
         {
             return new BiHuanXQDto();
         }
-        if (Objects.equals(ziBiHDCZXBZ, "1")) //子闭环信息
+        if (Objects.equals(ziBiHDCZXBZ, "1")) //子闭环多次执行信息
         {
 
             for (Map<String, Object> dataMap : maps) {
@@ -363,7 +363,19 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
 
                     biHuanJDMXByJieID.forEach(f -> {
                         String value;
-                        value = getValueBasedOnStorage(isRowStorage, filteredMaps, maps, f.getZiDuanBM());
+                        //value = getValueBasedOnStorage(isRowStorage, filteredMaps, maps, f.getZiDuanBM());
+                        if (isRowStorage) {
+                            var quZhi= filteredMaps.stream().map(map -> map.getOrDefault(f.getZiDuanBM().toLowerCase(), "")).findFirst().orElse("");
+                            value= quZhi.toString() ;
+                        } else {
+                            var quZhi=dataMap.getOrDefault(f.getZiDuanBM().toLowerCase(), "");
+                            if (Objects.isNull(quZhi))
+                            {
+                                value= "";
+                            }else {
+                                value= quZhi.toString() ;
+                            }
+                        }
                         // 创建并配置 jieDianNRList 对象
                         jieDianNRList biHuanJDNr = new jieDianNRList();
                         biHuanJDNr.setZiDuanBM(f.getZiDuanBM());
@@ -408,7 +420,9 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
                 ziDuanBMMC.setJieDianXX(jieDianList1);
                 ziDuanBMMCList.add(ziDuanBMMC);
             }
+            biHuanXQDto.setZiBiHXSLList(ziDuanBMMCList);
 
+             return biHuanXQDto;
         }
 
         for (SC_BH_JieDianXXModel scBhJieDianXXModel : biHuanJDXXList) {//获取节点下的 子闭环信信息
@@ -536,8 +550,6 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
                 });
             }
         }
-
-
         //处理时效问题，用控制时间字段 做比较
         //循环 得出的节点信息，在去找时效，中的数据 对应比较 如果有异常就给异常标志
         jieDianLists.forEach(j -> {
@@ -546,7 +558,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
             //遍历 节点时效
             List<ShiXiaoList> shiXiaoLists = new ArrayList<>();
             jieDianSXList.forEach(p -> {
-                var jieDianList = jieDianLists.stream().filter(d -> d.getId().equals(p.getGuanLianJDID())).findFirst().orElse(null);
+                var jieDianList = jieDianLists.stream().filter(d->Objects.nonNull(d.getId())).filter(d -> d.getId().equals(p.getGuanLianJDID())).findFirst().orElse(null);
                 if (jieDianList != null) {
                     if (j.getKongZhiSJ() == null || jieDianList.getKongZhiSJ() == null) {
                         ShiXiaoList shiXiaoList = new ShiXiaoList();
@@ -569,8 +581,6 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
             j.setShiXiaoLists(shiXiaoLists);
         });
         biHuanXQDto.setJieDianList(jieDianLists);
-        biHuanXQDto.setZiBiHXSLList(ziDuanBMMCList);
-
         return biHuanXQDto;
     }
 

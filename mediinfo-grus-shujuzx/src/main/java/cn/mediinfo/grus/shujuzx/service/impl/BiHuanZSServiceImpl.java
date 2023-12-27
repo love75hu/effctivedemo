@@ -6,6 +6,7 @@ import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
 import cn.mediinfo.cyan.msf.core.response.MsfResponse;
 import cn.mediinfo.cyan.msf.core.util.*;
+import cn.mediinfo.cyan.msf.security.IdentityService;
 import cn.mediinfo.grus.shujuzx.dto.bihuandy.SC_BH_DiaoYongPZDto;
 import cn.mediinfo.grus.shujuzx.dto.bihuansz.SC_BH_JieDianXXDto;
 import cn.mediinfo.grus.shujuzx.dto.bihuansz.SC_BH_ZiBiHXXDto;
@@ -116,6 +117,8 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
 
     private LinChuangRemoteService linChuangRemoteService;
 
+    private IdentityService identityService;
+
 
     /**
      * 根据闭环功能点和相关入参获取闭环详情
@@ -205,11 +208,18 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
                     } else {
                         throw new TongYongYWException("数据视图配置没有入参id信息");
                     }
-
+                    //处理基础条件
                     String tiaoJian = parseGuiZeListToSql(jsonToList);
-                    String fullTableName = biaoMoshi.stream().findFirst().map(s -> s.getShuJuYMC() + "." + s.getBiaoMing()).orElse("");
-
-                    String sql = "SELECT COUNT(*) FROM " + fullTableName + " WHERE " + tiaoJian;
+                    StringBuilder guoLuTJ=new StringBuilder();
+                    String fullTableName = biaoMoshi.stream().findFirst().map(s ->
+                            {
+                                guoLuTJ.append(s.getShuJuYMC()).append(".").append(s.getBiaoMing()).append(".").append("zuoFeiBZ=0").append(" AND ");
+                                guoLuTJ.append(s.getShuJuYMC()).append(".").append(s.getBiaoMing()).append(".").append("zuzhijgid=").append("'").append(lyraIdentityService.getJiGouID()).append("'").append(" AND ");
+                                guoLuTJ.append(s.getShuJuYMC()).append(".").append(s.getBiaoMing()).append(".").append("zuhuid=").append("'").append(identityService.getTenantId()).append("'").append(" AND ");
+                              return  s.getShuJuYMC() + "." + s.getBiaoMing();
+                            }
+                    ).orElse("");
+                    String sql = "SELECT COUNT(*) FROM " + fullTableName + " WHERE " + guoLuTJ +tiaoJian;
                     Long count = linChuangRemoteService.getShuLiang(new ChaXunDto(sql)).getData("执行sql报错");
                     if (count > 0) {
                         break;
@@ -310,7 +320,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
         }
         tableList.get(0).setFilterConditionList(builder.toString());
 
-        String sql = getShiTuBGX(tableList.get(0));
+        String sql = getShiTuBGX(tableList.get(0),identityService.getTenantId(),zuZhiJGID);
 
         //执行sql 得出结果
         List<Map<String, Object>> maps = linChuangRemoteService.getZiDianList(new ChaXunDto(sql.toLowerCase())).getData("执行sql报错");
@@ -343,7 +353,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
                 ziDuanBMMC.setZhanShiLLists(zhanShiLLists);
                 List<JieDianList> jieDianList1 = new ArrayList<>();
 
-                for (SC_BH_JieDianXXModel j : biHuanJDXXList) {//获取节点下的 子闭环信信息
+                for (SC_BH_JieDianXXModel j : biHuanJDXXList.stream().filter(n->Objects.equals(n.getYinCangBZ(),0)).toList()) {//获取节点下的 子闭环信信息
                     List<SC_BH_ZiBiHXXModel> ziBiHXXList = ziBiHXX.stream().filter(n -> n.getJieDianID().equals(j.getJieDianID())).toList();
                     //获取子闭环的显示列
                     List<SC_BH_ZiBiHXSLModel> ziBiHXSLList1 = biHuanZBHXSLList.stream().filter(n -> n.getJieDianID().equals(j.getJieDianID())).toList();
@@ -404,13 +414,33 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
                     jieDianList.setBingXingBZ(j.getBingXingBZ());
                     jieDianList.setId(j.getJieDianID());
 
-                    //缺失标志
-                    if (Objects.equals(j.getBiXuBZ(), 1) && jieDianNRList.isEmpty()) {
-                        jieDianList.setQueShiBZ(1);
-                    }
-                    //未执行标志
-                    if (jieDianNRList.isEmpty()) {
-                        jieDianList.setWeiZhiXBZ(1);
+                    if (Objects.equals(j.getBiXuBZ(), 1)) {
+                        if (jieDianNRList.stream().noneMatch(e -> !Objects.equals(1, e.getYunXuWKBZ()) && ObjectUtils.isEmpty(e.getZiDuanZhi()))) {
+                            jieDianList.setQueShiBZ(0);
+                        } else {
+                            jieDianList.setQueShiBZ(1);
+                            if (jieDianNRList.stream().allMatch(e -> ObjectUtils.isEmpty(e.getZiDuanZhi())))
+                            {
+                                jieDianList.setWeiZhiXBZ(1);
+                            }
+                        }
+                        jieDianList.setJieDianNRList(jieDianNRList);
+                        jieDianLists.add(jieDianList);
+
+                    } else {
+                        if (jieDianNRList.isEmpty())
+                        {
+                            jieDianList.setJieDianNRList(new ArrayList<>());
+                            jieDianLists.add(jieDianList);
+
+                        }else {
+                            if (jieDianNRList.stream().allMatch(e -> !Objects.equals(1, e.getYunXuWKBZ()) && ObjectUtils.isEmpty(e.getZiDuanZhi()))) {
+                                continue;
+                            }else
+                            {
+                                jieDianList.setXianShiBZ(1);
+                            }
+                        }
                     }
                     jieDianList.setJieDianMC(StringUtil.hasText(j.getXianShiMC()) ? j.getXianShiMC() : j.getJieDianMC());
                     jieDianList.setJieDianNRList(jieDianNRList);
@@ -421,10 +451,12 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
             }
             biHuanXQDto.setZiBiHXSLList(ziDuanBMMCList);
 
+
+
              return biHuanXQDto;
         }
 
-        for (SC_BH_JieDianXXModel scBhJieDianXXModel : biHuanJDXXList) {//获取节点下的 子闭环信信息
+        for (SC_BH_JieDianXXModel scBhJieDianXXModel : biHuanJDXXList.stream().filter(n->Objects.equals(n.getYinCangBZ(),0)).toList()) {//获取节点下的 子闭环信信息
             List<SC_BH_ZiBiHXXModel> ziBiHXXList = ziBiHXX.stream().filter(n -> n.getJieDianID().equals(scBhJieDianXXModel.getJieDianID())).toList();
             //获取子闭环的显示列
             List<SC_BH_ZiBiHXSLModel> ziBiHXSLList = biHuanZBHXSLList.stream().filter(n -> n.getJieDianID().equals(scBhJieDianXXModel.getJieDianID())).toList();
@@ -497,31 +529,36 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
             //缺失标志
             //闭环
             if (Objects.equals(scBhJieDianXXModel.getBiXuBZ(), 1)) {
-
-                if (jieDianNRList.stream().noneMatch(e -> Objects.equals(1, e.getYunXuWKBZ())
-                        || (Objects.equals(0, e.getYunXuWKBZ()) && ObjectUtils.isEmpty(e.getZiDuanZhi())))) {
+                if (jieDianNRList.stream().noneMatch(e -> !Objects.equals(1, e.getYunXuWKBZ()) && ObjectUtils.isEmpty(e.getZiDuanZhi()))) {
                     jieDianList.setQueShiBZ(0);
                 } else {
                     jieDianList.setQueShiBZ(1);
+                    if (jieDianNRList.stream().allMatch(e -> ObjectUtils.isEmpty(e.getZiDuanZhi())))
+                    {
+                        jieDianList.setWeiZhiXBZ(1);
+                    }
                 }
                 jieDianList.setJieDianNRList(jieDianNRList);
                 jieDianLists.add(jieDianList);
 
             } else {
-                if (jieDianNRList.stream().allMatch(e -> !Objects.equals(1, e.getYunXuWKBZ()) && ObjectUtils.isEmpty(e.getZiDuanZhi()))) {
-                    continue;
-                }else
+                if (jieDianNRList.isEmpty())
                 {
-                    jieDianList.setXianShiBZ(1);
-                    jieDianList.setJieDianNRList(jieDianNRList);
+                    jieDianList.setJieDianNRList(new ArrayList<>());
                     jieDianLists.add(jieDianList);
-                }
 
+                }else {
+                    if (jieDianNRList.stream().allMatch(e -> !Objects.equals(1, e.getYunXuWKBZ()) && ObjectUtils.isEmpty(e.getZiDuanZhi()))) {
+                        continue;
+                    }else
+                    {
+                        jieDianList.setXianShiBZ(1);
+                    }
+                }
             }
 //            关联节点处理
 //            处理逆节点内容
             if (!shiFouSGLJD.isEmpty()) {
-
                 for (SC_BH_ShiTuJDGXModel g : shiFouSGLJD) {
                     JieDianList niJieDianXX = new JieDianList();
                     niJieDianXX.setNiJieDBZ(1);
@@ -585,37 +622,77 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
         }
         //处理时效问题，用控制时间字段 做比较
         //循环 得出的节点信息，在去找时效，中的数据 对应比较 如果有异常就给异常标志
-        jieDianLists.forEach(j -> {
-            //当前这个节点下 的时效
-            List<SC_BH_JieDianSXModel> jieDianSXList = biHuanJDSXList.stream().filter(n -> n.getJieDianID().equals(j.getId())).toList();
-            //遍历 节点时效
-            List<ShiXiaoList> shiXiaoLists = new ArrayList<>();
-            jieDianSXList.forEach(p -> {
-                var jieDianList = jieDianLists.stream().filter(d->Objects.nonNull(d.getId())).filter(d -> d.getId().equals(p.getGuanLianJDID())).findFirst().orElse(null);
-                if (jieDianList != null) {
-                    if (j.getKongZhiSJ() == null || jieDianList.getKongZhiSJ() == null) {
-                        ShiXiaoList shiXiaoList = new ShiXiaoList();
-                        shiXiaoList.setShiXiaoYCBZ("1");
-                        shiXiaoList.setShiXiaoYCMS("时效异常配置控制时间异常");
-                        shiXiaoLists.add(shiXiaoList);
-                    } else {
-                        //时效秒
-                        int shiXiaoM = DateUtil.getSecondsBetween(j.getKongZhiSJ(), jieDianList.getKongZhiSJ());
-                        if (isTimeInvalid(p.getYunSuanFDM(), p.getDanWeiDM(), p.getShiXiao(), shiXiaoM)) {
-                            ShiXiaoList shiXiaoList = new ShiXiaoList();
-                            shiXiaoList.setShiXiaoYCBZ("1");
-                            shiXiaoList.setShiXiaoYCMS("时效异常" + shiXiaoM + "秒");
-                            shiXiaoLists.add(shiXiaoList);
-                        }
-                    }
+        processTimeValidity(jieDianLists,biHuanJDSXList);
+//        jieDianLists.forEach(j -> {
+//            //当前这个节点下 的时效
+//            List<SC_BH_JieDianSXModel> jieDianSXList = biHuanJDSXList.stream().filter(n -> n.getJieDianID().equals(j.getId())).toList();
+//            //遍历 节点时效
+//            List<ShiXiaoList> shiXiaoLists = new ArrayList<>();
+//            jieDianSXList.forEach(p -> {
+//                var jieDianList = jieDianLists.stream().filter(d->Objects.nonNull(d.getId())).filter(d -> d.getId().equals(p.getGuanLianJDID())).findFirst().orElse(null);
+//                if (jieDianList != null) {
+//                    if (j.getKongZhiSJ() == null || jieDianList.getKongZhiSJ() == null) {
+//                        ShiXiaoList shiXiaoList = new ShiXiaoList();
+//                        shiXiaoList.setShiXiaoYCBZ("1");
+//                        shiXiaoList.setShiXiaoYCMS("时效异常配置控制时间异常");
+//                        shiXiaoLists.add(shiXiaoList);
+//                    } else {
+//                        //时效秒
+//                        int shiXiaoM = DateUtil.getSecondsBetween(j.getKongZhiSJ(), jieDianList.getKongZhiSJ());
+//                        if (isTimeInvalid(p.getYunSuanFDM(), p.getDanWeiDM(), p.getShiXiao(), shiXiaoM)) {
+//                            ShiXiaoList shiXiaoList = new ShiXiaoList();
+//                            shiXiaoList.setShiXiaoYCBZ("1");
+//                            shiXiaoList.setShiXiaoYCMS("时效异常" + shiXiaoM + "秒");
+//                            shiXiaoLists.add(shiXiaoList);
+//                        }
+//                    }
+//
+//                }
+//            });
+//            j.setShiXiaoLists(shiXiaoLists);
+//        });
+        biHuanXQDto.setJieDianList(jieDianLists);
+        return biHuanXQDto;
+    }
 
+    private void processTimeValidity(List<JieDianList> jieDianLists, List<SC_BH_JieDianSXModel> biHuanJDSXList) {
+        jieDianLists.stream().filter(n->!Objects.equals(n.getQueShiBZ(),1)&&!Objects.equals(n.getWeiZhiXBZ(),1) ).forEach(j -> {
+            List<SC_BH_JieDianSXModel> jieDianSXList = biHuanJDSXList.stream()
+                    .filter(n -> n.getJieDianID().equals(j.getId())).toList();
+            List<ShiXiaoList> shiXiaoLists = new ArrayList<>();
+
+            jieDianSXList.forEach(p -> {
+                JieDianList jieDianList = jieDianLists.stream()
+                        .filter(d -> Objects.nonNull(d.getId()) && d.getId().equals(p.getGuanLianJDID()))
+                        .findFirst().orElse(null);
+
+                if (jieDianList != null) {
+                    shiXiaoLists.addAll(checkTimeValidity(j, jieDianList, p));
                 }
             });
             j.setShiXiaoLists(shiXiaoLists);
         });
-        biHuanXQDto.setJieDianList(jieDianLists);
-        return biHuanXQDto;
     }
+
+    private List<ShiXiaoList> checkTimeValidity(JieDianList sourceJieDian, JieDianList targetJieDian, SC_BH_JieDianSXModel p) {
+        List<ShiXiaoList> shiXiaoLists = new ArrayList<>();
+        if (sourceJieDian.getKongZhiSJ() == null || targetJieDian.getKongZhiSJ() == null) {
+            ShiXiaoList shiXiaoList = new ShiXiaoList();
+            shiXiaoList.setShiXiaoYCBZ("1");
+            shiXiaoList.setShiXiaoYCMS("时效异常配置控制时间异常");
+            shiXiaoLists.add(shiXiaoList);
+        } else {
+            int shiXiaoM = DateUtil.getSecondsBetween(sourceJieDian.getKongZhiSJ(), targetJieDian.getKongZhiSJ());
+            if (isTimeInvalid(p.getYunSuanFDM(), p.getDanWeiDM(), p.getShiXiao(), shiXiaoM)) {
+                ShiXiaoList shiXiaoList = new ShiXiaoList();
+                shiXiaoList.setShiXiaoYCBZ("1");
+                shiXiaoList.setShiXiaoYCMS("时效异常" + shiXiaoM + "秒");
+                shiXiaoLists.add(shiXiaoList);
+            }
+        }
+        return shiXiaoLists;
+    }
+
 
     private boolean isTimeInvalid(String operator, String yunSuanFDM, BigDecimal time, int value) {
         // 转换time为秒
@@ -644,9 +721,8 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
      * @param table 表信息
      * @return String
      */
-    private String getShiTuBGX(TableDTO table) {
+    private String getShiTuBGX(TableDTO table,String zuHuID,String zuZhiJGID) {
         StringBuilder builder = new StringBuilder();
-
         builder.append("select ");
         //字段名列表
         List<String> ziDuanMingList = new ArrayList<>();
@@ -657,6 +733,9 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
         //获取视图中过滤条件
         String filterCondition = Optional.ofNullable(table.getFilterConditionList()).orElse("");
         int index = 0;
+        StringBuilder zuoFeiBZ= new StringBuilder();
+        StringBuilder zuZhiJGIDTJ= new StringBuilder();
+        StringBuilder zuHuIDTJ= new StringBuilder();
         for (SchemaTable f : table.getSchemaTableList()) {
             String key = formatBiaoMing(f.getMoShi(), f.getBiaoMing());
             for (ShuJuJMXZDDto p : Optional.ofNullable(f.getShuJuJMXZDDtos()).orElse(new ArrayList<>())) {
@@ -665,23 +744,27 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
             biaoMingList.add(key + " l" + index);
             relationCondition = relationCondition.replaceAll("(?i)" + key, "l" + index);
             filterCondition = filterCondition.replaceAll("(?i)" + key, "l" + index);
+
+            zuoFeiBZ.append(" And l").append(index).append(".zuoFeiBZ=0");
+            zuZhiJGIDTJ.append(" And l").append(index).append(".zuzhijgid=").append("'"+zuZhiJGID+"'");
+            zuHuIDTJ.append(" And l").append(index).append(".zuhuid=").append("'"+zuHuID+"'");
             index++;
         }
         builder.append(CollUtil.join(ziDuanMingList, ","));
         builder.append(" from ");
         builder.append(CollUtil.join(biaoMingList, ", "));
         builder.append(" where 1=1 ");
+        builder.append(zuoFeiBZ);
+        builder.append(zuZhiJGIDTJ);
+        builder.append(zuHuIDTJ);
         if (StringUtils.isNotBlank(filterCondition)) {
             builder.append(" AND ");
             builder.append(filterCondition);
         }
-
         if (StringUtils.isNotBlank(relationCondition)) {
             builder.append(" and ");
             builder.append(relationCondition);
         }
-
-
         return builder.toString();
     }
 

@@ -23,6 +23,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -98,8 +99,11 @@ class JiBenXXServiceImpl implements JiBenXXService {
     public String addBiHuanJBXX(AddBiHuanXXDto dto) throws WeiZhaoDSJException {
         if (StringUtil.hasText(dto.getId())) {
             SC_BH_JiBenXXModel jiBenXXModel = jiBenXXRepository.findById(dto.getId()).orElseThrow(() -> new WeiZhaoDSJException("未获取到数据"));
-            BeanUtil.copyProperties(dto, jiBenXXModel);
             ruCanXXService.addRuCanXX(dto.getRuCanXXDtoList(), dto.getZuZhiJGID(), dto.getZuZhiJGMC(), dto.getBiHuanLXDM(), dto.getBiHuanLXMC(), jiBenXXModel.getBiHuanID(), dto.getBiHuanMC());
+            jiBenXXModel.setBiHuanMC(dto.getBiHuanMC());
+            jiBenXXModel.setShunXuHao(Objects.isNull(dto.getShunXuHao())?jiBenXXRepository.getMaxShunXuHao(dto.getZuZhiJGID(),dto.getBiHuanLXDM()):dto.getShunXuHao());
+            jiBenXXModel.setBiHuanLXDM(dto.getBiHuanLXDM());
+            jiBenXXModel.setBiHuanLXMC(dto.getBiHuanLXMC());
             jiBenXXRepository.save(jiBenXXModel);
             return dto.getId();
         } else {
@@ -107,6 +111,7 @@ class JiBenXXServiceImpl implements JiBenXXService {
             SC_BH_JiBenXXModel shiTuMXModel = new SC_BH_JiBenXXModel();
             BeanUtil.copyProperties(dto, shiTuMXModel);
             shiTuMXModel.setBiHuanID(biHuanID);
+            shiTuMXModel.setShunXuHao(Objects.isNull(dto.getShunXuHao())?jiBenXXRepository.getMaxShunXuHao(dto.getZuZhiJGID(),dto.getBiHuanLXDM()):dto.getShunXuHao());
             shiTuMXModel.setZuZhiJGMC(dto.getZuZhiJGMC());
             shiTuMXModel.setZuZhiJGID(dto.getZuZhiJGID());
             ruCanXXService.addRuCanXX(dto.getRuCanXXDtoList(), dto.getZuZhiJGID(), dto.getZuZhiJGMC(), dto.getBiHuanLXDM(), dto.getBiHuanLXMC(), biHuanID, dto.getBiHuanMC());
@@ -145,8 +150,12 @@ class JiBenXXServiceImpl implements JiBenXXService {
         //闭环设置基本信息
         List<SC_BH_JiBenXXModel> jiBenXXList = new ArrayList<>();
 
+
+
         //节点信息
         List<SC_BH_JieDianXXModel> jieDianXXList = jieDianXXRepository.jieDianXXList(dto.getBiHuanID());
+        List<SC_BH_RuCanXXModel> ruCanXXModelList = ruCanXXService.getRuCanXXByBHID(dto.getBiHuanID());
+        List<SC_BH_RuCanXXModel> addRuCanXX=new ArrayList<>();
         List<SC_BH_JieDianXXModel> addjieDianXXList = new ArrayList<>();
         //节点失效
         var jieDianSXList = jieDianSXRepository.jieDianSXList(dto.getBiHuanID());
@@ -183,6 +192,14 @@ class JiBenXXServiceImpl implements JiBenXXService {
                             b.setZuZhiJGMC(j.getZuZhiJGMC());
                             addjieDianXXList.add(b);
                         });
+                        ruCanXXModelList.stream().filter(n->n.getBiHuanID().equals(a.getBiHuanID())).forEach(b->{
+                            b.setId(null);
+                            b.setBiHuanID(newbiHuanID);
+                            b.setBiHuanMC(newbiHuanMC);
+                            b.setZuZhiJGID(j.getZuZhiJGID());
+                            b.setZuZhiJGMC(j.getZuZhiJGMC());
+                            addRuCanXX.add(b);
+                        });
                         jieDianSXList.stream().filter(n -> n.getBiHuanID().equals(a.getBiHuanID())).forEach(b -> {
                             b.setId(null);
                             b.setBiHuanID(newbiHuanID);
@@ -211,6 +228,7 @@ class JiBenXXServiceImpl implements JiBenXXService {
         }
 
         jiBenXXRepository.insertAll(jiBenXXList);
+        ruCanXXService.addFuZhiRCXX(addRuCanXX);
         jieDianXXRepository.insertAll(addjieDianXXList);
         jieDianSXRepository.insertAll(addjieDianSXList);
         ziBiHXXRepository.insertAll(addziBiHXX);

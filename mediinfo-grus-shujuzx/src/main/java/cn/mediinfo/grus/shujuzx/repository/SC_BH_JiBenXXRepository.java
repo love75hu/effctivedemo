@@ -6,6 +6,7 @@ import cn.mediinfo.grus.shujuzx.dto.bihuansz.SC_BH_JiBenXXDto;
 import cn.mediinfo.grus.shujuzx.model.QSC_BH_JiBenXXModel;
 import cn.mediinfo.grus.shujuzx.model.SC_BH_JiBenXXModel;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -17,6 +18,11 @@ public interface SC_BH_JiBenXXRepository extends MsfJpaRepository<QSC_BH_JiBenXX
         return asQuerydsl().where(n->n.zuZhiJGID.eq(zuZhiJGID).and(n.biHuanMC.like("%"+likeQuery+"%")))
                 .select(SC_BH_JiBenXXDto.class).fetch();
     }
+
+    @Query("select COALESCE(max(s.shunXuHao),0) from SC_BH_JiBenXXModel s where s.zuHuID=:zuZhiJGID and s.biHuanLXDM=:biHuanLXDM")
+    Integer getMaxShunXuHao(String zuZhiJGID,String biHuanLXDM);
+
+
 
     //
     default List<SC_BH_JiBenXXDto> getjiBeNXXBybiHuanID(String zuZhiJGID, String biHuanID)

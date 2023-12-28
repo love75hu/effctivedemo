@@ -82,4 +82,9 @@ public class RuCanXXServiceImpl implements RuCanXXService {
      return true;
     }
 
+    @Override
+    public List<SC_BH_RuCanXXModel> getRuCanXXByBHID(List<String> biHuanID) {
+        return ruCanXXRepository.findByBiHuanIDIn(biHuanID);
+    }
+
 }

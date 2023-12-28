@@ -30,7 +30,7 @@ public interface SC_CX_ShiTuXXRepository extends MsfJpaRepository<QSC_CX_ShiTuXX
      * 获取最大顺序号
      * @return 是否存在
      */
-    @Query("select max(s.shunXuHao) from SC_CX_ShiTuXXModel s where s.fuLeiID='0'")
+    @Query("select COALESCE(max(s.shunXuHao),0) from SC_CX_ShiTuXXModel s where s.fuLeiID='0'")
     Integer getMaxShunXuHao();
 
     /**
@@ -38,7 +38,7 @@ public interface SC_CX_ShiTuXXRepository extends MsfJpaRepository<QSC_CX_ShiTuXX
      * @param fuLeiID 父类ID
      * @return 是否存在
      */
-    @Query("select max(s.shunXuHao) from SC_CX_ShiTuXXModel s where s.fuLeiID=:fuLeiID")
+    @Query("select COALESCE(max(s.shunXuHao),0) from SC_CX_ShiTuXXModel s where s.fuLeiID=:fuLeiID")
     Integer getMaxShunXuHaoByFuLeiID(String fuLeiID);
 
     /**

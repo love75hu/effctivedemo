@@ -19,7 +19,7 @@ public interface SC_BH_ShiTuXXRepository extends MsfJpaRepository<QSC_BH_ShiTuXX
         return asQuerydsl().whereIf(StringUtil.hasText(likeQuery),n->n.shiTuMC.like("%" + likeQuery + "%"))
                 .orderBy(s->s.shunXuHao.asc()).select(SC_BH_ShiTuXXDto.class).fetch();
     }
-    @Query("select max(s.shunXuHao) from SC_BH_ShiTuXXModel s")
+    @Query("select COALESCE(max(s.shunXuHao),0) from SC_BH_ShiTuXXModel s")
     Integer getMaxShunXuHao();
     default List<SC_BH_ShiTuXXDto> getShiTuXXListByBiHuanLXDM(String biHuanLXDm,String likeQuery) {
         return asQuerydsl()

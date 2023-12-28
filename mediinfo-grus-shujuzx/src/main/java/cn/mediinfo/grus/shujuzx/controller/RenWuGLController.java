@@ -204,8 +204,8 @@ public class RenWuGLController {
      */
     @Operation(summary = "批量执行")
     @PostMapping(path = "SaveZhiXingRZList")
-    public MsfResponse<Boolean> saveZhiXingRZList(@RequestBody List<SC_RW_ZhiXingRZCreateDto> createDto) throws TongYongYWException {
-        return MsfResponse.success(renWuGLService.saveZhiXingRZList(createDto));
+    public MsfResponse<String> saveZhiXingRZList(@RequestBody List<SC_RW_ZhiXingRZCreateDto> createDto) throws TongYongYWException {
+        return MsfResponse.success(renWuGLService.saveRenWuZXList(createDto));
     }
 
     /**
@@ -235,7 +235,6 @@ public class RenWuGLController {
 
         return MsfResponse.success(renWuGLService.saveShuJuYuanList(createDto));
     }
-
 
     /**
      * 获取通用列表
@@ -279,6 +278,7 @@ public class RenWuGLController {
     public  MsfResponse<List<SC_RW_ShuJuYuanDto>> getShuJuYuanList(@RequestParam String RenWuID){
         return MsfResponse.success(renWuGLService.getShuJuYuanList(RenWuID));
     }
+    
     /**
      * 批量执行保存
      */

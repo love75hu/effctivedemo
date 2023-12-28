@@ -87,12 +87,8 @@ import java.util.stream.Stream;
 public class FangAnServiceImpl implements FangAnService {
 
     @Resource
-   /* @Qualifier("datasourcesjzx_jdbcTemplateFactory")
-    JdbcTemplate jdbcTemplate;*/
     @Autowired
     private ShiTuMXService shiTuMXService;
-    @Autowired
-    private FangAnSCService fangAnSCService;
     @Autowired
     private FangAnManager fangAnManager;
     @Autowired
@@ -143,7 +139,7 @@ public class FangAnServiceImpl implements FangAnService {
      *
      * @param fangAnID 方案ID
      * @return FangAnQueryDTO
-     * @throws TongYongYWException
+     * @throws TongYongYWException 异常
      */
     @Override
     public FangAnQueryDTO getFangAnXX(String fangAnID) throws TongYongYWException, WeiZhaoDSJException {
@@ -153,10 +149,10 @@ public class FangAnServiceImpl implements FangAnService {
     /**
      * 更新方案
      *
-     * @param request
+     * @param request 入参
      * @return Boolean
-     * @throws YuanChengException
-     * @throws TongYongYWException
+     * @throws YuanChengException 异常
+     * @throws TongYongYWException 异常
      */
     @Override
     public Boolean updateFangAnXX(FangAnXXUpdateRequest request) throws YuanChengException, TongYongYWException {
@@ -205,7 +201,7 @@ public class FangAnServiceImpl implements FangAnService {
      * @param fangAnLXDM   方案类型代码
      * @param guanJianZi   关键字
      * @return String
-     * @throws YuanChengException
+     * @throws YuanChengException 异常
      */
     @Override
     public String getSql(FangAnTreeNode root, List<FangAnSC> fangAnSCList, String fangAnLXDM, String guanJianZi) throws YuanChengException, TongYongYWException {
@@ -297,10 +293,10 @@ public class FangAnServiceImpl implements FangAnService {
      * @param fangAnCXLSId 方案查询历史id
      * @param mergeType 合并类型，1-患者，2-就诊
      * @return Long
-     * @throws TongYongYWException
+     * @throws TongYongYWException 异常
      */
     @Override
-    public Long getFangAnJGCount(String fangAnCXLSId, Integer mergeType) throws TongYongYWException {
+    public Long getFangAnJGCount(String fangAnCXLSId, Integer mergeType) throws TongYongYWException, YuanChengException {
         FangAnCXLSDTO fangAnCXLS = chaXunFAXXService.getFangAnCXLSByID(fangAnCXLSId);
         if (ObjectUtils.isEmpty(fangAnCXLS)) {
             throw new TongYongYWException("查询方案历史不存在");
@@ -315,7 +311,7 @@ public class FangAnServiceImpl implements FangAnService {
             sql = MessageFormat.format("select count(1) from (select distinct * from ({0}) tt) tt1",
                     fangAnCXLS.getChaXunSQL());
         }
-        return linChuangRemoteService.getShuLiang(new ChaXunDto(sql)).getData();
+        return linChuangRemoteService.getShuLiang(new ChaXunDto(sql)).getData("数据查询失败");
     }
 
     /**
@@ -327,9 +323,9 @@ public class FangAnServiceImpl implements FangAnService {
      * @param pageSize 每页数量
      * @param isShowBQ 是否显示标签(Excel导出不显示标签)
      * @return List<List<QueryResultDTO>>
-     * @throws TongYongYWException
+     * @throws TongYongYWException 异常
      */
-    public List<List<QueryResultDTO>> getFangAnJGList(String fangAnCXLSId, Integer mergeType, Integer pageIndex, Integer pageSize, boolean isShowBQ) throws TongYongYWException {
+    public List<List<QueryResultDTO>> getFangAnJGList(String fangAnCXLSId, Integer mergeType, Integer pageIndex, Integer pageSize, boolean isShowBQ) throws TongYongYWException, YuanChengException {
         List<List<QueryResultDTO>> result = new ArrayList<>();
         List<FangAnSCDTO> fangAnSCList = new ArrayList<>();
         //收藏夹明细
@@ -361,7 +357,7 @@ public class FangAnServiceImpl implements FangAnService {
             shouChangJMXList= BeanUtil.copyListProperties(scScShouCangJMXRepository.findByShouCangRIDAndBingRenIDIn(lyraIdentityService.getYongHuId(),bingRenIDList), SC_SC_ShouCangJMXListDto::new);
         }
         //列表时最大支持列数
-        Integer maxRecordCols=100;
+        int maxRecordCols=100;
         //药品
         if (fangAnSCList.stream().anyMatch(p -> "4".equals(p.getZhiBiaoLXDM()))) {
             //获取输出字段部分按就诊/患者合并的最大长度
@@ -375,10 +371,7 @@ public class FangAnServiceImpl implements FangAnService {
                     row0.add(new QueryResultDTO("bingrenid","bingrenid",bingRenIDXSMC,""));
                     row1.add(new QueryResultDTO("bingrenid","bingrenid", bingRenIDXSMC, bingRenFZ.getBingRenID()));
                     if(CollUtil.isNotEmpty(bingRenFZ.getBingRenJBXX())) {
-                        row0.addAll(BeanUtil.copyListProperties(bingRenFZ.getBingRenJBXX(), QueryResultDTO::new).stream().map(q-> {
-                            q.setZiDuanZhi("");
-                            return q;
-                        }).toList());
+                        row0.addAll(BeanUtil.copyListProperties(bingRenFZ.getBingRenJBXX(), QueryResultDTO::new).stream().peek(q-> q.setZiDuanZhi("")).toList());
                         row1.addAll(bingRenFZ.getBingRenJBXX());
                     }
                     //字段数量
@@ -389,6 +382,10 @@ public class FangAnServiceImpl implements FangAnService {
                                 for(FangAnCXZDFZDto ziDuanFZ:shiTuZJFZ.getFangAnCXZDFZList()){
                                     for(Object zhi:ziDuanFZ.getZiDuanZhiList()){
                                         row0.add(new QueryResultDTO("","","",ziDuanFZ.getZiDuanMC()));
+                                        //如果为列表，则将字段名和结果防止为2列
+                                        if(isShowBQ){
+                                            row1.add(new QueryResultDTO("","","",ziDuanFZ.getZiDuanMC()));
+                                        }
                                         row1.add(new QueryResultDTO("","","",zhi));
                                     }
                                     ziDuanCount=ziDuanCount+ziDuanFZ.getZiDuanZhiCount();
@@ -400,14 +397,20 @@ public class FangAnServiceImpl implements FangAnService {
                     if(ziDuanCount<maxColCount){
                         List<QueryResultDTO> kongBaiZDList= new ArrayList<>(Collections.nCopies(maxColCount-ziDuanCount, new QueryResultDTO()));
                         row0.addAll(kongBaiZDList);
+                        //如果为列表，则多加对应数量的空白列
+                        if(isShowBQ){
+                            row1.addAll(kongBaiZDList);
+                        }
                         row1.addAll(kongBaiZDList);
                     }
                     //列表时限制列数
                     if(isShowBQ){
-                        row0=row0.subList(0,Math.min(maxRecordCols, row0.size()));
                         row1=row1.subList(0,Math.min(maxRecordCols, row1.size()));
                     }
-                    result.add(row0);
+                    //非列表时字段名单行显示
+                    if(!isShowBQ) {
+                        result.add(row0);
+                    }
                     result.add(row1);
                     continue;
                 }
@@ -419,10 +422,7 @@ public class FangAnServiceImpl implements FangAnService {
                     row0.add(new QueryResultDTO("bingrenid","bingrenid",bingRenIDXSMC,""));
                     row1.add(new QueryResultDTO("bingrenid", "bingrenid", bingRenIDXSMC, bingRenFZ.getBingRenID()));
                     if(CollUtil.isNotEmpty(bingRenFZ.getBingRenJBXX())) {
-                        row0.addAll(BeanUtil.copyListProperties(bingRenFZ.getBingRenJBXX(), QueryResultDTO::new).stream().map(q-> {
-                            q.setZiDuanZhi("");
-                            return q;
-                        }).toList());
+                        row0.addAll(BeanUtil.copyListProperties(bingRenFZ.getBingRenJBXX(), QueryResultDTO::new).stream().peek(q-> q.setZiDuanZhi("")).toList());
                         row1.addAll(bingRenFZ.getBingRenJBXX());
                     }
                     //字段数量
@@ -432,18 +432,34 @@ public class FangAnServiceImpl implements FangAnService {
                             for(FangAnCXZDFZDto ziDuanFZ:shiTuZJFZ.getFangAnCXZDFZList()){
                                 for(Object zhi:ziDuanFZ.getZiDuanZhiList()){
                                     row0.add(new QueryResultDTO("","","",ziDuanFZ.getZiDuanMC()));
+                                    //如果为列表，则将字段名和结果防止为2列
+                                    if(isShowBQ){
+                                        row1.add(new QueryResultDTO("","","",ziDuanFZ.getZiDuanMC()));
+                                    }
                                     row1.add(new QueryResultDTO("","","",zhi));
                                 }
                                 ziDuanCount=ziDuanCount+ziDuanFZ.getZiDuanZhiCount();
                             }
                         }
                     }
+                    //补全长度
+                    if(ziDuanCount<maxColCount){
+                        List<QueryResultDTO> kongBaiZDList= new ArrayList<>(Collections.nCopies(maxColCount-ziDuanCount, new QueryResultDTO()));
+                        row0.addAll(kongBaiZDList);
+                        //如果为列表，则多加对应数量的空白列
+                        if(isShowBQ){
+                            row1.addAll(kongBaiZDList);
+                        }
+                        row1.addAll(kongBaiZDList);
+                    }
                     //列表时限制列数
                     if(isShowBQ){
-                        row0=row0.subList(0,Math.min(maxRecordCols, row0.size()));
                         row1=row1.subList(0,Math.min(maxRecordCols, row1.size()));
                     }
-                    result.add(row0);
+                    //非列表时字段名单行显示
+                    if(!isShowBQ) {
+                        result.add(row0);
+                    }
                     result.add(row1);
                 }
             }
@@ -578,9 +594,9 @@ public class FangAnServiceImpl implements FangAnService {
      * @param pageSize  每页数量
      * @param fangAnSCList  方案输出项
      * @return List<FangAnCXBRFZDto>
-     * @throws TongYongYWException
+     * @throws TongYongYWException 异常
      */
-    private List<FangAnCXBRFZDto> getFangAnCXBRFZList(String fangAnCXLSId, Integer mergeType, Integer pageIndex, Integer pageSize, List<FangAnSCDTO> fangAnSCList) throws TongYongYWException {
+    private List<FangAnCXBRFZDto> getFangAnCXBRFZList(String fangAnCXLSId, Integer mergeType, Integer pageIndex, Integer pageSize, List<FangAnSCDTO> fangAnSCList) throws TongYongYWException, YuanChengException {
         FangAnCXLSDTO fangAnCXLS = chaXunFAXXService.getFangAnCXLSByID(fangAnCXLSId);
         if (ObjectUtils.isEmpty(fangAnCXLS)) {
             throw new TongYongYWException("查询方案历史不存在");
@@ -595,7 +611,7 @@ public class FangAnServiceImpl implements FangAnService {
         }
         String guanJianZDSql = MessageFormat.format("select {0} from ({1}) tt group by {0} order by {0} limit {2,number,#} offset {3,number,#}", guanJianZD, fangAnCXLS.getChaXunSQL(), pageSize, pageSize * (pageIndex - 1));
         log.info("关键字段查询语句：{}", guanJianZDSql);
-        List<Map<String, Object>> guanJianZDList = linChuangRemoteService.getZiDianList(new ChaXunDto(guanJianZDSql)).getData();
+        List<Map<String, Object>> guanJianZDList = linChuangRemoteService.getZiDianList(new ChaXunDto(guanJianZDSql)).getData("数据查询失败");
         if (CollUtil.isEmpty(guanJianZDList)) {
             return null;
         }
@@ -617,7 +633,7 @@ public class FangAnServiceImpl implements FangAnService {
             }
             String pageResultSql = MessageFormat.format("select * from ({0}) tt where ({1}) in ({2}) order by {1}", fangAnCXLS.getChaXunSQL(), guanJianZD, StringUtils.join(pageGuanJianZDList, ","));
             log.info("分页查询语句：{}", pageResultSql);
-            jieGuoList.addAll(linChuangRemoteService.getZiDianList(new ChaXunDto(pageResultSql)).getData());
+            jieGuoList.addAll(linChuangRemoteService.getZiDianList(new ChaXunDto(pageResultSql)).getData("数据查询失败"));
         }
         //解析sql,获取字段与表的关系
         Pattern pattern = Pattern.compile("t_\\d+|zd_\\d+");
@@ -695,18 +711,21 @@ public class FangAnServiceImpl implements FangAnService {
                     shiTuFZ.setShiTuDM(qiTaSC.getKey());
                     shiTuFZ.setShiTuSXH(shiTuSXH++);
                     AtomicInteger shiTuZJSXH= new AtomicInteger();
-                    List<FangAnCXSTZJFZDto> shiTuZJFZList=jz.getValue().stream().collect(Collectors.groupingBy(st ->st.get("zj_"+shiTuFZ.getShiTuDM()),LinkedHashMap::new, Collectors.toList())).entrySet().stream().map(st->{
-                        FangAnCXSTZJFZDto shiTuZJFZ=new FangAnCXSTZJFZDto();
-                        shiTuZJFZ.setShiTuZJZ(String.valueOf(st.getKey()));
-                        shiTuZJFZ.setShiTuZJSXH(shiTuZJSXH.getAndIncrement());
+                    var ziDuanIDList=qiTaSC.getValue().stream().map(FangAnSCDTO::getId).toList();
+                    //数据按视图字段分组
+                    var shiTuZJFZList=jz.getValue().stream().map(st->st.entrySet().stream().filter(zd->ziDuanIDList.contains(zd.getKey())).toList()).map(st->{
                         List<FangAnCXZDFZDto> ziDuanFZList = new ArrayList<>();
                         int ziDuanSXH=0;
+                        FangAnCXSTZJFZDto shiTuZJFZ=new FangAnCXSTZJFZDto();
+                        //结果按主键分组时会出现值未合并为一列的情况，比如输出2个检验指标时结果中会有4列
+                        //shiTuZJFZ.setShiTuZJZ(String.valueOf(st.getKey()));
+                        shiTuZJFZ.setShiTuZJSXH(shiTuZJSXH.getAndIncrement());
                         for (FangAnSCDTO fangAnSC : qiTaSC.getValue()) {
                             FangAnCXZDFZDto ziDuanFZ = new FangAnCXZDFZDto();
                             ziDuanFZ.setZiDuanDM(fangAnSC.getId());
                             ziDuanFZ.setZiDuanYDM(fangAnSC.getZhiBiaoID());
                             ziDuanFZ.setZiDuanMC(fangAnSC.getZhiBiaoMC());
-                            List<Object> zhiList = st.getValue().stream().map(zd -> zd.get(fangAnSC.getId())).distinct().toList();
+                            List<Object> zhiList = st.stream().filter(zd ->Objects.equals(fangAnSC.getId(),zd.getKey())&&ObjectUtils.isNotEmpty(zd.getValue())).map(Map.Entry::getValue).distinct().toList();
                             ziDuanFZ.setZiDuanZhiList(zhiList);
                             ziDuanFZ.setZiDuanZhiCount(zhiList.size());
                             ziDuanFZ.setZiDuanSXH(ziDuanSXH++);
@@ -738,9 +757,9 @@ public class FangAnServiceImpl implements FangAnService {
      * @param fangAnSCList  方案输出项
      * @param bingRenIDList 病人ID列表
      * @return List<FangAnCXBRFZDto>
-     * @throws TongYongYWException
+     * @throws TongYongYWException 异常
      */
-    private List<List<QueryResultDTO>> getFangAnCXQueryResultList(String fangAnCXLSId, Integer pageIndex, Integer pageSize, List<FangAnSCDTO> fangAnSCList,List<String> bingRenIDList) throws TongYongYWException {
+    private List<List<QueryResultDTO>> getFangAnCXQueryResultList(String fangAnCXLSId, Integer pageIndex, Integer pageSize, List<FangAnSCDTO> fangAnSCList,List<String> bingRenIDList) throws TongYongYWException, YuanChengException {
         FangAnCXLSDTO fangAnCXLS = chaXunFAXXService.getFangAnCXLSByID(fangAnCXLSId);
         if (ObjectUtils.isEmpty(fangAnCXLS)) {
             throw new TongYongYWException("查询方案历史不存在");
@@ -750,7 +769,7 @@ public class FangAnServiceImpl implements FangAnService {
         }
         String jieGuoSql = MessageFormat.format("select distinct * from ({0}) tt limit {1,number,#} offset {2,number,#}", fangAnCXLS.getChaXunSQL(), pageSize, pageSize * (pageIndex - 1));
         log.info("结果查询语句：{}", jieGuoSql);
-        List<Map<String, Object>> jieGuoList = linChuangRemoteService.getZiDianList(new ChaXunDto(jieGuoSql)).getData();
+        List<Map<String, Object>> jieGuoList = linChuangRemoteService.getZiDianList(new ChaXunDto(jieGuoSql)).getData("数据查询失败");
         if (CollUtil.isEmpty(jieGuoList)) {
             return null;
         }
@@ -836,10 +855,10 @@ public class FangAnServiceImpl implements FangAnService {
      * @param mergeType 合并类型，1-患者，2-就诊
      * @param pageSize 页码
      * @return List<XSSFWorkbook>
-     * @throws TongYongYWException
-     * @throws RuntimeException
+     * @throws TongYongYWException 异常
+     * @throws RuntimeException 异常
      */
-    public List<ByteArrayOutputStream> getFangAnJGExcelList(String fangAnCXLSId, Integer mergeType, Integer pageSize) throws TongYongYWException, RuntimeException {
+    public List<ByteArrayOutputStream> getFangAnJGExcelList(String fangAnCXLSId, Integer mergeType, Integer pageSize) throws TongYongYWException, RuntimeException, YuanChengException {
         List<ByteArrayOutputStream> excelList=new ArrayList<>();
         Long jieGuoCount=getFangAnJGCount(fangAnCXLSId,mergeType);
         if(jieGuoCount.equals(0L)){
@@ -902,7 +921,7 @@ public class FangAnServiceImpl implements FangAnService {
      * 设置样式
      *
      * @param wb 表格
-     * @return
+     * @return CellStyle
      */
     private CellStyle getHeadStyle(Workbook wb){
         CellStyle cellStyle=wb.createCellStyle();
@@ -922,7 +941,7 @@ public class FangAnServiceImpl implements FangAnService {
      * @param pageIndex 页码
      * @param pageSize 每页数量
      * @return List<BingRenJBXXDTO>
-     * @throws TongYongYWException
+     * @throws TongYongYWException 异常
      */
     @Override
     public List<BingRenJBXXDTO> getBinRenJBXXList(String fangAnCXLSId, Integer pageIndex, Integer pageSize) throws TongYongYWException, YuanChengException {
@@ -943,7 +962,7 @@ public class FangAnServiceImpl implements FangAnService {
         String guanJianZD = "bingrenid";
         String guanJianZDSql = MessageFormat.format("select {0} from ({1}) tt group by {0} order by {0} limit {2,number,#} offset {3,number,#}", guanJianZD, bingLiCXJCSql, pageSize, pageSize * (pageIndex - 1));
 
-        List<String> bingRenIDList = linChuangRemoteService.getStringList(new ChaXunDto(guanJianZDSql)).getData();
+        List<String> bingRenIDList = linChuangRemoteService.getStringList(new ChaXunDto(guanJianZDSql)).getData("数据查询失败");
 
         //获取对应病人的收藏夹明细
         List<SC_SC_ShouCangJMXListDto> shouChangJMXList= BeanUtil.copyListProperties(scScShouCangJMXRepository.findByShouCangRIDAndBingRenIDIn(lyraIdentityService.getYongHuId(),bingRenIDList), SC_SC_ShouCangJMXListDto::new);
@@ -951,7 +970,7 @@ public class FangAnServiceImpl implements FangAnService {
         //获取病历查询结果
         String bingLiCXSql = MessageFormat.format(" {0} and a.bingrenid in (''{1}'') order by a.bingrenid", bingLiCXJCSql, CollUtil.join(bingRenIDList, "','"));
 
-        List<BingLiSCDTO> bingLiSCList = BeanUtil.copyListProperties(linChuangRemoteService.getZiDianList(new ChaXunDto(bingLiCXSql)).getData(),BingLiSCDTO::new);
+        List<BingLiSCDTO> bingLiSCList = BeanUtil.copyListProperties(linChuangRemoteService.getZiDianList(new ChaXunDto(bingLiCXSql)).getData("数据查询失败"),BingLiSCDTO::new);
 
         return bingLiSCList.stream().collect(Collectors.groupingBy(p -> ListUtil.toList(p.getBingRenID(), p.getXingMing(), p.getXingBieDM(), p.getXingBieMC(), p.getChuShengRQ(), p.getMenZhenCS(), p.getZhuYuanCS()),LinkedHashMap::new, Collectors.toList())).entrySet().stream().map(p -> {
             BingRenJBXXDTO item = new BingRenJBXXDTO();
@@ -988,8 +1007,8 @@ public class FangAnServiceImpl implements FangAnService {
      *
      * @param fangAnCXLSId  方案查询历史id
      * @return Long
-     * @throws TongYongYWException
-     * @throws YuanChengException
+     * @throws TongYongYWException 异常
+     * @throws YuanChengException 异常
      */
     public Long getBinRenJBXXCount(String fangAnCXLSId) throws TongYongYWException, YuanChengException {
         FangAnCXLSDTO fangAnCXLS = chaXunFAXXService.getFangAnCXLSByID(fangAnCXLSId);
@@ -1005,7 +1024,7 @@ public class FangAnServiceImpl implements FangAnService {
         //根据合并方式分页获取关键字段
         String guanJianZD = "bingrenid";
         String guanJianZDSql = MessageFormat.format("select count(1) from (select {0} from ({1}) tt group by {0}) lll0 ", guanJianZD, bingLiCXJCSql);
-        return linChuangRemoteService.getShuLiang(new ChaXunDto(guanJianZDSql)).getData();
+        return linChuangRemoteService.getShuLiang(new ChaXunDto(guanJianZDSql)).getData("数据查询失败");
     }
 
     private void subFangAn(List<FangAnCondition> conditionList) throws TongYongYWException {
@@ -1484,7 +1503,7 @@ public class FangAnServiceImpl implements FangAnService {
                     String shenQingBWKey = aliasMap.keySet().stream().filter(p -> p.contains("jc_sq_shenqingdbw")).findFirst().orElse("");
                     alias = aliasMap.containsKey(key) ? aliasMap.get(key).item1() : "";
                     String shenQingBWAlias = aliasMap.containsKey(shenQingBWKey) ? aliasMap.get(shenQingBWKey).item1() : "";
-                    fields.add(MessageFormat.format("(case when {0}.jianchabwid=''{1}'' then {2}.zhenduanjg else '''' end) as {3}", shenQingBWAlias, e.getZhiBiaoID(), alias, "zd_" + fangAnSCList.indexOf(e)));
+                    fields.add(MessageFormat.format("(case when {0}.jianchabwid=''{1}'' and {0}.jianchaxmid=''{4}'' then {2}.zhenduanjg else '''' end) as {3}", shenQingBWAlias, e.getZhiBiaoID(), alias, "zd_" + fangAnSCList.indexOf(e),e.getZhiBiaoFLID()));
                     break;
                 case "4": //药品
                     //根据方案类型代码，区分医嘱信息对应的表和取值逻辑
@@ -1534,8 +1553,8 @@ public class FangAnServiceImpl implements FangAnService {
     /**
      * 格式化表名
      *
-     * @param moShi
-     * @param biaoMing
+     * @param moShi 模式
+     * @param biaoMing 表名
      * @return String
      */
     private String formatBiaoMing(String shiTuID,String moShi, String biaoMing) {
@@ -1544,10 +1563,10 @@ public class FangAnServiceImpl implements FangAnService {
             shiTuID="";
         }
         if (StringUtils.isNotBlank(shiTuID)) {
-            builder.append(shiTuID + ".");
+            builder.append(shiTuID).append(".");
         }
         if (StringUtils.isNotBlank(moShi)) {
-            builder.append(moShi + ".");
+            builder.append(moShi).append(".");
         }
         builder.append(biaoMing);
         return builder.toString().toLowerCase();
@@ -1556,15 +1575,15 @@ public class FangAnServiceImpl implements FangAnService {
     /**
      * 根据表信息拼接表
      *
-     * @param biaoMing
-     * @param biaoXinXiList
+     * @param biaoMing 表名
+     * @param biaoXinXiList 表信息列表
      * @return String
      */
     private String formatBiaoMingByBXX(String biaoMing, List<ShuJuXXMSRso> biaoXinXiList) {
         String moShi = biaoXinXiList.stream().filter(p -> p.getBiaoMing().equals(biaoMing.toUpperCase())).findFirst().orElse(new ShuJuXXMSRso()).getShuJuYMC();
         StringBuilder builder = new StringBuilder();
         if (StringUtils.isNotBlank(moShi)) {
-            builder.append(moShi + ".");
+            builder.append(moShi).append(".");
         }
         builder.append(biaoMing);
         return builder.toString().toLowerCase();

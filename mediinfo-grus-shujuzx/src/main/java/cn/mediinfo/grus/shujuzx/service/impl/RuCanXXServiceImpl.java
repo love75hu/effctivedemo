@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -63,17 +64,67 @@ public class RuCanXXServiceImpl implements RuCanXXService {
     /**
      * 新增闭环入参信息
      */
-    public Boolean addRuCanXX(List<AddRuCanXXDto> dto, String zuZhiJGID,String zuZhiJGMC,String biHuanLXDM, String biHuanLXMC, String biHuanID, String biHuanMC)
+    public Boolean addRuCanXX(List<AddRuCanXXDto> dto,
+                              String zuZhiJGID,
+                              String zuZhiJGMC,
+                              String biHuanLXDM,
+                              String biHuanLXMC,
+                              String biHuanID,
+                              String biHuanMC)
     {
-        ruCanXXRepository.asDeleteDsl().where(n->n.biHuanID.eq(biHuanID)).execute();
-        ruCanXXRepository.saveAll(BeanUtil.copyListProperties(dto, SC_BH_RuCanXXModel::new, (d, s) -> {
+        // 根据给定的biHuanID获取现有记录。
+        List<SC_BH_RuCanXXModel> existingRecords = ruCanXXRepository.findByBiHuanIDAndZuZhiJGID(biHuanID,zuZhiJGID);
+        // 将DTO映射到模型。
+        List<SC_BH_RuCanXXModel> newModels = BeanUtil.copyListProperties(dto, SC_BH_RuCanXXModel::new, (d, s) -> {
             s.setZuZhiJGID(zuZhiJGID);
             s.setZuZhiJGMC(zuZhiJGMC);
             s.setBiHuanID(biHuanID);
             s.setBiHuanMC(biHuanMC);
             s.setBiHuanLXDM(biHuanLXDM);
             s.setBiHuanLXMC(biHuanLXMC);
-        }));
+        });
+        // 创建新模型的唯一标识符集合。
+        Set<String> newModelIdentifiers = newModels.stream()
+                .map(model -> model.getShiTuID() + "_" + model.getZiDuanBM()) // 组合成唯一标识符
+                .collect(Collectors.toSet());
+        // 确定需要删除的记录。
+        List<SC_BH_RuCanXXModel> modelsToDelete = existingRecords.stream()
+                .filter(existing -> !newModelIdentifiers.contains(existing.getShiTuID() + "_" + existing.getZiDuanBM()))
+                .toList();
+        // 执行删除操作。
+        if (!modelsToDelete.isEmpty()) {
+            ruCanXXRepository.deleteAll(modelsToDelete);
+        }
+        // 确定更新和插入。
+        List<SC_BH_RuCanXXModel> modelsToUpdate = new ArrayList<>();
+        List<SC_BH_RuCanXXModel> modelsToInsert = new ArrayList<>();
+        for (SC_BH_RuCanXXModel newModel : newModels) {
+            SC_BH_RuCanXXModel existing = existingRecords.stream()
+                    .filter(e -> (e.getShiTuID() + "_" + e.getZiDuanBM()).equals(newModel.getShiTuID() + "_" + newModel.getZiDuanBM()))
+                    .findFirst()
+                    .orElse(null);
+            if (existing != null) {
+                // 准备现有记录进行更新。
+                newModel.setId(existing.getId());
+                newModel.setZuZhiJGID(zuZhiJGID);
+                newModel.setZuZhiJGMC(zuZhiJGMC);
+                newModel.setBiHuanID(biHuanID);
+                newModel.setBiHuanMC(biHuanMC);
+                newModel.setBiHuanLXDM(biHuanLXDM);
+                newModel.setBiHuanLXMC(biHuanLXMC);
+                modelsToUpdate.add(existing);
+            } else {
+                // 准备插入新记录。
+                modelsToInsert.add(newModel);
+            }
+        }
+        // 执行批量更新和插入操作。
+        if (!modelsToUpdate.isEmpty()) {
+            ruCanXXRepository.saveAll(modelsToUpdate);
+        }
+        if (!modelsToInsert.isEmpty()) {
+            ruCanXXRepository.saveAll(modelsToInsert);
+        }
         return true;
     }
     public Boolean addFuZhiRCXX(List<SC_BH_RuCanXXModel> canXXModels)

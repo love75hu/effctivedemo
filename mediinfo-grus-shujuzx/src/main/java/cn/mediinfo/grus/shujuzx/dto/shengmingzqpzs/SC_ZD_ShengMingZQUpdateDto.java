@@ -4,6 +4,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import org.apache.poi.hpsf.Decimal;
 
+import java.math.BigDecimal;
+
 @Data
 public class SC_ZD_ShengMingZQUpdateDto {
     @Schema(description = "主键")
@@ -11,9 +13,9 @@ public class SC_ZD_ShengMingZQUpdateDto {
     @Schema(description = "生命周期名称")
     private String shengMingZQMC;
     @Schema(description = "起始年龄")
-    private Decimal qiShiNL;
+    private BigDecimal qiShiNL;
     @Schema(description = "结束年龄")
-    private Decimal jieShuNL;
+    private BigDecimal jieShuNL;
     @Schema(description = "男性图片")
     private String nanXingTP;
     @Schema(description = "女性图片")

@@ -17,10 +17,6 @@ public class SC_ZD_ShengMingZQListDto {
     private BigDecimal qiShiNL;
     @Schema(description = "结束年龄")
     private BigDecimal jieShuNL;
-    @Schema(description = "男性图片")
-    private String nanXingTP;
-    @Schema(description = "女性图片")
-    private String nvXingTP;
     @Schema(description = "顺序号")
     private Integer shunXuHao;
 }

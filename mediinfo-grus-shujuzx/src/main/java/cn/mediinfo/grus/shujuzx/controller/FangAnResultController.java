@@ -73,7 +73,7 @@ public class FangAnResultController {
     @Parameter(name = "pageSize", description = "每页数量")
     @GetMapping("/listQueryResult")
     public MsfResponse<List<List<QueryResultDTO>>> listQueryResult(@NotBlank(message = "方案查询历史id不能为空") @RequestParam String fangAnCXLSId,
-                                                                   @RequestParam(required = false) Integer mergeType, @RequestParam(required = false, defaultValue = "1") Integer page, @RequestParam(required = false, defaultValue = "10") Integer pageSize) throws TongYongYWException {
+                                                                   @RequestParam(required = false) Integer mergeType, @RequestParam(required = false, defaultValue = "1") Integer page, @RequestParam(required = false, defaultValue = "10") Integer pageSize) throws TongYongYWException, YuanChengException {
         return MsfResponse.success(fangAnService.getFangAnJGList(fangAnCXLSId, mergeType, page, pageSize, true));
     }
 
@@ -82,7 +82,7 @@ public class FangAnResultController {
     @Parameter(name = "mergeType", description = "合并类型，1-患者，2-就诊")
     @GetMapping("/countQueryResult")
     public MsfResponse<Long> countQueryResult(@NotBlank(message = "方案查询历史id不能为空") @RequestParam String fangAnCXLSId,
-                                              @RequestParam(required = false) Integer mergeType) throws TongYongYWException {
+                                              @RequestParam(required = false) Integer mergeType) throws TongYongYWException, YuanChengException {
         return MsfResponse.success(fangAnService.getFangAnJGCount(fangAnCXLSId, mergeType));
     }
 
@@ -98,7 +98,7 @@ public class FangAnResultController {
     @Parameter(name = "mergeType", description = "合并类型，1-患者，2-就诊")
     @GetMapping("/exportQueryResult")
     public void exportQueryResult(@NotBlank(message = "方案查询历史id不能为空") @RequestParam String fangAnCXLSId,
-                                  @RequestParam String mingCheng, @RequestParam(required = false) Integer mergeType, HttpServletResponse response) throws TongYongYWException, IOException {
+                                  @RequestParam String mingCheng, @RequestParam(required = false) Integer mergeType, HttpServletResponse response) throws TongYongYWException, IOException, YuanChengException {
         List<ByteArrayOutputStream> excelList = fangAnService.getFangAnJGExcelList(fangAnCXLSId, mergeType, 1000);
         //统一封装zip压缩包并导出
         ExportUtils.downFileByStream(response, excelList, mingCheng);

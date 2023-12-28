@@ -76,7 +76,7 @@ public interface FangAnService {
      * @return Long
      * @throws TongYongYWException
      */
-    Long getFangAnJGCount(String fangAnCXLSId, Integer mergeType) throws TongYongYWException;
+    Long getFangAnJGCount(String fangAnCXLSId, Integer mergeType) throws TongYongYWException, YuanChengException;
 
     /**
      * 获取方案查询结果
@@ -89,7 +89,7 @@ public interface FangAnService {
      * @return List<List<QueryResultDTO>>
      * @throws TongYongYWException
      */
-    List<List<QueryResultDTO>> getFangAnJGList(String fangAnCXLSId, Integer mergeType, Integer pageIndex, Integer pageSize, boolean isShowBQ) throws TongYongYWException;
+    List<List<QueryResultDTO>> getFangAnJGList(String fangAnCXLSId, Integer mergeType, Integer pageIndex, Integer pageSize, boolean isShowBQ) throws TongYongYWException, YuanChengException;
 
     /**
      * 获取方案结果Excel
@@ -101,7 +101,7 @@ public interface FangAnService {
      * @throws TongYongYWException
      * @throws RuntimeException
      */
-    List<ByteArrayOutputStream> getFangAnJGExcelList(String fangAnCXLSId, Integer mergeType, Integer pageSize) throws TongYongYWException, RuntimeException;
+    List<ByteArrayOutputStream> getFangAnJGExcelList(String fangAnCXLSId, Integer mergeType, Integer pageSize) throws TongYongYWException, RuntimeException, YuanChengException;
 
     /**
      * 获取方案患者信息

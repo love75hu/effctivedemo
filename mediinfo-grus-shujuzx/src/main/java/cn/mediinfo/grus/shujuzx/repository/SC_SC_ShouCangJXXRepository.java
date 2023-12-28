@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 public interface SC_SC_ShouCangJXXRepository extends MsfJpaRepository<QSC_SC_ShouCangJXXModel,SC_SC_ShouCangJXXModel, String> {
     Boolean existsByShouCangJMCAndYongHuID(String shouCangJMC,String yongHuID);
 
-    @Query("select max(s.shunXuHao) from  SC_SC_ShouCangJXXModel as s")
+    @Query("select COALESCE(max(s.shunXuHao),0) from  SC_SC_ShouCangJXXModel as s")
     Integer getMaxShunXuHao(String yongHuID);
 
 }

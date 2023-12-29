@@ -248,7 +248,9 @@ public class FangAnServiceImpl implements FangAnService {
         //转化sql树
         Map<String, ShuJuJMXZDDto> fieldMap = fieldList.stream().collect(Collectors.toMap(f ->Optional.ofNullable(f.getShiTuID()).orElse("").toLowerCase() + "|" + Optional.ofNullable(f.getZiDuanBM()).orElse("").toLowerCase(), e -> e));
         SQLQueryNode condition = transform(root, fieldMap);
-
+        if (ObjectUtils.isNotEmpty(condition.getLeft()) && root!=null) {
+            condition = getGuanXiNode(condition, Objects.isNull(root.getCondition()));
+        }
         //构建sql树
         SQLQueryNode sqlRoot = new SQLQueryNode(new SQLQueryObject("SELECT"));
         sqlRoot.setLeft(new SQLQueryNode(new SQLQueryObject(fields)));
@@ -1518,10 +1520,13 @@ public class FangAnServiceImpl implements FangAnService {
                     }
                     break;
                 default:
-                    key = aliasMap.keySet().stream().filter(p -> p.contains(formatBiaoMing(e.getZhiBiaoFLID(), e.getMoShi(), e.getBiaoMing()))).findFirst().orElse("");
+                    //优先单表匹配
+                    key = aliasMap.keySet().stream().filter(p -> p.equals(formatBiaoMing(e.getZhiBiaoFLID(), e.getMoShi(), e.getBiaoMing()))).findFirst().orElse("");
                     //如果key为空且为BR_DA_JIBENXX则去基本信息表中字段
-                    if(StringUtils.isBlank(key)&&Objects.equals(e.getBiaoMing().toLowerCase(),"br_da_jibenxx")){
+                    if (StringUtils.isBlank(key) && Objects.equals(e.getBiaoMing().toLowerCase(), "br_da_jibenxx")) {
                         key = aliasMap.keySet().stream().filter(p -> p.equals(formatBiaoMing("", e.getMoShi(), e.getBiaoMing()))).findFirst().orElse("");
+                    } else if (StringUtils.isBlank(key)) { //根据视图ID，模式和表名模糊匹配
+                        key = aliasMap.keySet().stream().filter(p -> p.contains(formatBiaoMing(e.getZhiBiaoFLID(), e.getMoShi(), e.getBiaoMing()))).findFirst().orElse("");
                     }
                     alias = aliasMap.containsKey(key) ? aliasMap.get(key).item1() : "";
                     fields.add(alias + "." + e.getZhiBiaoID() + " as zd_" + fangAnSCList.indexOf(e));

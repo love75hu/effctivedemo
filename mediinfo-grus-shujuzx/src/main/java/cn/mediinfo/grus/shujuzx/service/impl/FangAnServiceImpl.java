@@ -358,106 +358,113 @@ public class FangAnServiceImpl implements FangAnService {
         }
         //列表时最大支持列数
         int maxRecordCols=100;
-        //药品
-        if (fangAnSCList.stream().anyMatch(p -> "4".equals(p.getZhiBiaoLXDM()))) {
+        //药品或者列表展示时
+        if (fangAnSCList.stream().anyMatch(p -> "4".equals(p.getZhiBiaoLXDM()))||isShowBQ) {
             //获取输出字段部分按就诊/患者合并的最大长度
-            int maxColCount =bingRenFZList.stream().map(br -> br.getFangAnCXJZFZList().stream().map(jz -> jz.getFangAnCXSTFZList().stream().map(st->st.getFangAnCXSTZJFZList().stream().map(stzj->stzj.getFangAnCXZDFZList().stream().map(FangAnCXZDFZDto::getZiDuanZhiCount).reduce(0,Integer::sum)).reduce(0,Integer::sum)).reduce(0, (isHuanZheHB?Integer::sum:Integer::max))).reduce(0, Integer::max)).reduce(0,Integer::max);
+            int maxColCount = bingRenFZList.stream().map(br -> br.getFangAnCXJZFZList().stream().map(jz -> jz.getFangAnCXSTFZList().stream().map(st -> st.getFangAnCXSTZJFZList().stream().map(stzj -> stzj.getFangAnCXZDFZList().stream().map(FangAnCXZDFZDto::getZiDuanZhiCount).reduce(0, Integer::sum)).reduce(0, Integer::sum)).reduce(0, (isHuanZheHB ? Integer::sum : Integer::max))).reduce(0, Integer::max)).reduce(0, Integer::max);
 
             for (FangAnCXBRFZDto bingRenFZ : bingRenFZList) {
-                if(isHuanZheHB){
+                if (isHuanZheHB) {
                     List<QueryResultDTO> row0 = new ArrayList<>();
                     List<QueryResultDTO> row1 = new ArrayList<>();
                     //加入基本信息空值行
-                    row0.add(new QueryResultDTO("bingrenid","bingrenid",bingRenIDXSMC,""));
-                    row1.add(new QueryResultDTO("bingrenid","bingrenid", bingRenIDXSMC, bingRenFZ.getBingRenID()));
-                    if(CollUtil.isNotEmpty(bingRenFZ.getBingRenJBXX())) {
-                        row0.addAll(BeanUtil.copyListProperties(bingRenFZ.getBingRenJBXX(), QueryResultDTO::new).stream().peek(q-> q.setZiDuanZhi("")).toList());
+                    row0.add(new QueryResultDTO("bingrenid", "bingrenid", bingRenIDXSMC, ""));
+                    row1.add(new QueryResultDTO("bingrenid", "bingrenid", bingRenIDXSMC, bingRenFZ.getBingRenID()));
+                    if (CollUtil.isNotEmpty(bingRenFZ.getBingRenJBXX())) {
+                        row0.addAll(BeanUtil.copyListProperties(bingRenFZ.getBingRenJBXX(), QueryResultDTO::new).stream().peek(q -> q.setZiDuanZhi("")).toList());
                         row1.addAll(bingRenFZ.getBingRenJBXX());
                     }
                     //字段数量
-                    int ziDuanCount=1;
-                    for (FangAnCXJZFZDto jiuZhenFZ:bingRenFZ.getFangAnCXJZFZList()){
-                        for(FangAnCXSTFZDto shiTuFZ:jiuZhenFZ.getFangAnCXSTFZList()){
-                            for(FangAnCXSTZJFZDto shiTuZJFZ:shiTuFZ.getFangAnCXSTZJFZList()){
-                                for(FangAnCXZDFZDto ziDuanFZ:shiTuZJFZ.getFangAnCXZDFZList()){
-                                    for(Object zhi:ziDuanFZ.getZiDuanZhiList()){
-                                        row0.add(new QueryResultDTO("","","",ziDuanFZ.getZiDuanMC()));
+                    int ziDuanCount = 0;
+                    for (FangAnCXJZFZDto jiuZhenFZ : bingRenFZ.getFangAnCXJZFZList()) {
+                        for (FangAnCXSTFZDto shiTuFZ : jiuZhenFZ.getFangAnCXSTFZList()) {
+                            for (FangAnCXSTZJFZDto shiTuZJFZ : shiTuFZ.getFangAnCXSTZJFZList()) {
+                                for (FangAnCXZDFZDto ziDuanFZ : shiTuZJFZ.getFangAnCXZDFZList()) {
+                                    for (Object zhi : ziDuanFZ.getZiDuanZhiList()) {
+                                        row0.add(new QueryResultDTO("", "", "", ziDuanFZ.getZiDuanMC()));
                                         //如果为列表，则将字段名和结果防止为2列
-                                        if(isShowBQ){
-                                            row1.add(new QueryResultDTO("","","",ziDuanFZ.getZiDuanMC()));
+                                        if (isShowBQ) {
+                                            row1.add(new QueryResultDTO("", "", "", ziDuanFZ.getZiDuanMC() + " " + zhi));
+                                            continue;
                                         }
-                                        row1.add(new QueryResultDTO("","","",zhi));
+                                        row1.add(new QueryResultDTO("", "", "", zhi));
                                     }
-                                    ziDuanCount=ziDuanCount+ziDuanFZ.getZiDuanZhiCount();
+                                    ziDuanCount = ziDuanCount + ziDuanFZ.getZiDuanZhiCount();
                                 }
                             }
                         }
                     }
                     //补全长度
-                    if(ziDuanCount<maxColCount){
-                        List<QueryResultDTO> kongBaiZDList= new ArrayList<>(Collections.nCopies(maxColCount-ziDuanCount, new QueryResultDTO()));
+                    if (ziDuanCount < maxColCount) {
+                        List<QueryResultDTO> kongBaiZDList = new ArrayList<>(Collections.nCopies(maxColCount - ziDuanCount, new QueryResultDTO()));
                         row0.addAll(kongBaiZDList);
-                        //如果为列表，则多加对应数量的空白列
-                        if(isShowBQ){
-                            row1.addAll(kongBaiZDList);
-                        }
                         row1.addAll(kongBaiZDList);
                     }
                     //列表时限制列数
-                    if(isShowBQ){
-                        row1=row1.subList(0,Math.min(maxRecordCols, row1.size()));
+                    if (isShowBQ) {
+                        row1 = row1.subList(0, Math.min(maxRecordCols, row1.size()));
                     }
                     //非列表时字段名单行显示
-                    if(!isShowBQ) {
+                    if (!isShowBQ) {
                         result.add(row0);
                     }
                     result.add(row1);
                     continue;
                 }
                 //按就诊分组
-                for (FangAnCXJZFZDto jiuZhenFZ:bingRenFZ.getFangAnCXJZFZList()){
+                if(CollectionUtil.isEmpty(bingRenFZ.getFangAnCXJZFZList())){
+                    List<QueryResultDTO> row = new ArrayList<>();
+                    //加入基本信息
+                    row.add(new QueryResultDTO("bingrenid", "bingrenid", bingRenIDXSMC, bingRenFZ.getBingRenID()));
+                    if(CollUtil.isNotEmpty(bingRenFZ.getBingRenJBXX())) {
+                        row.addAll(bingRenFZ.getBingRenJBXX());
+                    }
+                    //列表时限制列数
+                    if(isShowBQ){
+                        row=row.subList(0,Math.min(maxRecordCols, row.size()));
+                    }
+                    result.add(row);
+                }
+                for (FangAnCXJZFZDto jiuZhenFZ : bingRenFZ.getFangAnCXJZFZList()) {
                     List<QueryResultDTO> row0 = new ArrayList<>();
                     List<QueryResultDTO> row1 = new ArrayList<>();
                     //加入基本信息空值行
-                    row0.add(new QueryResultDTO("bingrenid","bingrenid",bingRenIDXSMC,""));
+                    row0.add(new QueryResultDTO("bingrenid", "bingrenid", bingRenIDXSMC, ""));
                     row1.add(new QueryResultDTO("bingrenid", "bingrenid", bingRenIDXSMC, bingRenFZ.getBingRenID()));
-                    if(CollUtil.isNotEmpty(bingRenFZ.getBingRenJBXX())) {
-                        row0.addAll(BeanUtil.copyListProperties(bingRenFZ.getBingRenJBXX(), QueryResultDTO::new).stream().peek(q-> q.setZiDuanZhi("")).toList());
+                    if (CollUtil.isNotEmpty(bingRenFZ.getBingRenJBXX())) {
+                        row0.addAll(BeanUtil.copyListProperties(bingRenFZ.getBingRenJBXX(), QueryResultDTO::new).stream().peek(q -> q.setZiDuanZhi("")).toList());
                         row1.addAll(bingRenFZ.getBingRenJBXX());
                     }
                     //字段数量
-                    int ziDuanCount=1;
-                    for(FangAnCXSTFZDto shiTuFZ:jiuZhenFZ.getFangAnCXSTFZList()){
-                        for(FangAnCXSTZJFZDto shiTuZJFZ:shiTuFZ.getFangAnCXSTZJFZList()){
-                            for(FangAnCXZDFZDto ziDuanFZ:shiTuZJFZ.getFangAnCXZDFZList()){
-                                for(Object zhi:ziDuanFZ.getZiDuanZhiList()){
-                                    row0.add(new QueryResultDTO("","","",ziDuanFZ.getZiDuanMC()));
+                    int ziDuanCount = 0;
+                    for (FangAnCXSTFZDto shiTuFZ : jiuZhenFZ.getFangAnCXSTFZList()) {
+                        for (FangAnCXSTZJFZDto shiTuZJFZ : shiTuFZ.getFangAnCXSTZJFZList()) {
+                            for (FangAnCXZDFZDto ziDuanFZ : shiTuZJFZ.getFangAnCXZDFZList()) {
+                                for (Object zhi : ziDuanFZ.getZiDuanZhiList()) {
+                                    row0.add(new QueryResultDTO("", "", "", ziDuanFZ.getZiDuanMC()));
                                     //如果为列表，则将字段名和结果防止为2列
-                                    if(isShowBQ){
-                                        row1.add(new QueryResultDTO("","","",ziDuanFZ.getZiDuanMC()));
+                                    if (isShowBQ) {
+                                        row1.add(new QueryResultDTO("", "", "", ziDuanFZ.getZiDuanMC() + " " + zhi));
+                                        continue;
                                     }
-                                    row1.add(new QueryResultDTO("","","",zhi));
+                                    row1.add(new QueryResultDTO("", "", "", zhi));
                                 }
-                                ziDuanCount=ziDuanCount+ziDuanFZ.getZiDuanZhiCount();
+                                ziDuanCount = ziDuanCount + ziDuanFZ.getZiDuanZhiCount();
                             }
                         }
                     }
                     //补全长度
-                    if(ziDuanCount<maxColCount){
-                        List<QueryResultDTO> kongBaiZDList= new ArrayList<>(Collections.nCopies(maxColCount-ziDuanCount, new QueryResultDTO()));
+                    if (ziDuanCount < maxColCount) {
+                        List<QueryResultDTO> kongBaiZDList = new ArrayList<>(Collections.nCopies(maxColCount - ziDuanCount, new QueryResultDTO()));
                         row0.addAll(kongBaiZDList);
-                        //如果为列表，则多加对应数量的空白列
-                        if(isShowBQ){
-                            row1.addAll(kongBaiZDList);
-                        }
                         row1.addAll(kongBaiZDList);
                     }
                     //列表时限制列数
-                    if(isShowBQ){
-                        row1=row1.subList(0,Math.min(maxRecordCols, row1.size()));
+                    if (isShowBQ) {
+                        row1 = row1.subList(0, Math.min(maxRecordCols, row1.size()));
                     }
                     //非列表时字段名单行显示
-                    if(!isShowBQ) {
+                    if (!isShowBQ) {
                         result.add(row0);
                     }
                     result.add(row1);
@@ -536,10 +543,6 @@ public class FangAnServiceImpl implements FangAnService {
                         row.add(new QueryResultDTO(bingRenSXFZ.getZiDuanDM(),bingRenSXFZ.getZiDuanYDM(), bingRenSXFZ.getZiDuanMC(), zhi));
                     }
                 }
-                //列表时限制列数
-                if(isShowBQ){
-                    row=row.subList(0,Math.min(maxRecordCols, row.size()));
-                }
                 result.add(row);
                 continue;
             }
@@ -550,10 +553,6 @@ public class FangAnServiceImpl implements FangAnService {
                 row.add(new QueryResultDTO("bingrenid", "bingrenid", bingRenIDXSMC, bingRenFZ.getBingRenID()));
                 if(CollUtil.isNotEmpty(bingRenFZ.getBingRenJBXX())) {
                     row.addAll(bingRenFZ.getBingRenJBXX());
-                }
-                //列表时限制列数
-                if(isShowBQ){
-                    row=row.subList(0,Math.min(maxRecordCols, row.size()));
                 }
                 result.add(row);
             }
@@ -573,10 +572,6 @@ public class FangAnServiceImpl implements FangAnService {
                         }
                         row.add(new QueryResultDTO(bingRenSXFZ.getZiDuanDM(), bingRenSXFZ.getZiDuanYDM(), bingRenSXFZ.getZiDuanMC(), zhi));
                     }
-                }
-                //列表时限制列数
-                if(isShowBQ){
-                    row=row.subList(0,Math.min(maxRecordCols, row.size()));
                 }
                 result.add(row);
             }

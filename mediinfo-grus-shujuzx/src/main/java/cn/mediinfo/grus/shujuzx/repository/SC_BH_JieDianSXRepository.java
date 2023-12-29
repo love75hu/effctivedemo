@@ -22,6 +22,8 @@ public interface SC_BH_JieDianSXRepository extends MsfJpaRepository<QSC_BH_JieDi
 
     List<SC_BH_JieDianSXModel> findByBiHuanIDIn(List<String> biHuanID);
 
+    List<SC_BH_JieDianSXModel> findByBiHuanID(String biHuanID);
+
 
     default List<SC_BH_JieDianSXDto>  biHuanSZXXList(String biHuanID, String jiGouID)
     {

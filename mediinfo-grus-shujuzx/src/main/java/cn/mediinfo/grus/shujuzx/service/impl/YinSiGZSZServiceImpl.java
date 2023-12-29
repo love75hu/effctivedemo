@@ -12,6 +12,8 @@ import cn.mediinfo.grus.shujuzx.constant.ShuJuZXConstant;
 import cn.mediinfo.grus.shujuzx.dto.yinsigzszs.*;
 import cn.mediinfo.grus.shujuzx.model.*;
 import cn.mediinfo.grus.shujuzx.po.yinsigzsz.YinSiGZSZAndYinSiPZListPO;
+import cn.mediinfo.grus.shujuzx.remotedto.GongYong.GY_YW_YinSiGZXXRso;
+import cn.mediinfo.grus.shujuzx.remoteservice.GongYongRemoteService;
 import cn.mediinfo.grus.shujuzx.repository.SC_ZD_YinSiGZSZRepository;
 import cn.mediinfo.grus.shujuzx.repository.SC_ZD_YinSiPZRepository;
 import cn.mediinfo.grus.shujuzx.repository.SC_ZD_ZhanShiPZRepository;
@@ -38,13 +40,14 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
     private final SC_ZD_YinSiPZRepository yinSiPZRepository;
     private final SC_ZD_YinSiGZSZRepository yinSiGZSZRepository;
     private final SC_ZD_ZhanShiPZRepository zhanShiPZRepository;
-
+    private final GongYongRemoteService _gongYongRemoteService;
     public YinSiGZSZServiceImpl(SC_ZD_YinSiPZRepository yinSiPZRepository,
                                 SC_ZD_YinSiGZSZRepository yinSiGZSZRepository,
-                                SC_ZD_ZhanShiPZRepository zhanShiPZRepository) {
+                                SC_ZD_ZhanShiPZRepository zhanShiPZRepository, GongYongRemoteService gongYongRemoteService) {
         this.yinSiPZRepository = yinSiPZRepository;
         this.yinSiGZSZRepository = yinSiGZSZRepository;
         this.zhanShiPZRepository = zhanShiPZRepository;
+        _gongYongRemoteService = gongYongRemoteService;
     }
 
     /**
@@ -354,7 +357,9 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
     //todo tichu poceng
     @Override
     public List<SC_ZD_YinSiGZSZOutDto> getYinSiGZSZSJYList(String chaXunMSDM, String zuZhiJGID) {
-        List<SC_ZD_YinSiGZSZModel> yinSiGZSZModelList = yinSiGZSZRepository.findByZuZhiJGID(zuZhiJGID);
+
+        List<GY_YW_YinSiGZXXRso> yinSiGZSZModelList=_gongYongRemoteService.getYinSiGZMXList("1","",1,10000).getData();
+       // List<SC_ZD_YinSiGZSZModel> yinSiGZSZModelList = yinSiGZSZRepository.findByZuZhiJGID(zuZhiJGID);
         List<SC_ZD_YinSiPZModel> yinSiPZModelList = yinSiPZRepository.findByZuZhiJGIDAndChaXunMSDM(zuZhiJGID, chaXunMSDM);
         List<YinSiGZSZAndYinSiPZListPO> yinSiGZSZAndYinSiPZListPOS = yinSiGZSZModelList.stream().collect(CollectorUtil.groupJoin(yinSiPZModelList,
                 (guiZeSZ, yinSiPZ) -> Objects.equals(guiZeSZ.getShuJuYLM(), yinSiPZ.getShuJuYLM()), YinSiGZSZAndYinSiPZListPO::new)).stream().toList();
@@ -368,13 +373,13 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
                 yinSiGZSZOutDto.setTuoMinFSDM(po.getYinSiGZSZModel().getTuoMinFSDM());
                 yinSiGZSZOutDto.setTuoMinFSMC(po.getYinSiGZSZModel().getTuoMinFSMC());
                 yinSiGZSZOutDto.setTuoMinGZ(po.getYinSiGZSZModel().getTuoMinGZ());
-                yinSiGZSZOutDto.setTuoMinSM(po.getYinSiGZSZModel().getTuoMinSM());
-                yinSiGZSZOutDto.setShunXuHao(po.getYinSiGZSZModel().getShunXuHao());
+                yinSiGZSZOutDto.setTuoMinSM(po.getYinSiGZSZModel().getGuiZeSM());
+               // yinSiGZSZOutDto.setShunXuHao(po.getYinSiGZSZModel().getShunXuHao());
                 yinSiGZSZOutDto.setShiFouXZ(!CollectionUtils.isEmpty(po.getYinSiPZModels()) && StringUtil.hasText(po.getYinSiPZModels().get(0).getId()));//是否选中
                 scZdYinSiGZSZOutDtos.add(yinSiGZSZOutDto);
             }
-            return scZdYinSiGZSZOutDtos.stream().sorted(Comparator.comparing(SC_ZD_YinSiGZSZOutDto::getShunXuHao))
-                    .filter(ExpressionUtils.distinctByKeys(SC_ZD_YinSiGZSZOutDto::getShunXuHao)).toList();
+           // return scZdYinSiGZSZOutDtos.stream().sorted(Comparator.comparing(SC_ZD_YinSiGZSZOutDto::getShunXuHao)).filter(ExpressionUtils.distinctByKeys(SC_ZD_YinSiGZSZOutDto::getShunXuHao)).toList();
+            return scZdYinSiGZSZOutDtos;
         }
         return null;
     }

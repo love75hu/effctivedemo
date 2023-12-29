@@ -54,4 +54,10 @@ public interface GongYongRemoteService {
     MsfResponse<List<YuanSuJXXRso>> getZiDuanXXList(@RequestParam("id") String id,@RequestParam("leiXing") String leiXing,@RequestParam("likeQuery") String likeQuery);
 
 
+    @GetMapping("api/v1.0/yinSiGZSZ/getYinSiGZMXList")
+    MsfResponse<List<GY_YW_YinSiGZXXRso>> getYinSiGZMXList(@RequestParam String yingYongLBDM,
+                                                           @RequestParam(required = false) String likeQuery,
+                                                           @RequestParam(name = "pageIndex", required = false, defaultValue = "1") Integer pageIndex,
+                                                           @RequestParam(name = "pageSize", required = false, defaultValue = "10000") Integer pageSize);
+
 }

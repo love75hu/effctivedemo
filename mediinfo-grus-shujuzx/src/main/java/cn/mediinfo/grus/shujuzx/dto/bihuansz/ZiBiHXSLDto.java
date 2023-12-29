@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 public class ZiBiHXSLDto {
-
+    private String id;
     /**
      * 组织机构ID
      */

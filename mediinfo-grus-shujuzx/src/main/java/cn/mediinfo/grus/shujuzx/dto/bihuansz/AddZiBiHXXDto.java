@@ -6,6 +6,7 @@ import lombok.Data;
 
 @Data
 public class AddZiBiHXXDto {
+    private String id;
     /**
      * 组织机构ID
      */

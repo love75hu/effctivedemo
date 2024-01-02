@@ -278,7 +278,7 @@ public class RenWuGLController {
     public  MsfResponse<List<SC_RW_ShuJuYuanDto>> getShuJuYuanList(@RequestParam String RenWuID){
         return MsfResponse.success(renWuGLService.getShuJuYuanList(RenWuID));
     }
-    
+
     /**
      * 批量执行保存
      */

@@ -19,6 +19,8 @@ public class SC_RW_JiBenXXListDto {
     private String renWuMC;
     @Column(columnDefinition = "任务说明")
     private String renWuSM;
+    @Column(columnDefinition = "任务地址")
+    private String renWuDZ;
     @Column(columnDefinition = "分类名称")
     private String fenLeiMC;
     @Column(columnDefinition = "执行频率名称")
@@ -35,5 +37,9 @@ public class SC_RW_JiBenXXListDto {
     private Integer qiYongBZ;
     @Column(columnDefinition = "备注")
     private String beiZhu;
+    @Schema(description = "设计器地址")
+    private String sheJiQDZ;
+    @Schema(description = "api地址")
+    private String apiDZ;
 
 }

@@ -19,8 +19,4 @@ public class SC_ZD_ShengMingZQListDto {
     private BigDecimal jieShuNL;
     @Schema(description = "顺序号")
     private Integer shunXuHao;
-    @Schema(description = "男性图片")
-    private String nanXingTP;
-    @Schema(description = "女性图片")
-    private String nvXingTP;
 }

@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 
 @Data
 
@@ -41,5 +43,7 @@ public class SC_RW_JiBenXXListDto {
     private String sheJiQDZ;
     @Schema(description = "api地址")
     private String apiDZ;
+    @Schema(description = "最近执行时间")
+    private Date zuiJinZXSJ;
 
 }

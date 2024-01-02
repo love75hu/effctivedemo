@@ -1,16 +1,12 @@
 package cn.mediinfo.grus.shujuzx.service.impl;
 
-import cn.mediinfo.cyan.aqua.scheduler.annotation.JobDefinition;
 import cn.mediinfo.cyan.aqua.scheduler.api.SchedulerService;
 import cn.mediinfo.cyan.aqua.scheduler.api.SchedulerTriggerService;
-import cn.mediinfo.cyan.aqua.scheduler.api.dto.job.ScheduleBaseCreateDto;
-import cn.mediinfo.cyan.aqua.scheduler.api.dto.trigger.TriggerCreateDto;
-import cn.mediinfo.cyan.aqua.scheduler.impl.DefaultJobDetailImpl;
 import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 import cn.mediinfo.cyan.msf.core.http.ContentType;
 import cn.mediinfo.cyan.msf.core.http.HttpService;
 import cn.mediinfo.cyan.msf.core.util.BeanUtil;
-import cn.mediinfo.cyan.msf.core.util.JacksonUtil;
+import cn.mediinfo.cyan.msf.core.util.DateUtil;
 import cn.mediinfo.cyan.msf.core.util.StringUtil;
 import cn.mediinfo.grus.shujuzx.dto.renwugls.*;
 import cn.mediinfo.grus.shujuzx.model.*;
@@ -24,25 +20,14 @@ import cn.mediinfo.lyra.extension.service.LyraIdentityService;
 import cn.mediinfo.lyra.extension.service.SequenceService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.nimbusds.jose.shaded.gson.JsonObject;
 import com.querydsl.core.types.Expression;
 import jakarta.transaction.Transactional;
-import okhttp3.Response;
+import org.apache.pulsar.shade.org.apache.avro.data.Json;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.Document;
-import javax.xml.transform.Result;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMResult;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Stream;
@@ -93,7 +78,7 @@ public class RenWuGLServiceImpl implements RenWuGLService {
     @Override
     public List<SC_RW_JiBenXXListDto> getJiBenXXList(String likeQuery, String fenLeiDM, Integer qiYongBZ, Integer pageIndex, Integer pageSize) {
         // var entity = schedulerJobService.list(lyraIdentityService.getWeiZhiID(), null, 1, 10, 1);
-        var RenWuTZDZ="http://172.19.126.22:8080/spoon/spoon?file=/opt/kettle/GRUS_CDR/common/updateBusinessTime.ktr";
+//        var RenWuTZDZ="http://172.19.126.22:8080/spoon/spoon?file=/opt/kettle/GRUS_CDR/common/updateBusinessTime.ktr";
 //        var result = jiBenXXRepository.asQuerydsl()
 //                .whereIf(StringUtil.hasText(likeQuery), t -> t.renWuMC.contains(likeQuery))
 //                .whereIf(StringUtil.hasText(fenLeiDM), t -> t.fenLeiDM.eq(fenLeiDM))
@@ -133,6 +118,7 @@ public class RenWuGLServiceImpl implements RenWuGLService {
                                 q.jiBenXX().zuiJinZXRZID,
                                 q.jiBenXX().zhiXingHS,
                                 q.jiBenXX().qiYongBZ,
+                                q.jiBenXX().zhiXingKSSJ.as("zuiJinZXSJ"),
                                 q.tongYongPZ().fuWuQIP.concat(":").concat(q.tongYongPZ().fuWuQDK).concat("/spoon/spoon?file=/opt/kettle").concat(q.jiBenXX().renWuDZ).as("sheJiQDZ")
                         }
                         , SC_RW_JiBenXXListDto.class).fetchPage(pageIndex, pageSize);
@@ -286,6 +272,9 @@ public class RenWuGLServiceImpl implements RenWuGLService {
     @Override
     public SC_RW_ZhiXingRZDto getZhiXingRZDto(String id) {
         var entity = zhiXingRZRepository.findById(id).orElse(null);
+        if (entity != null && entity.getRuCan()!=null) {
+            entity.setRuCan(getJsonStr(entity.getRuCan()));
+        }
         return BeanUtil.copyProperties(entity, SC_RW_ZhiXingRZDto::new);
     }
 
@@ -570,6 +559,7 @@ public class RenWuGLServiceImpl implements RenWuGLService {
     @Override
     public String saveRenWuZXList(List<SC_RW_ZhiXingRZCreateDto> creatDto) {
         var renWuIDs = creatDto.stream().map(SC_RW_ZhiXingRZCreateDto::getRenWuID).toList();
+        var zhixingsj=new Date();
         //jiBenXXRepository.asQuerydsl().where(t -> t.renWuID.in(renWuIDs)).fetch();
         var jiBenXXList = jiBenXXRepository.asQuerydsl()
                 .where(t -> t.renWuID.in(renWuIDs))
@@ -588,18 +578,18 @@ public class RenWuGLServiceImpl implements RenWuGLService {
                                 q.jiBenXX().zhiXingHS,
                                 q.jiBenXX().qiYongBZ,
                                 q.tongYongPZ().renWuDZ,
-                                q.tongYongPZ().fuWuQIP.concat(":").concat(q.tongYongPZ().fuWuQDK).concat("/spoon/kettle/runJob?job=").concat(q.tongYongPZ().renWuDZ).concat("/").concat(q.jiBenXX().renWuMC).as("apiDZ")
+                                q.tongYongPZ().fuWuQIP.concat(":").concat(q.tongYongPZ().fuWuQDK).concat("/spoon/kettle/executeJob?job=/opt/kettle").concat(q.jiBenXX().renWuDZ).as("apiDZ")
                         }
                         , SC_RW_JiBenXXListDto.class).fetch();
 
         StringBuilder resultStr = new StringBuilder();
         jiBenXXList.forEach(jbxxItem -> {
-            if (!Objects.isNull(jbxxItem.getRenWuDZ())) {
+            if (!Objects.isNull(jbxxItem.getApiDZ())) {
                 SC_RW_ZhiXingRZCreateDto item = creatDto.stream().filter(q -> Objects.equals(q.getRenWuID(), jbxxItem.getRenWuID())).findFirst().get();
                 SC_RW_ZhiXingRZModel zhiXingRZEntity = new SC_RW_ZhiXingRZModel();
                 zhiXingRZEntity.setRenWuID(jbxxItem.getRenWuID());
                 zhiXingRZEntity.setRenWuMC(jbxxItem.getRenWuMC());
-                zhiXingRZEntity.setZhiXingSJ(new Date());
+                zhiXingRZEntity.setZhiXingSJ(zhixingsj);
                 zhiXingRZEntity.setZuZhiJGID(lyraIdentityService.getJiGouID());
                 zhiXingRZEntity.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
                 zhiXingRZEntity.setRuCan(item.getRuCan());
@@ -607,11 +597,30 @@ public class RenWuGLServiceImpl implements RenWuGLService {
                 zhiXingRZEntity.setZhiXingRXM(lyraIdentityService.getUserName());
                 zhiXingRZEntity.setZhiXingZTDM("0");
                 zhiXingRZEntity.setZhiXingZTMC("等待");
+                zhiXingRZEntity.setZhiXingKSSJ(zhixingsj);
                 zhiXingRZRepository.save(zhiXingRZEntity);
                 try {
-                    resultStr.append(saveRenWuZX(item, jbxxItem, zhiXingRZEntity.getId()));
+                    resultStr.append(saveRenWuZX(zhiXingRZEntity, jbxxItem, zhiXingRZEntity.getId()));
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    //throw new RuntimeException(e);
+                    resultStr.append(jbxxItem.getRenWuMC()).append("执行失败|");
+                    var zhixingjssj=new Date();
+                    var zhixingkssj=zhiXingRZEntity.getZhiXingKSSJ();
+                    var zhixinghs= DateUtil.getSecondsBetween(zhixingkssj,zhixingjssj);
+                    zhiXingRZRepository.asUpdateDsl().set(t -> t.zhiXingZTDM, "2")
+                            .set(t -> t.zhiXingZTMC, "错误")
+                            .set(t->t.zhiXingKSSJ,zhixingkssj)
+                            .set(t->t.zhiXingJSSJ,zhixingjssj)
+                            .set(t->t.zhiXingHS,zhixinghs)
+                            .where(t -> t.id.eq(zhiXingRZEntity.getId())).execute();
+                    jiBenXXRepository.asUpdateDsl().set(t -> t.zhiXingZTDM, "2")
+                            .set(t -> t.zhiXingZTMC, "错误")
+                            .set(t->t.zuiJinZXRZID,zhiXingRZEntity.getId())
+                            .set(t->t.zhiXingKSSJ,zhixingkssj)
+                            .set(t->t.zhiXingJSSJ,zhixingjssj)
+                            .set(t->t.zhiXingHS,zhixinghs)
+                            .where(t -> t.id.eq(jbxxItem.getId())).execute();
+
                 }
             } else {
                 resultStr.append(jbxxItem.getRenWuMC()).append("地址为空|");
@@ -630,7 +639,7 @@ public class RenWuGLServiceImpl implements RenWuGLService {
      * @return
      * @throws Exception
      */
-    public String saveRenWuZX(SC_RW_ZhiXingRZCreateDto createDto, SC_RW_JiBenXXListDto renWUXXDto, String zhiXingRZID) throws Exception {
+    public String saveRenWuZX(SC_RW_ZhiXingRZModel createDto, SC_RW_JiBenXXListDto renWUXXDto, String zhiXingRZID) throws Exception {
         //返回值
         StringBuilder resultStr = new StringBuilder();
         //参数
@@ -650,8 +659,6 @@ public class RenWuGLServiceImpl implements RenWuGLService {
             }
         }
         //url拼接
-        //String url = renWUXXDto.getRenWuDZ() + "&renWuID=" + renWUXXDto.getRenWuID() + "&zhiXingRZID=" + zhiXingRZID + canShuStr;
-
         String url=renWUXXDto.getApiDZ()+ "&renWuID=" + renWUXXDto.getRenWuID() + "&zhiXingRZID=" + zhiXingRZID + canShuStr;
 
         //region http接口调用返回数据类型为xml httpService返回byte数组
@@ -664,14 +671,44 @@ public class RenWuGLServiceImpl implements RenWuGLService {
         //判断
         if (Objects.equals(jsonNodes.get("result").asText(), "ERROR")) {
             resultStr.append(renWUXXDto.getRenWuMC()).append("执行失败|");
-            zhiXingRZRepository.asUpdateDsl().set(t -> t.zhiXingZTDM, "2").set(t -> t.zhiXingZTMC, "错误").where(t -> t.id.eq(zhiXingRZID)).execute();
-            jiBenXXRepository.asUpdateDsl().set(t -> t.zhiXingZTDM, "2").set(t -> t.zhiXingZTMC, "错误").set(t->t.zuiJinZXRZID,zhiXingRZID).where(t -> t.id.eq(renWUXXDto.getId())).execute();
+            var zhixingjssj=new Date();
+            var zhixingkssj=createDto.getZhiXingKSSJ();
+            var zhixinghs= DateUtil.getSecondsBetween(zhixingkssj,zhixingjssj);
+            zhiXingRZRepository.asUpdateDsl().set(t -> t.zhiXingZTDM, "2")
+                    .set(t -> t.zhiXingZTMC, "错误")
+                    .set(t->t.zhiXingKSSJ,zhixingjssj)
+                    .set(t->t.zhiXingJSSJ,zhixingjssj)
+                    .set(t->t.zhiXingHS,zhixinghs)
+                    .where(t -> t.id.eq(zhiXingRZID)).execute();
+            jiBenXXRepository.asUpdateDsl().set(t -> t.zhiXingZTDM, "2")
+                    .set(t -> t.zhiXingZTMC, "错误")
+                    .set(t->t.zuiJinZXRZID,zhiXingRZID)
+                    .set(t->t.zhiXingKSSJ,zhixingjssj)
+                    .set(t->t.zhiXingJSSJ,zhixingjssj)
+                    .set(t->t.zhiXingHS,zhixinghs)
+                    .where(t -> t.id.eq(renWUXXDto.getId())).execute();
+
         } else {
             zhiXingRZRepository.asUpdateDsl().set(t -> t.zhiXingZTDM, "3").set(t -> t.zhiXingZTMC, "正在执行").where(t -> t.id.eq(zhiXingRZID)).execute();
             jiBenXXRepository.asUpdateDsl().set(t -> t.zhiXingZTDM, "3").set(t -> t.zhiXingZTMC, "正在执行").set(t->t.zuiJinZXRZID,zhiXingRZID).where(t -> t.id.eq(renWUXXDto.getId())).execute();
         }
         //endregion
         return resultStr.toString();
+    }
+
+    @Override
+    public String getJsonStr(String ruCan){
+        var JsonDate=ruCan.split("\n\r");
+        JsonObject jsonObject=new JsonObject();
+        HashMap<String,String> hashMap=new HashMap<>();
+
+        for (String item : JsonDate) {
+            var jsonarr= item.split("=");
+            if (Arrays.stream(jsonarr).count()==2){
+                hashMap.put(jsonarr[0],jsonarr[1]);
+            }
+        }
+        return hashMap.size()>0? Json.toString(hashMap):null;
     }
 
 }

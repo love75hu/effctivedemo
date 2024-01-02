@@ -1116,19 +1116,18 @@ public class FangAnServiceImpl implements FangAnService {
         //子条件列表反转后构建AST树
         var list = node.getChildrenConditions().listIterator(node.getChildrenConditions().size());
         int index = 0;
-        SQLQueryNode currentSqlNode = sqlNode;
         while (list.hasPrevious()) {
             var item = list.previous();
             boolean isGuanXiJD = Objects.isNull(item.getCondition());
             if (0 == index) {
-                currentSqlNode.setRight(getGuanXiNode(transform(item, fieldMap), isGuanXiJD));
+                sqlNode.setRight(getGuanXiNode(transform(item, fieldMap), isGuanXiJD));
             } else if (index == node.getChildrenConditions().size() - 1) {
-                currentSqlNode.setLeft(getGuanXiNode(transform(item, fieldMap), isGuanXiJD));
+                sqlNode.setLeft(getGuanXiNode(transform(item, fieldMap), isGuanXiJD));
             } else {
-                SQLQueryNode childrenSqlNode = new SQLQueryNode(new SQLQueryObject(sqlOperator));
-                childrenSqlNode.setRight(transform(item, fieldMap));
-                currentSqlNode.setLeft(getGuanXiNode(childrenSqlNode, isGuanXiJD));
-                currentSqlNode = currentSqlNode.getLeft();
+                SQLQueryNode parentSqlNode = new SQLQueryNode(new SQLQueryObject(sqlOperator));
+                sqlNode.setLeft(getGuanXiNode(transform(item, fieldMap), isGuanXiJD));
+                parentSqlNode.setRight(sqlNode);
+                sqlNode = parentSqlNode;
             }
             index++;
         }

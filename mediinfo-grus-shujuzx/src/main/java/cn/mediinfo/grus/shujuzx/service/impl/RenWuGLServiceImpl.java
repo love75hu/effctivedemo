@@ -272,9 +272,9 @@ public class RenWuGLServiceImpl implements RenWuGLService {
     @Override
     public SC_RW_ZhiXingRZDto getZhiXingRZDto(String id) {
         var entity = zhiXingRZRepository.findById(id).orElse(null);
-        if (entity != null && entity.getRuCan()!=null) {
-            entity.setRuCan(getJsonStr(entity.getRuCan()));
-        }
+//        if (entity != null && entity.getRuCan()!=null) {
+//            entity.setRuCan(getJsonStr(entity.getRuCan()));
+//        }
         return BeanUtil.copyProperties(entity, SC_RW_ZhiXingRZDto::new);
     }
 
@@ -539,9 +539,9 @@ public class RenWuGLServiceImpl implements RenWuGLService {
                 .select(q -> new Expression<?>[]{
                         q.tongYongPZ().zuZhiJGID,
                         q.tongYongPZ().zuZhiJGMC,
-//                        q.tongYongPZ().renWuDZ,
+                        q.tongYongPZ().renWuDZ,
                         q.tongYongPZ().fuWuQIP,
-                        q.tongYongPZ().fuWuQIP.concat(":").concat(q.tongYongPZ().fuWuQDK).concat(q.tongYongPZ().renWuDZ).as("renWuDZ"),
+                        //q.tongYongPZ().fuWuQIP.concat(":").concat(q.tongYongPZ().fuWuQDK).concat(q.tongYongPZ().renWuDZ).as("renWuDZ"),
                         q.tongYongPZ().id,
                         q.tongYongPZ().fuWuQDK,
                         q.shuJuYZY().zhiYuID.as("fenLeiDM"),

@@ -36,4 +36,7 @@ public class SC_RW_ZhiXingRZListDto {
     private String zhiXingRXM;
     @Schema(description = "任务地址")
     private String renWuDZ;
+    @Schema(description = "最新执行时间")
+    private Date zuiJinZXSJ;
+
 }

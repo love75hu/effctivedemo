@@ -52,4 +52,6 @@ public interface RenWuGLService {
     SC_RW_TongYongPZDto getTongYongPZByFLDM(String fenLeiDM);
 
     String saveRenWuZXList(List<SC_RW_ZhiXingRZCreateDto> creatDto);
+
+    String getJsonStr(String ruCan);
 }

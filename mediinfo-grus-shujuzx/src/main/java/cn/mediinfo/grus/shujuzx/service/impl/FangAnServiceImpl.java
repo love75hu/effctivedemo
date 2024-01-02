@@ -223,6 +223,7 @@ public class FangAnServiceImpl implements FangAnService {
         if(shiTuIds.stream().anyMatch(StringUtil::isBlank)){
             throw new TongYongYWException("视图ID不能为空");
         }
+        shiTuIds.addAll(fangAnSCList.stream().filter(p -> "1".equals(p.getZhiBiaoLXDM())).map(FangAnSC::getZhiBiaoFLID).toList());
         //from
         ShuJuXSTXQDto shuJuXSTXQ = Optional.ofNullable(shiTuMXService.getShuJuSTXQDto(shiTuIds)).orElse(new ShuJuXSTXQDto());
         List<TableDTO> tableList = Optional.ofNullable(shuJuXSTXQ.getTableDTO()).orElse(ListUtil.toList());
@@ -606,7 +607,7 @@ public class FangAnServiceImpl implements FangAnService {
         if (Objects.equals(mergeType, 1)) {
             guanJianZD = "bingrenid";
         }
-        String guanJianZDSql = MessageFormat.format("select {0} from ({1}) tt group by {0} order by {0} limit {2,number,#} offset {3,number,#}", guanJianZD, fangAnCXLS.getChaXunSQL(), pageSize, pageSize * (pageIndex - 1));
+        String guanJianZDSql = MessageFormat.format("select {0} from (select {0},row_number() over(order by {0}) as rn from ({1}) tt group by {0}) tt where rn>{3,number,#} and rn<={2,number,#}", guanJianZD, fangAnCXLS.getChaXunSQL(), pageSize * pageIndex, pageSize * (pageIndex - 1));
         log.info("关键字段查询语句：{}", guanJianZDSql);
         List<Map<String, Object>> guanJianZDList = linChuangRemoteService.getZiDianList(new ChaXunDto(guanJianZDSql)).getData("数据查询失败");
         if (CollUtil.isEmpty(guanJianZDList)) {
@@ -764,11 +765,11 @@ public class FangAnServiceImpl implements FangAnService {
         if (StringUtil.isBlank(fangAnCXLS.getChaXunSQL())) {
             throw new TongYongYWException("查询方案不存在");
         }
-        String jieGuoSql = MessageFormat.format("select distinct * from ({0}) tt limit {1,number,#} offset {2,number,#}", fangAnCXLS.getChaXunSQL(), pageSize, pageSize * (pageIndex - 1));
+        String jieGuoSql = MessageFormat.format("select * from (select *,row_number() over() as rn from (select distinct * from ({0}) tt) tt) tt where rn>{2,number,#} and rn<={1,number,#}", fangAnCXLS.getChaXunSQL(), pageSize * pageIndex, pageSize * (pageIndex - 1));
         log.info("结果查询语句：{}", jieGuoSql);
         List<Map<String, Object>> jieGuoList = linChuangRemoteService.getZiDianList(new ChaXunDto(jieGuoSql)).getData("数据查询失败");
         if (CollUtil.isEmpty(jieGuoList)) {
-            return null;
+            return new ArrayList<>();
         }
         bingRenIDList.addAll(jieGuoList.stream().map(p->Optional.ofNullable(p.get("bingrenid")).orElse("").toString()).toList());
         //解析sql,获取字段与表的关系
@@ -858,17 +859,18 @@ public class FangAnServiceImpl implements FangAnService {
     public List<ByteArrayOutputStream> getFangAnJGExcelList(String fangAnCXLSId, Integer mergeType, Integer pageSize) throws TongYongYWException, RuntimeException, YuanChengException {
         List<ByteArrayOutputStream> excelList=new ArrayList<>();
         Long jieGuoCount=getFangAnJGCount(fangAnCXLSId,mergeType);
-        if(jieGuoCount.equals(0L)){
-            return excelList;
-        }
+
         int pageCount= ExportUtils.getPageCount(Math.toIntExact(jieGuoCount),pageSize);
-        for(int i=1;i<=pageCount;i++) {
+        int i=1;
+        //用do...while可以解决数据为空时返回的压缩包不能解压的问题
+        do {
             List<List<QueryResultDTO>> fangAnJGList = getFangAnJGList(fangAnCXLSId, mergeType, i, pageSize, false);
+            i++;
             try (XSSFWorkbook wb = new XSSFWorkbook()) {
-                XSSFSheet sheet=wb.createSheet("结果列表");
-                int index=0;
-                for(List<QueryResultDTO> fangAnJGRow:fangAnJGList){
-                    buildSheet(sheet,fangAnJGRow,index);
+                XSSFSheet sheet = wb.createSheet("结果列表");
+                int index = 0;
+                for (List<QueryResultDTO> fangAnJGRow : fangAnJGList) {
+                    buildSheet(sheet, fangAnJGRow, index);
                     index++;
                 }
                 // 将Workbook写入内存流
@@ -879,7 +881,8 @@ public class FangAnServiceImpl implements FangAnService {
             } catch (IOException e) {
                 throw new TongYongYWException(e.getMessage());
             }
-        }
+        } while (i <= pageCount);
+
         return excelList;
     }
 
@@ -957,7 +960,7 @@ public class FangAnServiceImpl implements FangAnService {
 
         //根据合并方式分页获取关键字段
         String guanJianZD = "bingrenid";
-        String guanJianZDSql = MessageFormat.format("select {0} from ({1}) tt group by {0} order by {0} limit {2,number,#} offset {3,number,#}", guanJianZD, bingLiCXJCSql, pageSize, pageSize * (pageIndex - 1));
+        String guanJianZDSql = MessageFormat.format("select {0} from (select {0},row_number() over(order by {0}) as rn from ({1}) tt group by {0}) tt where rn<= {2,number,#} and rn>{3,number,#}", guanJianZD, bingLiCXJCSql, pageSize * pageIndex, pageSize * (pageIndex - 1));
 
         List<String> bingRenIDList = linChuangRemoteService.getStringList(new ChaXunDto(guanJianZDSql)).getData("数据查询失败");
 
@@ -1452,7 +1455,7 @@ public class FangAnServiceImpl implements FangAnService {
      * @param fangAnLXDM   方案类型代码
      * @return 输出字段
      */
-    private String getQueryFields(List<FangAnSC> fangAnSCList, Map<String, Tuple.Tuple4<String, String, Boolean, Boolean>> aliasMap, String fangAnLXDM) {
+    private String getQueryFields(List<FangAnSC> fangAnSCList, Map<String, Tuple.Tuple4<String, String, Boolean, Boolean>> aliasMap, String fangAnLXDM) throws TongYongYWException {
         List<String> fields = ListUtil.toList();
         //增加基础表默认输出字段
         Tuple.Tuple4<String, String, Boolean, Boolean> jiChuTable = aliasMap.values().stream().filter(Tuple.Tuple4::item4).findFirst().orElse(null);
@@ -1492,12 +1495,18 @@ public class FangAnServiceImpl implements FangAnService {
                 case "2": //检验
                     key = aliasMap.keySet().stream().filter(p -> p.contains("jy_bg_baogaomx")).findFirst().orElse("");
                     alias = aliasMap.containsKey(key) ? aliasMap.get(key).item1() : "";
+                    if(StringUtils.isBlank(alias)){
+                        throw new TongYongYWException("请配置检验视图查询条件！");
+                    }
                     fields.add(MessageFormat.format("(case when {0}.shiyanxmdm=''{1}'' and {0}.jianyanxmid=''{2}'' then concat({0}.shiyanjg,{0}.danwei) else '''' end) as {3}", alias, e.getZhiBiaoID(), e.getZhiBiaoFLID(), "zd_" + fangAnSCList.indexOf(e)));
                     break;
                 case "3": //检查
                     key = aliasMap.keySet().stream().filter(p -> p.contains("jc_bg_baogaoxx")).findFirst().orElse("");
                     String shenQingBWKey = aliasMap.keySet().stream().filter(p -> p.contains("jc_sq_shenqingdbw")).findFirst().orElse("");
                     alias = aliasMap.containsKey(key) ? aliasMap.get(key).item1() : "";
+                    if(StringUtils.isBlank(alias)){
+                        throw new TongYongYWException("请配置检查视图查询条件！");
+                    }
                     String shenQingBWAlias = aliasMap.containsKey(shenQingBWKey) ? aliasMap.get(shenQingBWKey).item1() : "";
                     fields.add(MessageFormat.format("(case when {0}.jianchabwid=''{1}'' and {0}.jianchaxmid=''{4}'' then {2}.zhenduanjg else '''' end) as {3}", shenQingBWAlias, e.getZhiBiaoID(), alias, "zd_" + fangAnSCList.indexOf(e),e.getZhiBiaoFLID()));
                     break;
@@ -1507,11 +1516,17 @@ public class FangAnServiceImpl implements FangAnService {
                         case "1": //门诊
                             key = aliasMap.keySet().stream().filter(p -> p.contains("yz_mz_yizhuxx")).findFirst().orElse("");
                             alias = aliasMap.containsKey(key) ? aliasMap.get(key).item1() : "";
+                            if(StringUtils.isBlank(alias)){
+                                throw new TongYongYWException("请配置药品视图查询条件！");
+                            }
                             fields.add(MessageFormat.format("(case when {0}.guigeid=''{1}'' then concat({0}.yicijl,{0}.yicijldw) else '''' end) as {2}", alias, e.getZhiBiaoID(), "zd_" + fangAnSCList.indexOf(e)));
                             break;
                         case "3": //住院
                             key = aliasMap.keySet().stream().filter(p -> p.contains("yz_zy_yizhuxx")).findFirst().orElse("");
                             alias = aliasMap.containsKey(key) ? aliasMap.get(key).item1() : "";
+                            if(StringUtils.isBlank(alias)){
+                                throw new TongYongYWException("请配置药品视图查询条件！");
+                            }
                             fields.add(MessageFormat.format("(case when {0}.guigeid=''{1}'' then concat({0}.yicijl,{0}.yicijldw) else '''' end) as {2}", alias, e.getZhiBiaoID(), "zd_" + fangAnSCList.indexOf(e)));
                             break;
                         default:
@@ -1601,21 +1616,29 @@ public class FangAnServiceImpl implements FangAnService {
             builder.append(tableName);
             return builder.toString();
         }
-        builder.append("(select ");
         //字段名列表
         List<String> ziDuanMingList = new ArrayList<>();
         //表名列表
         Set<String> biaoMingList = new HashSet<>();
+        //表结构中配置的关联方式如果为SQL关联则为非内联模式，关联方式为字段关联则为内联模式
+        boolean isNeiLian = !"1".equals(table.getGuanLianFSDM());
         //获取视图中表关系
-        String relationCondition = Optional.ofNullable(table.getTableRelationConditionList()).orElse("");
+        String relationCondition = Optional.ofNullable(table.getTableRelationConditionList()).orElse("").replaceAll("\n"," ");
+        if (!isNeiLian && StringUtils.isBlank(relationCondition)) {
+            return builder.toString();
+        }
+        builder.append("(select ");
         //获取视图中过滤条件
-        String filterCondition = Optional.ofNullable(table.getFilterConditionList()).orElse("");
+        String filterCondition = Optional.ofNullable(table.getFilterConditionList()).orElse("").replaceAll("\n"," ");
         int index = 0;
         for (SchemaTable f : table.getSchemaTableList()) {
             //视图内联，不传shiTuID拼接
             String key = formatBiaoMing("", f.getMoShi(), f.getBiaoMing());
             for (ShuJuJMXZDDto p : Optional.ofNullable(f.getShuJuJMXZDDtos()).orElse(new ArrayList<>())) {
-                ziDuanMingList.add("l" + index + "." + p.getZiDuanBM());
+                ziDuanMingList.add(isNeiLian ? "l" + index + "." + p.getZiDuanBM() : f.getBiaoMing() + "." + p.getZiDuanBM());
+            }
+            if (!isNeiLian) {
+                continue;
             }
             biaoMingList.add(key + " l" + index);
             relationCondition = relationCondition.replaceAll("(?i)" + key, "l" + index);
@@ -1624,9 +1647,9 @@ public class FangAnServiceImpl implements FangAnService {
         }
         builder.append(CollUtil.join(ziDuanMingList, ","));
         builder.append(" from ");
-        builder.append(CollUtil.join(biaoMingList, ","));
+        builder.append(isNeiLian ? CollUtil.join(biaoMingList, ",") : relationCondition);
         builder.append(" where 1=1 ");
-        if (StringUtils.isNotBlank(relationCondition)) {
+        if (StringUtils.isNotBlank(relationCondition) && isNeiLian) {
             builder.append(" AND ");
             builder.append(relationCondition);
         }

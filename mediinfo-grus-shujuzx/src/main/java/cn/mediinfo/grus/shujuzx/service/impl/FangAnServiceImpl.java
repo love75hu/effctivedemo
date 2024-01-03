@@ -690,10 +690,7 @@ public class FangAnServiceImpl implements FangAnService {
                 }
                 bingRenFZ.setBingRenJBXX(jiBenXXSCJGList);
             }
-            if (CollUtil.isEmpty(qiTaSCList)) {
-                bingRenFZ.setFangAnCXJZFZList(new ArrayList<>());
-                return bingRenFZ;
-            }
+
             AtomicInteger shunXuHao= new AtomicInteger();
             List<FangAnCXJZFZDto> jiuZhenFZList = p.getValue().stream().sorted(Comparator.comparing(jz->DateUtil.parse(Optional.ofNullable(jz.get("jiuzhenrq")).orElse("").toString()),Comparator.nullsLast(Comparator.reverseOrder()))).collect(Collectors.groupingBy(jz -> CollUtil.toList(jz.get("zuzhijgid"), jz.get("jiuzhenid")),LinkedHashMap::new, Collectors.toList())).entrySet().stream().map(jz -> {
                 FangAnCXJZFZDto jiuZhenFZ = new FangAnCXJZFZDto();
@@ -701,41 +698,44 @@ public class FangAnServiceImpl implements FangAnService {
                 jiuZhenFZ.setJiuZhenID(String.valueOf(jz.getKey().get(1)));
                 jiuZhenFZ.setJiuZhenRQ(DateUtil.parse(Optional.ofNullable(jz.getValue().get(0).get("jiuzhenrq")).orElse("").toString()));
                 jiuZhenFZ.setShunXuHao(shunXuHao.getAndIncrement());
+
                 List<FangAnCXSTFZDto> shiTuFZList=new ArrayList<>();
                 //非患者基本信息以外的信息绑定
-                int shiTuSXH=0;
-                for(Map.Entry<String,List<FangAnSCDTO>> qiTaSC:qiTaSCList.entrySet()){
-                    FangAnCXSTFZDto shiTuFZ=new FangAnCXSTFZDto();
-                    shiTuFZ.setShiTuDM(qiTaSC.getKey());
-                    shiTuFZ.setShiTuSXH(shiTuSXH++);
-                    AtomicInteger shiTuZJSXH= new AtomicInteger();
-                    var ziDuanIDList=qiTaSC.getValue().stream().map(FangAnSCDTO::getId).toList();
-                    //数据按视图字段分组
-                    var shiTuZJFZList=jz.getValue().stream().map(st->st.entrySet().stream().filter(zd->ziDuanIDList.contains(zd.getKey())).toList()).map(st->{
-                        List<FangAnCXZDFZDto> ziDuanFZList = new ArrayList<>();
-                        int ziDuanSXH=0;
-                        FangAnCXSTZJFZDto shiTuZJFZ=new FangAnCXSTZJFZDto();
-                        //结果按主键分组时会出现值未合并为一列的情况，比如输出2个检验指标时结果中会有4列
-                        //shiTuZJFZ.setShiTuZJZ(String.valueOf(st.getKey()));
-                        shiTuZJFZ.setShiTuZJSXH(shiTuZJSXH.getAndIncrement());
-                        for (FangAnSCDTO fangAnSC : qiTaSC.getValue()) {
-                            FangAnCXZDFZDto ziDuanFZ = new FangAnCXZDFZDto();
-                            ziDuanFZ.setZiDuanDM(fangAnSC.getId());
-                            ziDuanFZ.setZiDuanYDM(fangAnSC.getZhiBiaoID());
-                            ziDuanFZ.setZiDuanMC(fangAnSC.getZhiBiaoMC());
-                            List<Object> zhiList = st.stream().filter(zd ->Objects.equals(fangAnSC.getId(),zd.getKey())&&ObjectUtils.isNotEmpty(zd.getValue())).map(Map.Entry::getValue).distinct().toList();
-                            ziDuanFZ.setZiDuanZhiList(zhiList);
-                            ziDuanFZ.setZiDuanZhiCount(zhiList.size());
-                            ziDuanFZ.setZiDuanSXH(ziDuanSXH++);
-                            ziDuanFZList.add(ziDuanFZ);
-                        }
-                        shiTuZJFZ.setFangAnCXZDFZList(ziDuanFZList);
-                        shiTuZJFZ.setZiDuanCount(ziDuanFZList.size());
-                        return shiTuZJFZ;
-                    }).toList();
-                    shiTuFZ.setFangAnCXSTZJFZList(shiTuZJFZList);
-                    shiTuFZ.setShiTuZJCount(shiTuZJFZList.size());
-                    shiTuFZList.add(shiTuFZ);
+                if (CollUtil.isNotEmpty(qiTaSCList)) {
+                    int shiTuSXH = 0;
+                    for (Map.Entry<String, List<FangAnSCDTO>> qiTaSC : qiTaSCList.entrySet()) {
+                        FangAnCXSTFZDto shiTuFZ = new FangAnCXSTFZDto();
+                        shiTuFZ.setShiTuDM(qiTaSC.getKey());
+                        shiTuFZ.setShiTuSXH(shiTuSXH++);
+                        AtomicInteger shiTuZJSXH = new AtomicInteger();
+                        var ziDuanIDList = qiTaSC.getValue().stream().map(FangAnSCDTO::getId).toList();
+                        //数据按视图字段分组
+                        var shiTuZJFZList = jz.getValue().stream().map(st -> st.entrySet().stream().filter(zd -> ziDuanIDList.contains(zd.getKey())).toList()).map(st -> {
+                            List<FangAnCXZDFZDto> ziDuanFZList = new ArrayList<>();
+                            int ziDuanSXH = 0;
+                            FangAnCXSTZJFZDto shiTuZJFZ = new FangAnCXSTZJFZDto();
+                            //结果按主键分组时会出现值未合并为一列的情况，比如输出2个检验指标时结果中会有4列
+                            //shiTuZJFZ.setShiTuZJZ(String.valueOf(st.getKey()));
+                            shiTuZJFZ.setShiTuZJSXH(shiTuZJSXH.getAndIncrement());
+                            for (FangAnSCDTO fangAnSC : qiTaSC.getValue()) {
+                                FangAnCXZDFZDto ziDuanFZ = new FangAnCXZDFZDto();
+                                ziDuanFZ.setZiDuanDM(fangAnSC.getId());
+                                ziDuanFZ.setZiDuanYDM(fangAnSC.getZhiBiaoID());
+                                ziDuanFZ.setZiDuanMC(fangAnSC.getZhiBiaoMC());
+                                List<Object> zhiList = st.stream().filter(zd -> Objects.equals(fangAnSC.getId(), zd.getKey()) && ObjectUtils.isNotEmpty(zd.getValue())).map(Map.Entry::getValue).distinct().toList();
+                                ziDuanFZ.setZiDuanZhiList(zhiList);
+                                ziDuanFZ.setZiDuanZhiCount(zhiList.size());
+                                ziDuanFZ.setZiDuanSXH(ziDuanSXH++);
+                                ziDuanFZList.add(ziDuanFZ);
+                            }
+                            shiTuZJFZ.setFangAnCXZDFZList(ziDuanFZList);
+                            shiTuZJFZ.setZiDuanCount(ziDuanFZList.size());
+                            return shiTuZJFZ;
+                        }).toList();
+                        shiTuFZ.setFangAnCXSTZJFZList(shiTuZJFZList);
+                        shiTuFZ.setShiTuZJCount(shiTuZJFZList.size());
+                        shiTuFZList.add(shiTuFZ);
+                    }
                 }
                 jiuZhenFZ.setFangAnCXSTFZList(shiTuFZList);
                 return jiuZhenFZ;
@@ -1402,14 +1402,14 @@ public class FangAnServiceImpl implements FangAnService {
             if (CollUtil.isEmpty(e.getSchemaTableList()) || e.getSchemaTableList().size() > 1) {
                 return;
             }
-            String filterCondition = e.getFilterConditionList();
+            String filterCondition =Optional.ofNullable(e.getFilterConditionList()).orElse("").replaceAll("\n"," ");
             for (SchemaTable f : e.getSchemaTableList()) {
                 String key = formatBiaoMing(f.getShiTuID(), f.getMoShi(), f.getBiaoMing());
-                if (Objects.isNull(filterCondition)) {
+                if (StringUtils.isBlank(filterCondition)) {
                     return;
                 }
                 String alias = aliasMap.get(key).item1();
-                filterCondition = filterCondition.replaceAll("(?i)" + key, alias);
+                filterCondition = filterCondition.replaceAll("(?i)" + formatBiaoMing("", f.getMoShi(), f.getBiaoMing()), alias);
             }
             builder.append("(");
             builder.append(filterCondition);

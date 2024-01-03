@@ -5,6 +5,7 @@ import cn.mediinfo.cyan.msf.orm.repository.querydsl.impl.MsfQuerydslExpression;
 import cn.mediinfo.grus.shujuzx.dto.renwugls.*;
 import cn.mediinfo.grus.shujuzx.model.QSC_RW_JiBenXXModel;
 import cn.mediinfo.grus.shujuzx.model.SC_RW_JiBenXXModel;
+import jakarta.transaction.Transactional;
 
 import java.io.IOException;
 import java.util.Date;
@@ -25,6 +26,9 @@ public interface RenWuGLService {
     String addRenWuJBXX(SC_RW_JiBenXXCreateDto createDto) throws TongYongYWException;
 
     Boolean updateRenWuJBXX(SC_RW_JiBenXXUpdateDto updateDto) throws TongYongYWException;
+
+    @Transactional(rollbackOn = Exception.class)
+    Boolean zuoFeiRenWuJBXX(String id) throws TongYongYWException;
 
     Boolean qiYongRW(String id, Integer qiYongBZ) throws TongYongYWException;
 

@@ -30,7 +30,6 @@ import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
@@ -231,6 +230,24 @@ public class RenWuGLServiceImpl implements RenWuGLService {
     }
 
     /**
+     * 作废任务
+     * @param id
+     * @return
+     * @throws TongYongYWException
+     */
+    @Override
+    @Transactional(rollbackOn = Exception.class)
+    public Boolean zuoFeiRenWuJBXX(String id) throws TongYongYWException {
+        var entity = jiBenXXRepository.findById(id).orElse(null);
+        if (null == entity) {
+            throw new TongYongYWException("该数据源值域不存在!");
+        }
+        //删除数据源值域
+        jiBenXXRepository.delete(entity);
+        return true;
+    }
+
+    /**
      * 启用任务
      *
      * @param id
@@ -352,17 +369,32 @@ public class RenWuGLServiceImpl implements RenWuGLService {
         delIDList.removeAll(createShuJuYIDs);
         //需新增的数据源
         List<SC_RW_ShuJuYuanDto> addList = createDto.getShuJuYuanDtoList().stream().filter(t -> addIDList.contains(t.getShuJuYID())).toList();
-
         var entity = BeanUtil.copyListProperties(addList, SC_RW_ShuJuYuanModel::new, (s, t) -> {
             t.setZuZhiJGID(lyraIdentityService.getJiGouID());
             t.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
             t.setRenWuID(renWuDto.getRenWuID());
             t.setRenWuMC(renWuDto.getRenWuMC());
-            //t.setQiYongBZ(0);//默认不启用
         });
+
+        //需要修改的数据源
+        var updateIds=new ArrayList<String>(shuJuYIDs);
+        updateIds.removeAll(addIDList);
+        updateIds.removeAll(delIDList);
+        List<SC_RW_ShuJuYuanModel> updateDtos=new ArrayList<>();
+        List<SC_RW_ShuJuYuanDto> updateList= new ArrayList<>(createDto.getShuJuYuanDtoList().stream().filter(t -> updateIds.contains(t.getShuJuYID())).toList());
+        updateList.forEach(item->{
+            var shujuyItem=shuJuYuanList.stream().filter(t->Objects.equals(item.getShuJuYID(),t.getShuJuYID()) ).findFirst().orElse(null);
+            if (shujuyItem != null && !Objects.equals(shujuyItem.getQiYongBZ(), item.getQiYongBZ())) {
+                BeanUtil.mergeProperties(item, shujuyItem);
+                updateDtos.add(shujuyItem);
+            }
+        });
+
+        entity.addAll(updateDtos);
         shuJuYuanRepository.saveAll(entity);
         //需删除的数据源
         shuJuYuanRepository.asDeleteDsl().where(t -> t.shuJuYID.in(delIDList)).execute();
+
         return true;
     }
 
@@ -543,6 +575,7 @@ public class RenWuGLServiceImpl implements RenWuGLService {
      * @return
      */
     @Override
+    @Transactional(rollbackOn = Exception.class)
     public String saveRenWuZXList(List<SC_RW_ZhiXingRZCreateDto> creatDto) {
         var renWuIDs = creatDto.stream().map(SC_RW_ZhiXingRZCreateDto::getRenWuID).toList();
         var zhixingsj=new Date();
@@ -625,6 +658,7 @@ public class RenWuGLServiceImpl implements RenWuGLService {
      * @return
      * @throws Exception
      */
+    @Transactional(rollbackOn = Exception.class)
     public String saveRenWuZX(SC_RW_ZhiXingRZModel createDto, SC_RW_JiBenXXListDto renWUXXDto, String zhiXingRZID) throws Exception {
         //返回值
         StringBuilder resultStr = new StringBuilder();

@@ -10,14 +10,14 @@ import cn.mediinfo.grus.shujuzx.service.RenWuGLService;
 import cn.mediinfo.lyra.extension.service.LyraIdentityService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @Tag(name = "RenWuGLController", description = "ETL管理-任务管理")
@@ -131,6 +131,20 @@ public class RenWuGLController {
     }
 
     /**
+     * 作废基本信息
+     * @param id
+     * @return
+     * @throws TongYongYWException
+     */
+    @Operation(summary = "作废基本信息")
+    @DeleteMapping(path = "ZuoFeiRenWuJBXX")
+    public MsfResponse<Boolean> ZuoFeiRenWuJBXX(@PathVariable @NotEmpty(message = "主键ID必传！") String id) throws TongYongYWException {
+
+        return MsfResponse.success(renWuGLService.zuoFeiRenWuJBXX(id));
+    }
+
+
+    /**
      * 启用任务
      *
      * @param id       主键
@@ -235,7 +249,17 @@ public class RenWuGLController {
         if (!StringUtil.hasText(createDto.getRenWuID())) {
             throw new TongYongYWException("任务ID不能为空");
         }
-
+        //判断是否存在重复保存的数据源数据
+        var shuJuYuanID=createDto.getShuJuYuanDtoList().stream().map(SC_RW_ShuJuYuanDto::getShuJuYID).toList();
+        Set<String> set = new HashSet<>();
+        for (var item : shuJuYuanID) {
+            if (!set.add(item)) {
+                var itemDto=createDto.getShuJuYuanDtoList().stream().filter(t->Objects.equals(t.getShuJuYID(),item)).findFirst().orElse(null);
+                if (itemDto!=null){
+                    throw new TongYongYWException("有相同的数据源名称，不允许保存");
+                }
+            }
+        }
         return MsfResponse.success(renWuGLService.saveShuJuYuanList(createDto));
     }
 

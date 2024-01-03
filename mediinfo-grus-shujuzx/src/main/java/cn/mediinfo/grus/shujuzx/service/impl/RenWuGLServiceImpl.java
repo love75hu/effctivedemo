@@ -30,6 +30,7 @@ import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
@@ -77,35 +78,13 @@ public class RenWuGLServiceImpl implements RenWuGLService {
      */
     @Override
     public List<SC_RW_JiBenXXListDto> getJiBenXXList(String likeQuery, String fenLeiDM, Integer qiYongBZ, Integer pageIndex, Integer pageSize) {
-        // var entity = schedulerJobService.list(lyraIdentityService.getWeiZhiID(), null, 1, 10, 1);
-//        var RenWuTZDZ="http://172.19.126.22:8080/spoon/spoon?file=/opt/kettle/GRUS_CDR/common/updateBusinessTime.ktr";
-//        var result = jiBenXXRepository.asQuerydsl()
-//                .whereIf(StringUtil.hasText(likeQuery), t -> t.renWuMC.contains(likeQuery))
-//                .whereIf(StringUtil.hasText(fenLeiDM), t -> t.fenLeiDM.eq(fenLeiDM))
-//                .whereIf(Objects.equals(qiYongBZ, 1), t -> t.qiYongBZ.eq(qiYongBZ))
-//                .select(q -> new Expression<?>[]{
-//                                q.id,
-//                                q.renWuID,
-//                                q.renWuMC,
-//                                q.renWuSM,
-//                                q.fenLeiMC,
-//                                q.zhiXingPLMC,
-//                                q.zhiXingZTMC,
-//                                q.zhiXingZTDM,
-//                                q.beiZhu,
-//                                q.zuiJinZXRZID,
-//                                q.zhiXingHS,
-//                                q.qiYongBZ
-//                        }
-//                        , SC_RW_JiBenXXListDto.class)
-//                .fetchPage(pageIndex, pageSize);
 
         var result=jiBenXXRepository.asQuerydsl()
                 .whereIf(StringUtil.hasText(likeQuery), t -> t.renWuMC.contains(likeQuery))
                 .whereIf(StringUtil.hasText(fenLeiDM), t -> t.fenLeiDM.eq(fenLeiDM))
                 .whereIf(Objects.equals(qiYongBZ, 1), t -> t.qiYongBZ.eq(qiYongBZ))
                 .leftJoin(tongYongPZRepository.asQuerydsl(), (jiBenXX, tongYongPZ) -> jiBenXX.fenLeiDM.eq(tongYongPZ.fenLeiDM), JiBenXXAndTongYongPZPO::new)
-                .select(q -> new Expression<?>[]{
+                .select(q -> new Expression[]{
                                 q.jiBenXX().id,
                                 q.jiBenXX().renWuID,
                                 q.jiBenXX().renWuMC,
@@ -122,8 +101,15 @@ public class RenWuGLServiceImpl implements RenWuGLService {
                                 q.tongYongPZ().fuWuQIP.concat(":").concat(q.tongYongPZ().fuWuQDK).concat("/spoon/spoon?file=/opt/kettle").concat(q.jiBenXX().renWuDZ).as("sheJiQDZ")
                         }
                         , SC_RW_JiBenXXListDto.class).fetchPage(pageIndex, pageSize);
-
-
+        var renWuIDs=result.stream().map(SC_RW_JiBenXXListDto::getRenWuID).toList();
+        var shuJuYuanDtos=shuJuYuanRepository.asQuerydsl().where(t->t.renWuID.in(renWuIDs)).fetch();
+        result.forEach(item->{
+            var shuJuYuanList=shuJuYuanDtos.stream().filter(t->Objects.equals(t.getRenWuID(),item.getRenWuID())).toList();
+            if(shuJuYuanList.size()>0){
+                var maxYeWuZXSJ=shuJuYuanList.stream().sorted(Comparator.comparing(SC_RW_ShuJuYuanModel::getYeWuZXSJ,Comparator.nullsLast(Comparator.reverseOrder()))).findFirst().orElse(null);
+                item.setYeWuZXSJ(maxYeWuZXSJ.getYeWuZXSJ());
+            }
+        });
         return result;
     }
 
@@ -206,7 +192,7 @@ public class RenWuGLServiceImpl implements RenWuGLService {
             createDto.setZhiXingPLDM(saveZhiXingPZZD(dto));
         }
         var entity = BeanUtil.copyProperties(createDto, SC_RW_JiBenXXModel::new, (s, t) -> {
-            t.setRenWuID(sequenceService.getXuHao("SC_RW_JiBenXX_RenWuID", 7));
+            t.setRenWuID(sequenceService.getXuHao("SC_RW_JiBenXX_RenWuID", 9));
             t.setZuZhiJGID(lyraIdentityService.getJiGouID());
             t.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
         });
@@ -372,7 +358,7 @@ public class RenWuGLServiceImpl implements RenWuGLService {
             t.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
             t.setRenWuID(renWuDto.getRenWuID());
             t.setRenWuMC(renWuDto.getRenWuMC());
-            t.setQiYongBZ(0);//默认不启用
+            //t.setQiYongBZ(0);//默认不启用
         });
         shuJuYuanRepository.saveAll(entity);
         //需删除的数据源
@@ -710,5 +696,14 @@ public class RenWuGLServiceImpl implements RenWuGLService {
         }
         return hashMap.size()>0? Json.toString(hashMap):null;
     }
-
+    @Override
+    public Boolean qiYongSJY(String id, Integer qiYongBZ) throws TongYongYWException {
+        var entity = shuJuYuanRepository.findById(id).orElse(null);
+        if (Objects.isNull(entity)) {
+            throw new TongYongYWException("该任务基本信息不存在");
+        }
+        entity.setQiYongBZ(qiYongBZ);
+        shuJuYuanRepository.save(entity);
+        return true;
+    }
 }

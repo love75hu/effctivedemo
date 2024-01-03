@@ -6,6 +6,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 @Entity
 @Table(name="sc_rw_shujuyuan")
@@ -24,4 +26,6 @@ public class SC_RW_ShuJuYuanModel extends StringMTEntity {
     private String shuJuYMC;
     @Column(columnDefinition = "启用标志")
     private Integer qiYongBZ;
+    @Column(columnDefinition = "业务最新时间")
+    private Date yeWuZXSJ;
 }

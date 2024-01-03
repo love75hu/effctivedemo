@@ -90,6 +90,9 @@ public class RenWuGLController {
     @GetMapping(path = "GetRenWuXXListByIds")
     public MsfResponse<JiBenXXListDto> GetRenWuXXListByIds(@RequestParam List<String> ids) throws TongYongYWException {
 
+        if (ids.size()==0){
+            return MsfResponse.fail(new TongYongYWException("请选择任务"));
+        }
         return MsfResponse.success(renWuGLService.getRenWuXXByIds(ids));
     }
 
@@ -288,4 +291,24 @@ public class RenWuGLController {
         return MsfResponse.success(renWuGLService.saveRenWuZXList(createDto));
     }
 
+
+    /**
+     * 启用任务
+     *
+     * @param id       主键
+     * @param qiYongBZ 启用标志
+     * @return
+     * @throws TongYongYWException
+     */
+    @Operation(summary = "启用数据源")
+    @PutMapping(path = "QiYongSJY")
+    public MsfResponse<Boolean> qiYongSJY(String id, Integer qiYongBZ) throws TongYongYWException {
+        if (!StringUtil.hasText(id)) {
+            throw new TongYongYWException("主键ID不能为空");
+        }
+        if (Objects.isNull(qiYongBZ)) {
+            throw new TongYongYWException("启用标志不能为空");
+        }
+        return MsfResponse.success(renWuGLService.qiYongRW(id, qiYongBZ));
+    }
 }

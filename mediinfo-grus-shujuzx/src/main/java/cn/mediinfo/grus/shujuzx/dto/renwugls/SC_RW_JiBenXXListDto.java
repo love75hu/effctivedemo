@@ -2,9 +2,7 @@ package cn.mediinfo.grus.shujuzx.dto.renwugls;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
@@ -45,5 +43,7 @@ public class SC_RW_JiBenXXListDto {
     private String apiDZ;
     @Schema(description = "最近执行时间")
     private Date zuiJinZXSJ;
+    @Schema(description = "业务最新时间")
+    private Date yeWuZXSJ;
 
 }

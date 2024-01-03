@@ -54,4 +54,7 @@ public interface RenWuGLService {
     String saveRenWuZXList(List<SC_RW_ZhiXingRZCreateDto> creatDto);
 
     String getJsonStr(String ruCan);
+
+    Boolean qiYongSJY(String id, Integer qiYongBZ) throws TongYongYWException;
+
 }

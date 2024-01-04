@@ -120,7 +120,7 @@ public class ZhiBiaoXXServiceImpl implements ZhiBiaoXXService {
     public Boolean addZhiBiaoXX(ZhiBiaoXXCreateDto createDto) throws TongYongYWException {
         String zhiBiaoFLID;
         if (StringUtil.notHasText(createDto.getZhiBiaoID()) && createDto.getZhiBiaoLXDM().equals(ZhiBiaoLXDMEnum.YAO_PIN.getZhiBiaoLXDM())) {
-            zhiBiaoFLID = sequenceService.getXuHao("SC_CX_ZhiBiaoXX_ZhiBiaoFLID", 7);
+            zhiBiaoFLID = sequenceService.getXuHao("SC_CX_ZhiBiaoXX_ZhiBiaoFLID", 8);
             boolean existZhiBiaoMC = zhiBiaoXXRepository.existsZhiBiaoFL(lyraIdentityService.getJiGouID(), createDto.getZhiBiaoLXDM(), zhiBiaoFLID, createDto.getZhiBiaoFLMC());
             if (existZhiBiaoMC) {
                 throw new TongYongYWException("指标分类名称或分类ID已存在，请重新确认! ");

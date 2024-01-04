@@ -7,10 +7,7 @@ import cn.mediinfo.cyan.msf.core.response.MsfResponse;
 import cn.mediinfo.grus.shujuzx.dto.shujuylbs.SC_ZD_ShuJuYLBCreateDto;
 import cn.mediinfo.grus.shujuzx.dto.shujuylbs.SC_ZD_ShuJuYLBDto;
 import cn.mediinfo.grus.shujuzx.dto.shujuylbs.SC_ZD_ShuJuYLBUpdateDto;
-import cn.mediinfo.grus.shujuzx.dto.shujuyzys.SC_ZD_ShuJuYZYCreateDto;
-import cn.mediinfo.grus.shujuzx.dto.shujuyzys.SC_ZD_ShuJuYZYDto;
-import cn.mediinfo.grus.shujuzx.dto.shujuyzys.SC_ZD_ShuJuYZYListDto;
-import cn.mediinfo.grus.shujuzx.dto.shujuyzys.SC_ZD_ShuJuYZYUpdateDto;
+import cn.mediinfo.grus.shujuzx.dto.shujuyzys.*;
 import cn.mediinfo.grus.shujuzx.service.ShuJuYLBService;
 import cn.mediinfo.grus.shujuzx.service.ShuJuYZYService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -230,4 +227,18 @@ public class YeWuZDController {
                                               @RequestParam(required = false) String likeQuery) throws WeiZhaoDSJException {
         return MsfResponse.success(shuJuYZYService.getShuJuYZYCount(zuZhiJGID, shuJuYLBID, likeQuery));
     }
+
+    /**
+     * 根据数据源类别ID查询值域树list
+     *
+     * @param shuJuYLBID
+     * @return
+     * @throws
+     */
+    @Operation(summary = "根据数据源类别ID查询值域树list")
+    @GetMapping("GetShuJuYZYTreeListByLBID")
+    public MsfResponse<List<TreeDto>> GetShuJuYZYTreeListByLBID(@RequestParam String shuJuYLBID) {
+        return MsfResponse.success(shuJuYZYService.getShuJuYZYTreeListByLBID(shuJuYLBID));
+    }
+
 }

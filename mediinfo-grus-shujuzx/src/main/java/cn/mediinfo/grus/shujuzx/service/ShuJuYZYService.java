@@ -3,10 +3,7 @@ package cn.mediinfo.grus.shujuzx.service;
 import cn.mediinfo.cyan.msf.core.exception.CanShuException;
 import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
-import cn.mediinfo.grus.shujuzx.dto.shujuyzys.SC_ZD_ShuJuYZYCreateDto;
-import cn.mediinfo.grus.shujuzx.dto.shujuyzys.SC_ZD_ShuJuYZYDto;
-import cn.mediinfo.grus.shujuzx.dto.shujuyzys.SC_ZD_ShuJuYZYListDto;
-import cn.mediinfo.grus.shujuzx.dto.shujuyzys.SC_ZD_ShuJuYZYUpdateDto;
+import cn.mediinfo.grus.shujuzx.dto.shujuyzys.*;
 
 import java.util.List;
 
@@ -86,6 +83,12 @@ public interface ShuJuYZYService {
      * @throws WeiZhaoDSJException
      */
     long getShuJuYZYCount(String zuZhiJGID, String shuJuYLBID, String likeQuery) throws WeiZhaoDSJException;
-
+    /**
+     * 根据数据源类别ID获取数据源值域树
+     *
+     * @param shuJuYLBID
+     * @return
+     */
+    List<TreeDto> getShuJuYZYTreeListByLBID(String shuJuYLBID);
 
 }

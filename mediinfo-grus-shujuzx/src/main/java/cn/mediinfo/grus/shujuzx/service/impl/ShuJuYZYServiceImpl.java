@@ -280,4 +280,83 @@ public class ShuJuYZYServiceImpl implements ShuJuYZYService {
         }
         return query.fetch().size();
     }
+
+    /**
+     * 根据数据源类别ID获取数据源值域树
+     *
+     * @param shuJuYLBID
+     * @return
+     * @throws
+     */
+    @Override
+    public List<TreeDto> getShuJuYZYTreeListByLBID(String shuJuYLBID) {
+        var entityList = sc_zd_shuJuYZYRepository.findByShuJuYLBID(shuJuYLBID).stream().toList();
+        List<TreeDto> resultList = new ArrayList<>();
+        //拼装成树形结构、获取一级
+        List<String> allSJYZYIDs = entityList.stream().map(SC_ZD_ShuJuYZYModel::getBiaoZhunDM).toList();
+        List<SC_ZD_ShuJuYZYModel> yiJiZYList = entityList.stream().filter(x -> !allSJYZYIDs.contains(x.getFuJiDM())).toList();
+        //设置 resultList
+        setResultList(resultList, entityList, yiJiZYList);
+        return resultList;
+    }
+
+    private void setResultList(List<TreeDto> resultList, List<SC_ZD_ShuJuYZYModel> allZhiYuList, List<SC_ZD_ShuJuYZYModel> yiJiZYList) {
+        for (SC_ZD_ShuJuYZYModel item : yiJiZYList) {
+            TreeDto root = new TreeDto();
+            root.setDaiMa(item.getBiaoZhunDM());
+            root.setId(item.getId());
+            root.setName(item.getBiaoZhunMC());
+            root.setLabel(item.getBiaoZhunMC());
+            root.setValue(item.getBiaoZhunDM());
+            root.setPId("0");
+            root.setShangJiSJYZYDM(item.getFuJiDM());
+            root.setMoJiBZ(item.getMoJiBZ());
+            root.setChildren(new ArrayList<TreeDto>());
+            //  root.setJiGouQXBZ((JiGouIDs.contains(ZuZhiJGConstant.STRING_ZERO) || JiGouIDs.contains(item.getZuZhiJGID())) ? ZuZhiJGConstant.INTEGER_1 : ZuZhiJGConstant.INTEGER_0);
+            List<SC_ZD_ShuJuYZYModel> childrenSJYZY = new ArrayList<>();
+            childrenSJYZY = allZhiYuList.stream().filter(x -> item.getBiaoZhunDM().equals(x.getFuJiDM())).toList();
+            resultList.add(getDownChildren(allZhiYuList, childrenSJYZY, root));
+        }
+    }
+    private TreeDto getDownChildren(List<SC_ZD_ShuJuYZYModel> allData, List<SC_ZD_ShuJuYZYModel> child, TreeDto parent) {
+        List<SC_ZD_ShuJuYZYModel> childList = child.stream().sorted(Comparator.comparing(SC_ZD_ShuJuYZYModel::getShunXuHao, Comparator.nullsLast(Integer::compareTo))).toList();
+        for (SC_ZD_ShuJuYZYModel item : childList) {
+            List<SC_ZD_ShuJuYZYModel> list = allData.stream().filter(o -> item.getBiaoZhunDM().equals(o.getFuJiDM())).toList();
+            if (list.size() > 0) {
+                setValues(allData, parent, item, list, "0");
+            } else {
+                setValues(null, parent, item, null, "1");
+            }
+        }
+        return parent;
+    }
+
+    /**
+     * 设置值
+     *
+     * @param allData
+     * @param parent
+     * @param item
+     * @param list
+     * @param flag
+     */
+    private void setValues(List<SC_ZD_ShuJuYZYModel> allData, TreeDto parent,  SC_ZD_ShuJuYZYModel item,
+                           List<SC_ZD_ShuJuYZYModel> list, String flag) {
+        TreeDto childNode = new TreeDto();
+        childNode.setDaiMa(item.getBiaoZhunDM());
+        childNode.setId(item.getId());
+        childNode.setName(item.getBiaoZhunMC());
+        childNode.setLabel(item.getBiaoZhunMC());
+        childNode.setValue(item.getBiaoZhunDM());
+        childNode.setPId(parent.getId());
+        childNode.setShangJiSJYZYDM(item.getFuJiDM());
+        childNode.setMoJiBZ(item.getMoJiBZ());
+        if ("0".equals(flag)) {
+            childNode.setChildren(new ArrayList<TreeDto>());
+            parent.getChildren().add(getDownChildren(allData, list, childNode));
+        } else {
+            parent.getChildren().add(childNode);
+        }
+
+    }
 }

@@ -1,5 +1,6 @@
 package cn.mediinfo.grus.shujuzx.service.impl;
 
+import cn.mediinfo.cyan.aqua.scheduler.annotation.JobDefinition;
 import cn.mediinfo.cyan.aqua.scheduler.api.SchedulerService;
 import cn.mediinfo.cyan.aqua.scheduler.api.SchedulerTriggerService;
 import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
@@ -107,9 +108,11 @@ public class RenWuGLServiceImpl implements RenWuGLService {
         var renWuIDs = result.stream().map(SC_RW_JiBenXXListDto::getRenWuID).toList();
         var shuJuYuanDtos = shuJuYuanRepository.asQuerydsl().where(t -> t.renWuID.in(renWuIDs)).fetch();
         result.forEach(item -> {
-            var shejidz = item.getFuWuQIP().concat(":").concat(item.getFuWuQDK()).concat("/spoon/spoon?file=/opt/kettle").concat(item.getRenWuDZ());
+            var shejidz = item.getFuWuQIP().concat(":").concat(item.getFuWuQDK()).concat("/spoon/spoon?file=/opt/kettle");
             if (Objects.isNull(item.getRenWuDZ()) || Objects.equals(item.getRenWuDZ(),"")) {
                  shejidz = item.getFuWuQIP().concat(":").concat(item.getFuWuQDK()).concat("/spoon/spoon?file=/opt/kettle").concat(item.getFuWuQRWDZ()).concat("/").concat(item.getRenWuMC()).concat(".kjb");
+            }else{
+                shejidz=shejidz.concat(item.getRenWuDZ());
             }
             item.setSheJiQDZ(shejidz);
             var shuJuYuanList = shuJuYuanDtos.stream().filter(t -> Objects.equals(t.getRenWuID(), item.getRenWuID())).toList();
@@ -758,4 +761,7 @@ public class RenWuGLServiceImpl implements RenWuGLService {
         shuJuYuanRepository.save(entity);
         return true;
     }
+
+
+   
 }

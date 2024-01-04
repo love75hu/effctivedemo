@@ -40,6 +40,8 @@ class ShiTuXXServiceImpl implements ShiTuXXService {
     private final ShiTuMXService shiTuMXService;
     private final SequenceService sequenceService;
 
+
+
     public ShiTuXXServiceImpl(StringGenerator stringGenerator,
                               SC_CX_ShiTuXXRepository shiTuXXRepository,
                               ShiTuMXService shiTuMXService, SequenceService sequenceService) {
@@ -137,8 +139,9 @@ class ShiTuXXServiceImpl implements ShiTuXXService {
      */
     @Override
     public String addShiTuXX(ShiTuXXDto dto) {
+
         //生成视图id
-        dto.setShiTuID(stringGenerator.Create());
+        dto.setShiTuID(sequenceService.getXuHao("SC_CX_ShiTuxx_ShiTuID", 6));
         //复制属性
     var shiTuXXModel= BeanUtil.copyProperties(dto,SC_CX_ShiTuXXModel::new);
         shiTuXXModel.setZuZhiJGMC(ShuJuZXConstant.TONGYONG_JGMC);

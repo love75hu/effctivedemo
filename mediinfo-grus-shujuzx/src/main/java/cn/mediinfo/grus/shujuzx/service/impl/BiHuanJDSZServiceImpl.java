@@ -92,7 +92,7 @@ public class BiHuanJDSZServiceImpl implements BiHuanJDSZService {
         if (existsJieDianMC) {
             throw new TongYongYWException("节点名称已存在!");
         }
-        createDto.setJieDianID(sequenceService.getXuHao("SC_ZD_BiHuan_JieDianID", 6));
+        createDto.setJieDianID(sequenceService.getXuHao("SC_ZD_BiHuanJD_JieDianID", 6));
         var existsJieDianID = sc_zd_biHuanJDRepository.existsByZuZhiJGIDAndJieDianID(zuZhiJGID, createDto.getJieDianID());
         if (existsJieDianID) {
             throw new TongYongYWException("节点ID已存在!");

@@ -101,7 +101,7 @@ public class FangAnManagerImpl implements FangAnManager {
     @Transactional(rollbackFor = Exception.class)
     public String saveFangAn(FangAnXXSaveRequest request, String sql) {
 
-        String fangAnId = sequenceService.getXuHao("SC_ZD_BIHUANLC", 10);//stringGenerator.Create();
+        String fangAnId = sequenceService.getXuHao("SC_CX_FangAnXX_FangAnID", 10);//stringGenerator.Create();
 
         //判断方案ID是否存在
         if (ObjectUtils.isNotEmpty(fangAnXXRepository.findByFangAnID(fangAnId))) {

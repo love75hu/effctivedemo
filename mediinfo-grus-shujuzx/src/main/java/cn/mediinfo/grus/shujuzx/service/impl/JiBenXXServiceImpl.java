@@ -108,7 +108,7 @@ class JiBenXXServiceImpl implements JiBenXXService {
             jiBenXXRepository.save(jiBenXXModel);
             return dto.getId();
         } else {
-            var biHuanID = sequenceService.getXuHao("SC_BH_JiBenxx_BiHuanID", 6); //闭环id
+            var biHuanID = sequenceService.getXuHao("SC_BH_JiBenXX_BiHuanID", 6); //闭环id
             SC_BH_JiBenXXModel shiTuMXModel = new SC_BH_JiBenXXModel();
             BeanUtil.copyProperties(dto, shiTuMXModel);
             shiTuMXModel.setBiHuanID(biHuanID);
@@ -247,7 +247,7 @@ class JiBenXXServiceImpl implements JiBenXXService {
     public String biHuanSZFZ(String biHuanID, String zuZhiJGID, String zuZhiJGMC) {
 
         SC_BH_JiBenXXModel jiBenXXModel = jiBenXXRepository.findFirstByBiHuanIDAndZuZhiJGID(biHuanID, zuZhiJGID);
-        String newbiHuanID = sequenceService.getXuHao("SC_BH_JiBenxx_BiHuanID", 6); //闭环id
+        String newbiHuanID = sequenceService.getXuHao("SC_BH_JiBenXX_BiHuanID", 6); //闭环id
         String newbiHuanMc = StringUtil.concat(jiBenXXModel.getBiHuanMC(), "(-副本)");
         jiBenXXModel.setId(null);
         jiBenXXModel.setZuZhiJGID(zuZhiJGID);

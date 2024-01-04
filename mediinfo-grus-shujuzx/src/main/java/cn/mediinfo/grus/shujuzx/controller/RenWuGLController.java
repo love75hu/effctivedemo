@@ -138,7 +138,7 @@ public class RenWuGLController {
      */
     @Operation(summary = "作废基本信息")
     @DeleteMapping(path = "ZuoFeiRenWuJBXX")
-    public MsfResponse<Boolean> ZuoFeiRenWuJBXX(@PathVariable @NotEmpty(message = "主键ID必传！") String id) throws TongYongYWException {
+    public MsfResponse<Boolean> ZuoFeiRenWuJBXX(@NotEmpty(message = "主键ID必传！") @RequestParam String id) throws TongYongYWException {
 
         return MsfResponse.success(renWuGLService.zuoFeiRenWuJBXX(id));
     }
@@ -314,7 +314,6 @@ public class RenWuGLController {
     public MsfResponse<String> saveRenWuZXList(@RequestBody List<SC_RW_ZhiXingRZCreateDto> createDto) throws TongYongYWException {
         return MsfResponse.success(renWuGLService.saveRenWuZXList(createDto));
     }
-
 
     /**
      * 启用任务

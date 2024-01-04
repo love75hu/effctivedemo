@@ -45,5 +45,11 @@ public class SC_RW_JiBenXXListDto {
     private Date zuiJinZXSJ;
     @Schema(description = "业务最新时间")
     private Date yeWuZXSJ;
+    @Schema(description = "服务ip")
+    private String fuWuQIP;
+    @Schema(description = "服务端口")
+    private String fuWuQDK;
+    @Schema(description = "通用配置任务地址")
+    private String fuWuQRWDZ;
 
 }

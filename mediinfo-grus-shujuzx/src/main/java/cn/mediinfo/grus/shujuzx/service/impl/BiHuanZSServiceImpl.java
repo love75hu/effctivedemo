@@ -134,7 +134,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
         //获取入参字段
         var ruCanZD = biHuanGNDPZ.getRuCanList().stream().map(ZiDuanRCDto::getZiDuanBM).toList();
         //闭环入参字段集合
-        var ruCanXXList = ruCanXXRepository.findByBiHuanIDIn(biHuanIDs);
+        var ruCanXXList = ruCanXXRepository.findByBiHuanIDInAndZuZhiJGID(biHuanIDs, lyraIdentityService.getJiGouID());
         List<String> shituIDList = new ArrayList<>();
         List<String> biaoMingList = new ArrayList<>();
         boolean kongTiaoJFH = false;
@@ -309,15 +309,19 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
         StringBuilder builder = new StringBuilder();
         //拼接入参条件
         for (ZiDuanRCDto r : ruCanList) {
-            ShuJuJMXZDDto shuJuJMXZDDto = tableList.get(0).getSchemaTableList().get(0).getShuJuJMXZDDtos().stream().filter(n -> n.getZiDuanBM().equals(r.getZiDuanBM())).findFirst().orElse(null);
-            if (shuJuJMXZDDto != null) {
-                String itemString = shuJuJMXZDDto.getShuJuYMC() + "." + shuJuJMXZDDto.getBiaoMing() + "." + r.getZiDuanBM() + "='" + r.getZiDuanZhi() + "'";
-                builder.append(itemString);
-                //  builder.append(" and ");
-            } else {
-                throw new TongYongYWException("数据视图配置没有入参id信息");
-            }
+            tableList.get(0).getSchemaTableList().forEach(n -> {
+                n.getShuJuJMXZDDtos().forEach(m -> {
+                    if (m.getZiDuanBM().equals(r.getZiDuanBM())) {
+                        String itemString = m.getShuJuYMC() + "." + m.getBiaoMing() + "." + r.getZiDuanBM() + "='" + r.getZiDuanZhi() + "'";
+                        builder.append(itemString);
+                    }
+                });
+            });
         }
+        if (!StringUtil.hasText(builder.toString())) {
+             throw new TongYongYWException("数据视图配置没有入参id信息");
+        }
+
         tableList.get(0).setFilterConditionList(builder.toString());
 
         String sql = getShiTuBGX(tableList.get(0),identityService.getTenantId(),zuZhiJGID);
@@ -730,6 +734,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
         List<String> ziDuanMingList = new ArrayList<>();
         //表名列表
         Set<String> biaoMingList = new HashSet<>();
+        boolean isNeiLian = !"1".equals(table.getGuanLianFSDM());
         //获取视图中表关系
         String relationCondition = Optional.ofNullable(table.getTableRelationConditionList()).orElse("");
         //获取视图中过滤条件
@@ -741,7 +746,10 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
         for (SchemaTable f : table.getSchemaTableList()) {
             String key = formatBiaoMing(f.getMoShi(), f.getBiaoMing());
             for (ShuJuJMXZDDto p : Optional.ofNullable(f.getShuJuJMXZDDtos()).orElse(new ArrayList<>())) {
-                ziDuanMingList.add("l" + index + "." + p.getZiDuanBM());
+                ziDuanMingList.add(isNeiLian ? "l" + index + "." + p.getZiDuanBM() : f.getBiaoMing() + "." + p.getZiDuanBM());
+            }
+            if (!isNeiLian) {
+                continue;
             }
             biaoMingList.add(key + " l" + index);
             relationCondition = relationCondition.replaceAll("(?i)" + key, "l" + index);
@@ -754,18 +762,19 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
         }
         builder.append(CollUtil.join(ziDuanMingList, ","));
         builder.append(" from ");
-        builder.append(CollUtil.join(biaoMingList, ", "));
+        builder.append(isNeiLian ? CollUtil.join(biaoMingList, ",") : relationCondition);
         builder.append(" where 1=1 ");
-        builder.append(zuoFeiBZ);
-        builder.append(zuZhiJGIDTJ);
-        builder.append(zuHuIDTJ);
-        if (StringUtils.isNotBlank(filterCondition)) {
+        if (StringUtils.isNotBlank(filterCondition)  ) {
             builder.append(" AND ");
             builder.append(filterCondition);
+
         }
-        if (StringUtils.isNotBlank(relationCondition)) {
+        if (StringUtils.isNotBlank(relationCondition) && isNeiLian) {
             builder.append(" and ");
             builder.append(relationCondition);
+            builder.append(zuoFeiBZ);
+            builder.append(zuZhiJGIDTJ);
+            builder.append(zuHuIDTJ);
         }
         return builder.toString();
     }

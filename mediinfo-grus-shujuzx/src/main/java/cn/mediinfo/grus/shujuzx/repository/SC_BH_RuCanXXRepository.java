@@ -16,5 +16,6 @@ public interface SC_BH_RuCanXXRepository extends MsfJpaRepository<QSC_BH_RuCanXX
 
     List<SC_BH_RuCanXXModel> findByBiHuanIDAndZuZhiJGID(String biHuanID,String zuZhiJGID);
 
+    List<SC_BH_RuCanXXModel> findByBiHuanIDInAndZuZhiJGID(List<String> biHuanIDs,String zuZhiJGID);
     List<SC_BH_RuCanXXModel> findByBiHuanIDIn(List<String> biHuanIDs);
 }

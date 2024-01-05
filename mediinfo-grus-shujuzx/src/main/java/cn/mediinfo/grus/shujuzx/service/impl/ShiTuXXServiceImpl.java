@@ -182,7 +182,7 @@ class ShiTuXXServiceImpl implements ShiTuXXService {
             throw new TongYongYWException("未获取到数据");
         }
         //修改分类名称
-        scCxShiTuXXModel.setShiTuMC(dto.getShiTuFLMC());
+        scCxShiTuXXModel.setShiTuMC(dto.getShiTuFLMC()); 
         shiTuXXRepository.save(scCxShiTuXXModel);
         return true;
     }

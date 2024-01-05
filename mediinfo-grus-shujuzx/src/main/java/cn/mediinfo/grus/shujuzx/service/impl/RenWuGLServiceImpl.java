@@ -702,7 +702,7 @@ public class RenWuGLServiceImpl implements RenWuGLService {
         //String url = renWUXXDto.getApiDZ() + "&renWuID=" + renWUXXDto.getRenWuID() + "&zhiXingRZID=" + zhiXingRZID + canShuStr;
 
         //region http接口调用返回数据类型为xml httpService返回byte数组
-        byte[] response = httpService.get(url, null, null, ContentType.XML_DATA_FORMAT);
+        byte[] response = httpService.get(url, null, null, ContentType.XML_DATA_FORMAT.ordinal());
         //byte转xml字符串
         String result = new String(response, StandardCharsets.UTF_8);
         //xml字符串转节点

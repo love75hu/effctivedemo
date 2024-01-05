@@ -182,8 +182,8 @@ public class BiHuanSTJDXXServiceImpl implements BiHuanSTJDXXService {
             SC_BH_ShiTuJDXXDto scBhShiTuJDXXDto = shiTuJDXXList.stream().filter(n -> n.getShiTuID().equals(s)).findFirst().orElse(new SC_BH_ShiTuJDXXDto());
             keXuanJDDto.setShiTuID(scBhShiTuJDXXDto.getShiTuID());
             keXuanJDDto.setShiTuMC(scBhShiTuJDXXDto.getShiTuMC());
-            keXuanJDDto.setKeXuanJDXXDtoList(BeanUtil.copyToList(shiTuJDXXList.stream()
-                    .filter(n -> n.getShiTuID().equals(s)).collect(Collectors.toList()), KeXuanJDXXDto.class));
+            keXuanJDDto.setKeXuanJDXXDtoList(BeanUtil.copyListProperties(shiTuJDXXList.stream()
+                    .filter(n -> n.getShiTuID().equals(s)).collect(Collectors.toList()), KeXuanJDXXDto::new));
             keXuanJDDtoList.add(keXuanJDDto);
         }
         return keXuanJDDtoList;

@@ -15,6 +15,7 @@ import cn.mediinfo.grus.shujuzx.repository.SC_BH_ZiBiHXSLRepository;
 import cn.mediinfo.grus.shujuzx.repository.SC_BH_ZiBiHXXRepository;
 import cn.mediinfo.grus.shujuzx.service.JieDianXXService;
 import cn.mediinfo.lyra.extension.service.LyraIdentityService;
+import com.querydsl.core.util.BeanUtils;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -224,14 +225,14 @@ public class JieDianXXServiceImpl implements JieDianXXService {
     }
 
     private <T> void processRecordForUpdateOrInsert(T record, List<T> existingRecords, List<T> toInsert, List<T> toUpdate, Set<String> retainedIds) {
-        String id = BeanUtil.getProperty(record, "id");
-            T existingRecord = existingRecords.stream().filter(e -> BeanUtil.getProperty(e, "id").equals(id)).findFirst().orElse(null);
+        String id =  org.dromara.hutool.core.bean.BeanUtil.getProperty(record, "id");
+            T existingRecord = existingRecords.stream().filter(e ->  org.dromara.hutool.core.bean.BeanUtil.getProperty(e, "id").equals(id)).findFirst().orElse(null);
 
         if (existingRecord != null) {
             // 如果记录存在，准备更新
-            BeanUtil.setProperty(record, "id", BeanUtil.getProperty(existingRecord, "id"));
-            BeanUtil.setProperty(record, "zuHuID", BeanUtil.getProperty(existingRecord, "zuHuID"));
-            BeanUtil.setProperty(record, "zuHuMC", BeanUtil.getProperty(existingRecord, "zuHuMC"));
+            org.dromara.hutool.core.bean.BeanUtil.setProperty(record, "id", org.dromara.hutool.core.bean.BeanUtil.getProperty(existingRecord, "id"));
+            org.dromara.hutool.core.bean.BeanUtil.setProperty(record, "zuHuID", org.dromara.hutool.core.bean.BeanUtil.getProperty(existingRecord, "zuHuID"));
+            org.dromara.hutool.core.bean.BeanUtil.setProperty(record, "zuHuMC", org.dromara.hutool.core.bean.BeanUtil.getProperty(existingRecord, "zuHuMC"));
             toUpdate.add(record);
             retainedIds.add(id);
         } else if (StringUtil.hasText(id)) {
@@ -359,9 +360,9 @@ public class JieDianXXServiceImpl implements JieDianXXService {
         for (var a : jieDianXXList) {
             a.setZiBiHXXDto(BeanUtil.copyProperties(ziBiHXXList.stream().filter(x -> x.getJieDianID().equals(a.getJieDianID())).findFirst().orElse(null), ZiBiHXXDto.class));
 
-            a.setJieDianSXList(BeanUtil.copyToList(biHuanSZXXList.stream().filter(x -> x.getJieDianID().equals(a.getJieDianID())).collect(Collectors.toList()), JieDianSXDto.class));
+            a.setJieDianSXList(BeanUtil.copyListProperties(biHuanSZXXList.stream().filter(x -> x.getJieDianID().equals(a.getJieDianID())).collect(Collectors.toList()), JieDianSXDto::new));
 
-            a.setZiBiHXSLDtoList(BeanUtil.copyToList(ziBiHXSLList.stream().filter(x -> x.getJieDianID().equals(a.getJieDianID())).collect(Collectors.toList()), ZiBiHXSLDto.class));
+            a.setZiBiHXSLDtoList(BeanUtil.copyListProperties(ziBiHXSLList.stream().filter(x -> x.getJieDianID().equals(a.getJieDianID())).collect(Collectors.toList()), ZiBiHXSLDto::new));
         }
         return jieDianXXList;
     }

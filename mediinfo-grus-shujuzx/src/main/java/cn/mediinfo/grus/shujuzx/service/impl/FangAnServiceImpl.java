@@ -1710,7 +1710,7 @@ public class FangAnServiceImpl implements FangAnService {
             bingLiXQXXDto.setJiuZhenYWLX(j.getJiuZhenYWLX());
 
             List<JiuluTextRso> jiluTest = jiuluTextRsos.stream().filter(n -> Objects.equals(n.getJiuZhenID(), j.getId()) && n.getJiuZhenYWLX().equals(j.getJiuZhenYWLX())).toList();
-            bingLiXQXXDto.setJiuluTextDtoList(BeanUtil.copyToList(jiluTest, JiuluTextDto.class));
+            bingLiXQXXDto.setJiuluTextDtoList(BeanUtil.copyListProperties(jiluTest, JiuluTextDto::new));
             bingLiXQXXDtoList.add(bingLiXQXXDto);
         });
         return bingLiXQXXDtoList;

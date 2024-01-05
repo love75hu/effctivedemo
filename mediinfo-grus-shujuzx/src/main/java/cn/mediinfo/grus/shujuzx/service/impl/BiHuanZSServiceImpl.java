@@ -126,7 +126,6 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
     public BiHuanXQDto getBiHuanXQ(BiHuanGNDPZ biHuanGNDPZ) throws YuanChengException, TongYongYWException {
 
         //闭环调用信息
-
         //当前功能点的调用配置
         List<SC_BH_DiaoYongPZDto> biHuanPZList = diaoYongPZRepository.getBiHuanPZList(lyraIdentityService.getJiGouID(), biHuanGNDPZ.getBiHuanGNDDM(), 1);
         //获取配的闭环
@@ -238,8 +237,38 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
         return getBiHuanZXJG(biHuanIDs.get(0), "0", "0", "0", lyraIdentityService.getJiGouID(), biHuanGNDPZ.getRuCanList());
     }
 
+    public BiHuanXQDto getBiHuanXQ2(BiHuanGNDPZ biHuanGNDPZ)
+    {
+        //如果入参是空的 就返回空的数据
+        if ( CollectionUtil.isEmpty(biHuanGNDPZ.getRuCanList()))return new BiHuanXQDto();
+        //闭环调用信息
+        //当前功能点的调用配置
+        List<SC_BH_DiaoYongPZDto> biHuanPZList = diaoYongPZRepository.getBiHuanPZList(lyraIdentityService.getJiGouID(), biHuanGNDPZ.getBiHuanGNDDM(), 1);
+        //如果没有配置也返回空
+        if (CollectionUtil.isEmpty(biHuanPZList))return new BiHuanXQDto();
+        //获取配的闭环
+        for (SC_BH_DiaoYongPZDto sc_bh_diaoYongPZDto:biHuanPZList)
+        {
+            //解析条件
+            List<GuiZeDto> jsonToList = JsonUtil.getJsonToList(sc_bh_diaoYongPZDto.getTiaoJian(), GuiZeDto.class);
+
+
+
+        }
+
+
+
+
+
+
+
+
+
+        return new BiHuanXQDto();
+    }
+
     /**
-     * 根据闭环id获取闭配置信息去执行sql
+         * 根据闭环id获取闭配置信息去执行sql
      */
     public BiHuanXQDto getBiHuanZXJG(String ziBiHID,String biHuanID, String ziBiHDCZXBZ, String jieDianID, String zuZhiJGID, List<ZiDuanRCDto> ruCanList) throws YuanChengException, TongYongYWException {
         zuZhiJGID = StringUtil.hasText(zuZhiJGID) ? zuZhiJGID : lyraIdentityService.getJiGouID();

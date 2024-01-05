@@ -708,7 +708,9 @@ public class FangAnServiceImpl implements FangAnService {
                         shiTuFZ.setShiTuDM(qiTaSC.getKey());
                         shiTuFZ.setShiTuSXH(shiTuSXH++);
                         AtomicInteger shiTuZJSXH = new AtomicInteger();
-                        var ziDuanIDList = qiTaSC.getValue().stream().map(FangAnSCDTO::getId).toList();
+                        var ziDuanIDList = qiTaSC.getValue().stream().map(FangAnSCDTO::getId).collect(Collectors.toList());
+                        //添加视图主键ID
+                        ziDuanIDList.add("zj_"+qiTaSC.getKey());
                         //数据按视图字段分组
                         var shiTuZJFZList = jz.getValue().stream().map(st -> st.entrySet().stream().filter(zd -> ziDuanIDList.contains(zd.getKey())).toList()).distinct().map(st -> {
                             List<FangAnCXZDFZDto> ziDuanFZList = new ArrayList<>();

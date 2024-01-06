@@ -3,6 +3,8 @@ package cn.mediinfo.grus.shujuzx.dto.renwugls;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class SC_RW_TongYongPZDto {
     @Schema(description = "id")
@@ -21,4 +23,6 @@ public class SC_RW_TongYongPZDto {
     private String fuWuQIP;
     @Schema(description = "服务器端口")
     private String fuWuQDK;
+    @Schema(description = "子集")
+    private List<SC_RW_TongYongPZDto> Children;
 }

@@ -39,9 +39,9 @@ public class SC_RW_JiBenXXDto  {
     @Schema(description = "执行耗时")
     private Integer zhiXingHS;
     @Schema(description = "执行状态代码[SC0019](最近一次执行状态)")
-    private Integer zhiXingZTDM;
+    private String zhiXingZTDM;
     @Schema(description = "执行状态名称")
-    private Integer zhiXingZTMC;
+    private String zhiXingZTMC;
     @Schema(description = "最近执行日志id")
     private String zuiJinZXRZID;
     @Schema(description = "启用标志")

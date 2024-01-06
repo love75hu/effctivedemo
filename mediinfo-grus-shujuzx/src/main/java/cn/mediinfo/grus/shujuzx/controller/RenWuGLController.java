@@ -271,7 +271,7 @@ public class RenWuGLController {
     @Operation(summary = "获取通用配置列表")
     @GetMapping(path = "GetTongYongPZ")
     public MsfResponse<List<SC_RW_TongYongPZDto>> getTongYongPZ() {
-        return MsfResponse.success(renWuGLService.getTongYongPZ());
+        return MsfResponse.success(renWuGLService.getTongYongPZNew());
     }
 
     /**
@@ -287,7 +287,7 @@ public class RenWuGLController {
         if (creatDto.size() == 0) {
             throw new TongYongYWException("通用配置列表不能为空");
         }
-        return MsfResponse.success(renWuGLService.saveTongYongPZ(creatDto));
+        return MsfResponse.success(renWuGLService.saveTongYongPZNew(creatDto));
     }
 
     /**
@@ -334,4 +334,22 @@ public class RenWuGLController {
         }
         return MsfResponse.success(renWuGLService.qiYongRW(id, qiYongBZ));
     }
+    @Operation(summary = "获取任务详情")
+    @GetMapping(path = "getRenWuXQ")
+    public MsfResponse<RenWuXQDto> getRenWuXQ(@RequestParam String id) throws TongYongYWException {
+        if (!StringUtil.hasText(id)) {
+            throw new TongYongYWException("主键ID不能为空");
+        }
+        return MsfResponse.success(renWuGLService.getRenWuXQ(id));
+    }
+
+    @Operation(summary = "保存通用配置列表")
+    @PostMapping(path = "SaveTongYongPZNew")
+    public MsfResponse<Boolean> saveTongYongPZNew(@RequestBody List<SC_RW_TongYongPZDto> creatDto) throws TongYongYWException {
+        if (creatDto.size() == 0) {
+            throw new TongYongYWException("通用配置列表不能为空");
+        }
+        return MsfResponse.success(renWuGLService.saveTongYongPZNew(creatDto));
+    }
+
 }

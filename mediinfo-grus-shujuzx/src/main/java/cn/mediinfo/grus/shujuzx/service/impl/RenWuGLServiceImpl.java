@@ -805,7 +805,7 @@ public class RenWuGLServiceImpl implements RenWuGLService {
         String finalFenleimc = fenleimc;
         var result=BeanUtil.copyProperties(entity,RenWuXQDto::new,(s,t)->{
             if (!Objects.isNull(tongyongpz)){
-                if (!Objects.isNull(tongyongpz.getFuWuQIP()) && !Objects.isNull(tongyongpz.getFuWuQDK())){
+                if (!Objects.isNull(tongyongpz.getFuWuQIP()) && !Objects.isNull(tongyongpz.getFuWuQDK()) && !Objects.isNull(tongyongpz.getRenWuDZ())){
                     var renwudz=tongyongpz.getFuWuQIP().concat(":").concat(tongyongpz.getFuWuQDK()).concat("/spoon/kettle/executeJob?job=/opt/kettle").concat(tongyongpz.getRenWuDZ()).concat("/").concat(s.getRenWuMC()).concat(".kjb");
                     if (!Objects.isNull(s.getRenWuDZ())){
                         renwudz=tongyongpz.getFuWuQIP().concat(":").concat(tongyongpz.getFuWuQDK()).concat("/spoon/kettle/executeJob?job=/opt/kettle").concat(s.getRenWuDZ());

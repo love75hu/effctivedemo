@@ -116,7 +116,7 @@ public class RenWuGLServiceImpl implements RenWuGLService {
             && !Objects.equals(item.getFuWuQIP(),"") && !Objects.equals(item.getFuWuQDK(),"")){
                 var shejidz = item.getFuWuQIP().concat(":").concat(item.getFuWuQDK()).concat("/spoon/spoon?file=/opt/kettle");
                 if (Objects.isNull(item.getRenWuDZ()) || Objects.equals(item.getRenWuDZ(),"")) {
-                    if(!Objects.isNull(item.getFuWuQRWDZ()) && !Objects.equals(item.getRenWuDZ(),"")){
+                    if(!Objects.isNull(item.getFuWuQRWDZ()) && !Objects.equals(item.getFuWuQRWDZ(),"")){
                         shejidz = shejidz.concat(item.getFuWuQRWDZ()).concat("/").concat(item.getRenWuMC()).concat(".kjb");
                     }else{
                         shejidz="";

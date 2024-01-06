@@ -343,13 +343,4 @@ public class RenWuGLController {
         return MsfResponse.success(renWuGLService.getRenWuXQ(id));
     }
 
-    @Operation(summary = "保存通用配置列表")
-    @PostMapping(path = "SaveTongYongPZNew")
-    public MsfResponse<Boolean> saveTongYongPZNew(@RequestBody List<SC_RW_TongYongPZDto> creatDto) throws TongYongYWException {
-        if (creatDto.size() == 0) {
-            throw new TongYongYWException("通用配置列表不能为空");
-        }
-        return MsfResponse.success(renWuGLService.saveTongYongPZNew(creatDto));
-    }
-
 }

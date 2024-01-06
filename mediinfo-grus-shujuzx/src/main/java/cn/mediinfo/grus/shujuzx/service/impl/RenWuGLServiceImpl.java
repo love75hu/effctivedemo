@@ -785,23 +785,45 @@ public class RenWuGLServiceImpl implements RenWuGLService {
     @Override
     public RenWuXQDto getRenWuXQ(String id) throws TongYongYWException {
         var entity=jiBenXXRepository.findById(id).orElse(null);
-
         if (Objects.isNull(entity)) {
             throw new TongYongYWException("该任务基本信息不存在");
         }
+        var ShuJuYZYList=shuJuYZYRepository.findByShuJuYLBID("SC0021");
+        //判断当前任务分类是否为最后一级
+        String fenleimc=entity.getFenLeiMC();
+        var shujuyzyDto=ShuJuYZYList.stream().filter(t->Objects.equals(t.getZhiYuID(),entity.getFenLeiDM())).findFirst().orElse(null);
+        if (shujuyzyDto!=null && !Objects.isNull(shujuyzyDto.getFuJiDM()) ){
+            fenleimc=getFenLeiMC(shujuyzyDto.getFuJiDM(),fenleimc,ShuJuYZYList);
+        }
         var tongyongpz=tongYongPZRepository.asQuerydsl().where(t->t.fenLeiDM.eq(entity.getFenLeiDM())).fetchFirst();
+
+        String finalFenleimc = fenleimc;
         var result=BeanUtil.copyProperties(entity,RenWuXQDto::new,(s,t)->{
             if (!Objects.isNull(tongyongpz)){
-                var renwudz=tongyongpz.getFuWuQIP().concat(":").concat(tongyongpz.getFuWuQDK()).concat("/spoon/kettle/executeJob?job=/opt/kettle").concat(tongyongpz.getRenWuDZ()).concat("/").concat(s.getRenWuMC()).concat(".kjb");
-                if (!Objects.isNull(s.getRenWuDZ())){
-                   renwudz=tongyongpz.getFuWuQIP().concat(":").concat(tongyongpz.getFuWuQDK()).concat("/spoon/kettle/executeJob?job=/opt/kettle").concat(s.getRenWuDZ());
+                if (!Objects.isNull(tongyongpz.getFuWuQIP()) && !Objects.isNull(tongyongpz.getFuWuQDK())){
+                    var renwudz=tongyongpz.getFuWuQIP().concat(":").concat(tongyongpz.getFuWuQDK()).concat("/spoon/kettle/executeJob?job=/opt/kettle").concat(tongyongpz.getRenWuDZ()).concat("/").concat(s.getRenWuMC()).concat(".kjb");
+                    if (!Objects.isNull(s.getRenWuDZ())){
+                        renwudz=tongyongpz.getFuWuQIP().concat(":").concat(tongyongpz.getFuWuQDK()).concat("/spoon/kettle/executeJob?job=/opt/kettle").concat(s.getRenWuDZ());
+                    }
+                    t.setRenWuDZ(renwudz);
                 }
-                t.setRenWuDZ(renwudz);
             }
+            t.setFenLeiMC(finalFenleimc);
         });
 
         result.shuJuYuanDtoList=getShuJuYuanList(entity.getRenWuID());
         return result;
+    }
+    public String getFenLeiMC(String FenLeiDM,String fenleimc,List<SC_ZD_ShuJuYZYModel> shuJuYZYModels){
+        var entity=shuJuYZYModels.stream().filter(t->Objects.equals(t.getZhiYuID(),FenLeiDM)).findFirst().orElse(null);
+
+        if (!Objects.isNull(entity) ){
+            fenleimc=entity.getZhiYuMC()+"-"+fenleimc;
+            if (!Objects.isNull(entity.getFuJiDM()) && !Objects.equals(entity.getFuJiDM(),"")){
+                fenleimc=getFenLeiMC(entity.getFuJiDM(),fenleimc,shuJuYZYModels);
+            }
+        }
+        return fenleimc;
     }
 
     @Override

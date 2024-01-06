@@ -61,4 +61,10 @@ public interface RenWuGLService {
 
     Boolean qiYongSJY(String id, Integer qiYongBZ) throws TongYongYWException;
 
+    RenWuXQDto getRenWuXQ(String id) throws TongYongYWException;
+
+    List<SC_RW_TongYongPZDto> getTongYongPZNew();
+
+    @Transactional(rollbackOn = Exception.class)
+    Boolean saveTongYongPZNew(List<SC_RW_TongYongPZDto> creatDto);
 }

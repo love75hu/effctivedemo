@@ -35,7 +35,7 @@ public class RenWuDDController {
 
     @JobDefinition(name = "BI_WD_RIQI", description = "日期")
     @GetMapping()
-    public MsfResponse<Boolean> jobs(DefaultJobDetailImpl a) {
+    public MsfResponse<String> jobs(DefaultJobDetailImpl a) {
         log.info("任务调度开始了");
         return MsfResponse.success(renWuDDService.saveRenWuZX("BI_WD_RIQI"));
     }

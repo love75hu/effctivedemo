@@ -26,6 +26,7 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.nimbusds.jose.shaded.gson.JsonObject;
 import com.querydsl.core.types.Expression;
 import jakarta.transaction.Transactional;
+import okhttp3.Response;
 import org.apache.pulsar.shade.org.apache.avro.data.Json;
 import org.springframework.stereotype.Service;
 
@@ -699,12 +700,16 @@ public class RenWuGLServiceImpl implements RenWuGLService {
             url = renWUXXDto.getFuWuQIP().concat(":").concat(renWUXXDto.getFuWuQDK()).concat("/spoon/kettle/executeJob?job=/opt/kettle").concat(renWUXXDto.getFuWuQRWDZ()).concat("/").concat(renWUXXDto.getRenWuMC()).concat(".kjb")+ "&renWuID=" + renWUXXDto.getRenWuID() + "&zhiXingRZID=" + zhiXingRZID + canShuStr;
         }
 
+        //http接口调用返回数据类型为xml httpService返回byte数组
         //String url = renWUXXDto.getApiDZ() + "&renWuID=" + renWUXXDto.getRenWuID() + "&zhiXingRZID=" + zhiXingRZID + canShuStr;
-
-        //region http接口调用返回数据类型为xml httpService返回byte数组
-        byte[] response = httpService.get(url, null, null, ContentType.XML_DATA_FORMAT.ordinal());
+        //byte[] response = httpService.get(url, null, null, ContentType.XML_DATA_FORMAT.ordinal());
         //byte转xml字符串
-        String result = new String(response, StandardCharsets.UTF_8);
+        //String result = new String(response, StandardCharsets.UTF_8);
+
+        //region  设置ContentType，获取xml返回值
+        Map<String,String> header=Map.of("Content-Type", ContentType.XML_DATA_FORMAT.getValue());
+        Response response=httpService.get(url,header);
+        String result = response.body().string();
         //xml字符串转节点
         XmlMapper xmlMapper = new XmlMapper();
         var jsonNodes = xmlMapper.readTree(result);

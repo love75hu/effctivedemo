@@ -112,10 +112,15 @@ public class RenWuGLServiceImpl implements RenWuGLService {
         var renWuIDs = result.stream().map(SC_RW_JiBenXXListDto::getRenWuID).toList();
         var shuJuYuanDtos = shuJuYuanRepository.asQuerydsl().where(t -> t.renWuID.in(renWuIDs)).fetch();
         result.forEach(item -> {
-            if (!Objects.isNull(item.getFuWuQIP()) && !Objects.isNull(item.getFuWuQDK())){
+            if (!Objects.isNull(item.getFuWuQIP()) && !Objects.isNull(item.getFuWuQDK())
+            && !Objects.equals(item.getFuWuQIP(),"") && !Objects.equals(item.getFuWuQDK(),"")){
                 var shejidz = item.getFuWuQIP().concat(":").concat(item.getFuWuQDK()).concat("/spoon/spoon?file=/opt/kettle");
                 if (Objects.isNull(item.getRenWuDZ()) || Objects.equals(item.getRenWuDZ(),"")) {
-                    shejidz = item.getFuWuQIP().concat(":").concat(item.getFuWuQDK()).concat("/spoon/spoon?file=/opt/kettle").concat(item.getFuWuQRWDZ()).concat("/").concat(item.getRenWuMC()).concat(".kjb");
+                    if(!Objects.isNull(item.getFuWuQRWDZ()) && !Objects.equals(item.getRenWuDZ(),"")){
+                        shejidz = shejidz.concat(item.getFuWuQRWDZ()).concat("/").concat(item.getRenWuMC()).concat(".kjb");
+                    }else{
+                        shejidz="";
+                    }
                 }else{
                     shejidz=shejidz.concat(item.getRenWuDZ());
                 }

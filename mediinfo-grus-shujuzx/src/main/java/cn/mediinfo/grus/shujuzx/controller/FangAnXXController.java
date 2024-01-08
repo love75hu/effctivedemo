@@ -80,7 +80,7 @@ public class FangAnXXController {
     @PostMapping("/saveQueryRercordByFAID")
     public MsfResponse<String> saveFangAnCXLSByFAID(@Validated @RequestBody FangAnCXLSSaveRequestByFAID request) throws YuanChengException, TongYongYWException, WeiZhaoDSJException {
         FangAnQueryDTO fangAnXX=fangAnService.getFangAnXX(request.getFangAnId());
-        FangAnCXLSSaveRequest saveRequest= BeanUtil.copyProperties(fangAnXX,FangAnCXLSSaveRequest::new) ;
+        FangAnCXLSSaveRequest saveRequest= BeanUtil.copyProperties(fangAnXX,FangAnCXLSSaveRequest.class,"fangAnSCList") ;
         saveRequest.setGuanJianZi(request.getGuanJianZi());
         saveRequest.setFangAnID(fangAnXX.getFangAnID());
         saveRequest.setFangAnSCList(BeanUtil.copyListProperties(fangAnXX.getFangAnSCList(), FangAnSC::new));

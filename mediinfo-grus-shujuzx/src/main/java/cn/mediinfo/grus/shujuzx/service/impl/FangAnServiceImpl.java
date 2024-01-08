@@ -1271,20 +1271,23 @@ public class FangAnServiceImpl implements FangAnService {
         ShuJuXXMSRso jiBenXX = jiChuBiaoXXList.stream().filter(p -> p.getBiaoMing().equals("BR_DA_JIBENXX")).findFirst().orElse(new ShuJuXXMSRso());
 
         //根据条件中涉及的表或视图设置表别名
-        for (int i = 0; i < tableList.size(); i++) {
-            TableDTO table = tableList.get(i);
+        int index=0;
+        for (TableDTO table : tableList) {
             if (CollUtil.isEmpty(table.getSchemaTableList())) {
                 continue;
             }
             //获取模式和表名拼接后的表名
             String tableName = StringUtils.join(table.getSchemaTableList().stream().map(p -> formatBiaoMing("", p.getMoShi(), p.getBiaoMing())).collect(Collectors.toSet()), ",");
-            //获取shiTuID，模式和表名拼接后的表名
-            String shiTuBM=StringUtils.join(table.getSchemaTableList().stream().map(p -> formatBiaoMing(p.getShiTuID(), p.getMoShi(), p.getBiaoMing())).collect(Collectors.toSet()), ",");
+            //排除基本信息表和基础表
             String shiTuBGX = getShiTuBGX(table, tableName);
-            if(Objects.equals(shiTuBGX,formatBiaoMing("", jiBenXX.getShuJuYMC(), jiBenXX.getBiaoMing()))){
+            if (Objects.equals(shiTuBGX, formatBiaoMing("", jiBenXX.getShuJuYMC(), jiBenXX.getBiaoMing()))) {
                 continue;
             }
-            aliasMap.put(shiTuBM, Tuple.of("t_" + i, shiTuBGX, false, tableName.equals(formatBiaoMing("", jiChuBiao.getMoShi(), jiChuBiao.getBiaoMing()))));
+            //获取shiTuID，模式和表名拼接后的表名
+            String shiTuBM = StringUtils.join(table.getSchemaTableList().stream().map(p -> formatBiaoMing(p.getShiTuID(), p.getMoShi(), p.getBiaoMing())).collect(Collectors.toSet()), ",");
+
+            aliasMap.put(shiTuBM, Tuple.of("t_" + index, shiTuBGX, false, tableName.equals(formatBiaoMing("", jiChuBiao.getMoShi(), jiChuBiao.getBiaoMing()))));
+            index++;
         }
 
         if (ObjectUtils.isNotEmpty(jiChuBiao) && !StringUtils.isBlank(jiChuBiao.getBiaoMing()) && !aliasMap.containsKey(formatBiaoMing("", jiChuBiao.getMoShi(), jiChuBiao.getBiaoMing())) && aliasMap.values().stream().noneMatch(Tuple.Tuple4::item4)) {

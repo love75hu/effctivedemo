@@ -237,8 +237,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
         return getBiHuanZXJG(biHuanIDs.get(0), "0", "0", "0", lyraIdentityService.getJiGouID(), biHuanGNDPZ.getRuCanList());
     }
 
-    public BiHuanXQDto getBiHuanXQ2(BiHuanGNDPZ biHuanGNDPZ)
-    {
+    public BiHuanXQDto getBiHuanXQ2(BiHuanGNDPZ biHuanGNDPZ) throws TongYongYWException, YuanChengException {
         //如果入参是空的 就返回空的数据
         if ( CollectionUtil.isEmpty(biHuanGNDPZ.getRuCanList()))return new BiHuanXQDto();
         //闭环调用信息
@@ -246,25 +245,35 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
         List<SC_BH_DiaoYongPZDto> biHuanPZList = diaoYongPZRepository.getBiHuanPZList(lyraIdentityService.getJiGouID(), biHuanGNDPZ.getBiHuanGNDDM(), 1);
         //如果没有配置也返回空
         if (CollectionUtil.isEmpty(biHuanPZList))return new BiHuanXQDto();
-        //获取配的闭环
-        for (SC_BH_DiaoYongPZDto sc_bh_diaoYongPZDto:biHuanPZList)
-        {
-            //解析条件
+        String biHuanID = null;
+        // 获取配的闭环
+        for (SC_BH_DiaoYongPZDto sc_bh_diaoYongPZDto : biHuanPZList) {
+            // 解析条件
             List<GuiZeDto> jsonToList = JsonUtil.getJsonToList(sc_bh_diaoYongPZDto.getTiaoJian(), GuiZeDto.class);
-
-
-
+            boolean isMatched = false;
+            for (var guiZeDto : jsonToList) {
+                for (var shiTu : guiZeDto.getGuiZeList()) {
+                    String ziDuanZhi = biHuanGNDPZ.getTiaoJianList().stream()
+                            .filter(n -> n.getZiDuanBM().equals(shiTu.getZiDuanBM()))
+                            .findFirst().orElse(new ZiDuanRCDto()).getZiDuanZhi();
+                    if (!Objects.equals(ziDuanZhi, shiTu.getZiDuanZhi().get(0).getValue())) {
+                        isMatched = false;
+                        break;
+                    } else {
+                        isMatched = true;
+                    }
+                }
+                if (isMatched) {
+                    break;
+                }
+            }
+            if (isMatched) {
+                biHuanID = sc_bh_diaoYongPZDto.getBiHuanID();
+                break;
+            }
         }
-
-
-
-
-
-
-
-
-
-        return new BiHuanXQDto();
+        if (biHuanID==null)return new BiHuanXQDto();
+        return getBiHuanZXJG(biHuanID, "0", "0", "0", lyraIdentityService.getJiGouID(), biHuanGNDPZ.getRuCanList());
     }
 
     /**

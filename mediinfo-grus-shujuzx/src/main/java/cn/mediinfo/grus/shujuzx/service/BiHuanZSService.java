@@ -12,6 +12,7 @@ import java.util.List;
 
 public interface BiHuanZSService {
     BiHuanXQDto getBiHuanXQ(BiHuanGNDPZ biHuanGNDPZ) throws YuanChengException, TongYongYWException;
+    BiHuanXQDto getBiHuanXQ2(BiHuanGNDPZ biHuanGNDPZ) throws YuanChengException, TongYongYWException;
 
     BiHuanXQDto getBiHuanZXJG(String zibiHID,String biHuanID,String ziBiHDCZXBZ,String jieDianID,String zuZhiJGID, List<ZiDuanRCDto> ruCanList) throws YuanChengException, TongYongYWException;
 }

@@ -38,7 +38,8 @@ public class BiHuanZSController {
         if (!StringUtil.hasText(biHuanGNDPZ.getBiHuanGNDDM()) || CollectionUtil.isEmpty(biHuanGNDPZ.getRuCanList())) {
             return MsfResponse.fail(XiTongResponseCode.CANSHUYC,"入参异常检查入参！");
         }
-        return MsfResponse.success(biHuanZSService.getBiHuanXQ(biHuanGNDPZ));
+        //return MsfResponse.success(biHuanZSService.getBiHuanXQ(biHuanGNDPZ));
+        return MsfResponse.success(biHuanZSService.getBiHuanXQ2(biHuanGNDPZ));
     }
 
     @Operation(summary = "根据闭环ID和组织机构ID获取子闭环详情")

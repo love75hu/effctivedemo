@@ -93,7 +93,7 @@ public class BIHuanSTXXServiceImpl implements BIHuanSTXXService {
         scBhShiTuXXModel.setZuZhiJGID(ShuJuZXConstant.TONGYONG_JGID);
         scBhShiTuXXModel.setZuZhiJGMC(ShuJuZXConstant.TONGYONG_JGMC);
         scBhShiTuXXModel.setShiTuID(sequenceService.getXuHao("SC_BH_ShiTuXX_ShiTuID", 6));
-       scBhShiTuXXModel.setShunXuHao(dto.getShunXuHAO()==null?shiTuXXRepository.getMaxShunXuHao()+1:dto.getShunXuHAO());
+       scBhShiTuXXModel.setShunXuHao(dto.getShunXuHao()==null?shiTuXXRepository.getMaxShunXuHao()+1:dto.getShunXuHao());
        var model= shiTuXXRepository.save(scBhShiTuXXModel);
         return model.getId();
     }

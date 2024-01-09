@@ -251,7 +251,12 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
             // 解析条件
             List<GuiZeDto> jsonToList = JsonUtil.getJsonToList(sc_bh_diaoYongPZDto.getTiaoJian(), GuiZeDto.class);
             boolean isMatched = false;
+            if (jsonToList.isEmpty()) {
+                biHuanID = sc_bh_diaoYongPZDto.getBiHuanID();
+                break;
+            }
             for (var guiZeDto : jsonToList) {
+
                 for (var shiTu : guiZeDto.getGuiZeList()) {
                     String ziDuanZhi = biHuanGNDPZ.getTiaoJianList().stream()
                             .filter(n -> n.getZiDuanBM().equals(shiTu.getZiDuanBM()))
@@ -273,7 +278,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
             }
         }
         if (biHuanID==null)return new BiHuanXQDto();
-        return getBiHuanZXJG(biHuanID, "0", "0", "0", lyraIdentityService.getJiGouID(), biHuanGNDPZ.getRuCanList());
+        return getBiHuanZXJG("0" ,biHuanID, "0", "0", lyraIdentityService.getJiGouID(), biHuanGNDPZ.getRuCanList());
     }
 
     /**
@@ -290,23 +295,24 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
         //6.在获取子闭环的显示列
 
         //1.获取闭环基本信息
-        SC_BH_JiBenXXModel biHuanJBXX = jiBenXXRepository.findFirstByBiHuanIDAndZuZhiJGID(ziBiHID, zuZhiJGID);
+        SC_BH_JiBenXXModel biHuanJBXX = jiBenXXRepository.findFirstByBiHuanIDAndZuZhiJGID(biHuanID, zuZhiJGID);
 
         if (biHuanJBXX == null) {
             return new BiHuanXQDto();
         }
         //2.获取闭环入参信息
-        List<SC_BH_RuCanXXModel> biHuanRCXXList = ruCanXXRepository.findByBiHuanIDAndZuZhiJGID(ziBiHID, zuZhiJGID);
+        List<SC_BH_RuCanXXModel> biHuanRCXXList = ruCanXXRepository.findByBiHuanIDAndZuZhiJGID(biHuanID, zuZhiJGID);
         //3.获取闭环下的节点信息
-        List<SC_BH_JieDianXXModel> biHuanJDXXList = jieDianXXRepository.findByBiHuanIDAndZuZhiJGIDOrderByShunXuHao(ziBiHID, zuZhiJGID);
+        List<SC_BH_JieDianXXModel> biHuanJDXXList = jieDianXXRepository.findByBiHuanIDAndZuZhiJGIDOrderByShunXuHao(biHuanID, zuZhiJGID);
         //4.在获取节点下的 节点时效
-        List<SC_BH_JieDianSXModel> biHuanJDSXList = jieDianSXRepository.findByBiHuanIDAndZuZhiJGID(ziBiHID, zuZhiJGID);
+        List<SC_BH_JieDianSXModel> biHuanJDSXList = jieDianSXRepository.findByBiHuanIDAndZuZhiJGID(biHuanID, zuZhiJGID);
         //5.在获取节点下的 子闭环信信息
-        List<SC_BH_ZiBiHXXModel> ziBiHXX = ziBiHXXRepository.findByBiHuanIDAndZuZhiJGID(ziBiHID, zuZhiJGID);
+        List<SC_BH_ZiBiHXXModel> ziBiHXX = ziBiHXXRepository.findByBiHuanIDAndZuZhiJGID(biHuanID, zuZhiJGID);
 
         //6.在获取子闭环的显示列
-        List<SC_BH_ZiBiHXSLModel> biHuanZBHXSLList = ziBiHXSLRepository.findByBiHuanIDAndZuZhiJGID(Objects.equals(biHuanID,"0")?ziBiHID:biHuanID , zuZhiJGID);
+        List<SC_BH_ZiBiHXSLModel> biHuanZBHXSLList = ziBiHXSLRepository.findByBiHuanIDAndZuZhiJGID(Objects.equals(ziBiHXX,"0")?ziBiHID:biHuanID , zuZhiJGID);
 
+        //闭环入参信息
         //List<String> ruCanZDBMs = biHuanRCXXList.stream().map(n -> n.getZiDuanBM()).distinct().toList();
         //视图id 整理
         List<String> shituIDs = biHuanJDXXList.stream().map(SC_BH_JieDianXXModel::getShiTuID).distinct().toList();
@@ -334,6 +340,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
         biHuanSTXXList.forEach(s -> {
             LingChuangJSPZDto shuJuLYDto = new LingChuangJSPZDto();
             shuJuLYDto.setShuJuLYID(s.getShuJuLYID());
+            shuJuLYDto.setShiTuID(s.getShiTuID());
             shuJuLYDto.setShuJuLYLXDM(s.getShuJuLYLXDM());
             val list = biHuanSTMXList.stream().filter(n -> n.getShiTuID().equals(s.getShiTuID())).toList();
             shuJuLYDto.setShuJuJMXZDDtos(BeanUtil.copyListProperties(list, ShuJuJMXZDDto::new));
@@ -346,21 +353,33 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
 
         StringBuilder builder = new StringBuilder();
         //拼接入参条件
-        for (ZiDuanRCDto r : ruCanList) {
-            tableList.get(0).getSchemaTableList().forEach(n -> {
-                n.getShuJuJMXZDDtos().forEach(m -> {
-                    if (m.getZiDuanBM().equals(r.getZiDuanBM())) {
-                        String itemString = m.getShuJuYMC() + "." + m.getBiaoMing() + "." + r.getZiDuanBM() + "='" + r.getZiDuanZhi() + "'";
-                        builder.append(itemString);
-                    }
-                });
-            });
-        }
-        if (!StringUtil.hasText(builder.toString())) {
-             throw new TongYongYWException("数据视图配置没有入参id信息");
-        }
+        biHuanRCXXList.forEach(n->{
+        });
 
-        tableList.get(0).setFilterConditionList(builder.toString());
+        for (var table : tableList) {
+            StringBuilder builder1 = new StringBuilder();
+            for (SC_BH_RuCanXXModel r : biHuanRCXXList) {
+                table.getSchemaTableList().forEach(n -> {
+                    n.getShuJuJMXZDDtos().forEach(m -> {
+                        if (m.getZiDuanBM().equals(r.getZiDuanBM()) && ruCanList.stream().allMatch(l->l.getZiDuanBM().equals(r.getZiDuanBM()))) {
+                            String itemString = m.getShuJuYMC() + "." + m.getBiaoMing() + "." + r.getZiDuanBM() + "='" +
+                                    ruCanList.stream().filter(l->l.getZiDuanBM().equals(r.getZiDuanBM()))
+                                            .findFirst().orElse(new ZiDuanRCDto()).getZiDuanZhi() + "'";
+                            if (builder1.length() > 0) {
+                                builder1.append(" AND ");
+                            }
+                            builder1.append(itemString);
+                        }
+                    });
+                });
+            }
+
+            if (!StringUtil.hasText(builder1.toString())) {
+                throw new TongYongYWException("数据视图配置没有入参id信息");
+            }
+            // 为当前表设置过滤条件
+            table.setFilterConditionList(builder1.toString());
+        }
 
         String sql = getShiTuBGX(tableList.get(0),identityService.getTenantId(),zuZhiJGID);
 

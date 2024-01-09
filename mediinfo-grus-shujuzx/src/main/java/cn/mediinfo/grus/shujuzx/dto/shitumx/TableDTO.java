@@ -32,6 +32,15 @@ public class TableDTO {
     private String filterConditionList;
 
     /**
+     * 数据来源ID[1.数据集ID2.数据视图ID]
+     */
+    private String shuJuLYID;
+    /**
+     * 数据来源类型代码
+     */
+    private String shuJuLYLXDM;
+
+    /**
      * 关联方式代码[0.默认不关联 1.SQL关联2.字段关联]
      */
     @Schema(description = "关联方式代码")

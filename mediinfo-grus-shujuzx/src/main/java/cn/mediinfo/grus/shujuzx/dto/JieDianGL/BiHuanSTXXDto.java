@@ -26,6 +26,6 @@ private String shuJuLYID;
 @Schema(description = "数据来源名称")
 private String shuJuLYMC;
 @Schema(description = "顺序号")
-private Integer shunXuHAO;
+private Integer shunXuHao;
 
 }

@@ -351,13 +351,13 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
         }
         List<TableDTO> tableList = gongYongRemoteService.getShiTuGLFSGLTJ(shuJuLYDtos).getData("获取功能服务字段信息失败");
 
-        StringBuilder builder = new StringBuilder();
         //拼接入参条件
-        biHuanRCXXList.forEach(n->{
-        });
 
+        List<ShiTuZXJGDto> shiTuZXJGDtoList=new ArrayList<>();
+        //处理多视图执行代码
         for (var table : tableList) {
-            StringBuilder builder1 = new StringBuilder();
+            ShiTuZXJGDto shiTuZXJGDto=new ShiTuZXJGDto();
+            StringBuilder builder = new StringBuilder();
             for (SC_BH_RuCanXXModel r : biHuanRCXXList) {
                 table.getSchemaTableList().forEach(n -> {
                     n.getShuJuJMXZDDtos().forEach(m -> {
@@ -365,20 +365,28 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
                             String itemString = m.getShuJuYMC() + "." + m.getBiaoMing() + "." + r.getZiDuanBM() + "='" +
                                     ruCanList.stream().filter(l->l.getZiDuanBM().equals(r.getZiDuanBM()))
                                             .findFirst().orElse(new ZiDuanRCDto()).getZiDuanZhi() + "'";
-                            if (builder1.length() > 0) {
-                                builder1.append(" AND ");
+                            if (builder.length() > 0) {
+                                builder.append(" AND ");
                             }
-                            builder1.append(itemString);
+                            builder.append(itemString);
                         }
                     });
                 });
             }
 
-            if (!StringUtil.hasText(builder1.toString())) {
+            if (!StringUtil.hasText(builder.toString())) {
                 throw new TongYongYWException("数据视图配置没有入参id信息");
             }
             // 为当前表设置过滤条件
-            table.setFilterConditionList(builder1.toString());
+            table.setFilterConditionList(builder.toString());
+
+            shiTuZXJGDto.setShuJuLYLXDM(table.getShuJuLYLXDM());
+            shiTuZXJGDto.setShuJuLYID(table.getShuJuLYID());
+            String sql = getShiTuBGX(tableList.get(0),identityService.getTenantId(),zuZhiJGID);
+            //执行sql 得出结果
+            List<Map<String, Object>> maps = linChuangRemoteService.getZiDianList(new ChaXunDto(sql.toLowerCase())).getData("执行sql报错");
+            shiTuZXJGDto.setShiTuZXJG(maps);
+            shiTuZXJGDtoList.add(shiTuZXJGDto);
         }
 
         String sql = getShiTuBGX(tableList.get(0),identityService.getTenantId(),zuZhiJGID);

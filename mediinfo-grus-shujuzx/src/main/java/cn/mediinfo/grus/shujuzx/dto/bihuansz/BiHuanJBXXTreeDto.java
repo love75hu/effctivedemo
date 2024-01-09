@@ -10,7 +10,7 @@ public class BiHuanJBXXTreeDto {
     private String biHuanLXDM;
     private String biHuanLXMC;
     private String biHuanID;
-    private String qiYongBZ;
+    private Integer qiYongBZ;
     private String biHuanMC;
     private String label;
     private List<BiHuanJBXXTreeDto> children;

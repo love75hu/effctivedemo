@@ -604,10 +604,12 @@ public class FangAnServiceImpl implements FangAnService {
         }
         //根据合并方式分页获取关键字段
         String guanJianZD = "zuzhijgid,jiuzhenid";
+        String fenZuZD="zuzhijgid,jiuzhenid,bingrenid";
         if (Objects.equals(mergeType, 1)) {
             guanJianZD = "bingrenid";
+            fenZuZD = "bingrenid";
         }
-        String guanJianZDSql = MessageFormat.format("select {0} from (select {0},row_number() over(order by {0}) as rn from ({1}) tt group by {0}) tt where rn>{3,number,#} and rn<={2,number,#}", guanJianZD, fangAnCXLS.getChaXunSQL(), pageSize * pageIndex, pageSize * (pageIndex - 1));
+        String guanJianZDSql = MessageFormat.format("select {0} from (select {0},row_number() over(order by bingrenid) as rn from ({1}) tt group by {4}) tt where rn>{3,number,#} and rn<={2,number,#}", guanJianZD, fangAnCXLS.getChaXunSQL(), pageSize * pageIndex, pageSize * (pageIndex - 1), fenZuZD);
         log.info("关键字段查询语句：{}", guanJianZDSql);
         List<Map<String, Object>> guanJianZDList = linChuangRemoteService.getZiDianList(new ChaXunDto(guanJianZDSql)).getData("数据查询失败");
         if (CollUtil.isEmpty(guanJianZDList)) {
@@ -629,7 +631,7 @@ public class FangAnServiceImpl implements FangAnService {
                 }
                 pageGuanJianZDList.add("(" + StringUtils.join(guanJianZDZhi, ",") + ")");
             }
-            String pageResultSql = MessageFormat.format("select * from ({0}) tt where ({1}) in ({2}) order by {1}", fangAnCXLS.getChaXunSQL(), guanJianZD, StringUtils.join(pageGuanJianZDList, ","));
+            String pageResultSql = MessageFormat.format("select * from ({0}) tt where ({1}) in ({2})", fangAnCXLS.getChaXunSQL(), guanJianZD, StringUtils.join(pageGuanJianZDList, ","));
             log.info("分页查询语句：{}", pageResultSql);
             jieGuoList.addAll(linChuangRemoteService.getZiDianList(new ChaXunDto(pageResultSql)).getData("数据查询失败"));
         }
@@ -678,7 +680,7 @@ public class FangAnServiceImpl implements FangAnService {
         var qiTaSCList = fangAnSCList.stream().filter(p -> !"br_da_jibenxx".equalsIgnoreCase(p.getBiaoMing())&&StringUtil.hasText(p.getBieMing())).collect(Collectors.groupingBy(FangAnSCDTO::getBieMing, LinkedHashMap::new, Collectors.toList()));
 
         //结果分组除重 患者基本信息表：br_da_jibenxx，该表相关字段分组后只显示1次，其它按就诊显示
-        return jieGuoList.stream().collect(Collectors.groupingBy(p -> p.get("bingrenid"),LinkedHashMap::new, Collectors.toList())).entrySet().stream().map(p -> {
+        return jieGuoList.stream().collect(Collectors.groupingBy(p -> Optional.ofNullable(p.get("bingrenid")).orElse("").toString(),LinkedHashMap::new, Collectors.toList())).entrySet().stream().sorted(Comparator.comparing(Map.Entry::getKey,Comparator.nullsLast(String::compareTo))).map(p -> {
             FangAnCXBRFZDto bingRenFZ = new FangAnCXBRFZDto();
             bingRenFZ.setBingRenID(String.valueOf(p.getKey()));
             //绑定患者基本信息
@@ -692,11 +694,11 @@ public class FangAnServiceImpl implements FangAnService {
             }
 
             AtomicInteger shunXuHao= new AtomicInteger();
-            List<FangAnCXJZFZDto> jiuZhenFZList = p.getValue().stream().sorted(Comparator.comparing(jz->DateUtil.parse(Optional.ofNullable(jz.get("jiuzhenrq")).orElse("").toString()),Comparator.nullsLast(Comparator.reverseOrder()))).collect(Collectors.groupingBy(jz -> CollUtil.toList(jz.get("zuzhijgid"), jz.get("jiuzhenid")),LinkedHashMap::new, Collectors.toList())).entrySet().stream().map(jz -> {
+            List<FangAnCXJZFZDto> jiuZhenFZList = p.getValue().stream().collect(Collectors.groupingBy(jz -> CollUtil.toList(jz.get("zuzhijgid"), jz.get("jiuzhenid"), jz.get("jiuzhenrq")),LinkedHashMap::new, Collectors.toList())).entrySet().stream().sorted(Comparator.comparing(jz->DateUtil.parse(Optional.ofNullable(jz.getKey().get(2)).orElse("").toString()),Comparator.nullsLast(Comparator.reverseOrder()))).map(jz -> {
                 FangAnCXJZFZDto jiuZhenFZ = new FangAnCXJZFZDto();
                 jiuZhenFZ.setZuZhiJGID(String.valueOf(jz.getKey().get(0)));
                 jiuZhenFZ.setJiuZhenID(String.valueOf(jz.getKey().get(1)));
-                jiuZhenFZ.setJiuZhenRQ(DateUtil.parse(Optional.ofNullable(jz.getValue().get(0).get("jiuzhenrq")).orElse("").toString()));
+                jiuZhenFZ.setJiuZhenRQ(DateUtil.parse(Optional.ofNullable(jz.getKey().get(2)).orElse("").toString()));
                 jiuZhenFZ.setShunXuHao(shunXuHao.getAndIncrement());
 
                 List<FangAnCXSTFZDto> shiTuFZList=new ArrayList<>();
@@ -712,7 +714,7 @@ public class FangAnServiceImpl implements FangAnService {
                         //添加视图主键ID
                         ziDuanIDList.add("zj_"+qiTaSC.getKey());
                         //数据按视图字段分组
-                        var shiTuZJFZList = jz.getValue().stream().map(st -> st.entrySet().stream().filter(zd -> ziDuanIDList.contains(zd.getKey())).toList()).distinct().map(st -> {
+                        var shiTuZJFZList = jz.getValue().stream().sorted(Comparator.comparing(st -> Optional.ofNullable(st.get("zj_" + qiTaSC.getKey())).orElse("").toString(), Comparator.nullsLast(String::compareTo))).map(st -> st.entrySet().stream().filter(zd -> ziDuanIDList.contains(zd.getKey())).toList()).distinct().map(st -> {
                             List<FangAnCXZDFZDto> ziDuanFZList = new ArrayList<>();
                             int ziDuanSXH = 0;
                             FangAnCXSTZJFZDto shiTuZJFZ = new FangAnCXSTZJFZDto();

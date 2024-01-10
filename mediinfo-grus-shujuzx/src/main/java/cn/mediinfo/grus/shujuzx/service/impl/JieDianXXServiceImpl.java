@@ -86,6 +86,7 @@ public class JieDianXXServiceImpl implements JieDianXXService {
             SC_BH_JieDianXXModel jieDianXXModel = BeanUtil.copyProperties(b, SC_BH_JieDianXXModel.class);
             jieDianXXModel.setBiHuanID(dto.getBiHuanID());
             jieDianXXModel.setBiHuanMC(dto.getBiHuanMC());
+            jieDianXXModel.setShunXuHao(b.getShunXuHao());
             processRecordForUpdateOrInsert(jieDianXXModel, existingJieDianXX, jieDianXXToInsert, jieDianXXToUpdate, retainedJieDianXXIds);
             for (var s : b.getJieDianSXList()) {
                 SC_BH_JieDianSXModel jieDianSXModel = BeanUtil.copyProperties(s, SC_BH_JieDianSXModel.class);
@@ -95,8 +96,6 @@ public class JieDianXXServiceImpl implements JieDianXXService {
             }
             if (Objects.nonNull(b.getZiBiHXXDto()))
             {
-                if (b.getZiBiHXXDto().getId()!=null)
-                {
                     SC_BH_ZiBiHXXModel scBhZiBiHXXModel = existingZiBiHXX.stream().filter(n -> n.getJieDianID().equals(b.getJieDianID())).findFirst().orElse(null);
                    if (scBhZiBiHXXModel!=null)
                    {
@@ -118,9 +117,10 @@ public class JieDianXXServiceImpl implements JieDianXXService {
                        SC_BH_ZiBiHXXModel ziBiHXXModel = BeanUtil.copyProperties(b.getZiBiHXXDto(), SC_BH_ZiBiHXXModel.class);
                        ziBiHXXModel.setBiHuanID(dto.getBiHuanID());
                        ziBiHXXModel.setBiHuanMC(dto.getBiHuanMC());
+                       ziBiHXXModel.setJieDianID(b.getJieDianID());
+                       ziBiHXXModel.setJieDianMC(b.getJieDianMC());
                        ziBiHXXToInsert.add(ziBiHXXModel);
                    }
-                }
             }
             for (var x : b.getZiBiHXSLDtoList()) {
                 SC_BH_ZiBiHXSLModel ziBiHXSLModel = BeanUtil.copyProperties(x, SC_BH_ZiBiHXSLModel.class);

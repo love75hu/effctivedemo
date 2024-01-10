@@ -365,7 +365,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
                             String itemString = m.getShuJuYMC() + "." + m.getBiaoMing() + "." + r.getZiDuanBM() + "='" +
                                     ruCanList.stream().filter(l->l.getZiDuanBM().equals(r.getZiDuanBM()))
                                             .findFirst().orElse(new ZiDuanRCDto()).getZiDuanZhi() + "'";
-                            if (builder.length() > 0) {
+                            if (!builder.isEmpty()) {
                                 builder.append(" AND ");
                             }
                             builder.append(itemString);
@@ -388,22 +388,20 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
             shiTuZXJGDto.setShiTuZXJG(maps);
             shiTuZXJGDtoList.add(shiTuZXJGDto);
         }
-
-        String sql = getShiTuBGX(tableList.get(0),identityService.getTenantId(),zuZhiJGID);
-
+        //单次执行视图 整理数据
+        //String sql = getShiTuBGX(tableList.get(0),identityService.getTenantId(),zuZhiJGID);
         //执行sql 得出结果
-        List<Map<String, Object>> maps = linChuangRemoteService.getZiDianList(new ChaXunDto(sql.toLowerCase())).getData("执行sql报错");
+        //List<Map<String, Object>> maps = linChuangRemoteService.getZiDianList(new ChaXunDto(sql.toLowerCase())).getData("执行sql报错");
         //执行完视图 获取节点的数据集合
         List<JieDianList> jieDianLists = new ArrayList<>();
         List<ZiDuanBMMC> ziDuanBMMCList = new ArrayList<>();
-        if (maps.isEmpty())
-        {
-            return new BiHuanXQDto();
-        }
+//        if (maps.isEmpty())
+//        {
+//            return new BiHuanXQDto();
+//        }
         if (Objects.equals(ziBiHDCZXBZ, "1")) //子闭环多次执行信息
         {
-
-            for (Map<String, Object> dataMap : maps) {
+            for (Map<String, Object> dataMap : shiTuZXJGDtoList.get(0).getShiTuZXJG()) {
                 List<SC_BH_ZiBiHXSLModel> ziBiHXSLList = biHuanZBHXSLList.stream().filter(n -> n.getJieDianID().equals(jieDianID)).toList();
 
                 ZiDuanBMMC ziDuanBMMC = new ZiDuanBMMC();
@@ -438,7 +436,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
                     boolean isRowStorage = Objects.equals(biHuanSTXX.getShiTuLXDM(), 2);
                     if (isRowStorage && !StringUtil.hasText(biHuanSTJDXXByJieID.getShiJianZDBM())) continue;
                     // 如果是行存储，先过滤出符合条件的映射
-                    List<Map<String, Object>> filteredMaps = isRowStorage ? maps.stream().filter(map -> Objects.equals(map.get(biHuanSTJDXXByJieID.getShiJianZDBM()), biHuanSTJDXXByJieID.getShiJianDM())).toList() : maps;
+                    List<Map<String, Object>> filteredMaps = isRowStorage ? shiTuZXJGDtoList.get(0).getShiTuZXJG().stream().filter(map -> Objects.equals(map.get(biHuanSTJDXXByJieID.getShiJianZDBM()), biHuanSTJDXXByJieID.getShiJianDM())).toList() : shiTuZXJGDtoList.get(0).getShiTuZXJG();
 
                     biHuanJDMXByJieID.forEach(f -> {
                         String value;
@@ -474,7 +472,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
                         //子闭环标志
                         jieDianList.setZiBiHBZ("1");
                         jieDianList.setZiBiHGLZD(ziBiHXXModel.getGuanLianZDBM());
-                        jieDianList.setZiBiHGLZDZ(maps.stream().map(k -> k.getOrDefault(ziBiHXXModel.getGuanLianZDBM(), "").toString()).findFirst().orElse(""));
+                        jieDianList.setZiBiHGLZDZ(shiTuZXJGDtoList.get(0).getShiTuZXJG().stream().map(k -> k.getOrDefault(ziBiHXXModel.getGuanLianZDBM(), "").toString()).findFirst().orElse(""));
                     }
                     if (!CollectionUtils.isEmpty(ziBiHXSLList1)) {
                         jieDianList.setZiBiHDCZXBZ("1");
@@ -520,8 +518,6 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
             }
             biHuanXQDto.setZiBiHXSLList(ziDuanBMMCList);
 
-
-
              return biHuanXQDto;
         }
 
@@ -539,17 +535,21 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
             List<SC_BH_ShiTuJDGXModel> scBhShiTuJDGXModel = jieDianGXList.stream().filter(n -> n.getJieDianID().equals(scBhJieDianXXModel.getJieDianID())).toList();
             JieDianList jieDianList = new JieDianList();
             List<jieDianNRList> jieDianNRList = new ArrayList<>();
+
+
+            ShiTuZXJGDto shiTuZXJGDto = shiTuZXJGDtoList.stream().filter(n -> n.getShuJuLYID().equals(biHuanSTXX.getShuJuLYID())
+                    && n.getShuJuLYLXDM().equals(biHuanSTXX.getShuJuLYLXDM())).findFirst().orElse(null);
+            if (shiTuZXJGDto==null) return new BiHuanXQDto();
             // 在 forEach 循环之前判断是行存储还是列存储
             boolean isRowStorage = Objects.equals(biHuanSTXX.getShiTuLXDM(), "2");
             // 如果是行存储，先过滤出符合条件的映射
             if (isRowStorage && !StringUtil.hasText(biHuanSTJDXXByJieID.getShiJianZDBM())) continue;
-            List<Map<String, Object>> filteredMaps = isRowStorage ? maps.stream().filter(map -> Objects.equals(map.get(biHuanSTJDXXByJieID.getShiJianZDBM().toLowerCase()), biHuanSTJDXXByJieID.getShiJianDM())).toList() : maps;
+            List<Map<String, Object>> filteredMaps = isRowStorage ? shiTuZXJGDto.getShiTuZXJG().stream().filter(map -> Objects.equals(map.get(biHuanSTJDXXByJieID.getShiJianZDBM().toLowerCase()), biHuanSTJDXXByJieID.getShiJianDM())).toList() : shiTuZXJGDto.getShiTuZXJG();
 
             //处理关联节点
-
             biHuanJDMXByJieID.forEach(f -> {
                 String value;
-                value = getValueBasedOnStorage(isRowStorage, filteredMaps, maps, f.getZiDuanBM());
+                value = getValueBasedOnStorage(isRowStorage, filteredMaps, shiTuZXJGDto.getShiTuZXJG(), f.getZiDuanBM());
                 // 创建并配置 jieDianNRList 对象
                 jieDianNRList biHuanJDNr = new jieDianNRList();
                 biHuanJDNr.setZiDuanBM(f.getZiDuanBM());
@@ -569,7 +569,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
                 //子闭环标志
                 jieDianList.setZiBiHBZ("1");
                 jieDianList.setZiBiHGLZD(ziBiHXXModel.getZiBiHZDBM());
-                jieDianList.setZiBiHGLZDZ(maps.stream().map(k -> {
+                jieDianList.setZiBiHGLZDZ(shiTuZXJGDto.getShiTuZXJG().stream().map(k -> {
                     var quZhi = k.getOrDefault(ziBiHXXModel.getGuanLianZDBM().toLowerCase(), "");
                     if (Objects.isNull(quZhi)) {
                         return "";
@@ -644,9 +644,9 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
                     if (isRowStorage && !StringUtil.hasText(niJieDianXXX.getShiJianZDBM())) continue;
 
                     List<Map<String, Object>> mapList = isRowStorage
-                            ? maps.stream().filter(map -> Objects.equals(map.get(niJieDianXXX.getShiJianZDBM().toLowerCase()), niJieDianXXX.getShiJianDM())).toList() : maps;
+                            ? shiTuZXJGDto.getShiTuZXJG().stream().filter(map -> Objects.equals(map.get(niJieDianXXX.getShiJianZDBM().toLowerCase()), niJieDianXXX.getShiJianDM())).toList() :  shiTuZXJGDto.getShiTuZXJG();
 
-                    if (mapList.isEmpty()||maps.isEmpty())
+                    if (mapList.isEmpty()||shiTuZXJGDto.getShiTuZXJG().isEmpty())
                     {
                         continue;
                     }
@@ -661,7 +661,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
                                 return quZhi.toString();
                             }).findFirst().orElse("");
                         } else {
-                            value = maps.stream().map(k -> {
+                            value = shiTuZXJGDto.getShiTuZXJG().stream().map(k -> {
                                 var quZhi = k.getOrDefault(bjdmx.getZiDuanBM().toLowerCase(), "");
                                 if (Objects.isNull(quZhi)) {
                                     return "";
@@ -670,7 +670,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
                             }).findFirst().orElse("");
                         }
 
-                        value = getValueBasedOnStorage(isRowStorage, mapList, maps, bjdmx.getZiDuanBM());
+                        value = getValueBasedOnStorage(isRowStorage, mapList, shiTuZXJGDto.getShiTuZXJG(), bjdmx.getZiDuanBM());
                         jieDianNRList niJieDianNR = new jieDianNRList();
                         niJieDianNR.setZiDuanBM(bjdmx.getZiDuanBM());
                         niJieDianNR.setZiDuanBM(bjdmx.getZiDuanBM());

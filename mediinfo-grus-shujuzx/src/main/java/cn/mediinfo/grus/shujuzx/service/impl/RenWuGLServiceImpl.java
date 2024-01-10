@@ -150,7 +150,7 @@ public class RenWuGLServiceImpl implements RenWuGLService {
     @Override
     public long getJiBenXXCount(String likeQuery, String fenLeiDM, Integer qiYongBZ) {
         return jiBenXXRepository.asQuerydsl()
-                .whereIf(StringUtil.hasText(likeQuery), t -> t.renWuMC.contains(likeQuery))
+                .whereIf(StringUtil.hasText(likeQuery), t ->t.renWuMC.lower().contains(likeQuery.toLowerCase()).or(t.renWuSM.lower().contains(likeQuery.toLowerCase())))
                 .whereIf(StringUtil.hasText(fenLeiDM), t -> t.fenLeiDM.eq(fenLeiDM))
                 .whereIf(Objects.equals(qiYongBZ, 1), t -> t.qiYongBZ.eq(qiYongBZ)).count();
     }

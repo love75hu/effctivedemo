@@ -26,7 +26,10 @@ import cn.mediinfo.grus.shujuzx.dto.fangan.FangAnSCDTO;
 import cn.mediinfo.grus.shujuzx.dto.fangancxls.FangAnCXLSDTO;
 import cn.mediinfo.grus.shujuzx.dto.fangannr.FangAnSqlDTO;
 import cn.mediinfo.grus.shujuzx.dto.result.*;
-import cn.mediinfo.grus.shujuzx.dto.shitumx.*;
+import cn.mediinfo.grus.shujuzx.dto.shitumx.SchemaTable;
+import cn.mediinfo.grus.shujuzx.dto.shitumx.ShuJuJMXZDDto;
+import cn.mediinfo.grus.shujuzx.dto.shitumx.ShuJuXSTXQDto;
+import cn.mediinfo.grus.shujuzx.dto.shitumx.TableDTO;
 import cn.mediinfo.grus.shujuzx.dto.shujuzxsts.SC_SC_ShouCangJMXListDto;
 import cn.mediinfo.grus.shujuzx.enums.FangAnOperator;
 import cn.mediinfo.grus.shujuzx.enums.NodeTypeEnum;
@@ -46,7 +49,10 @@ import cn.mediinfo.grus.shujuzx.repository.SC_SC_ShouCangJMXRepository;
 import cn.mediinfo.grus.shujuzx.request.fangan.FangAnSC;
 import cn.mediinfo.grus.shujuzx.request.fangan.FangAnXXSaveRequest;
 import cn.mediinfo.grus.shujuzx.request.fangan.FangAnXXUpdateRequest;
-import cn.mediinfo.grus.shujuzx.service.*;
+import cn.mediinfo.grus.shujuzx.service.ChaXunFAXXService;
+import cn.mediinfo.grus.shujuzx.service.FangAnNRService;
+import cn.mediinfo.grus.shujuzx.service.FangAnService;
+import cn.mediinfo.grus.shujuzx.service.ShiTuMXService;
 import cn.mediinfo.grus.shujuzx.sql.ast.SQLQueryExpr;
 import cn.mediinfo.grus.shujuzx.sql.ast.SQLQueryNode;
 import cn.mediinfo.grus.shujuzx.sql.ast.SQLQueryObject;
@@ -974,7 +980,25 @@ public class FangAnServiceImpl implements FangAnService {
         //获取病历查询结果
         String bingLiCXSql = MessageFormat.format(" {0} and a.bingrenid in (''{1}'') order by a.bingrenid", bingLiCXJCSql, CollUtil.join(bingRenIDList, "','"));
 
-        List<BingLiSCDTO> bingLiSCList = BeanUtil.copyListProperties(linChuangRemoteService.getZiDianList(new ChaXunDto(bingLiCXSql)).getData("数据查询失败"),BingLiSCDTO::new);
+        var bingLiSCList=linChuangRemoteService.getZiDianList(new ChaXunDto(bingLiCXSql)).getData("数据查询失败").stream().map(p->{
+            BingLiSCDTO item=new BingLiSCDTO();
+            item.setBingRenID((String)p.get("bingrenid"));
+            item.setXingMing((String)p.get("xingming"));
+            item.setXingBieDM((String)p.get("xingbiedm"));
+            item.setXingBieMC((String)p.get("xingbiemc"));
+            item.setChuShengRQ(DateUtil.parse(Optional.ofNullable(p.get("chushengrq")).orElse("").toString()));
+            item.setMenZhenCS((Integer)p.get("menzhencs"));
+            item.setZhuYuanCS((Integer)p.get("zhuyuancs"));
+            item.setJiuZhenYWID((String)p.get("jiuzhenywid"));
+            item.setJiuZhenYWLXDM((String)p.get("jiuzhenywlxdm"));
+            item.setZuZhiJGID((String)p.get("zuzhijgid"));
+            item.setZuZhiJGMC((String)p.get("zuzhijgmc"));
+            item.setJiuZhenRQ(DateUtil.parse(Optional.ofNullable(p.get("jiuzhenrq")).orElse("").toString()));
+            item.setJiuZhenKSID((String)p.get("jiuzhenksid"));
+            item.setJiuZhenKSMC((String)p.get("jiuzhenksmc"));
+            item.setBingLiJLID((String)p.get("binglijlid"));
+            return item;
+        }).toList();
 
         return bingLiSCList.stream().collect(Collectors.groupingBy(p -> ListUtil.toList(p.getBingRenID(), p.getXingMing(), p.getXingBieDM(), p.getXingBieMC(), p.getChuShengRQ(), p.getMenZhenCS(), p.getZhuYuanCS()),LinkedHashMap::new, Collectors.toList())).entrySet().stream().map(p -> {
             BingRenJBXXDTO item = new BingRenJBXXDTO();
@@ -983,7 +1007,9 @@ public class FangAnServiceImpl implements FangAnService {
             item.setXingBieDM(String.valueOf(p.getKey().get(2)));
             item.setXingBieMC(String.valueOf(p.getKey().get(3)));
             item.setChuShengRQ(DateUtil.parse(Optional.ofNullable(p.getKey().get(4)).orElse("").toString()));
-            item.setNianLing(DateUtil.getAge(DateFormatUtils.format(DateUtil.parse(Optional.ofNullable(p.getKey().get(4)).orElse("").toString()), "yyyy-MM-dd")));
+            if(ObjectUtils.isNotEmpty(p.getKey().get(4))) {
+                item.setNianLing(DateUtil.getAge(DateFormatUtils.format(DateUtil.parse(Optional.ofNullable(p.getKey().get(4)).orElse("").toString()), "yyyy-MM-dd")));
+            }
             item.setMzJiuZhenNum((Integer) p.getKey().get(5));
             item.setZhuYuanNum((Integer) p.getKey().get(6));
             List<JiuZhenXXDTO> jiuZhenXXList = p.getValue().stream().collect(Collectors.groupingBy(q -> ListUtil.toList(q.getJiuZhenYWID(), q.getJiuZhenYWLXDM(), q.getZuZhiJGID(), q.getZuZhiJGMC(), q.getJiuZhenRQ(), q.getJiuZhenKSID(), q.getJiuZhenKSMC()),LinkedHashMap::new, Collectors.toList())).entrySet().stream().map(q -> {

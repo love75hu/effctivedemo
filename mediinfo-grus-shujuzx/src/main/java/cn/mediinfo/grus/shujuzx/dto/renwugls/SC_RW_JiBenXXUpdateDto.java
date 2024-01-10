@@ -30,5 +30,7 @@ public class SC_RW_JiBenXXUpdateDto {
     private String zhiXingPLDM;
     @Schema(description = "执行频率名称")
     private String zhiXingPLMC;
+    @Schema(description = "顺序号")
+    private Integer shunXuHao;
 
 }

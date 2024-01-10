@@ -12,4 +12,5 @@ import java.util.List;
 public interface SC_ZD_ShengMingZQRepository extends MsfJpaRepository<QSC_ZD_ShengMingZQModel, SC_ZD_ShengMingZQModel, String> {
 
     Boolean existsByIdIsNotAndShengMingZQMC(String id, String ShengMingZQMC);
+
 }

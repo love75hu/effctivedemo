@@ -50,6 +50,7 @@ public class RenWuGLServiceImpl implements RenWuGLService {
     private final HttpService httpService;
     private final ShuJuYZYService shuJuYZYService;
 
+
     public RenWuGLServiceImpl(SequenceService sequenceService, SC_RW_JiBenXXRepository jiBenXXRepository, LyraIdentityService lyraIdentityService,
                               SC_RW_ZhiXingRZRepository zhiXingRZRepository, SC_RW_ShuJuYuanRepository shuJuYuanRepository, SC_RW_TongYongPZRepository tongYongPZRepository,
                               SC_ZD_ShuJuYZYRepository shuJuYZYRepository, SC_ZD_ShuJuYLBRepository shuJuYLBRepository, GongYongRemoteService gongYongRemoteService,
@@ -84,10 +85,11 @@ public class RenWuGLServiceImpl implements RenWuGLService {
     public List<SC_RW_JiBenXXListDto> getJiBenXXList(String likeQuery, String fenLeiDM, Integer qiYongBZ, Integer pageIndex, Integer pageSize) {
 
         var result = jiBenXXRepository.asQuerydsl()
-                .whereIf(StringUtil.hasText(likeQuery), t -> t.renWuMC.contains(likeQuery))
+                .whereIf(StringUtil.hasText(likeQuery), t ->t.renWuMC.lower().contains(likeQuery.toLowerCase()).or(t.renWuSM.contains(likeQuery)))
                 .whereIf(StringUtil.hasText(fenLeiDM), t -> t.fenLeiDM.eq(fenLeiDM))
                 .whereIf(Objects.equals(qiYongBZ, 1), t -> t.qiYongBZ.eq(qiYongBZ))
                 .leftJoin(tongYongPZRepository.asQuerydsl(), (jiBenXX, tongYongPZ) -> jiBenXX.fenLeiDM.eq(tongYongPZ.fenLeiDM), JiBenXXAndTongYongPZPO::new)
+                .orderBy(t->t.jiBenXX().shunXuHao.asc())
                 .select(q -> new Expression[]{
                                 q.jiBenXX().id,
                                 q.jiBenXX().renWuID,
@@ -114,7 +116,9 @@ public class RenWuGLServiceImpl implements RenWuGLService {
         result.forEach(item -> {
             if (!Objects.isNull(item.getFuWuQIP()) && !Objects.isNull(item.getFuWuQDK())
             && !Objects.equals(item.getFuWuQIP(),"") && !Objects.equals(item.getFuWuQDK(),"")){
-                var shejidz = item.getFuWuQIP().concat(":").concat(item.getFuWuQDK()).concat("/spoon/spoon?file=/opt/kettle");
+                var IP=item.getFuWuQIP().startsWith("http://")? item.getFuWuQIP():"http://"+item.getFuWuQIP();
+
+                var shejidz =IP.concat(":").concat(item.getFuWuQDK()).concat("/spoon/spoon?file=/opt/kettle");
                 if (Objects.isNull(item.getRenWuDZ()) || Objects.equals(item.getRenWuDZ(),"")) {
                     if(!Objects.isNull(item.getFuWuQRWDZ()) && !Objects.equals(item.getFuWuQRWDZ(),"")){
                         shejidz = shejidz.concat(item.getFuWuQRWDZ()).concat("/").concat(item.getRenWuMC()).concat(".kjb");
@@ -126,7 +130,6 @@ public class RenWuGLServiceImpl implements RenWuGLService {
                 }
                 item.setSheJiQDZ(shejidz);
             }
-
             var shuJuYuanList = shuJuYuanDtos.stream().filter(t -> Objects.equals(t.getRenWuID(), item.getRenWuID())).toList();
             if (shuJuYuanList.size() > 0) {
                 var maxYeWuZXSJ = shuJuYuanList.stream().sorted(Comparator.comparing(SC_RW_ShuJuYuanModel::getYeWuZXSJ, Comparator.nullsLast(Comparator.reverseOrder()))).findFirst().orElse(null);
@@ -218,6 +221,7 @@ public class RenWuGLServiceImpl implements RenWuGLService {
             t.setRenWuID(sequenceService.getXuHao("SC_RW_JiBenXX_RenWuID", 9));
             t.setZuZhiJGID(lyraIdentityService.getJiGouID());
             t.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
+
         });
         jiBenXXRepository.save(entity);
         return entity.getId();
@@ -352,18 +356,22 @@ public class RenWuGLServiceImpl implements RenWuGLService {
      */
     @Override
     public List<SC_RW_ShuJuYuanDto> getShuJuYuanList(String renWuID) {
-
         List<GY_ZD_ShuJuYuanTreeRso> ShuJuYuanTree = gongYongRemoteService.getShuJuYFLTree().getData();
         List<GY_ZD_ShuJuYuanTreeRso> treeChild = new ArrayList<>();
         ShuJuYuanTree.forEach(item -> {
             //var array=  Stream.concat(item.getChildren().stream(), treeChild.stream()).toList();
             treeChild.addAll(Stream.concat(item.getChildren().stream(), treeChild.stream()).toList());
         });
+        var jiGouid=lyraIdentityService.getJiGouID();
         var result = shuJuYuanRepository.asQuerydsl().where(t -> t.renWuID.eq(renWuID)).fetch();
         var entity = BeanUtil.copyListProperties(result, SC_RW_ShuJuYuanDto::new, (s, t) -> {
-            var itemchild = treeChild.stream().filter(q -> Objects.equals(q.getId(), t.getShuJuYID())).findFirst().get();
-            t.setChangShangMC(itemchild.getChangShangMC());
-            t.setXiTongMC(itemchild.getXiTongMC());
+            var entityChild = treeChild.stream().anyMatch(q -> Objects.equals(q.getId(), t.getShuJuYID()));
+            if (entityChild){
+                var itemchild=treeChild.stream().filter(q -> Objects.equals(q.getId(), t.getShuJuYID())).findFirst().get();
+                t.setChangShangMC(itemchild.getChangShangMC());
+                t.setXiTongMC(itemchild.getXiTongMC());
+            }
+
         });
 
         return entity;
@@ -709,9 +717,10 @@ public class RenWuGLServiceImpl implements RenWuGLService {
             }
         }
         //url拼接
-        String url=renWUXXDto.getFuWuQIP().concat(":").concat(renWUXXDto.getFuWuQDK()).concat("/spoon/kettle/executeJob?job=/opt/kettle").concat(renWUXXDto.getRenWuDZ())+ "&renWuID=" + renWUXXDto.getRenWuID() + "&zhiXingRZID=" + zhiXingRZID + canShuStr;
+        var IP=renWUXXDto.getFuWuQIP().startsWith("http://")?renWUXXDto.getFuWuQIP():"http://"+renWUXXDto.getFuWuQIP();
+        String url=IP.concat(":").concat(renWUXXDto.getFuWuQDK()).concat("/spoon/kettle/executeJob?job=/opt/kettle").concat(renWUXXDto.getRenWuDZ())+ "&renWuID=" + renWUXXDto.getRenWuID() + "&zhiXingRZID=" + zhiXingRZID + canShuStr;
         if (Objects.isNull(renWUXXDto.getRenWuDZ()) || Objects.equals(renWUXXDto.getRenWuDZ(),"")){
-            url = renWUXXDto.getFuWuQIP().concat(":").concat(renWUXXDto.getFuWuQDK()).concat("/spoon/kettle/executeJob?job=/opt/kettle").concat(renWUXXDto.getFuWuQRWDZ()).concat("/").concat(renWUXXDto.getRenWuMC()).concat(".kjb")+ "&renWuID=" + renWUXXDto.getRenWuID() + "&zhiXingRZID=" + zhiXingRZID + canShuStr;
+            url =IP.concat(":").concat(renWUXXDto.getFuWuQDK()).concat("/spoon/kettle/executeJob?job=/opt/kettle").concat(renWUXXDto.getFuWuQRWDZ()).concat("/").concat(renWUXXDto.getRenWuMC()).concat(".kjb")+ "&renWuID=" + renWUXXDto.getRenWuID() + "&zhiXingRZID=" + zhiXingRZID + canShuStr;
         }
 
         //http接口调用返回数据类型为xml httpService返回byte数组
@@ -806,9 +815,10 @@ public class RenWuGLServiceImpl implements RenWuGLService {
         var result=BeanUtil.copyProperties(entity,RenWuXQDto::new,(s,t)->{
             if (!Objects.isNull(tongyongpz)){
                 if (!Objects.isNull(tongyongpz.getFuWuQIP()) && !Objects.isNull(tongyongpz.getFuWuQDK()) && !Objects.isNull(tongyongpz.getRenWuDZ())){
-                    var renwudz=tongyongpz.getFuWuQIP().concat(":").concat(tongyongpz.getFuWuQDK()).concat("/spoon/kettle/executeJob?job=/opt/kettle").concat(tongyongpz.getRenWuDZ()).concat("/").concat(s.getRenWuMC()).concat(".kjb");
+                    var IP=tongyongpz.getFuWuQIP().startsWith("http://")? tongyongpz.getFuWuQIP():"http://"+tongyongpz.getFuWuQIP();
+                    var renwudz=IP.concat(":").concat(tongyongpz.getFuWuQDK()).concat("/spoon/kettle/executeJob?job=/opt/kettle").concat(tongyongpz.getRenWuDZ()).concat("/").concat(s.getRenWuMC()).concat(".kjb");
                     if (!Objects.isNull(s.getRenWuDZ())){
-                        renwudz=tongyongpz.getFuWuQIP().concat(":").concat(tongyongpz.getFuWuQDK()).concat("/spoon/kettle/executeJob?job=/opt/kettle").concat(s.getRenWuDZ());
+                        renwudz=IP.concat(":").concat(tongyongpz.getFuWuQDK()).concat("/spoon/kettle/executeJob?job=/opt/kettle").concat(s.getRenWuDZ());
                     }
                     t.setRenWuDZ(renwudz);
                 }

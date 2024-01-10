@@ -14,7 +14,7 @@ public class ShiTuXXDto {
     @Schema(description = "视图名称")
     private String shiTuMC;
     @Schema(description = "末级标志")
-    private String moJiBZ;
+    private Integer moJiBZ;
     @Schema(description = "数据来源类型代码【SC0014】")
     private String shuJuLYLXDM;
     @Schema(description = "数据来源类型名称")
@@ -24,13 +24,13 @@ public class ShiTuXXDto {
     @Schema(description = "数据来源名称")
     private String shuJuLYMC;
     @Schema(description = "门诊使用标志")
-    private String menZhenSYBZ;
+    private Integer menZhenSYBZ;
     @Schema(description = "住院使用标志")
-    private String zhuYuanSYBZ;
+    private Integer zhuYuanSYBZ;
     @Schema(description = "急诊使用标志")
-    private String jiZhenSYBZ;
+    private Integer jiZhenSYBZ;
     @Schema(description = "公卫使用标志")
-    private String gongWeiSYBZ;
+    private Integer gongWeiSYBZ;
     @Schema(description = "顺序号")
     private Integer shunXuHao;
 

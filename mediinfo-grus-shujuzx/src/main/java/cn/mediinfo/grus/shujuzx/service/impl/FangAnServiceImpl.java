@@ -186,8 +186,9 @@ public class FangAnServiceImpl implements FangAnService {
             throw new TongYongYWException("查询方案历史不存在");
         }
         if (StringUtils.isBlank(fangAnCXLS.getFangAnID())) {
-            BeanUtil.copyProperties(fangAnCXLS, result);
+            BeanUtil.copyProperties(fangAnCXLS, result,"fangAnId");
             result.setId("");
+            result.setFangAnId(fangAnCXLS.getFangAnID());
             result.setRoot(JsonUtil.getJsonToBean(fangAnCXLS.getChaXunTJ(),FangAnTreeNode.class));
             result.setFangAnSCList(JsonUtil.getJsonToList(fangAnCXLS.getChaXunSC(),FangAnSCDTO.class));
             return result;

@@ -11,6 +11,7 @@ import cn.mediinfo.grus.shujuzx.model.SC_BH_ShiTuMXModel;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.util.List;
+import java.util.Objects;
 
 @MsfDataSource("datasourcesjzx")
 public interface SC_BH_ShiTuMXRepository extends MsfJpaRepository<QSC_BH_ShiTuMXModel, SC_BH_ShiTuMXModel, String>, JpaSpecificationExecutor<SC_BH_ShiTuMXModel> {
@@ -58,7 +59,7 @@ public interface SC_BH_ShiTuMXRepository extends MsfJpaRepository<QSC_BH_ShiTuMX
     }
 
     default List<KeXuanZDDto> getShiTuMXList(String biHuanLXDM,List<String> shiTuIDs) {
-        return this.asQuerydsl().where(e->e.biHuanLXDM.eq(biHuanLXDM)).where(e->e.shiTuID.in(shiTuIDs) ).select(KeXuanZDDto.class).fetch();
+        return this.asQuerydsl().where(e->e.biHuanLXDM.eq(biHuanLXDM)).where(e->e.shiTuID.in(shiTuIDs).and(e.tiaoJianBZ.eq(1))).select(KeXuanZDDto.class).fetch();
     }
     List<SC_BH_ShiTuMXModel> findByShiTuIDIn(List<String> shiTuID);
 

@@ -1,6 +1,7 @@
 package cn.mediinfo.grus.shujuzx.dto.renwugls;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
 import lombok.Data;
 
 import java.util.Date;
@@ -48,6 +49,8 @@ public class SC_RW_JiBenXXDto  {
     private Integer qiYongBZ;
     @Schema(description = "备注")
     private String beiZhu;
+    @Schema(description = "顺序号")
+    private Integer shunXuHao;
 
 
 }

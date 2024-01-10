@@ -54,5 +54,7 @@ public class SC_RW_JiBenXXModel  extends StringMTEntity {
     private Integer qiYongBZ;
     @Column(columnDefinition = "备注")
     private String beiZhu;
+    @Column(columnDefinition = "顺序号")
+    private Integer shunXuHao;
 
 }

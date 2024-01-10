@@ -10,7 +10,9 @@ import cn.mediinfo.grus.shujuzx.dto.shengmingzqpzs.SC_ZD_ShengMingZQDto;
 import cn.mediinfo.grus.shujuzx.dto.shengmingzqpzs.SC_ZD_ShengMingZQListDto;
 import cn.mediinfo.grus.shujuzx.dto.shengmingzqpzs.SC_ZD_ShengMingZQUpdateDto;
 import cn.mediinfo.grus.shujuzx.dto.shujuyzys.SC_ZD_ShuJuYZYDto;
+import cn.mediinfo.grus.shujuzx.model.SC_RW_JiBenXXModel;
 import cn.mediinfo.grus.shujuzx.model.SC_ZD_ShengMingZQModel;
+import cn.mediinfo.grus.shujuzx.model.SC_ZD_ShuJuYZYModel;
 import cn.mediinfo.grus.shujuzx.repository.SC_ZD_ShengMingZQRepository;
 import cn.mediinfo.grus.shujuzx.service.ShengMingZQPZService;
 import cn.mediinfo.lyra.extension.service.LyraIdentityService;
@@ -18,8 +20,10 @@ import cn.mediinfo.lyra.extension.service.SequenceService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class ShengMingZQPZServiceImpl implements ShengMingZQPZService {
@@ -61,13 +65,20 @@ public class ShengMingZQPZServiceImpl implements ShengMingZQPZService {
             }
         }
         String shengmingZQID = sequenceService.getXuHao("SC_ZD_ShengMingZQ_ShengMingZQID", 7);
-        ;
+
         SC_ZD_ShengMingZQModel addModel = BeanUtil.copyProperties(createDto, SC_ZD_ShengMingZQModel::new, (dto, model) -> {
             model.setZuZhiJGID(lyraIdentityService.getJiGouID());
             model.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
             model.setShengMingZQID(shengmingZQID);
+            if (Objects.isNull(createDto.getShunXuHao())){
+                // 获取shuJuYZYList集合中的SC_ZD_ShuJuYZYModel对象中的shunXuHao的最大值
+                Optional<SC_ZD_ShengMingZQModel> maxModel=shengMingZQRepository.findAll().stream().max(Comparator.comparing(SC_ZD_ShengMingZQModel::getShunXuHao));;
+                // 获取最大值
+                int maxShunXuHao = maxModel.map(SC_ZD_ShengMingZQModel::getShunXuHao).orElse(0);
+                model.setShunXuHao(maxShunXuHao+1);
+            }
         });
-        shengMingZQRepository.insert(addModel);
+        shengMingZQRepository.save(addModel);
         return true;
     }
 

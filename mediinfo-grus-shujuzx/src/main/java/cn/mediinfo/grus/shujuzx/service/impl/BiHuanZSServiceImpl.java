@@ -246,35 +246,40 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
         //如果没有配置也返回空
         if (CollectionUtil.isEmpty(biHuanPZList))return new BiHuanXQDto();
         String biHuanID = null;
-        // 获取配的闭环
-        for (SC_BH_DiaoYongPZDto sc_bh_diaoYongPZDto : biHuanPZList) {
-            // 解析条件
-            List<GuiZeDto> jsonToList = JsonUtil.getJsonToList(sc_bh_diaoYongPZDto.getTiaoJian(), GuiZeDto.class);
-            boolean isMatched = false;
-            if (jsonToList.isEmpty()) {
-                biHuanID = sc_bh_diaoYongPZDto.getBiHuanID();
-                break;
-            }
-            for (var guiZeDto : jsonToList) {
+        if (CollectionUtil.isEmpty(biHuanGNDPZ.getTiaoJianList()))
+        {
+            biHuanID= biHuanPZList.stream().filter(n->n.getTiaoJian().isEmpty()).findFirst().orElse(new SC_BH_DiaoYongPZDto()).getBiHuanID();
+        }else {
+            // 获取配的闭环
+            for (SC_BH_DiaoYongPZDto sc_bh_diaoYongPZDto : biHuanPZList) {
+                // 解析条件
+                List<GuiZeDto> jsonToList = JsonUtil.getJsonToList(sc_bh_diaoYongPZDto.getTiaoJian(), GuiZeDto.class);
+                boolean isMatched = false;
+                if (jsonToList.isEmpty()) {
+                    biHuanID = sc_bh_diaoYongPZDto.getBiHuanID();
+                    break;
+                }
+                for (var guiZeDto : jsonToList) {
 
-                for (var shiTu : guiZeDto.getGuiZeList()) {
-                    String ziDuanZhi = biHuanGNDPZ.getTiaoJianList().stream()
-                            .filter(n -> n.getZiDuanBM().equals(shiTu.getZiDuanBM()))
-                            .findFirst().orElse(new ZiDuanRCDto()).getZiDuanZhi();
-                    if (!Objects.equals(ziDuanZhi, shiTu.getZiDuanZhi().get(0).getValue())) {
-                        isMatched = false;
+                    for (var shiTu : guiZeDto.getGuiZeList()) {
+                        String ziDuanZhi = biHuanGNDPZ.getTiaoJianList().stream()
+                                .filter(n -> n.getZiDuanBM().equals(shiTu.getZiDuanBM()))
+                                .findFirst().orElse(new ZiDuanRCDto()).getZiDuanZhi();
+                        if (!Objects.equals(ziDuanZhi, shiTu.getZiDuanZhi().get(0).getValue())) {
+                            isMatched = false;
+                            break;
+                        } else {
+                            isMatched = true;
+                        }
+                    }
+                    if (isMatched) {
                         break;
-                    } else {
-                        isMatched = true;
                     }
                 }
                 if (isMatched) {
+                    biHuanID = sc_bh_diaoYongPZDto.getBiHuanID();
                     break;
                 }
-            }
-            if (isMatched) {
-                biHuanID = sc_bh_diaoYongPZDto.getBiHuanID();
-                break;
             }
         }
         if (biHuanID==null)return new BiHuanXQDto();

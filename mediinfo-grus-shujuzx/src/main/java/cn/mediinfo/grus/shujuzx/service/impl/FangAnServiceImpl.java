@@ -371,7 +371,7 @@ public class FangAnServiceImpl implements FangAnService {
         //药品或者列表展示时
         if (fangAnSCList.stream().anyMatch(p -> "4".equals(p.getZhiBiaoLXDM()))||isShowBQ) {
             //获取输出字段部分按就诊/患者合并的最大长度
-            int maxColCount = bingRenFZList.stream().map(br -> br.getFangAnCXJZFZList().stream().map(jz -> jz.getFangAnCXSTFZList().stream().map(st -> st.getFangAnCXSTZJFZList().stream().map(stzj -> stzj.getFangAnCXZDFZList().stream().map(FangAnCXZDFZDto::getZiDuanZhiCount).reduce(0, Integer::sum)).reduce(0, Integer::sum)).reduce(0, (isHuanZheHB ? Integer::sum : Integer::max))).reduce(0, Integer::max)).reduce(0, Integer::max);
+            int maxColCount = bingRenFZList.stream().map(br -> br.getFangAnCXJZFZList().stream().map(jz -> jz.getFangAnCXSTFZList().stream().map(st -> st.getFangAnCXSTZJFZList().stream().map(stzj -> stzj.getFangAnCXZDFZList().stream().map(FangAnCXZDFZDto::getZiDuanZhiCount).reduce(0, Integer::sum)).reduce(0, Integer::sum)).reduce(0, Integer::sum)).reduce(0, (isHuanZheHB ? Integer::sum : Integer::max))).reduce(0, Integer::max);
 
             for (FangAnCXBRFZDto bingRenFZ : bingRenFZList) {
                 if (isHuanZheHB) {

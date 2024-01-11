@@ -621,7 +621,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
         try {
             if (!CollectionUtils.isEmpty(huanZheList))
             {
-                var updateXiuGaiSJ=huanZheList.stream().findFirst().orElse(new BR_DA_JiBenXXModel()).getXiuGaiSJ();
+                var updateXiuGaiSJ=huanZheList.stream().sorted(Comparator.comparing(BR_DA_JiBenXXModel::getXiuGaiSJ, Comparator.nullsLast(Comparator.reverseOrder()))).findFirst().orElse(new BR_DA_JiBenXXModel()).getXiuGaiSJ();
                 if (huanZheList.size()==1001) {
                     //当患者列表的修改时间都一样时，重新取修改时间为这个时间的患者
                     if (huanZheList.get(0).getXiuGaiSJ().equals(huanZheList.get(1000).getXiuGaiSJ()))
@@ -646,6 +646,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
         }catch (Exception e)
         {
            springCache.put("GengXinSJ",DateUtil.getYYMMDDHHMMSS(kaiShiSJ));
+
 //            throw;
         }
         return result;

@@ -49,17 +49,10 @@ public interface RenWuGLService {
 
     Boolean saveTongYongPZ(List<SC_RW_TongYongPZDto> creatDto);
 
-    Boolean saveZhiXingRZ(String id) throws TongYongYWException;
-
-    Boolean saveZhiXingRZList(List<SC_RW_ZhiXingRZCreateDto> creatDto);
-
     SC_RW_TongYongPZDto getTongYongPZByFLDM(String fenLeiDM);
 
     String saveRenWuZXList(List<SC_RW_ZhiXingRZCreateDto> creatDto);
 
-    String getJsonStr(String ruCan);
-
-    Boolean qiYongSJY(String id, Integer qiYongBZ) throws TongYongYWException;
 
     RenWuXQDto getRenWuXQ(String id) throws TongYongYWException;
 

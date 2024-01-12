@@ -208,14 +208,7 @@ public class RenWuGLController {
                                                                       @RequestParam Date zhiXingJSSJ) {
         return MsfResponse.success(renWuGLService.getZhiXingRZCount(renWuID,zhiXingKSSJ,zhiXingJSSJ));
     }
-    /**
-     * 执行保存
-     */
-    @Operation(summary = "单条数据执行")
-    @PostMapping(path = "SaveZhiXingRZ")
-    public MsfResponse<Boolean> saveZhiXingRZ(String RenWuID) throws TongYongYWException {
-        return MsfResponse.success(renWuGLService.saveZhiXingRZ(RenWuID));
-    }
+
     /**
      * 批量执行保存
      */

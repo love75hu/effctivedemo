@@ -736,7 +736,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
    {
        // 提取满足条件的元素并排序
        List<JieDianList> sortedList = jieDianLists.stream()
-               .filter(j -> j.getBingXingBZ() == 1)
+               .filter(j -> Objects.equals(j.getBingXingBZ(),1))
                .sorted(Comparator.comparing(JieDianList::getKongZhiSJ))
                .toList();
        // 如果节点中没有 返回当前的顺序 不去排序

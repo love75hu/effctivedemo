@@ -192,6 +192,8 @@ public class JieDianXXServiceImpl implements JieDianXXService {
                     .set(q->q.ziBiHSTMC,(q,t)->t.getZiBiHSTMC())
                     .set(q->q.zuZhiJGID,(q,t)->t.getZuZhiJGID())
                     .set(q->q.zuZhiJGMC,(q,t)->t.getZuZhiJGMC())
+                    .set(q->q.ziBiHZDBM,(q,t)->t.getZiBiHZDBM())
+                    .set(q->q.ziBiHZDMC,(q,t)->t.getZiBiHZDMC())
                     .where((q,t)->q.id.eq(t.getId())).execute();
         }
         // 删除数据库中但不在保留ID列表中的记录

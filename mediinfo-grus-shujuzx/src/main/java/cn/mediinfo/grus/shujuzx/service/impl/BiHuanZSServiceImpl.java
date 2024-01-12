@@ -841,6 +841,15 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
             for (ShuJuJMXZDDto p : Optional.ofNullable(f.getShuJuJMXZDDtos()).orElse(new ArrayList<>())) {
                 ziDuanMingList.add(isNeiLian ? "l" + index + "." + p.getZiDuanBM() : f.getBiaoMing() + "." + p.getZiDuanBM());
             }
+            if (isNeiLian) {
+                zuoFeiBZ.append(" And l").append(index).append(".zuoFeiBZ=0");
+                zuZhiJGIDTJ.append(" And l").append(index).append(".zuzhijgid=").append("'").append(zuZhiJGID).append("'");
+                zuHuIDTJ.append(" And l").append(index).append(".zuhuid=").append("'").append(zuHuID).append("'");
+            }else {
+                zuoFeiBZ.append(" And ").append(f.getBiaoMing()).append(".zuoFeiBZ=0");
+                zuZhiJGIDTJ.append(" And ").append(f.getBiaoMing()).append(".zuzhijgid=").append("'").append(zuZhiJGID).append("'");
+                zuHuIDTJ.append(" And ").append(f.getBiaoMing()).append(".zuhuid=").append("'").append(zuHuID).append("'");
+            }
             if (!isNeiLian) {
                 continue;
             }
@@ -848,11 +857,8 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
             relationCondition = relationCondition.replaceAll("(?i)" + key, "l" + index);
             filterCondition = filterCondition.replaceAll("(?i)" + key, "l" + index);
 
-            zuoFeiBZ.append(" And l").append(index).append(".zuoFeiBZ=0");
-            zuZhiJGIDTJ.append(" And l").append(index).append(".zuzhijgid=").append("'"+zuZhiJGID+"'");
-            zuHuIDTJ.append(" And l").append(index).append(".zuhuid=").append("'"+zuHuID+"'");
             index++;
-        }
+            }
         builder.append(CollUtil.join(ziDuanMingList, ","));
         builder.append(" from ");
         builder.append(isNeiLian ? CollUtil.join(biaoMingList, ",") : relationCondition);
@@ -860,14 +866,13 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
         if (StringUtils.isNotBlank(filterCondition)  ) {
             builder.append(" AND ");
             builder.append(filterCondition);
-
+            builder.append(zuoFeiBZ);
+            builder.append(zuZhiJGIDTJ);
+            builder.append(zuHuIDTJ);
         }
         if (StringUtils.isNotBlank(relationCondition) && isNeiLian) {
             builder.append(" and ");
             builder.append(relationCondition);
-            builder.append(zuoFeiBZ);
-            builder.append(zuZhiJGIDTJ);
-            builder.append(zuHuIDTJ);
         }
         return builder.toString();
     }

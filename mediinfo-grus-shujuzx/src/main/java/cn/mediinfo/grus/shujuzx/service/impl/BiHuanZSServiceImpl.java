@@ -338,7 +338,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
         List<SC_BH_ShiTuJDMXModel> biHuanSTJDMXSYMX = shiTuJDMXRepository.findByShiTuIDIn(shituIDs);
 
         BiHuanXQDto biHuanXQDto = new BiHuanXQDto();
-        biHuanXQDto.setBiHuanID(ziBiHID);
+        biHuanXQDto.setBiHuanID(biHuanID);
         biHuanXQDto.setBiHuanMC(biHuanJBXX.getBiHuanMC());
         //组装节点管理中的配置的字段和数据视图
         List<LingChuangJSPZDto> shuJuLYDtos = new ArrayList<>();
@@ -518,7 +518,9 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
                     jieDianList.setJieDianNRList(jieDianNRList);
                     jieDianList1.add(jieDianList);
                 }
-                ziDuanBMMC.setJieDianXX(jieDianList1);
+                ziDuanBMMC.setJieDianXX(jieDianList1.stream()
+                        .filter(n->n.getBingXingBZ().equals(1))
+                        .sorted(Comparator.comparing(JieDianList::getKongZhiSJ)).toList());
                 ziDuanBMMCList.add(ziDuanBMMC);
             }
             biHuanXQDto.setZiBiHXSLList(ziDuanBMMCList);
@@ -727,7 +729,10 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
 //            });
 //            j.setShiXiaoLists(shiXiaoLists);
 //        });
-        biHuanXQDto.setJieDianList(jieDianLists);
+//        });
+        biHuanXQDto.setJieDianList(jieDianLists.stream()
+                .filter(n->n.getBingXingBZ().equals(1))
+                .sorted(Comparator.comparing(JieDianList::getKongZhiSJ)).toList());
         return biHuanXQDto;
     }
 

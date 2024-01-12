@@ -2,11 +2,12 @@ package cn.mediinfo.grus.shujuzx.service.impl;
 
 import cn.mediinfo.cyan.msf.core.exception.MsfException;
 import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
+import cn.mediinfo.cyan.msf.core.util.BeanUtil;
 import cn.mediinfo.cyan.msf.core.util.CollectorUtil;
-import cn.mediinfo.cyan.msf.core.util.MapUtils;
 import cn.mediinfo.cyan.msf.core.util.PageRequestUtil;
 import cn.mediinfo.cyan.msf.core.util.StringUtil;
 import cn.mediinfo.cyan.msf.orm.util.QueryDSLUtils;
+import cn.mediinfo.cyan.msf.tenant.orm.entity.StringMTEntity;
 import cn.mediinfo.grus.shujuzx.constant.ChaXunMSEnum;
 import cn.mediinfo.grus.shujuzx.constant.ShuJuZXConstant;
 import cn.mediinfo.grus.shujuzx.dto.yinsigzszs.*;
@@ -18,7 +19,6 @@ import cn.mediinfo.grus.shujuzx.repository.SC_ZD_YinSiGZSZRepository;
 import cn.mediinfo.grus.shujuzx.repository.SC_ZD_YinSiPZRepository;
 import cn.mediinfo.grus.shujuzx.repository.SC_ZD_ZhanShiPZRepository;
 import cn.mediinfo.grus.shujuzx.service.YinSiGZSZService;
-import cn.mediinfo.grus.shujuzx.utils.ExpressionUtils;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.transaction.Transactional;
@@ -41,9 +41,11 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
     private final SC_ZD_YinSiGZSZRepository yinSiGZSZRepository;
     private final SC_ZD_ZhanShiPZRepository zhanShiPZRepository;
     private final GongYongRemoteService _gongYongRemoteService;
+
     public YinSiGZSZServiceImpl(SC_ZD_YinSiPZRepository yinSiPZRepository,
                                 SC_ZD_YinSiGZSZRepository yinSiGZSZRepository,
-                                SC_ZD_ZhanShiPZRepository zhanShiPZRepository, GongYongRemoteService gongYongRemoteService) {
+                                SC_ZD_ZhanShiPZRepository zhanShiPZRepository,
+                                GongYongRemoteService gongYongRemoteService) {
         this.yinSiPZRepository = yinSiPZRepository;
         this.yinSiGZSZRepository = yinSiGZSZRepository;
         this.zhanShiPZRepository = zhanShiPZRepository;
@@ -61,7 +63,7 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
             throw new TongYongYWException("数据元名称已存在,请重新确认!");
         }
         SC_ZD_YinSiGZSZModel addModel = new SC_ZD_YinSiGZSZModel();
-        MapUtils.mergeProperties(yinSiGZSZInDto, addModel);
+        BeanUtil.mergeProperties(yinSiGZSZInDto, addModel);
         addModel.setZuZhiJGID("0");
         addModel.setZuZhiJGMC("通用");
         yinSiGZSZRepository.save(addModel);
@@ -74,13 +76,22 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
     @Override
     @Transactional(rollbackOn = Exception.class)
     public Boolean saveYinSiSZList(SC_ZD_YinSiPZCreateDto dto) {
+        List<SC_ZD_YinSiPZModel> tongYongYSPZs = yinSiPZRepository.findByZuZhiJGIDAndChaXunMSDM("0", dto.getAddList().get(0).getChaXunMSDM());
+
         if (!dto.getAddList().isEmpty()) {
-            List<SC_ZD_YinSiPZModel> tongYongYSPZs = yinSiPZRepository.findByZuZhiJGIDAndChaXunMSDM("0", dto.getAddList().get(0).getChaXunMSDM());
             List<SC_ZD_YinSiPZDto> scZdYinSiPZDtos = dto.getAddList().stream().filter(s -> !tongYongYSPZs.stream().map(SC_ZD_YinSiPZModel::getShuJuYLM).toList().contains(s.getShuJuYLM())).toList();
-            yinSiPZRepository.saveAll(MapUtils.copyListProperties(scZdYinSiPZDtos, SC_ZD_YinSiPZModel::new));
+            yinSiPZRepository.saveAll(BeanUtil.copyListProperties(scZdYinSiPZDtos, SC_ZD_YinSiPZModel::new));
         }
         if (!dto.getZuoFeiIds().isEmpty()) {
-            yinSiPZRepository.deleteAllById(dto.getZuoFeiIds());
+            //id找到需要作废的隐私配置
+            var tongYongList = getYinSiGZSZSJYList("0", dto.getAddList().get(0).getChaXunMSDM())
+                    .stream()
+                    .filter(x -> dto.getZuoFeiIds().contains(x.getId()))
+                    .map(SC_ZD_YinSiGZSZOutDto::getShuJuYLM)
+                    .toList();
+            //根据配置信息删除
+            var deleteIDs = tongYongYSPZs.stream().filter(x -> tongYongList.contains(x.getShuJuYLM())).map(StringMTEntity::getId).toList();
+            yinSiPZRepository.deleteAllById(deleteIDs);
         }
         return true;
     }
@@ -93,7 +104,7 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
     @Transactional(rollbackOn = Exception.class)
     public Boolean saveZhanShiPZ(SC_ZD_ZhanShiPZCreateDto dto) {
         if (dto.getAddList().size() > 0) {
-            zhanShiPZRepository.saveAll(MapUtils.copyListProperties(dto.getAddList(), SC_ZD_ZhanShiPZModel::new, (zhanShiPZDto, model) -> {
+            zhanShiPZRepository.saveAll(BeanUtil.copyListProperties(dto.getAddList(), SC_ZD_ZhanShiPZModel::new, (zhanShiPZDto, model) -> {
                 model.setId(null);
                 model.setZuZhiJGID(dto.getZuZhiJGID());
                 model.setZuZhiJGMC(dto.getZuZhiJGMC());
@@ -106,9 +117,9 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
             List<String> idList = dto.getUpdateList().stream().map(SC_ZD_ZhanShiPZDto::getId).toList();
             var zhanShiPZList = zhanShiPZRepository.findByZuZhiJGIDAndIdIn(zuZhiJGID, idList);
             for (var item : zhanShiPZList) {
-                var zhanShiPZ = dto.getUpdateList().stream().filter(x -> Objects.equals(x.getId(), item.getId())).findFirst().orElseGet(()->null);
+                var zhanShiPZ = dto.getUpdateList().stream().filter(x -> Objects.equals(x.getId(), item.getId())).findFirst().orElseGet(() -> null);
                 //if (Objects.nonNull(zhanShiPZ)) {
-                    MapUtils.mergeProperties(zhanShiPZ, item, true);
+                BeanUtil.mergeProperties(zhanShiPZ, item, true);
                 //}
             }
             zhanShiPZRepository.saveAll(zhanShiPZList);
@@ -125,11 +136,11 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
      */
     @Override
     public Integer updateYinSiGZ(SC_ZD_YinSiGZSZInDto yinSiGZSZInDto) throws MsfException {
-        SC_ZD_YinSiGZSZModel updateModel = yinSiGZSZRepository.findById(yinSiGZSZInDto.getId()).orElseGet(()->null);
+        SC_ZD_YinSiGZSZModel updateModel = yinSiGZSZRepository.findById(yinSiGZSZInDto.getId()).orElseGet(() -> null);
         if (Objects.isNull(updateModel)) {
             throw new TongYongYWException("未找到相关可修改的信息!");
         }
-        MapUtils.mergeProperties(yinSiGZSZInDto, updateModel, true);
+        BeanUtil.mergeProperties(yinSiGZSZInDto, updateModel, true);
         yinSiGZSZRepository.save(updateModel);
         return 1;
     }
@@ -139,21 +150,20 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
      */
     @Override
     public Boolean updateYinSiGZ(String chaXunMSDM, String zuZhiJGID, String zuZhiJGMC) throws MsfException {
-        var yinSiPZList=yinSiPZRepository.asQuerydsl()
-                .where(x->x.zuZhiJGID.eq("0").or(x.zuZhiJGID.eq(zuZhiJGID)))
-                .where(x->x.chaXunMSDM.eq(chaXunMSDM)).fetch();
+        var yinSiPZList = yinSiPZRepository.asQuerydsl()
+                .where(x -> x.zuZhiJGID.eq("0").or(x.zuZhiJGID.eq(zuZhiJGID)))
+                .where(x -> x.chaXunMSDM.eq(chaXunMSDM)).fetch();
         //通用数据
-        var tongYongSJList= yinSiPZList.stream().filter(x->x.getZuZhiJGID().equals("0")).toList();
+        var tongYongSJList = yinSiPZList.stream().filter(x -> x.getZuZhiJGID().equals("0")).toList();
         //机构数据
-        var jiGouSJList =yinSiPZList.stream().filter(x->x.getZuZhiJGID().equals(zuZhiJGID)).toList();
+        var jiGouSJList = yinSiPZList.stream().filter(x -> x.getZuZhiJGID().equals(zuZhiJGID)).toList();
 
-        var chaJiList=tongYongSJList.stream()
-                .filter(itm1->
-                        jiGouSJList.stream().noneMatch(item2->itm1.getShuJuYLM().equals(item2.getShuJuYLM())))
+        var chaJiList = tongYongSJList.stream()
+                .filter(itm1 ->
+                        jiGouSJList.stream().noneMatch(item2 -> itm1.getShuJuYLM().equals(item2.getShuJuYLM())))
                 .toList();
 
-        for (var item:chaJiList)
-        {
+        for (var item : chaJiList) {
             item.setId(null);
             item.setZuZhiJGID(zuZhiJGID);
             item.setZuZhiJGMC(zuZhiJGMC);
@@ -191,7 +201,7 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
     @Override
     @Transactional(rollbackOn = Exception.class)
     public Boolean qiYongYinSiSZ(String id, Integer qiYongBZ) {
-        SC_ZD_YinSiPZModel yinSiPZXX = yinSiPZRepository.findById(id).orElseGet(()->null);
+        SC_ZD_YinSiPZModel yinSiPZXX = yinSiPZRepository.findById(id).orElseGet(() -> null);
         if (yinSiPZXX == null) return false;
         yinSiPZXX.setQiYongBZ(qiYongBZ);
         yinSiPZRepository.save(yinSiPZXX);
@@ -217,8 +227,8 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
         var jiGouSJList = yinSiPZList.stream().filter(x -> Objects.equals(x.getZuZhiJGID(), zuZhiJGID)).toList();
         //取差集
         List<SC_ZD_ZhanShiPZModel> chaJiList = tongYongSJList.stream()
-                .filter(t->!jiGouSJList.stream().map(SC_ZD_ZhanShiPZModel::getGongNengID).toList().contains(t.getGongNengID())).toList();
-                //.filter(t -> !jiGouSJList.contains(t)).toList();
+                .filter(t -> !jiGouSJList.stream().map(SC_ZD_ZhanShiPZModel::getGongNengID).toList().contains(t.getGongNengID())).toList();
+        //.filter(t -> !jiGouSJList.contains(t)).toList();
         chaJiList.forEach(zhanShiPZModel -> {
             zhanShiPZModel.setId(null);
             zhanShiPZModel.setZuZhiJGID(zuZhiJGID);
@@ -240,9 +250,9 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
     @Transactional(rollbackOn = Exception.class)
     public Boolean chuShiHYinSiZS(String zuZhiJGID, String zuZhiJGMC, String chaXunMSDM) {
         //通用数据t zuzhijg zaiqian
-        List<SC_ZD_YinSiPZModel> tongYongSJList = yinSiPZRepository.findByZuZhiJGIDAndChaXunMSDM("0",chaXunMSDM);
+        List<SC_ZD_YinSiPZModel> tongYongSJList = yinSiPZRepository.findByZuZhiJGIDAndChaXunMSDM("0", chaXunMSDM);
         //删除机构之前的数据
-        yinSiPZRepository.deleteAllInBatch(yinSiPZRepository.findByZuZhiJGIDAndChaXunMSDM(zuZhiJGID,chaXunMSDM));
+        yinSiPZRepository.deleteAllInBatch(yinSiPZRepository.findByZuZhiJGIDAndChaXunMSDM(zuZhiJGID, chaXunMSDM));
         //初始化数据
         tongYongSJList.forEach(item -> {
             item.setZuZhiJGID(zuZhiJGID);
@@ -264,15 +274,16 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
     @Transactional(rollbackOn = Exception.class)
     public Boolean chuShiHYSGZPZ(String zuZhiJGID, String zuZhiJGMC, String chaXunMSDM) {
         //通用数据 todo  zuzhijg zaiqian
-        List<SC_ZD_YinSiPZModel> tongYongSJList = yinSiPZRepository.findByZuZhiJGIDAndChaXunMSDM("0",chaXunMSDM);
+        List<SC_ZD_YinSiPZModel> tongYongSJList = yinSiPZRepository.findByZuZhiJGIDAndChaXunMSDM("0", chaXunMSDM);
         //删除机构之前的数据
-        yinSiPZRepository.deleteAllInBatch(yinSiPZRepository.findByZuZhiJGIDAndChaXunMSDM(zuZhiJGID,chaXunMSDM));
+        yinSiPZRepository.deleteAllInBatch(yinSiPZRepository.findByZuZhiJGIDAndChaXunMSDM(zuZhiJGID, chaXunMSDM));
         //初始化数据
-        tongYongSJList.forEach(item -> {
-            item.setZuZhiJGID(zuZhiJGID);
-            item.setZuZhiJGMC(zuZhiJGMC);
+        List<SC_ZD_YinSiPZModel> addSJList = BeanUtil.copyListProperties(tongYongSJList, SC_ZD_YinSiPZModel::new, (a, b) -> {
+            b.setId(null);
+            b.setZuZhiJGID(zuZhiJGID);
+            b.setZuZhiJGMC(zuZhiJGMC);
         });
-        yinSiPZRepository.saveAll(tongYongSJList);
+        yinSiPZRepository.saveAll(addSJList);
         return true;
     }
 
@@ -306,13 +317,13 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
     public List<SC_ZD_YinSiPZOutDto> getYinSiGZPZList(String chaXunMSDM, String zuZhiJGID) throws TongYongYWException {
         List<String> canXunMSDMList = new ArrayList<>();
         canXunMSDMList.add(ChaXunMSEnum.TONG_YONG_MO_SHI.getValue());
-        if(StringUtils.hasText(chaXunMSDM)){
+        if (StringUtils.hasText(chaXunMSDM)) {
             canXunMSDMList.add(chaXunMSDM);
         }
         var list = yinSiPZRepository.findByZuZhiJGIDAndChaXunMSDMInAndQiYongBZ(zuZhiJGID, canXunMSDMList, 1);
-        var result = list.stream().filter(o -> Objects.equals(o.getChaXunMSDM(), chaXunMSDM)).map(o -> MapUtils.copyProperties(o, SC_ZD_YinSiPZOutDto::new)).toList();
+        var result = list.stream().filter(o -> Objects.equals(o.getChaXunMSDM(), chaXunMSDM)).map(o -> BeanUtil.copyProperties(o, SC_ZD_YinSiPZOutDto::new)).toList();
         if (CollectionUtils.isEmpty(result)) {
-            result = list.stream().filter(o -> Objects.equals(o.getChaXunMSDM(), ChaXunMSEnum.TONG_YONG_MO_SHI.getValue())).map(o -> MapUtils.copyProperties(o, SC_ZD_YinSiPZOutDto::new)).toList();
+            result = list.stream().filter(o -> Objects.equals(o.getChaXunMSDM(), ChaXunMSEnum.TONG_YONG_MO_SHI.getValue())).map(o -> BeanUtil.copyProperties(o, SC_ZD_YinSiPZOutDto::new)).toList();
         }
         return result;
     }
@@ -322,7 +333,7 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
      */
     @Override
     public SC_ZD_YinSiGZSZOutDto getYinSiGZByID(String id) {
-        return MapUtils.copyProperties(yinSiGZSZRepository.findById(id).orElseGet(()->null), SC_ZD_YinSiGZSZOutDto::new);
+        return BeanUtil.copyProperties(yinSiGZSZRepository.findById(id).orElseGet(() -> null), SC_ZD_YinSiGZSZOutDto::new);
     }
 
     /**
@@ -334,7 +345,7 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
         JPAQuery<SC_ZD_YinSiGZSZModel> jpaQuery = new JPAQueryFactory(yinSiGZSZRepository.getEntityManager())
                 .select(yinSiGZSZModel).from(yinSiGZSZModel)
                 .where(yinSiGZSZModel.zuZhiJGID.eq("0"))
-                .where(QueryDSLUtils.whereIfHasText(likeQuery,()->yinSiGZSZModel.shuJuYMC.contains(likeQuery)));
+                .where(QueryDSLUtils.whereIfHasText(likeQuery, () -> yinSiGZSZModel.shuJuYMC.contains(likeQuery)));
         return jpaQuery.fetch().size();
     }
 
@@ -342,13 +353,13 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
      * 获取隐私规则列表
      */
     @Override
-    public List<SC_ZD_YinSiGZSZOutDto> getYinSiGZSZList(String likeQuery,Integer pageIndex, Integer pageSize) {
+    public List<SC_ZD_YinSiGZSZOutDto> getYinSiGZSZList(String likeQuery, Integer pageIndex, Integer pageSize) {
         QSC_ZD_YinSiGZSZModel yinSiGZSZModel = QSC_ZD_YinSiGZSZModel.sC_ZD_YinSiGZSZModel;
         JPAQuery<SC_ZD_YinSiGZSZModel> jpaQuery = new JPAQueryFactory(yinSiGZSZRepository.getEntityManager()).select(yinSiGZSZModel).from(yinSiGZSZModel).where(yinSiGZSZModel.zuZhiJGID.eq("0"))
-                .where(QueryDSLUtils.whereIfHasText(likeQuery,()->yinSiGZSZModel.shuJuYMC.contains(likeQuery)));
+                .where(QueryDSLUtils.whereIfHasText(likeQuery, () -> yinSiGZSZModel.shuJuYMC.contains(likeQuery)));
         List<SC_ZD_YinSiGZSZModel> yinSiGZSZModelList = jpaQuery.orderBy(yinSiGZSZModel.shunXuHao.asc())
                 .offset(PageRequestUtil.of(pageIndex, pageSize).getOffset()).limit(pageSize).fetch();
-        return MapUtils.copyListProperties(yinSiGZSZModelList, SC_ZD_YinSiGZSZOutDto::new);
+        return BeanUtil.copyListProperties(yinSiGZSZModelList, SC_ZD_YinSiGZSZOutDto::new);
     }
 
     /**
@@ -358,8 +369,8 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
     @Override
     public List<SC_ZD_YinSiGZSZOutDto> getYinSiGZSZSJYList(String chaXunMSDM, String zuZhiJGID) {
 
-        List<GY_YW_YinSiGZXXRso> yinSiGZSZModelList=_gongYongRemoteService.getYinSiGZMXList("1","",1,10000).getData();
-       // List<SC_ZD_YinSiGZSZModel> yinSiGZSZModelList = yinSiGZSZRepository.findByZuZhiJGID(zuZhiJGID);
+        List<GY_YW_YinSiGZXXRso> yinSiGZSZModelList = _gongYongRemoteService.getYinSiGZMXList("1", "", 1, 10000).getData();
+        // List<SC_ZD_YinSiGZSZModel> yinSiGZSZModelList = yinSiGZSZRepository.findByZuZhiJGID(zuZhiJGID);
         List<SC_ZD_YinSiPZModel> yinSiPZModelList = yinSiPZRepository.findByZuZhiJGIDAndChaXunMSDM(zuZhiJGID, chaXunMSDM);
         List<YinSiGZSZAndYinSiPZListPO> yinSiGZSZAndYinSiPZListPOS = yinSiGZSZModelList.stream().collect(CollectorUtil.groupJoin(yinSiPZModelList,
                 (guiZeSZ, yinSiPZ) -> Objects.equals(guiZeSZ.getShuJuYLM(), yinSiPZ.getShuJuYLM()), YinSiGZSZAndYinSiPZListPO::new)).stream().toList();
@@ -374,11 +385,11 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
                 yinSiGZSZOutDto.setTuoMinFSMC(po.getYinSiGZSZModel().getTuoMinFSMC());
                 yinSiGZSZOutDto.setTuoMinGZ(po.getYinSiGZSZModel().getTuoMinGZ());
                 yinSiGZSZOutDto.setTuoMinSM(po.getYinSiGZSZModel().getGuiZeSM());
-               // yinSiGZSZOutDto.setShunXuHao(po.getYinSiGZSZModel().getShunXuHao());
+                // yinSiGZSZOutDto.setShunXuHao(po.getYinSiGZSZModel().getShunXuHao());
                 yinSiGZSZOutDto.setShiFouXZ(!CollectionUtils.isEmpty(po.getYinSiPZModels()) && StringUtil.hasText(po.getYinSiPZModels().get(0).getId()));//是否选中
                 scZdYinSiGZSZOutDtos.add(yinSiGZSZOutDto);
             }
-           // return scZdYinSiGZSZOutDtos.stream().sorted(Comparator.comparing(SC_ZD_YinSiGZSZOutDto::getShunXuHao)).filter(ExpressionUtils.distinctByKeys(SC_ZD_YinSiGZSZOutDto::getShunXuHao)).toList();
+            // return scZdYinSiGZSZOutDtos.stream().sorted(Comparator.comparing(SC_ZD_YinSiGZSZOutDto::getShunXuHao)).filter(ExpressionUtils.distinctByKeys(SC_ZD_YinSiGZSZOutDto::getShunXuHao)).toList();
             return scZdYinSiGZSZOutDtos;
         }
         return null;
@@ -400,11 +411,12 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
         if (StringUtil.hasText(likeQuery)) {
             jpaQuery.where(yinSiPZModel.shuJuYLM.contains(likeQuery.toUpperCase()).or(yinSiPZModel.shuJuYMC.contains(likeQuery.toUpperCase())));
         }
-        return MapUtils.copyListProperties(jpaQuery.orderBy(yinSiPZModel.shunXuHao.asc()).fetch(), SC_ZD_YinSiPZDto::new);
+        return BeanUtil.copyListProperties(jpaQuery.orderBy(yinSiPZModel.shunXuHao.asc()).fetch(), SC_ZD_YinSiPZDto::new);
     }
 
     /**
      * 获取展示配置列表
+     *
      * @param zuZhiJGID  组织机构ID
      * @param chaXunMSDM 查询模式代码
      * @param peiZhiLXDM 配置类型代码
@@ -420,10 +432,10 @@ public class YinSiGZSZServiceImpl implements YinSiGZSZService {
             } else if (!"1".equals(chaXunMSDM)) { // 非通用查询模式 向通用模式取数据
                 zhanShiPZModelList = zhanShiPZRepository.findByZuZhiJGIDAndChaXunMSDMAndPeiZhiLXDM(zuZhiJGID, "1", peiZhiLXDM);
             }
-            zhanShiPZModelList.forEach(item->item.setId("0"));
+            zhanShiPZModelList.forEach(item -> item.setId("0"));
         }
         return zhanShiPZModelList.stream()
-                .sorted(Comparator.comparing(SC_ZD_ZhanShiPZModel::getShunXuHao,Comparator.nullsLast(Integer::compareTo)).thenComparing(SC_ZD_ZhanShiPZModel::getId))
-                .map(t->MapUtils.copyProperties(t,SC_ZD_ZhanShiPZDto::new)).toList();
+                .sorted(Comparator.comparing(SC_ZD_ZhanShiPZModel::getShunXuHao, Comparator.nullsLast(Integer::compareTo)).thenComparing(SC_ZD_ZhanShiPZModel::getId))
+                .map(t -> BeanUtil.copyProperties(t, SC_ZD_ZhanShiPZDto::new)).toList();
     }
 }

@@ -387,7 +387,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
 
             shiTuZXJGDto.setShuJuLYLXDM(table.getShuJuLYLXDM());
             shiTuZXJGDto.setShuJuLYID(table.getShuJuLYID());
-            String sql = getShiTuBGX(tableList.get(0),identityService.getTenantId(),zuZhiJGID);
+            String sql = getShiTuBGX(table,identityService.getTenantId(),zuZhiJGID);
             //执行sql 得出结果
             List<Map<String, Object>> maps = linChuangRemoteService.getZiDianList(new ChaXunDto(sql.toLowerCase())).getData("执行sql报错");
             shiTuZXJGDto.setShiTuZXJG(maps);
@@ -846,9 +846,9 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
                 zuZhiJGIDTJ.append(" And l").append(index).append(".zuzhijgid=").append("'").append(zuZhiJGID).append("'");
                 zuHuIDTJ.append(" And l").append(index).append(".zuhuid=").append("'").append(zuHuID).append("'");
             }else {
-                zuoFeiBZ.append(" And ").append(f.getBiaoMing()).append(".zuoFeiBZ=0");
-                zuZhiJGIDTJ.append(" And ").append(f.getBiaoMing()).append(".zuzhijgid=").append("'").append(zuZhiJGID).append("'");
-                zuHuIDTJ.append(" And ").append(f.getBiaoMing()).append(".zuhuid=").append("'").append(zuHuID).append("'");
+//                zuoFeiBZ.append(" And ").append(f.getBiaoMing()).append(".zuoFeiBZ=0");
+//                zuZhiJGIDTJ.append(" And ").append(f.getBiaoMing()).append(".zuzhijgid=").append("'").append(zuZhiJGID).append("'");
+//                zuHuIDTJ.append(" And ").append(f.getBiaoMing()).append(".zuhuid=").append("'").append(zuHuID).append("'");
             }
             if (!isNeiLian) {
                 continue;

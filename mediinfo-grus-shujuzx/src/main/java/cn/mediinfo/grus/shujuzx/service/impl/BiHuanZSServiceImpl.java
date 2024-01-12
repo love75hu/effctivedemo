@@ -248,7 +248,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
         String biHuanID = null;
         if (CollectionUtil.isEmpty(biHuanGNDPZ.getTiaoJianList()))
         {
-            biHuanID= biHuanPZList.stream().filter(n->n.getTiaoJian().isEmpty()).findFirst().orElse(new SC_BH_DiaoYongPZDto()).getBiHuanID();
+            biHuanID= biHuanPZList.stream().filter(n->n.getTiaoJian().equals("[]")).findFirst().orElse(new SC_BH_DiaoYongPZDto()).getBiHuanID();
         }else {
             // 获取配的闭环
             for (SC_BH_DiaoYongPZDto sc_bh_diaoYongPZDto : biHuanPZList) {

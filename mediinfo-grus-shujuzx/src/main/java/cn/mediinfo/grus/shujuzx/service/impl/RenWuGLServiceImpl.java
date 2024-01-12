@@ -7,6 +7,7 @@ import cn.mediinfo.cyan.msf.core.http.ContentType;
 import cn.mediinfo.cyan.msf.core.http.HttpService;
 import cn.mediinfo.cyan.msf.core.util.BeanUtil;
 import cn.mediinfo.cyan.msf.core.util.DateUtil;
+import cn.mediinfo.cyan.msf.core.util.JacksonUtil;
 import cn.mediinfo.cyan.msf.core.util.StringUtil;
 import cn.mediinfo.grus.shujuzx.dto.renwugls.*;
 import cn.mediinfo.grus.shujuzx.dto.shujuyzys.TreeDto;
@@ -31,6 +32,7 @@ import okhttp3.Response;
 import org.apache.pulsar.shade.org.apache.avro.data.Json;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -180,16 +182,10 @@ public class RenWuGLServiceImpl implements RenWuGLService {
         }
         List<String> canShuKeys = new ArrayList<>();
         entity.forEach(item -> {
-            if (!Objects.isNull(item.getRenWuCS()) && !Objects.equals(item.getRenWuCS(), "")) {
-                ObjectMapper mapper = new ObjectMapper();
-                try {
-                    Map<String, String> map = mapper.readValue(item.getRenWuCS(), new TypeReference<Map<String, String>>() {
-                    });
-                    Set<String> keys = map.keySet();
-                    canShuKeys.addAll(keys);
-                } catch (JsonProcessingException e) {
-                    throw new RuntimeException(e);
-                }
+            if (!Objects.isNull(item.getRenWuCS()) && item.getRenWuCS().isEmpty()) {
+                Map<String,String> map=JacksonUtil.getJsonToMap(item.getRenWuCS(),String.class,String.class);
+                Set<String> keys = map.keySet();
+                canShuKeys.addAll(keys);
             }
         });
         result.setJiBenXXDtoList(BeanUtil.copyListProperties(entity, SC_RW_JiBenXXDto::new));
@@ -313,7 +309,7 @@ public class RenWuGLServiceImpl implements RenWuGLService {
     /**
      * 获取列表
      *
-     * @param renWuID
+     * @param renWuID 任务id
      * @param zhiXingKSSJ
      * @param zhiXingJSSJ
      * @param pageIndex
@@ -362,7 +358,6 @@ public class RenWuGLServiceImpl implements RenWuGLService {
             //var array=  Stream.concat(item.getChildren().stream(), treeChild.stream()).toList();
             treeChild.addAll(Stream.concat(item.getChildren().stream(), treeChild.stream()).toList());
         });
-        var jiGouid=lyraIdentityService.getJiGouID();
         var result = shuJuYuanRepository.asQuerydsl().where(t -> t.renWuID.eq(renWuID)).fetch();
         var entity = BeanUtil.copyListProperties(result, SC_RW_ShuJuYuanDto::new, (s, t) -> {
             var entityChild = treeChild.stream().anyMatch(q -> Objects.equals(q.getId(), t.getShuJuYID()));
@@ -464,9 +459,6 @@ public class RenWuGLServiceImpl implements RenWuGLService {
     @Override
     @Transactional(rollbackOn = Exception.class)
     public Boolean saveTongYongPZ(List<SC_RW_TongYongPZDto> creatDto) {
-
-
-
         List<SC_RW_TongYongPZModel> result = new ArrayList<>();
         //新增
         var addDto = creatDto.stream().filter(t -> Objects.isNull(t.getId())).toList();
@@ -532,53 +524,6 @@ public class RenWuGLServiceImpl implements RenWuGLService {
     }
 
     /**
-     * 保存执行信息
-     *
-     * @param id
-     * @return
-     */
-    @Override
-    public Boolean saveZhiXingRZ(String id) throws TongYongYWException {
-        var jiBenxx = jiBenXXRepository.findFirstByRenWuID(id);
-        var zhixingkssj = new Date();
-        if (Objects.isNull(jiBenxx)) {
-            throw new TongYongYWException("该任务基本信息不存在！");
-        }
-
-        var entity = BeanUtil.copyProperties(jiBenxx, SC_RW_ZhiXingRZModel::new, (s, t) -> {
-            t.setId(null);
-            t.setZuZhiJGID(lyraIdentityService.getJiGouID());
-            t.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
-            t.setZhiXingKSSJ(zhixingkssj);
-            t.setZhiXingQYWZXSJ(zhixingkssj);
-            t.setZhiXingHYWZXSJ(new Date());
-            t.setRuCan(jiBenxx.getRenWuCS());
-
-        });
-        zhiXingRZRepository.save(entity);
-        return true;
-    }
-
-    //region 旧批量执行
-    @Override
-    public Boolean saveZhiXingRZList(List<SC_RW_ZhiXingRZCreateDto> creatDto) {
-        var renWuIDs = creatDto.stream().map(SC_RW_ZhiXingRZCreateDto::getRenWuID).toList();
-        var zhixingkssj = new Date();
-
-        var jiBenXXList = jiBenXXRepository.asQuerydsl().where(t -> t.renWuID.in(renWuIDs)).fetch();
-        var entity = BeanUtil.copyListProperties(jiBenXXList, SC_RW_ZhiXingRZModel::new, (s, t) -> {
-            t.setZuZhiJGID(lyraIdentityService.getJiGouID());
-            t.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
-            t.setZhiXingKSSJ(zhixingkssj);
-            var item = creatDto.stream().filter(q -> Objects.equals(q.getRenWuID(), t.getRenWuID())).findFirst();
-            t.setRuCan(item.get().getRuCan());
-        });
-        zhiXingRZRepository.saveAll(entity);
-        return true;
-    }
-    //endregion
-
-    /**
      * 根据分类代码查询通用配置默认任务地址
      *
      * @param fenLeiDM
@@ -635,13 +580,13 @@ public class RenWuGLServiceImpl implements RenWuGLService {
                                 q.tongYongPZ().fuWuQIP,
                                 q.tongYongPZ().fuWuQDK,
                                 q.tongYongPZ().renWuDZ.as("fuWuQRWDZ")
-                                //, q.tongYongPZ().fuWuQIP.concat(":").concat(q.tongYongPZ().fuWuQDK).concat("/spoon/kettle/executeJob?job=/opt/kettle").concat(q.jiBenXX().renWuDZ).as("apiDZ")
                         }
                         , SC_RW_JiBenXXListDto.class).fetch();
         StringBuilder resultStr = new StringBuilder();
+        //循环任务基本信息 单条执行
         jiBenXXList.forEach(jbxxItem -> {
             if (!Objects.isNull(jbxxItem.getFuWuQIP())&& !Objects.isNull(jbxxItem.getFuWuQDK()) && !Objects.isNull(jbxxItem.getFuWuQRWDZ())
-                    && !Objects.equals(jbxxItem.getFuWuQIP(),"") && !Objects.equals(jbxxItem.getFuWuQDK(),"") && !Objects.equals(jbxxItem.getFuWuQRWDZ(),"")
+                    && !jbxxItem.getFuWuQIP().isEmpty() && !jbxxItem.getFuWuQDK().isEmpty() && !jbxxItem.getFuWuQRWDZ().isEmpty()
             ) {
                 SC_RW_ZhiXingRZCreateDto item = creatDto.stream().filter(q -> Objects.equals(q.getRenWuID(), jbxxItem.getRenWuID())).findFirst().get();
                 SC_RW_ZhiXingRZModel zhiXingRZEntity = new SC_RW_ZhiXingRZModel();
@@ -658,9 +603,9 @@ public class RenWuGLServiceImpl implements RenWuGLService {
                 zhiXingRZEntity.setZhiXingKSSJ(zhixingsj);
                 zhiXingRZRepository.save(zhiXingRZEntity);
                 try {
-                    resultStr.append(saveRenWuZX(zhiXingRZEntity, jbxxItem, zhiXingRZEntity.getId()));
+                    resultStr.append(saveRenWuZX(zhiXingRZEntity, jbxxItem));
                 } catch (Exception e) {
-                    //throw new RuntimeException(e);
+                    //region 调度失败 基本信息与执行记录的【执行状态】字段更改
                     resultStr.append(jbxxItem.getRenWuMC()).append("执行失败|");
                     var zhixingjssj = new Date();
                     var zhixingkssj = zhiXingRZEntity.getZhiXingKSSJ();
@@ -678,7 +623,9 @@ public class RenWuGLServiceImpl implements RenWuGLService {
                             .set(t -> t.zhiXingJSSJ, zhixingjssj)
                             .set(t -> t.zhiXingHS, zhixinghs)
                             .where(t -> t.id.eq(jbxxItem.getId())).execute();
+                    //endregion
                 }
+
             } else {
                 resultStr.append(jbxxItem.getRenWuMC()).append("地址为空|");
             }
@@ -692,29 +639,23 @@ public class RenWuGLServiceImpl implements RenWuGLService {
      *
      * @param createDto
      * @param renWUXXDto
-     * @param zhiXingRZID
      * @return
      * @throws Exception
      */
     @Transactional(rollbackOn = Exception.class)
-    public String saveRenWuZX(SC_RW_ZhiXingRZModel createDto, SC_RW_JiBenXXListDto renWUXXDto, String zhiXingRZID) throws Exception {
+    public String saveRenWuZX(SC_RW_ZhiXingRZModel createDto, SC_RW_JiBenXXListDto renWUXXDto) throws IOException {
+        var zhiXingRZID=createDto.getId();
         //返回值
         StringBuilder resultStr = new StringBuilder();
         //参数
         StringBuilder canShuStr = new StringBuilder();
         //拼接参数
         if (!Objects.isNull(createDto.getRuCan())) {
-            ObjectMapper mapper = new ObjectMapper();
-            try {
-                Map<String, String> map = mapper.readValue(createDto.getRuCan(), new TypeReference<Map<String, String>>() {
-                });
-                Set<String> keys = map.keySet();
-                keys.forEach(item -> {
-                    canShuStr.append("&").append(item).append("=").append(map.get(item));
-                });
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
+            Map<String, String> map= JacksonUtil.getJsonToMap(createDto.getRuCan(),String.class,String.class);
+            Set<String> keys = map.keySet();
+            keys.forEach(item -> {
+                canShuStr.append("&").append(item).append("=").append(map.get(item));
+            });
         }
         //url拼接
         var IP=renWUXXDto.getFuWuQIP().startsWith("http://")?renWUXXDto.getFuWuQIP():"http://"+renWUXXDto.getFuWuQIP();
@@ -722,20 +663,16 @@ public class RenWuGLServiceImpl implements RenWuGLService {
         if (Objects.isNull(renWUXXDto.getRenWuDZ()) || Objects.equals(renWUXXDto.getRenWuDZ(),"")){
             url =IP.concat(":").concat(renWUXXDto.getFuWuQDK()).concat("/spoon/kettle/executeJob?job=/opt/kettle").concat(renWUXXDto.getFuWuQRWDZ()).concat("/").concat(renWUXXDto.getRenWuMC()).concat(".kjb")+ "&renWuID=" + renWUXXDto.getRenWuID() + "&zhiXingRZID=" + zhiXingRZID + canShuStr;
         }
-
-        //http接口调用返回数据类型为xml httpService返回byte数组
-        //String url = renWUXXDto.getApiDZ() + "&renWuID=" + renWUXXDto.getRenWuID() + "&zhiXingRZID=" + zhiXingRZID + canShuStr;
-        //byte[] response = httpService.get(url, null, null, ContentType.XML_DATA_FORMAT.ordinal());
-        //byte转xml字符串
-        //String result = new String(response, StandardCharsets.UTF_8);
-
         //region  设置ContentType，获取xml返回值
         Map<String,String> header=Map.of("Content-Type", ContentType.XML_DATA_FORMAT.getValue());
         Response response=httpService.get(url,header);
-        String result = response.body().string();
+        String result = null;
+        if (response.body() != null) {
+            result = response.body().string();
+        }
         //xml字符串转节点
-        XmlMapper xmlMapper = new XmlMapper();
-        var jsonNodes = xmlMapper.readTree(result);
+       var jsonNodes= JacksonUtil.getXmlToJsonNode(result);
+
         //判断
         if (Objects.equals(jsonNodes.get("result").asText(), "ERROR")) {
             resultStr.append(renWUXXDto.getRenWuMC()).append("执行失败|");
@@ -764,31 +701,6 @@ public class RenWuGLServiceImpl implements RenWuGLService {
         return resultStr.toString();
     }
 
-    @Override
-    public String getJsonStr(String ruCan) {
-        var JsonDate = ruCan.split("\n\r");
-        JsonObject jsonObject = new JsonObject();
-        HashMap<String, String> hashMap = new HashMap<>();
-
-        for (String item : JsonDate) {
-            var jsonarr = item.split("=");
-            if (Arrays.stream(jsonarr).count() == 2) {
-                hashMap.put(jsonarr[0], jsonarr[1]);
-            }
-        }
-        return hashMap.size() > 0 ? Json.toString(hashMap) : null;
-    }
-
-    @Override
-    public Boolean qiYongSJY(String id, Integer qiYongBZ) throws TongYongYWException {
-        var entity = shuJuYuanRepository.findById(id).orElse(null);
-        if (Objects.isNull(entity)) {
-            throw new TongYongYWException("该任务基本信息不存在");
-        }
-        entity.setQiYongBZ(qiYongBZ);
-        shuJuYuanRepository.save(entity);
-        return true;
-    }
 
     /**
      * 点击任务名称查看任务详情
@@ -806,18 +718,18 @@ public class RenWuGLServiceImpl implements RenWuGLService {
         //判断当前任务分类是否为最后一级
         String fenleimc=entity.getFenLeiMC();
         var shujuyzyDto=ShuJuYZYList.stream().filter(t->Objects.equals(t.getZhiYuID(),entity.getFenLeiDM())).findFirst().orElse(null);
+        //判断当前分类是否存在父级
         if (shujuyzyDto!=null && !Objects.isNull(shujuyzyDto.getFuJiDM()) ){
             fenleimc=getFenLeiMC(shujuyzyDto.getFuJiDM(),fenleimc,ShuJuYZYList);
         }
         var tongyongpz=tongYongPZRepository.asQuerydsl().where(t->t.fenLeiDM.eq(entity.getFenLeiDM())).fetchFirst();
-
         String finalFenleimc = fenleimc;
         var result=BeanUtil.copyProperties(entity,RenWuXQDto::new,(s,t)->{
             if (!Objects.isNull(tongyongpz)){
                 if (!Objects.isNull(tongyongpz.getFuWuQIP()) && !Objects.isNull(tongyongpz.getFuWuQDK()) && !Objects.isNull(tongyongpz.getRenWuDZ())){
                     var IP=tongyongpz.getFuWuQIP().startsWith("http://")? tongyongpz.getFuWuQIP():"http://"+tongyongpz.getFuWuQIP();
                     var renwudz=IP.concat(":").concat(tongyongpz.getFuWuQDK()).concat("/spoon/kettle/executeJob?job=/opt/kettle").concat(tongyongpz.getRenWuDZ()).concat("/").concat(s.getRenWuMC()).concat(".kjb");
-                    if (!Objects.isNull(s.getRenWuDZ())){
+                    if (!Objects.isNull(s.getRenWuDZ()) && !s.getRenWuDZ().isEmpty()){
                         renwudz=IP.concat(":").concat(tongyongpz.getFuWuQDK()).concat("/spoon/kettle/executeJob?job=/opt/kettle").concat(s.getRenWuDZ());
                     }
                     t.setRenWuDZ(renwudz);
@@ -825,14 +737,13 @@ public class RenWuGLServiceImpl implements RenWuGLService {
             }
             t.setFenLeiMC(finalFenleimc);
         });
-
         result.shuJuYuanDtoList=getShuJuYuanList(entity.getRenWuID());
         return result;
     }
     public String getFenLeiMC(String FenLeiDM,String fenleimc,List<SC_ZD_ShuJuYZYModel> shuJuYZYModels){
         var entity=shuJuYZYModels.stream().filter(t->Objects.equals(t.getZhiYuID(),FenLeiDM)).findFirst().orElse(null);
-
         if (!Objects.isNull(entity) ){
+            //判断是否存在父级 存在并拼接
             fenleimc=entity.getZhiYuMC()+"-"+fenleimc;
             if (!Objects.isNull(entity.getFuJiDM()) && !Objects.equals(entity.getFuJiDM(),"")){
                 fenleimc=getFenLeiMC(entity.getFuJiDM(),fenleimc,shuJuYZYModels);
@@ -841,27 +752,31 @@ public class RenWuGLServiceImpl implements RenWuGLService {
         return fenleimc;
     }
 
+    /**
+     * 获取通用配置列表
+     * @return
+     */
     @Override
     public List<SC_RW_TongYongPZDto> getTongYongPZNew() {
         List<SC_RW_TongYongPZDto> result=new ArrayList<>();
+        //获取数据源字典值域树结构
         var ShuJuYZDList=shuJuYZYService.getShuJuYZYTreeListByLBID("SC0021");
-
+        //获取所有已保存的通用配置信息
         List<SC_RW_TongYongPZModel> tongYongPZModels=tongYongPZRepository.findAll();
         result=TongYongPZTree(ShuJuYZDList,result,tongYongPZModels);
         return result;
     }
 
     public List<SC_RW_TongYongPZDto> TongYongPZTree(List<TreeDto> treeDtos, List<SC_RW_TongYongPZDto> entity,List<SC_RW_TongYongPZModel> tongYongPZModels){
+        //循环树
         treeDtos.forEach(item->{
             SC_RW_TongYongPZDto dto=new SC_RW_TongYongPZDto();
-            dto.setFenLeiDM(item.getValue());
-            dto.setFenLeiMC(item.getLabel());
             var tongYongPZItem=tongYongPZModels.stream().filter(t->Objects.equals(t.getFenLeiDM(),item.value)).findFirst().orElse(null);
             if (!Objects.isNull(tongYongPZItem)){
                 BeanUtil.mergeProperties(tongYongPZItem,dto);
             }
             List<SC_RW_TongYongPZDto> children=new ArrayList<>();
-
+            //判断是否存在子集，且递归赋值
             if (!Objects.isNull(item.children)){
                 dto.setChildren(TongYongPZTree(item.children,children,tongYongPZModels));
             }
@@ -875,31 +790,33 @@ public class RenWuGLServiceImpl implements RenWuGLService {
     public Boolean saveTongYongPZNew(List<SC_RW_TongYongPZDto> creatDto) {
         //子集数据汇总到createDto中
         ChangeLevel(creatDto);
-//        //新增
+        //新增
         var addDto = creatDto.stream().filter(t -> Objects.isNull(t.getId())).toList();
         var addEntity = BeanUtil.copyListProperties(addDto, SC_RW_TongYongPZModel::new, (s, t) -> {
             t.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
             t.setZuZhiJGID(lyraIdentityService.getJiGouID());
         });
-       tongYongPZRepository.saveAll(addEntity);
-//        //修改
+        List<SC_RW_TongYongPZModel> tongYongPZModelList = new ArrayList<>(addEntity);
+        //修改
         var updateDto = creatDto.stream().filter(t -> !Objects.isNull(t.getId())).toList();
         var ids = updateDto.stream().map(SC_RW_TongYongPZDto::getId).toList();
         var tongYongPZList = tongYongPZRepository.asQuerydsl().where(t -> t.id.in(ids)).fetch();
         for (var item : tongYongPZList) {
             var tongYongPZItem = updateDto.stream().filter(q -> Objects.equals(q.getId(), item.getId())).findFirst().orElse(null);
-            BeanUtil.mergeProperties(tongYongPZItem, item, true);
+            BeanUtil.mergeProperties(tongYongPZItem, item);
         }
-//
-        tongYongPZRepository.saveAll(tongYongPZList);
+        tongYongPZModelList.addAll(tongYongPZList);
+
+        if(tongYongPZModelList.size()>0){
+            tongYongPZRepository.saveAll(tongYongPZList);
+        }
         return true;
     }
     public List<SC_RW_TongYongPZDto> ChangeLevel(List<SC_RW_TongYongPZDto> dtos){
         List<SC_RW_TongYongPZDto> entity=new ArrayList<>();
         dtos.forEach(item->{
            if (!Objects.isNull(item.getChildren())){
-
-             var children=  ChangeLevel(item.getChildren());
+             var children=ChangeLevel(item.getChildren());
                entity.addAll(children);
            }
         });
@@ -907,5 +824,5 @@ public class RenWuGLServiceImpl implements RenWuGLService {
         return dtos;
     }
 
-   
+
 }

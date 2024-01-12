@@ -518,9 +518,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
                     jieDianList.setJieDianNRList(jieDianNRList);
                     jieDianList1.add(jieDianList);
                 }
-                ziDuanBMMC.setJieDianXX(jieDianList1.stream()
-                        .filter(n->n.getBingXingBZ().equals(1))
-                        .sorted(Comparator.comparing(JieDianList::getKongZhiSJ)).toList());
+                ziDuanBMMC.setJieDianXX(bingXingJDPX(jieDianList1));
                 ziDuanBMMCList.add(ziDuanBMMC);
             }
             biHuanXQDto.setZiBiHXSLList(ziDuanBMMCList);
@@ -730,11 +728,31 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
 //            j.setShiXiaoLists(shiXiaoLists);
 //        });
 //        });
-        biHuanXQDto.setJieDianList(jieDianLists.stream()
-                .filter(n->n.getBingXingBZ().equals(1))
-                .sorted(Comparator.comparing(JieDianList::getKongZhiSJ)).toList());
+        biHuanXQDto.setJieDianList(bingXingJDPX(jieDianLists));
         return biHuanXQDto;
     }
+
+   private List<JieDianList> bingXingJDPX(List<JieDianList> jieDianLists)
+   {
+       // 提取满足条件的元素并排序
+       List<JieDianList> sortedList = jieDianLists.stream()
+               .filter(j -> j.getBingXingBZ() == 1)
+               .sorted(Comparator.comparing(JieDianList::getKongZhiSJ))
+               .toList();
+       // 如果节点中没有 返回当前的顺序 不去排序
+       if (CollectionUtil.isEmpty(sortedList)) {
+           return jieDianLists;
+       }
+       // 遍历原始列表，并用排序后的元素替换满足条件的元素
+       int sortedIndex = 0;
+       for (int i = 0; i < jieDianLists.size(); i++) {
+           if (jieDianLists.get(i).getBingXingBZ() == 1) {
+               jieDianLists.set(i, sortedList.get(sortedIndex++));
+           }
+       }
+       return jieDianLists;
+
+   }
 
     private void processTimeValidity(List<JieDianList> jieDianLists, List<SC_BH_JieDianSXModel> biHuanJDSXList) {
         jieDianLists.stream().filter(n->!Objects.equals(n.getQueShiBZ(),1)&&!Objects.equals(n.getWeiZhiXBZ(),1) ).forEach(j -> {

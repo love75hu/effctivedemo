@@ -407,11 +407,11 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
         if (Objects.equals(ziBiHDCZXBZ, "1")) //子闭环多次执行信息
         {
             for (Map<String, Object> dataMap : shiTuZXJGDtoList.get(0).getShiTuZXJG()) {
-                List<SC_BH_ZiBiHXSLModel> ziBiHXSLList = biHuanZBHXSLList.stream().filter(n -> n.getJieDianID().equals(jieDianID)).toList();
+               // List<SC_BH_ZiBiHXSLModel> ziBiHXSLList = biHuanZBHXSLList.stream().filter(n -> n.getJieDianID().equals(jieDianID)).toList();
 
                 ZiDuanBMMC ziDuanBMMC = new ZiDuanBMMC();
                 List<ZhanShiLList> zhanShiLLists = new ArrayList<>();
-                ziBiHXSLList.forEach(z -> {
+                biHuanZBHXSLList.forEach(z -> {
                     ZhanShiLList zhanShiL = new ZhanShiLList();
                     zhanShiL.setZiDuanBM(z.getZiDuanBM());
                     var ziDuanZ = dataMap.getOrDefault(z.getZiDuanBM().toLowerCase(), "");

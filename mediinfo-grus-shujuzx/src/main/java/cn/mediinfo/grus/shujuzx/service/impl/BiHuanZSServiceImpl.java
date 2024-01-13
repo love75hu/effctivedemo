@@ -473,7 +473,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
                         //子闭环标志
                         jieDianList.setZiBiHBZ("1");
                         jieDianList.setZiBiHGLZD(ziBiHXXModel.getGuanLianZDBM());
-                        jieDianList.setZiBiHGLZDZ(shiTuZXJGDtoList.get(0).getShiTuZXJG().stream().map(k -> k.getOrDefault(ziBiHXXModel.getGuanLianZDBM(), "").toString()).findFirst().orElse(""));
+                        jieDianList.setZiBiHGLZDZ(shiTuZXJGDtoList.get(0).getShiTuZXJG().stream().map(k -> k.getOrDefault(ziBiHXXModel.getGuanLianZDBM().toLowerCase(), "").toString()).findFirst().orElse(""));
                     }
                     if (!CollectionUtils.isEmpty(ziBiHXSLList1)) {
                         jieDianList.setZiBiHDCZXBZ("1");
@@ -735,10 +735,21 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
                .filter(j -> Objects.equals(j.getBingXingBZ(),1))
                .sorted(Comparator.comparing(JieDianList::getKongZhiSJ))
                .toList();
+
+       List<JieDianList> niJieDEqualsOne = jieDianLists.stream()
+               .filter(j -> Objects.equals(j.getNiJieDBZ(), 1))
+               .sorted(Comparator.comparing(JieDianList::getKongZhiSJ))
+               .toList();
+       jieDianLists.removeIf(j -> Objects.equals(j.getNiJieDBZ(), 1));
        // 如果节点中没有 返回当前的顺序 不去排序
        if (CollectionUtil.isEmpty(sortedList)) {
+           if (CollectionUtil.isEmpty(niJieDEqualsOne)) {
+               return jieDianLists;
+           }
+           niJieDianWZCL(jieDianLists, niJieDEqualsOne);
            return jieDianLists;
        }
+
        // 遍历原始列表，并用排序后的元素替换满足条件的元素
        int sortedIndex = 0;
        for (int i = 0; i < jieDianLists.size(); i++) {
@@ -746,9 +757,26 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
                jieDianLists.set(i, sortedList.get(sortedIndex++));
            }
        }
+       niJieDianWZCL(jieDianLists, niJieDEqualsOne);
        return jieDianLists;
 
    }
+
+   //逆节点位置处理
+    private void niJieDianWZCL(List<JieDianList> jieDianLists, List<JieDianList> niJieDEqualsOne) {
+        Optional<JieDianList> maxKongZhiSJNode = jieDianLists.stream()
+                .filter(j -> j.getKongZhiSJ() != null)
+                .max(Comparator.comparing(JieDianList::getKongZhiSJ));
+
+        if (maxKongZhiSJNode.isPresent()) {
+            // 找到 getKongZhiSJ 最大的节点的索引
+            int index = jieDianLists.indexOf(maxKongZhiSJNode.get());
+            jieDianLists.addAll(index + 1, niJieDEqualsOne);
+        } else {
+            // 如果没有找到具有最大控制时间的节点，则添加到列表末尾
+            jieDianLists.addAll(niJieDEqualsOne);
+        }
+    }
 
     private void processTimeValidity(List<JieDianList> jieDianLists, List<SC_BH_JieDianSXModel> biHuanJDSXList) {
         jieDianLists.stream().filter(n->!Objects.equals(n.getQueShiBZ(),1)&&!Objects.equals(n.getWeiZhiXBZ(),1) ).forEach(j -> {

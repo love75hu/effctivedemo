@@ -315,10 +315,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
         List<SC_BH_ZiBiHXXModel> ziBiHXX = ziBiHXXRepository.findByBiHuanIDAndZuZhiJGID(biHuanID, zuZhiJGID);
 
         //6.在获取子闭环的显示列
-        List<SC_BH_ZiBiHXSLModel> biHuanZBHXSLList = ziBiHXSLRepository.findByBiHuanIDAndZuZhiJGID(ziBiHID, zuZhiJGID);
-
-        //闭环入参信息
-        //List<String> ruCanZDBMs = biHuanRCXXList.stream().map(n -> n.getZiDuanBM()).distinct().toList();
+        List<SC_BH_ZiBiHXSLModel> biHuanZBHXSLList = ziBiHXSLRepository.findByBiHuanIDAndZuZhiJGID(Objects.equals(ziBiHID,"0")?biHuanID: ziBiHID, zuZhiJGID);
         //视图id 整理
         List<String> shituIDs = biHuanJDXXList.stream().map(SC_BH_JieDianXXModel::getShiTuID).distinct().toList();
         //节点id 整理
@@ -333,7 +330,6 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
         //节点关系
         List<SC_BH_ShiTuJDGXModel> jieDianGXList = shiTuJDGXRepository.findByJieDianIDIn(jieDianIDs);
         //节点管理下的所有节点
-        //List<SC_BH_ShiTuJDXXModel> biHuanPZSYJD = shiTuJDXXRepository.findByShiTuIDIn(shituIDs);
 
         List<SC_BH_ShiTuJDMXModel> biHuanSTJDMXSYMX = shiTuJDMXRepository.findByShiTuIDIn(shituIDs);
 

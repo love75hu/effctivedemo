@@ -315,7 +315,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
         List<SC_BH_ZiBiHXXModel> ziBiHXX = ziBiHXXRepository.findByBiHuanIDAndZuZhiJGID(biHuanID, zuZhiJGID);
 
         //6.在获取子闭环的显示列
-        List<SC_BH_ZiBiHXSLModel> biHuanZBHXSLList = ziBiHXSLRepository.findByBiHuanIDAndZuZhiJGID(CollectionUtil.isEmpty(ziBiHXX)?ziBiHID:biHuanID , zuZhiJGID);
+        List<SC_BH_ZiBiHXSLModel> biHuanZBHXSLList = ziBiHXSLRepository.findByBiHuanIDAndZuZhiJGID(ziBiHID, zuZhiJGID);
 
         //闭环入参信息
         //List<String> ruCanZDBMs = biHuanRCXXList.stream().map(n -> n.getZiDuanBM()).distinct().toList();

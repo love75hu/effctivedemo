@@ -48,6 +48,10 @@ public class BiHuanZSController {
         if (!StringUtil.hasText(ziBiHXQDto.getJieDianID()) || CollectionUtil.isEmpty(ziBiHXQDto.getRuCanList())) {
             return MsfResponse.fail(XiTongResponseCode.CANSHUYC,"入参异常检查入参！");
         }
+        if (!StringUtil.hasText(ziBiHXQDto.getZiBiHID())&&!StringUtil.hasText(ziBiHXQDto.getZiBiHDCZXBZ()))
+        {
+            return MsfResponse.success(biHuanZSService.getBiHuanZXJG("0",ziBiHXQDto.getBiHuanID(),ziBiHXQDto.getZiBiHDCZXBZ(),ziBiHXQDto.getJieDianID(),ziBiHXQDto.getZuZhiJGID(),ziBiHXQDto.getRuCanList()));
+        }
         return MsfResponse.success(biHuanZSService.getBiHuanZXJG(ziBiHXQDto.getBiHuanID(),ziBiHXQDto.getZiBiHID(),ziBiHXQDto.getZiBiHDCZXBZ(),ziBiHXQDto.getJieDianID(),ziBiHXQDto.getZuZhiJGID(),ziBiHXQDto.getRuCanList()));
     }
 

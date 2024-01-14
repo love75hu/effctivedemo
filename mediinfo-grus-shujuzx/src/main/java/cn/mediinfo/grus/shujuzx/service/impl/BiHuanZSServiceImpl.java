@@ -472,6 +472,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
                     if (ziBiHXXModel != null) {
                         //子闭环标志
                         jieDianList.setZiBiHBZ("1");
+                        jieDianList.setZiBiHID(ziBiHXXModel.getZiBiHID());
                         jieDianList.setZiBiHGLZD(ziBiHXXModel.getGuanLianZDBM());
                         jieDianList.setZiBiHGLZDZ(shiTuZXJGDtoList.get(0).getShiTuZXJG().stream().map(k -> k.getOrDefault(ziBiHXXModel.getGuanLianZDBM().toLowerCase(), "").toString()).findFirst().orElse(""));
                     }

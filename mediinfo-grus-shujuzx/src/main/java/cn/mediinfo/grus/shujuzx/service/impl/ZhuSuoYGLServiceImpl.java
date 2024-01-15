@@ -28,6 +28,7 @@ import cn.mediinfo.lyra.extension.service.LyraIdentityService;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -45,6 +46,7 @@ import java.util.stream.Collectors;
  * 主索引管理
  */
 @Service
+@Slf4j
 public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
     public final BR_DA_XiangSiSYRepository brDaXiangSiSYRepository;
     public final BR_DA_JiaoChaSYRepository brDaJiaoChaSYRepository;
@@ -597,6 +599,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
         var jiGouID = "0";
         var jiGouMC = "通用";
         //获取筛选开始时间
+        log.info("主索引增量JOB-开始时间："+DateUtil.getCurrentDate());
         var hasGengXinSJ =  springCache.get("GengXinSJ");
 
         Date gengXinSJ =DateUtil.offsetHour(DateUtil.offsetDay(DateUtil.beginOfDay(DateUtil.getCurrentDate()),-1),1);
@@ -654,6 +657,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
 
     private void zengLiangPPXSHZ_Start(List<BR_DA_JiBenXXModel> huanZheList,Boolean ziDongHB) throws TongYongYWException
     {
+        log.info("主索引增量合并匹配处理-开始时间："+DateUtil.getCurrentDate());
         //region 获取合并规则
         //获取合并规则
         List<GuiZeListDto> guiZeList = brZdHeBingGZRepository.asQuerydsl()
@@ -782,7 +786,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
             {
                 brDaHeBingJLRepository.saveAll(addHeBingJLList);
             }
-
+            log.info("主索引增量合并匹配处理-结束时间："+DateUtil.getCurrentDate());
             jiSuanHBXSS(xiangSiHZList.stream().map(StringMTEntity::getId).toList());
         }
         /**
@@ -791,6 +795,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
          */
         private void jiSuanHBXSS(List<String> bingRenIDs)
         {
+            log.info("主索引处理相似数-开始时间："+DateUtil.getCurrentDate());
             List<BR_DA_HeBingJLModel> allHeBingJL = brDaHeBingJLRepository.findByBingRenIDIn(bingRenIDs);
             List<BR_DA_XiangSiSYModel> allXaingSiSYList =brDaXiangSiSYRepository.asQuerydsl().where(x->x.bingRenID1.in(bingRenIDs).and(x.huLueBZ.eq(0)).and(x.heBingBZ.eq(0))).fetch();
             List<BR_DA_JiaoChaSYModel> allJiaoChaSYList = brDaJiaoChaSYRepository.findByZhuBingRIDInOrGuanLianBRIDIn(bingRenIDs, bingRenIDs);
@@ -826,6 +831,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
                 x.setXiangSiShu((int)allXaingSiSYList.stream().filter(m->m.getBingRenID1().equals(x.getBingRenID())).count());
             });
             brDaHeBingJLRepository.saveAll(allHeBingJL);
+            log.info("主索引处理相似数-结束时间："+DateUtil.getCurrentDate());
         }
 
     private void xiangSiPPByBRXX2(BR_DA_JiBenXXModel bingRenXX,

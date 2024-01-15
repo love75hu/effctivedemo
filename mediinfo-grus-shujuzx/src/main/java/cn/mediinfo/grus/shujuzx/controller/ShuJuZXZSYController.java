@@ -1,5 +1,7 @@
 package cn.mediinfo.grus.shujuzx.controller;
 
+import cn.mediinfo.cyan.aqua.scheduler.annotation.JobDefinition;
+import cn.mediinfo.cyan.aqua.scheduler.impl.DefaultJobDetailImpl;
 import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 import cn.mediinfo.cyan.msf.core.exception.YuanChengException;
 import cn.mediinfo.cyan.msf.core.response.MsfResponse;
@@ -345,6 +347,7 @@ public class ShuJuZXZSYController {
         return MsfResponse.success(zhuSuoYGLService.quXiaoHB(saveDto));
     }
 
+    @JobDefinition(name = "ZengLiangPPXSHZ", description = "增量匹配相似患者")
     @Operation(summary = "增量匹配相似患者")
     @GetMapping("ZengLiangPPXSHZ")
     public MsfResponse<String> ZengLiangPPXSHZ() {

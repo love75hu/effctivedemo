@@ -362,7 +362,7 @@ public class BiHuanZSServiceImpl implements BiHuanZSService {
             for (SC_BH_RuCanXXModel r : biHuanRCXXList) {
                 table.getSchemaTableList().forEach(n -> {
                     n.getShuJuJMXZDDtos().forEach(m -> {
-                        if (m.getZiDuanBM().equals(r.getZiDuanBM()) && ruCanList.stream().allMatch(l->l.getZiDuanBM().equals(r.getZiDuanBM()))) {
+                        if (m.getZiDuanBM().equals(r.getZiDuanBM()) && ruCanList.stream().anyMatch(l->l.getZiDuanBM().equals(r.getZiDuanBM()))) {
                             String itemString = m.getShuJuYMC() + "." + m.getBiaoMing() + "." + r.getZiDuanBM() + "='" +
                                     ruCanList.stream().filter(l->l.getZiDuanBM().equals(r.getZiDuanBM()))
                                             .findFirst().orElse(new ZiDuanRCDto()).getZiDuanZhi() + "'";

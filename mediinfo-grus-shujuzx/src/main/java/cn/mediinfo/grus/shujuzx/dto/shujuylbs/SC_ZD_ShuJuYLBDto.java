@@ -48,7 +48,7 @@ public class SC_ZD_ShuJuYLBDto {
    *代码值域存储对象
     */
    @Schema(description = "代码值域存储对象")
-   private String zHIYUCC;
+   private String zhiYuCC;
 
     /**
    *数据元分类代码

@@ -217,6 +217,15 @@ public class RenWuGLServiceImpl implements RenWuGLService {
             t.setRenWuID(sequenceService.getXuHao("SC_RW_JiBenXX_RenWuID", 9));
             t.setZuZhiJGID(lyraIdentityService.getJiGouID());
             t.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
+            if (Objects.isNull(createDto.getShunXuHao())){
+                // 获取shuJuYZYList集合中的SC_RW_JiBenXXModel对象中的shunXuHao的最大值
+                List<SC_RW_JiBenXXModel> maxModel=jiBenXXRepository.findAll().stream().sorted(Comparator.comparing(SC_RW_JiBenXXModel::getShunXuHao,Comparator.nullsLast(Comparator.reverseOrder()))).toList();
+               if(maxModel.size()>0){
+                   int maxShunXuHao = maxModel.stream().findFirst().map(SC_RW_JiBenXXModel::getShunXuHao).orElse(0);
+                   t.setShunXuHao(maxShunXuHao+1);
+               }
+                // 获取最大值
+            }
 
         });
         jiBenXXRepository.save(entity);

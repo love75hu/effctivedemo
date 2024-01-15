@@ -19,7 +19,7 @@ public class SC_ZD_ShuJuYLBModel extends StringMTEntity {
    @Column(columnDefinition = "标准说明")
    private String biaoZhunSM;
    @Column(columnDefinition = "代码值域存储对象")
-   private String zHIYUCC;
+   private String zhiYuCC;
    @Column(columnDefinition = "数据元分类代码")
    private String shuJuYFLDM;
    @Column(columnDefinition = "数据元分类名称")

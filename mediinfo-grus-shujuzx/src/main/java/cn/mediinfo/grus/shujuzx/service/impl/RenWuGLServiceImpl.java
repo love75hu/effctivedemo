@@ -187,7 +187,7 @@ public class RenWuGLServiceImpl implements RenWuGLService {
         }
         List<String> canShuKeys = new ArrayList<>();
         entity.forEach(item -> {
-            if (!Objects.isNull(item.getRenWuCS()) && item.getRenWuCS().isEmpty()) {
+            if (!Objects.isNull(item.getRenWuCS()) && !item.getRenWuCS().isEmpty()) {
                 Map<String,String> map=JacksonUtil.getJsonToMap(item.getRenWuCS(),String.class,String.class);
                 Set<String> keys = map.keySet();
                 canShuKeys.addAll(keys);
@@ -656,8 +656,8 @@ public class RenWuGLServiceImpl implements RenWuGLService {
         StringBuilder resultStr = new StringBuilder();
         //循环任务基本信息 单条执行
         jiBenXXList.forEach(jbxxItem -> {
-            if (!Objects.isNull(jbxxItem.getFuWuQIP())&& !Objects.isNull(jbxxItem.getFuWuQDK()) && !Objects.isNull(jbxxItem.getFuWuQRWDZ())
-                    && !jbxxItem.getFuWuQIP().isEmpty() && !jbxxItem.getFuWuQDK().isEmpty() && !jbxxItem.getFuWuQRWDZ().isEmpty()
+            var renwudz=(!Objects.isNull(jbxxItem.getRenWuDZ())&& !jbxxItem.getRenWuDZ().isEmpty())?jbxxItem.getRenWuDZ(): jbxxItem.getFuWuQRWDZ();
+            if (!Objects.isNull(jbxxItem.getFuWuQIP()) && !Objects.isNull(jbxxItem.getFuWuQDK()) && !jbxxItem.getFuWuQIP().isEmpty() && !jbxxItem.getFuWuQDK().isEmpty() && !renwudz.isEmpty()
             ) {
                 SC_RW_ZhiXingRZCreateDto item = creatDto.stream().filter(q -> Objects.equals(q.getRenWuID(), jbxxItem.getRenWuID())).findFirst().get();
                 SC_RW_ZhiXingRZModel zhiXingRZEntity = new SC_RW_ZhiXingRZModel();

@@ -21,7 +21,7 @@ public class RenWuDDServiceImpl implements RenWuDDService {
         this.renWuGLService=renWuGLService;
     }
     @Override
-    public String saveRenWuZX(String renWuMC){
+    public String saveRenWuZX(String renWuMC,String zhiXingFSDM,String zhiXingFSMC){
         var jibenxx=jiBenXXRepository.asQuerydsl().where(t->t.renWuMC.eq(renWuMC).and(t.qiYongBZ.eq(1))).fetchFirst();
 
         if (jibenxx!=null){
@@ -30,6 +30,8 @@ public class RenWuDDServiceImpl implements RenWuDDService {
             createDto.setRenWuID(jibenxx.getRenWuID());
             createDto.setRenWuMC(jibenxx.getRenWuMC());
             createDto.setRuCan(jibenxx.getRenWuCS());
+            createDto.setZhiXingfFSDM(zhiXingFSDM);
+            createDto.setZhiXingfFSMC(zhiXingFSMC);
             createDtoList.add(createDto);
             renWuGLService.saveRenWuZXList(createDtoList);
         }

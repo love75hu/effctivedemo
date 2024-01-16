@@ -2,13 +2,20 @@ package cn.mediinfo.grus.shujuzx.service.impl;
 
 import cn.mediinfo.cyan.aqua.scheduler.api.SchedulerService;
 import cn.mediinfo.cyan.aqua.scheduler.api.SchedulerTriggerService;
+import cn.mediinfo.cyan.aqua.scheduler.api.contanst.ConCurrent;
+import cn.mediinfo.cyan.aqua.scheduler.api.contanst.MisFirePolicy;
+import cn.mediinfo.cyan.aqua.scheduler.api.contanst.TriggerType;
+import cn.mediinfo.cyan.aqua.scheduler.api.dto.job.ScheduleCurrentServiceJobCreateDto;
+import cn.mediinfo.cyan.aqua.scheduler.api.dto.trigger.TriggerCreateDto;
 import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 import cn.mediinfo.cyan.msf.core.http.ContentType;
+import cn.mediinfo.cyan.msf.core.http.HttpMethod;
 import cn.mediinfo.cyan.msf.core.http.HttpService;
 import cn.mediinfo.cyan.msf.core.util.BeanUtil;
 import cn.mediinfo.cyan.msf.core.util.DateUtil;
 import cn.mediinfo.cyan.msf.core.util.JacksonUtil;
 import cn.mediinfo.cyan.msf.core.util.StringUtil;
+import cn.mediinfo.cyan.msf.security.IdentityService;
 import cn.mediinfo.grus.shujuzx.dto.renwugls.*;
 import cn.mediinfo.grus.shujuzx.dto.shujuyzys.TreeDto;
 import cn.mediinfo.grus.shujuzx.model.*;
@@ -21,15 +28,10 @@ import cn.mediinfo.grus.shujuzx.service.RenWuGLService;
 import cn.mediinfo.grus.shujuzx.service.ShuJuYZYService;
 import cn.mediinfo.lyra.extension.service.LyraIdentityService;
 import cn.mediinfo.lyra.extension.service.SequenceService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.nimbusds.jose.shaded.gson.JsonObject;
 import com.querydsl.core.types.Expression;
 import jakarta.transaction.Transactional;
 import okhttp3.Response;
-import org.apache.pulsar.shade.org.apache.avro.data.Json;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -40,7 +42,6 @@ import java.util.stream.Stream;
 public class RenWuGLServiceImpl implements RenWuGLService {
     private final SequenceService sequenceService;
     private final SC_RW_JiBenXXRepository jiBenXXRepository;
-    private final LyraIdentityService lyraIdentityService;
     private final SC_RW_ZhiXingRZRepository zhiXingRZRepository;
     private final SC_RW_ShuJuYuanRepository shuJuYuanRepository;
     private final SC_RW_TongYongPZRepository tongYongPZRepository;
@@ -51,14 +52,15 @@ public class RenWuGLServiceImpl implements RenWuGLService {
     private final SchedulerTriggerService schedulerTriggerService;
     private final HttpService httpService;
     private final ShuJuYZYService shuJuYZYService;
+    private final Environment environment;
+    private final IdentityService identityService;
+    private final LyraIdentityService lyraIdentityService;
 
-
-    public RenWuGLServiceImpl(SequenceService sequenceService, SC_RW_JiBenXXRepository jiBenXXRepository, LyraIdentityService lyraIdentityService,
+    public RenWuGLServiceImpl(SequenceService sequenceService, SC_RW_JiBenXXRepository jiBenXXRepository,
                               SC_RW_ZhiXingRZRepository zhiXingRZRepository, SC_RW_ShuJuYuanRepository shuJuYuanRepository, SC_RW_TongYongPZRepository tongYongPZRepository,
                               SC_ZD_ShuJuYZYRepository shuJuYZYRepository, SC_ZD_ShuJuYLBRepository shuJuYLBRepository, GongYongRemoteService gongYongRemoteService,
                               SchedulerService schedulerService, SchedulerTriggerService schedulerTriggerService, HttpService httpService,
-                              ShuJuYZYService shuJuYZYService) {
-        this.lyraIdentityService = lyraIdentityService;
+                              ShuJuYZYService shuJuYZYService, Environment environment, IdentityService identityService, LyraIdentityService lyraIdentityService) {
         this.jiBenXXRepository = jiBenXXRepository;
         this.sequenceService = sequenceService;
         this.zhiXingRZRepository = zhiXingRZRepository;
@@ -71,6 +73,9 @@ public class RenWuGLServiceImpl implements RenWuGLService {
         this.schedulerTriggerService = schedulerTriggerService;
         this.httpService = httpService;
         this.shuJuYZYService=shuJuYZYService;
+        this.environment = environment;
+        this.identityService = identityService;
+        this.lyraIdentityService = lyraIdentityService;
     }
 
     /**
@@ -229,6 +234,16 @@ public class RenWuGLServiceImpl implements RenWuGLService {
 
         });
         jiBenXXRepository.save(entity);
+        try{
+            //同步中台job和触发器
+            createJob(createDto.getRenWuMC());
+            if(!StringUtil.hasText(createDto.getZhiXingPLDM())){
+                createTrigger(createDto.getRenWuMC(),createDto.getZhiXingPLDM());
+            }
+        }
+        catch (Exception ex){
+
+        }
         return entity.getId();
     }
 
@@ -259,6 +274,16 @@ public class RenWuGLServiceImpl implements RenWuGLService {
         //把dto赋值到entity
         BeanUtil.mergeProperties(updateDto, entity);
         jiBenXXRepository.save(entity);
+        try{
+            //同步中台job和触发器
+            createJob(updateDto.getRenWuMC());
+            if(!StringUtil.hasText(updateDto.getZhiXingPLDM())){
+                createTrigger(updateDto.getRenWuMC(),updateDto.getZhiXingPLDM());
+            }
+        }
+        catch (Exception ex){
+
+        }
         return true;
     }
 
@@ -298,6 +323,43 @@ public class RenWuGLServiceImpl implements RenWuGLService {
         entity.setQiYongBZ(qiYongBZ);
         jiBenXXRepository.save(entity);
         return true;
+    }
+
+    /**
+     *   创建job
+     *
+     */
+    public void createJob(String renWuMC) {
+        //创建job
+        var createModel = ScheduleCurrentServiceJobCreateDto
+                .builder()
+                //.fuWuMC(serviceName) //不指定则默认使用当前服务的applicationName
+                .jobName(renWuMC)
+                .jobGroup("GRUS_SC")
+                .requestUrl("http://172.19.80.10:31003/mediinfo-grus-shujuzx/api/v1.0/RenWuDD/zhiXingRW?renWuMC="+renWuMC)
+                .httpMethod(HttpMethod.GET)
+                .concurrent(ConCurrent.YES)
+                .build();
+        schedulerService.job().create(createModel);
+    }
+
+
+
+    /**
+     *   创建触发器
+     *
+     */
+    public void createTrigger(String renWuMC,String cron) {
+        var createDto= TriggerCreateDto
+                .builder()
+                .tenantId(identityService.getTenantId())
+                .tenantName(identityService.getTenantName())
+                .misFirePolicy(MisFirePolicy.MISFIRE_INSTRUCTION_IGNORE_MISFIRE_POLICY)
+                .triggerNameText(renWuMC+"_触发器")
+                .triggerType(TriggerType.CRON)
+                .cron(cron)
+                .build();
+        schedulerService.trigger().create(renWuMC,"GRUS_SC",createDto);
     }
 
     /**
@@ -609,7 +671,9 @@ public class RenWuGLServiceImpl implements RenWuGLService {
                 zhiXingRZEntity.setZhiXingRXM(lyraIdentityService.getUserName());
                 zhiXingRZEntity.setZhiXingZTDM("0");
                 zhiXingRZEntity.setZhiXingZTMC("等待");
-                zhiXingRZEntity.setZhiXingKSSJ(zhixingsj);
+                zhiXingRZEntity.setZhiXingZTDM("0");
+                zhiXingRZEntity.setZhiXingFSDM(item.getZhiXingfFSDM());
+                zhiXingRZEntity.setZhiXingFSMC(item.getZhiXingfFSMC());
                 zhiXingRZRepository.save(zhiXingRZEntity);
                 try {
                     resultStr.append(saveRenWuZX(zhiXingRZEntity, jbxxItem));

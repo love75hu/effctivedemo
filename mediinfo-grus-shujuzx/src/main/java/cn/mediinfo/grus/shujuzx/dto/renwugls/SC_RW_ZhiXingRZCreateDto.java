@@ -12,4 +12,8 @@ public class SC_RW_ZhiXingRZCreateDto {
     private String renWuMC;
     @Schema(description = "入参")
     private String ruCan;
+    @Schema(description = "执行方式代码")
+    private String zhiXingfFSDM;
+    @Schema(description = "执行方式名称")
+    private String zhiXingfFSMC;
 }

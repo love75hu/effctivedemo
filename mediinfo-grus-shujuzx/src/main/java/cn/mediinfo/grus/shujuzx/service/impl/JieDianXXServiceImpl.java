@@ -151,6 +151,7 @@ public class JieDianXXServiceImpl implements JieDianXXService {
                     .set(q->q.biXuBZ,(q,t)->t.getBiXuBZ())
                     .set(q->q.bingXingBZ,(q,t)->t.getBingXingBZ())
                     .set(q->q.yinCangBZ,(q,t)->t.getYinCangBZ())
+                    .set(q->q.shunXuHao,(q,t)->t.getShunXuHao())
                     .where((q,t)->q.id.eq(t.getId())).execute();
         }
         if (!jieDianSXToUpdate.isEmpty()) {

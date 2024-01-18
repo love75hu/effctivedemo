@@ -18,4 +18,9 @@ public interface SC_BH_RuCanXXRepository extends MsfJpaRepository<QSC_BH_RuCanXX
 
     List<SC_BH_RuCanXXModel> findByBiHuanIDInAndZuZhiJGID(List<String> biHuanIDs,String zuZhiJGID);
     List<SC_BH_RuCanXXModel> findByBiHuanIDIn(List<String> biHuanIDs);
+
+    default long deleteByBiHuanIDAndZuZhiJGID(String biHuanID,String zuZhiJGID)
+    {
+        return this.asDeleteDsl().where(n->n.biHuanID.eq(biHuanID).and(n.zuZhiJGID.eq(zuZhiJGID))).execute();
+    }
 }

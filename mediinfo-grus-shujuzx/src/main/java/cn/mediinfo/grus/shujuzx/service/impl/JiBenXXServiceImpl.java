@@ -327,6 +327,7 @@ class JiBenXXServiceImpl implements JiBenXXService {
             String biHuanID = jiBenXXModel.getBiHuanID();
             String zuZhiJGID = jiBenXXModel.getZuZhiJGID();
             jiBenXXRepository.asDeleteDsl().where(n -> n.id.eq(id)).execute();
+            ruCanXXService.delectRuCanXX(biHuanID,zuZhiJGID);
             jieDianXXRepository.asDeleteDsl().where(n -> n.zuZhiJGID.eq(zuZhiJGID).and(n.biHuanID.eq(biHuanID))).execute();
             jieDianSXRepository.asDeleteDsl().where(n -> n.zuZhiJGID.eq(zuZhiJGID).and(n.biHuanID.eq(biHuanID))).execute();
             ziBiHXXRepository.asDeleteDsl().where(n -> n.zuZhiJGID.eq(zuZhiJGID).and(n.biHuanID.eq(biHuanID))).execute();

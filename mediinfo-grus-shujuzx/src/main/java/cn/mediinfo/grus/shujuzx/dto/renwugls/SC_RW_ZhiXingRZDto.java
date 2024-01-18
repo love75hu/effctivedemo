@@ -39,11 +39,6 @@ public class SC_RW_ZhiXingRZDto {
     @Schema(description = "入参")
     private String ruCan;
 
-    @Schema(description = "执行前业务最新时间")
-    private Date zhiXingGYWZXSJ;
-    @Schema(description = "执行后业务最新时间")
-    private Date zhiXingHYWZXSJ;
-
     @Schema(description = "日志内容")
     private String riZhiNR;
     @Schema(description = "执行人id")

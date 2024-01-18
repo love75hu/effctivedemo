@@ -41,11 +41,6 @@ public class SC_RW_ZhiXingRZModel extends StringMTEntity {
     @Column(columnDefinition = "入参")
     private String ruCan;
 
-    @Column(columnDefinition = "执行前业务最新时间")
-    private Date zhiXingQYWZXSJ;
-    @Column(columnDefinition = "执行后业务最新时间")
-    private Date zhiXingHYWZXSJ;
-
     @Column(columnDefinition = "日志内容")
     private String riZhiNR;
     @Column(columnDefinition = "执行人id")

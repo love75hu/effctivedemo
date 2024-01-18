@@ -1521,6 +1521,8 @@ public class FangAnServiceImpl implements FangAnService {
         }
         //主键添加
         Set<String> zhuJianList=new HashSet<>();
+        //输出中表名为空的字段
+        List<String> kongBiaoMZDList=new ArrayList<>();
         //数据元
         for (FangAnSC e : Optional.ofNullable(fangAnSCList).orElse(new ArrayList<>())) {
             String key = "";
@@ -1568,6 +1570,10 @@ public class FangAnServiceImpl implements FangAnService {
                     }
                     break;
                 default:
+                    if(StringUtils.isBlank(e.getBiaoMing())){
+                        kongBiaoMZDList.add(e.getZhiBiaoMC());
+                        continue;
+                    }
                     //优先单表匹配
                     key = aliasMap.keySet().stream().filter(p -> p.equals(formatBiaoMing(e.getZhiBiaoFLID(), e.getMoShi(), e.getBiaoMing()))).findFirst().orElse("");
                     //如果key为空且为BR_DA_JIBENXX则去基本信息表中字段
@@ -1581,6 +1587,9 @@ public class FangAnServiceImpl implements FangAnService {
                     break;
             }
             zhuJianList.add(alias + "." + "id as zj_" + alias);
+        }
+        if(!kongBiaoMZDList.isEmpty()) {
+            throw new TongYongYWException("输出字段缺少对应的表名,字段为:" + StringUtils.join(kongBiaoMZDList,","));
         }
         fields.addAll(zhuJianList.stream().toList());
         return " " + CharSequenceUtil.join(",", fields);

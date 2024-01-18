@@ -17,4 +17,5 @@ public interface RuCanXXService {
     List<BiHuanSTRCZDDto> getBiHuanSTRCZD(String biHuanID, String jiGouID);
     Boolean addFuZhiRCXX(List<SC_BH_RuCanXXModel> canXXModels);
     List<SC_BH_RuCanXXModel> getRuCanXXByBHID(List<String> biHuanID);
+    long delectRuCanXX(String biHuanID,String zuZhiJGID);
 }

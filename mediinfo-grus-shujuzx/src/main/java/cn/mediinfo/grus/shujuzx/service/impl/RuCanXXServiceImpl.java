@@ -39,6 +39,13 @@ public class RuCanXXServiceImpl implements RuCanXXService {
     }
 
     @Override
+    public long delectRuCanXX(String biHuanID,String zuZhiJGID)
+    {
+        return ruCanXXRepository.deleteByBiHuanIDAndZuZhiJGID(biHuanID,zuZhiJGID);
+    }
+
+
+    @Override
     public  List<BiHuanSTRCZDDto> getBiHuanSTRCZD(String biHuanID, String jiGouID) {
 
         List<SC_BH_RuCanXXModel> byBiHuanIDAndZuZhiJGID = ruCanXXRepository.findByBiHuanIDAndZuZhiJGID(biHuanID, jiGouID);

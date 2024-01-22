@@ -350,7 +350,7 @@ public class ShuJuZXZSYController {
     @JobDefinition(name = "ZengLiangPPXSHZ", description = "增量匹配相似患者")
     @Operation(summary = "增量匹配相似患者")
     @GetMapping("ZengLiangPPXSHZ")
-    public MsfResponse<String> ZengLiangPPXSHZ() {
+    public MsfResponse<String> ZengLiangPPXSHZ() throws ParseException {
         return MsfResponse.success(zhuSuoYGLService.zengLiangPPXSHZ());
     }
 

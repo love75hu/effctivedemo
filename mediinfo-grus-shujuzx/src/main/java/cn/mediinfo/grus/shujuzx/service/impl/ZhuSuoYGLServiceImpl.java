@@ -65,7 +65,6 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
     private final SpringCache springCache;
 
 
-
     public ZhuSuoYGLServiceImpl(BR_DA_XiangSiSYRepository brDaXiangSiSYRepository, BR_DA_JiaoChaSYRepository brDaJiaoChaSYRepository, BR_DA_JiBenXXRepository brDaJiBenXXRepository, BR_DA_HeBingJLRepository brDaHeBingJLRepository, BR_DA_JieZhiXXRepository brDaJieZhiXXRepository, BR_DA_KuoZhanXXRepository brDaKuoZhanXXRepository, BR_ZD_HeBingGZRepository brZdHeBingGZRepository, BR_ZD_HeBingGZMXRepository brZdHeBingGZMXRepository, JiuZhenRemoteService jiuZhenRemoteService, YinSiGZSZService yinSiGZSZService, ZhuSuoYCZRZService zhuSuoYCZRZService, LyraIdentityService lyraIdentityService, BR_DA_ZhuSuoYCZRZRepository zhuSuoYCZRZRepository, SpringCache springCache) {
         this.brDaXiangSiSYRepository = brDaXiangSiSYRepository;
         this.brDaJiaoChaSYRepository = brDaJiaoChaSYRepository;
@@ -130,10 +129,10 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
             item.setJiaoChaSYCount((int) jiaoChaSYCounts.stream().filter(x -> Objects.equals(x, item.getId())).count());
             item.setXianZhuZXX(StringUtil.concat(item.getXianZhuZXX(), item.getXianZhuZXZMC(), item.getXianZhuZCJMC(), item.getXianZhuZQTXX()));
         }
-        return xiangSiBRXXList.stream().sorted(Comparator.comparing(BR_DA_JiBenXXByZSYGLDto::getHeBingBZ,Comparator.nullsFirst(Integer::compareTo)).reversed()
-                        .thenComparing(Comparator.comparing(BR_DA_JiBenXXByZSYGLDto::getHeBingSJ,Comparator.nullsFirst(Date::compareTo)).reversed())
-                        .thenComparing(Comparator.comparing(BR_DA_JiBenXXByZSYGLDto::getXiangSiDu,Comparator.nullsFirst(BigDecimal::compareTo)).reversed())
-                        .thenComparing(Comparator.comparing(BR_DA_JiBenXXByZSYGLDto::getJiaoChaSYCount,Comparator.nullsFirst(Integer::compareTo)).reversed()))
+        return xiangSiBRXXList.stream().sorted(Comparator.comparing(BR_DA_JiBenXXByZSYGLDto::getHeBingBZ, Comparator.nullsFirst(Integer::compareTo)).reversed()
+                        .thenComparing(Comparator.comparing(BR_DA_JiBenXXByZSYGLDto::getHeBingSJ, Comparator.nullsFirst(Date::compareTo)).reversed())
+                        .thenComparing(Comparator.comparing(BR_DA_JiBenXXByZSYGLDto::getXiangSiDu, Comparator.nullsFirst(BigDecimal::compareTo)).reversed())
+                        .thenComparing(Comparator.comparing(BR_DA_JiBenXXByZSYGLDto::getJiaoChaSYCount, Comparator.nullsFirst(Integer::compareTo)).reversed()))
                 .collect(Collectors.toList());
     }
 
@@ -183,16 +182,16 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
     @Override
     public Integer getZhuSuoYinCount(Date kaiShiSJ, Date jieShuSJ, Integer xiangSiDu, String MPI, String xingMing, String lianXiDH, String shenFenZH) throws TongYongYWException, ParseException {
         var count = brDaJiBenXXRepository.asQuerydsl()
-                .whereIf(!ObjectUtils.isEmpty(kaiShiSJ),o->o.jianDangSJ.goe(kaiShiSJ))
-                .whereIf(!ObjectUtils.isEmpty(jieShuSJ),o->o.jianDangSJ.loe(jieShuSJ))
-                .whereIf(StringUtils.hasText(MPI), o->o.id.contains(MPI))
-                .whereIf(StringUtils.hasText(xingMing), o->o.xingMing.contains(xingMing))
-                .whereIf(StringUtils.hasText(lianXiDH), o->o.lianXiDH.contains(lianXiDH))
-                .whereIf(StringUtils.hasText(shenFenZH), o->o.zhengJianHM.contains(shenFenZH))
-                .leftJoin(brDaHeBingJLRepository.asQuerydsl(),(c,d)->c.id.eq(d.bingRenID), RecordJiBenXXAndHeBingJL::new)
-                .where(o->o.heBingJL().heBingZTDM.ne(ZhuSuoYHBZTConstant.HEBINGZTDM_BHB).or(o.heBingJL().heBingZTDM.isNull()))
-                .whereIf(xiangSiDu!=null && xiangSiDu>0,o->o.heBingJL().zuiDaXSD.goe(xiangSiDu))
-                .select(o->o.jiBenXX().count())
+                .whereIf(!ObjectUtils.isEmpty(kaiShiSJ), o -> o.jianDangSJ.goe(kaiShiSJ))
+                .whereIf(!ObjectUtils.isEmpty(jieShuSJ), o -> o.jianDangSJ.loe(jieShuSJ))
+                .whereIf(StringUtils.hasText(MPI), o -> o.id.contains(MPI))
+                .whereIf(StringUtils.hasText(xingMing), o -> o.xingMing.contains(xingMing))
+                .whereIf(StringUtils.hasText(lianXiDH), o -> o.lianXiDH.contains(lianXiDH))
+                .whereIf(StringUtils.hasText(shenFenZH), o -> o.zhengJianHM.contains(shenFenZH))
+                .leftJoin(brDaHeBingJLRepository.asQuerydsl(), (c, d) -> c.id.eq(d.bingRenID), RecordJiBenXXAndHeBingJL::new)
+                .where(o -> o.heBingJL().heBingZTDM.ne(ZhuSuoYHBZTConstant.HEBINGZTDM_BHB).or(o.heBingJL().heBingZTDM.isNull()))
+                .whereIf(xiangSiDu != null && xiangSiDu > 0, o -> o.heBingJL().zuiDaXSD.goe(xiangSiDu))
+                .select(o -> o.jiBenXX().count())
                 .findFirst();
         if (count != null) {
             return count.intValue();
@@ -209,47 +208,47 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
     @Override
     public List<BR_DA_JiBenXXByZSYGLDto> getZhuSuoYGLList(Integer pageIndex, Integer pageSize, Date kaiShiSJ, Date jieShuSJ, Integer xiangSiDu, String MPI, String xingMing, String lianXiDH, String shenFenZH, String jiuZhenKH) throws TongYongYWException {
         var jiBenXXList = brDaJiBenXXRepository.asQuerydsl()
-                .whereIf(!ObjectUtils.isEmpty(kaiShiSJ),o->o.jianDangSJ.goe(kaiShiSJ))
-                .whereIf(!ObjectUtils.isEmpty(jieShuSJ),o->o.jianDangSJ.loe(jieShuSJ))
-                .whereIf(StringUtils.hasText(MPI), o->o.id.contains(MPI))
-                .whereIf(StringUtils.hasText(xingMing), o->o.xingMing.contains(xingMing))
-                .whereIf(StringUtils.hasText(lianXiDH), o->o.lianXiDH.contains(lianXiDH))
-                .whereIf(StringUtils.hasText(shenFenZH), o->o.zhengJianHM.contains(shenFenZH))
-                .leftJoin(brDaHeBingJLRepository.asQuerydsl(),(c,d)->c.id.eq(d.bingRenID), RecordJiBenXXAndHeBingJL::new)
-                .where(o->o.heBingJL().heBingZTDM.ne(ZhuSuoYHBZTConstant.HEBINGZTDM_BHB).or(o.heBingJL().heBingZTDM.isNull()))
-                .whereIf(xiangSiDu!=null && xiangSiDu>0,o->o.heBingJL().zuiDaXSD.goe(xiangSiDu))
-                .orderBy(o->o.jiBenXX().jianDangSJ.desc().nullsLast())
+                .whereIf(!ObjectUtils.isEmpty(kaiShiSJ), o -> o.jianDangSJ.goe(kaiShiSJ))
+                .whereIf(!ObjectUtils.isEmpty(jieShuSJ), o -> o.jianDangSJ.loe(jieShuSJ))
+                .whereIf(StringUtils.hasText(MPI), o -> o.id.contains(MPI))
+                .whereIf(StringUtils.hasText(xingMing), o -> o.xingMing.contains(xingMing))
+                .whereIf(StringUtils.hasText(lianXiDH), o -> o.lianXiDH.contains(lianXiDH))
+                .whereIf(StringUtils.hasText(shenFenZH), o -> o.zhengJianHM.contains(shenFenZH))
+                .leftJoin(brDaHeBingJLRepository.asQuerydsl(), (c, d) -> c.id.eq(d.bingRenID), RecordJiBenXXAndHeBingJL::new)
+                .where(o -> o.heBingJL().heBingZTDM.ne(ZhuSuoYHBZTConstant.HEBINGZTDM_BHB).or(o.heBingJL().heBingZTDM.isNull()))
+                .whereIf(xiangSiDu != null && xiangSiDu > 0, o -> o.heBingJL().zuiDaXSD.goe(xiangSiDu))
+                .orderBy(o -> o.jiBenXX().jianDangSJ.desc().nullsLast())
                 .select(c -> new Expression<?>[]{
                         c.jiBenXX(),
                         c.heBingJL()
                 }, RecordJiBenXXAndHeBingJLModel.class)
-                .fetchPage(pageIndex,pageSize);
+                .fetchPage(pageIndex, pageSize);
         List<BR_DA_JiBenXXByZSYGLDto> result = new ArrayList<>();
-        for(var item :jiBenXXList){
-            var dto = MapUtils.copyProperties(item.jiBenXX(),BR_DA_JiBenXXByZSYGLDto::new);
-            if (item.heBingJL()==null || item.heBingJL().getHeBingZTDM() == null) {
+        for (var item : jiBenXXList) {
+            var dto = MapUtils.copyProperties(item.jiBenXX(), BR_DA_JiBenXXByZSYGLDto::new);
+            if (item.heBingJL() == null || item.heBingJL().getHeBingZTDM() == null) {
                 dto.setHeBingZTDM(ZhuSuoYHBZTConstant.HEBINGZTDM_WHB);
-            }else{
+            } else {
                 dto.setHeBingZTDM(item.heBingJL().getHeBingZTDM());
             }
-            if (item.heBingJL()==null || item.heBingJL().getHeBingZTMC() == null) {
+            if (item.heBingJL() == null || item.heBingJL().getHeBingZTMC() == null) {
                 dto.setHeBingZTMC("无合并");
-            }else{
+            } else {
                 dto.setHeBingZTMC(item.heBingJL().getHeBingZTMC());
             }
-            if (item.heBingJL()==null || item.heBingJL().getZuiDaXSD() == null) {
+            if (item.heBingJL() == null || item.heBingJL().getZuiDaXSD() == null) {
                 dto.setZuiDaXSD(0);
-            }else{
+            } else {
                 dto.setZuiDaXSD(item.heBingJL().getZuiDaXSD());
             }
-            if (item.heBingJL()==null || item.heBingJL().getHeBingShu() == null) {
+            if (item.heBingJL() == null || item.heBingJL().getHeBingShu() == null) {
                 dto.setHeBingShu(0);
-            }else{
+            } else {
                 dto.setHeBingShu(item.heBingJL().getHeBingShu());
             }
-            if (item.heBingJL()==null || item.heBingJL().getXiangSiShu() == null) {
+            if (item.heBingJL() == null || item.heBingJL().getXiangSiShu() == null) {
                 dto.setXiangSiShu(0);
-            }else{
+            } else {
                 dto.setXiangSiShu(item.heBingJL().getXiangSiShu());
             }
             dto.setNianLing(getNianLing(dto.getChuShengRQ()));
@@ -261,6 +260,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
 
     /**
      * 合并页面获取主索引和相似索引信息
+     *
      * @return List<BR_DA_JiBenXXByHBXXDto>
      * @throws TongYongYWException 通用异常
      */
@@ -268,37 +268,37 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
     public List<BR_DA_JiBenXXByHBXXDto> getZhuSuoYXSList(String bingRenID, Integer xiangSiDu) throws TongYongYWException {
         //获取主索引信息
         var bingRenXX = brDaJiBenXXRepository.findById(bingRenID).orElse(null);
-        if(bingRenXX == null){
+        if (bingRenXX == null) {
             throw new TongYongYWException("未找到相关病人信息");
         }
         //获取相似索引病人Id
         var xiangSiBRs = brDaXiangSiSYRepository.asQuerydsl()
-                .where(o->o.bingRenID1.eq(bingRenID).and(o.heBingBZ.eq(0)).and(o.huLueBZ.eq(0)))
-                .whereIf(Objects.nonNull(xiangSiDu) && xiangSiDu > 0,o->o.xiangSiDu.goe(xiangSiDu))
-                .select(o->new Expression<?>[]{ o.bingRenID2,o.xiangSiDu},BR_DA_XiangSiSYModel.class)
+                .where(o -> o.bingRenID1.eq(bingRenID).and(o.heBingBZ.eq(0)).and(o.huLueBZ.eq(0)))
+                .whereIf(Objects.nonNull(xiangSiDu) && xiangSiDu > 0, o -> o.xiangSiDu.goe(xiangSiDu))
+                .select(o -> new Expression<?>[]{o.bingRenID2, o.xiangSiDu}, BR_DA_XiangSiSYModel.class)
                 .fetch();
         var xiangSiBRIDs = xiangSiBRs.stream().map(BR_DA_XiangSiSYModel::getBingRenID2).toList();
         //获取相似索引病人信息
-        var xiangSiBRList = MapUtils.copyListProperties(brDaJiBenXXRepository.findAllById(xiangSiBRIDs),BR_DA_JiBenXXByHBXXDto::new);
+        var xiangSiBRList = MapUtils.copyListProperties(brDaJiBenXXRepository.findAllById(xiangSiBRIDs), BR_DA_JiBenXXByHBXXDto::new);
         List<BR_DA_JiBenXXByHBXXDto> result = new ArrayList<>();
-        result.add(MapUtils.copyProperties(bingRenXX,BR_DA_JiBenXXByHBXXDto::new));
+        result.add(MapUtils.copyProperties(bingRenXX, BR_DA_JiBenXXByHBXXDto::new));
         //获取介质信息
-        var bingRenIDs= result.stream().map(BR_DA_JiBenXXByHBXXDto::getId).toList();
-        var jieZhiXXList = MapUtils.copyListProperties(brDaJieZhiXXRepository.findByBingRenIDIn(bingRenIDs),BR_DA_JieZhiXXDto::new);
+        var bingRenIDs = result.stream().map(BR_DA_JiBenXXByHBXXDto::getId).toList();
+        var jieZhiXXList = MapUtils.copyListProperties(brDaJieZhiXXRepository.findByBingRenIDIn(bingRenIDs), BR_DA_JieZhiXXDto::new);
         //查询病人扩展信息
-        var kuoZhanXXList =MapUtils.copyListProperties(brDaKuoZhanXXRepository.findByBingRenIDIn(bingRenIDs),BR_DA_KuoZhanXXDto::new);
-        for(var item :xiangSiBRList){
-            var firstXSBR = xiangSiBRs.stream().filter(o-> Objects.equals(o.getBingRenID2(), item.getId())).findFirst().orElse(null);
-            item.setXiangSiDu(firstXSBR!=null ? firstXSBR.getXiangSiDu(): BigDecimal.ZERO);
-            item.setJieZhiXX(jieZhiXXList.stream().filter(o-> Objects.equals(o.getBingRenID(), item.getId())).findFirst().orElse(null));
-            item.setKuoZhanXX(kuoZhanXXList.stream().filter(o-> Objects.equals(o.getBingRenID(), item.getId()) && "YouHuiLB".equals(o.getXiangMuDM())).findFirst().orElse(null));
+        var kuoZhanXXList = MapUtils.copyListProperties(brDaKuoZhanXXRepository.findByBingRenIDIn(bingRenIDs), BR_DA_KuoZhanXXDto::new);
+        for (var item : xiangSiBRList) {
+            var firstXSBR = xiangSiBRs.stream().filter(o -> Objects.equals(o.getBingRenID2(), item.getId())).findFirst().orElse(null);
+            item.setXiangSiDu(firstXSBR != null ? firstXSBR.getXiangSiDu() : BigDecimal.ZERO);
+            item.setJieZhiXX(jieZhiXXList.stream().filter(o -> Objects.equals(o.getBingRenID(), item.getId())).findFirst().orElse(null));
+            item.setKuoZhanXX(kuoZhanXXList.stream().filter(o -> Objects.equals(o.getBingRenID(), item.getId()) && "YouHuiLB".equals(o.getXiangMuDM())).findFirst().orElse(null));
             var nianLing = getNianLing(item.getChuShengRQ());
             var nianLings = nianLing.split(" ");
-            if(nianLings.length>=2){
+            if (nianLings.length >= 2) {
                 item.setNianLing(nianLings[0]);
                 item.setNianLingDW(nianLings[1]);
             }
-            if(nianLings.length>=4){
+            if (nianLings.length >= 4) {
                 item.setNianLing1(nianLings[2]);
                 item.setNianLingDW1(nianLings[3]);
             }
@@ -412,7 +412,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
                     .filter(o -> Objects.equals(o.getBingRenID1(), item.getBingRenID()))
                     .map(BR_DA_XiangSiSYModel::getBingRenID2)
                     .distinct().count();
-                item.setXiangSiShu((item.getXiangSiShu() != null ? item.getXiangSiShu() : 0) - (int) count);
+            item.setXiangSiShu((item.getXiangSiShu() != null ? item.getXiangSiShu() : 0) - (int) count);
         }
         brDaHeBingJLRepository.saveAll(xiangSiHZHBJLList);
         return true;
@@ -420,6 +420,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
 
     /**
      * 忽略合并
+     *
      * @return Boolean
      * @throws TongYongYWException 通用异常
      */
@@ -427,38 +428,39 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
     @Transactional(rollbackFor = Exception.class)
     public Boolean huLueHB(HuLueHBDto dto) throws TongYongYWException {
         //修改相似索引的忽略标志
-        var xiangSISYList = brDaXiangSiSYRepository.getXiangSiSYList(dto.getZhuSuoYBRID(),List.of(dto.getXiangSiSYBRID()));
-        xiangSISYList.forEach(o->o.setHuLueBZ(1));
+        var xiangSISYList = brDaXiangSiSYRepository.getXiangSiSYList(dto.getZhuSuoYBRID(), List.of(dto.getXiangSiSYBRID()));
+        xiangSISYList.forEach(o -> o.setHuLueBZ(1));
         brDaXiangSiSYRepository.saveAll(xiangSISYList);
         //修改病人基本信息的相似数
         var zhuSuoYBRXX = brDaJiBenXXRepository.findById(dto.getZhuSuoYBRID()).orElse(null);
-        if(zhuSuoYBRXX!=null){
+        if (zhuSuoYBRXX != null) {
             var zhuSuoYHBJL = brDaHeBingJLRepository.findFirstByBingRenID(dto.getZhuSuoYBRID());
-            var xiangSiSY = brDaXiangSiSYRepository.findFirstByBingRenID1AndBingRenID2NotAndHuLueBZOrderByXiangSiDuDesc(zhuSuoYBRXX.getId(),dto.getXiangSiSYBRID(),0);
-            if(zhuSuoYHBJL!=null){
-                zhuSuoYHBJL.setXiangSiShu(zhuSuoYHBJL.getXiangSiShu()-1);
-                zhuSuoYHBJL.setZuiDaXSD(xiangSiSY.getXiangSiDu()!=null?xiangSiSY.getXiangSiDu().intValue():0);
+            var xiangSiSY = brDaXiangSiSYRepository.findFirstByBingRenID1AndBingRenID2NotAndHuLueBZOrderByXiangSiDuDesc(zhuSuoYBRXX.getId(), dto.getXiangSiSYBRID(), 0);
+            if (zhuSuoYHBJL != null) {
+                zhuSuoYHBJL.setXiangSiShu(zhuSuoYHBJL.getXiangSiShu() - 1);
+                zhuSuoYHBJL.setZuiDaXSD(xiangSiSY.getXiangSiDu() != null ? xiangSiSY.getXiangSiDu().intValue() : 0);
                 brDaHeBingJLRepository.save(zhuSuoYHBJL);
             }
         }
         var xiangSiSYBRXX = brDaJiBenXXRepository.findById(dto.getXiangSiSYBRID()).orElse(null);
-        if(xiangSiSYBRXX!=null){
+        if (xiangSiSYBRXX != null) {
             var xiangSiSYYHBJL = brDaHeBingJLRepository.findFirstByBingRenID(dto.getXiangSiSYBRID());
-            var xiangSiSY = brDaXiangSiSYRepository.findFirstByBingRenID1AndBingRenID2NotAndHuLueBZOrderByXiangSiDuDesc(xiangSiSYBRXX.getId(),dto.getZhuSuoYBRID(),0);
-            if(xiangSiSYYHBJL!=null){
-                xiangSiSYYHBJL.setXiangSiShu(xiangSiSYYHBJL.getXiangSiShu()-1);
-                xiangSiSYYHBJL.setZuiDaXSD(xiangSiSY.getXiangSiDu()!=null?xiangSiSY.getXiangSiDu().intValue():0);
+            var xiangSiSY = brDaXiangSiSYRepository.findFirstByBingRenID1AndBingRenID2NotAndHuLueBZOrderByXiangSiDuDesc(xiangSiSYBRXX.getId(), dto.getZhuSuoYBRID(), 0);
+            if (xiangSiSYYHBJL != null) {
+                xiangSiSYYHBJL.setXiangSiShu(xiangSiSYYHBJL.getXiangSiShu() - 1);
+                xiangSiSYYHBJL.setZuiDaXSD(xiangSiSY.getXiangSiDu() != null ? xiangSiSY.getXiangSiDu().intValue() : 0);
                 brDaHeBingJLRepository.save(xiangSiSYYHBJL);
             }
         }
         //添加操作日志
-        String caoZuoNR = StringUtil.concat("主索引MPI：",dto.getZhuSuoYBRID(),",忽略合并MPI：",dto.getXiangSiSYBRID());
-        zhuSuoYCZRZService.addCaoZuoRZ(dto.getZhuSuoYBRID(),zhuSuoYBRXX!=null?zhuSuoYBRXX.getXingMing():"", ZhuSuoYCZLXEnum.HULUE,caoZuoNR,false);
+        String caoZuoNR = StringUtil.concat("主索引MPI：", dto.getZhuSuoYBRID(), ",忽略合并MPI：", dto.getXiangSiSYBRID());
+        zhuSuoYCZRZService.addCaoZuoRZ(dto.getZhuSuoYBRID(), zhuSuoYBRXX != null ? zhuSuoYBRXX.getXingMing() : "", ZhuSuoYCZLXEnum.HULUE, caoZuoNR, false);
         return true;
     }
 
     /**
      * 主索引修改病人基本信息
+     *
      * @return Boolean
      * @throws TongYongYWException 通用异常
      */
@@ -466,27 +468,29 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
     @Transactional(rollbackFor = Exception.class)
     public String updateBingRenJBXX(BR_DA_JiBenXXCreateDto dto) throws TongYongYWException {
         var updateJiBenXX = brDaJiBenXXRepository.findById(dto.getId()).orElse(null);
-        if(updateJiBenXX == null){
+        if (updateJiBenXX == null) {
             throw new TongYongYWException("未找到病人信息");
         }
         //防病人信息被修改
-        if(!StringUtil.hasText(dto.getZhengJianHM())){
-           
+        if (!StringUtil.hasText(dto.getZhengJianHM())) {
+
             dto.setZhengJianHM(null);
         }
-        if(!Objects.equals(updateJiBenXX.getXingMing(), dto.getXingMing()) && !Objects.equals(updateJiBenXX.getZhengJianHM(), dto.getZhengJianHM())){
+        if (!Objects.equals(updateJiBenXX.getXingMing(), dto.getXingMing()) && !Objects.equals(updateJiBenXX.getZhengJianHM(), dto.getZhengJianHM())) {
             throw new TongYongYWException("不能同时修改姓名和证件号码");
         }
-        MapUtils.mergeProperties(dto,updateJiBenXX);
+        MapUtils.mergeProperties(dto, updateJiBenXX);
         brDaJiBenXXRepository.save(updateJiBenXX);
         //添加操作日志
-        String caoZuoNR = StringUtil.concat("主索引MPI：",updateJiBenXX.getId(),",修改基本信息");
-        zhuSuoYCZRZService.addCaoZuoRZ(updateJiBenXX.getId(),updateJiBenXX.getXingMing(), ZhuSuoYCZLXEnum.XIUGAI,caoZuoNR,false);
+        String caoZuoNR = StringUtil.concat("主索引MPI：", updateJiBenXX.getId(), ",修改基本信息");
+        zhuSuoYCZRZService.addCaoZuoRZ(updateJiBenXX.getId(), updateJiBenXX.getXingMing(), ZhuSuoYCZLXEnum.XIUGAI, caoZuoNR, false);
         return dto.getId();
 
     }
+
     /**
      * 取消合并
+     *
      * @return Boolean
      */
     @Override
@@ -509,34 +513,29 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
         //region 修改病人基本信息
         //修改病人基本信息
         BR_DA_JiBenXXModel zhuBingRenXX = brDaJiBenXXRepository.findById(dto.getZhuSuoYBRID()).stream().findFirst().orElse(null);
-        if (zhuBingRenXX==null)
-        {
+        if (zhuBingRenXX == null) {
             throw new TongYongYWException("未找到主病人信息");
         }
 
         BR_DA_HeBingJLModel zhuSuoYHBJL = brDaHeBingJLRepository.findFirstByBingRenID(dto.getZhuSuoYBRID());
-        zhuSuoYHBJL.setHeBingShu( zhuSuoYHBJL.getHeBingShu()-deteleJiaoChaSYList.size());
-        if (brDaJiaoChaSYRepository.existsByZhuBingRIDAndGuanLianBRIDNot(dto.getZhuSuoYBRID(),dto.getXiangSiSYBRID()))
-        {
-          zhuSuoYHBJL.setHeBingZTDM("0");
-          zhuSuoYHBJL.setHeBingZTMC("未合并");
+        zhuSuoYHBJL.setHeBingShu(zhuSuoYHBJL.getHeBingShu() - deteleJiaoChaSYList.size());
+        if (brDaJiaoChaSYRepository.existsByZhuBingRIDAndGuanLianBRIDNot(dto.getZhuSuoYBRID(), dto.getXiangSiSYBRID())) {
+            zhuSuoYHBJL.setHeBingZTDM("0");
+            zhuSuoYHBJL.setHeBingZTMC("未合并");
         }
         BR_DA_JiBenXXModel xiangSiBRXX = brDaJiBenXXRepository.findById(dto.getXiangSiSYBRID()).stream().findFirst().orElse(null);//todo
-        if (xiangSiBRXX==null)
-        {
+        if (xiangSiBRXX == null) {
             throw new TongYongYWException("未找到相似病人信息");
         }
         BR_DA_HeBingJLModel xiangSiHBJL = brDaHeBingJLRepository.findFirstByBingRenID(dto.getXiangSiSYBRID());
         xiangSiHBJL.setHeBingShu(xiangSiHBJL.getHeBingShu() - 1);
-        if(brDaJiaoChaSYRepository.existsByZhuBingRID(dto.getXiangSiSYBRID()))
-        {
+        if (brDaJiaoChaSYRepository.existsByZhuBingRID(dto.getXiangSiSYBRID())) {
             xiangSiHBJL.setHeBingZTDM("1");
             xiangSiHBJL.setHeBingZTMC("合并后主数据");
 
-        }else {
+        } else {
             List<BR_DA_JiaoChaSYModel> xiangSiJCList = brDaJiaoChaSYRepository.findByGuanLianBRIDAndZhuBingRIDNot(dto.getXiangSiSYBRID(), dto.getZhuSuoYBRID());
-            if (!CollectionUtils.isEmpty(xiangSiJCList))
-            {
+            if (!CollectionUtils.isEmpty(xiangSiJCList)) {
                 //被合并患者被其他患者合并时，移除与其他患者的交叉索引和相似索引
                 brDaJiaoChaSYRepository.deleteAllInBatch(xiangSiJCList);
                 QBR_DA_XiangSiSYModel brDaXiangSiSYModel = QBR_DA_XiangSiSYModel.bR_DA_XiangSiSYModel;
@@ -549,8 +548,8 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
                                         .map(BR_DA_JiaoChaSYModel::getZhuBingRID).toList()))));
 
                 List<BR_DA_HeBingJLModel> beiHeBXSLHBJList = brDaHeBingJLRepository.findByBingRenIDIn(xiangSiJCList.stream().map(BR_DA_JiaoChaSYModel::getZhuBingRID).toList());
-                beiHeBXSLHBJList.forEach(x->{
-                    x.setHeBingShu(x.getHeBingShu()-1);
+                beiHeBXSLHBJList.forEach(x -> {
+                    x.setHeBingShu(x.getHeBingShu() - 1);
                 });
             }
             xiangSiHBJL.setHeBingZTDM("0");
@@ -568,7 +567,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
 //        });
         brDaXiangSiSYRepository.asUpdateDsl().where(x -> (x.bingRenID1.eq(dto.getZhuSuoYBRID())
                 .and(x.bingRenID2.eq(dto.getXiangSiSYBRID())))
-                .or(x.bingRenID2.eq(dto.getZhuSuoYBRID()).and(x.bingRenID1.eq(dto.getXiangSiSYBRID())))).set(s->s.heBingBZ,0).set(s->s.huLueBZ,1).update();
+                .or(x.bingRenID2.eq(dto.getZhuSuoYBRID()).and(x.bingRenID1.eq(dto.getXiangSiSYBRID())))).set(s -> s.heBingBZ, 0).set(s -> s.huLueBZ, 1).update();
 //        brDaXiangSiSYRepository.saveAll(xiangSiSYList);
         //endregion
 
@@ -576,45 +575,54 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
         zhuSuoYCZRZService.addCaoZuoRZ(dto.getZhuSuoYBRID(),
                 zhuBingRenXX.getXingMing(),
                 ZhuSuoYCZLXEnum.QUXIAOHB,
-                StringUtil.concat("主索引MPI",dto.getZhuSuoYBRID(),",取消合并MPI：",dto.getXiangSiSYBRID(),"，取消合并理由：",dto.getQuXiaoHBLY()),
+                StringUtil.concat("主索引MPI", dto.getZhuSuoYBRID(), ",取消合并MPI：", dto.getXiangSiSYBRID(), "，取消合并理由：", dto.getQuXiaoHBLY()),
                 false);
 
         brDaHeBingJLRepository.save(zhuSuoYHBJL);
         brDaHeBingJLRepository.save(xiangSiHBJL);
         //region 似索引重新计算
-        ArrayList<BR_DA_JiBenXXModel> huanZheList = new ArrayList<>(){};
+        ArrayList<BR_DA_JiBenXXModel> huanZheList = new ArrayList<>() {
+        };
         huanZheList.add(zhuBingRenXX);
         huanZheList.add(xiangSiBRXX);
-        zengLiangPPXSHZ_Start(huanZheList,false);
+        zengLiangPPXSHZ_Start(huanZheList, false);
         //endregion
         return true;
     }
     //todo 缓存获取数据修改
+
     /**
      * 增量匹配相似患者（增量）
+     *
      * @return Boolean
      */
     @Override
-    public String zengLiangPPXSHZ() {
+    public String zengLiangPPXSHZ() throws ParseException {
         var jiGouID = "0";
         var jiGouMC = "通用";
         //获取筛选开始时间
-        log.info("主索引增量JOB-开始时间："+DateUtil.getCurrentDate());
-        var hasGengXinSJ =  springCache.get("GengXinSJ");
+        log.info("主索引增量JOB-开始时间：" + DateUtil.getCurrentDate());
+        var hasGengXinSJ = springCache.get("GengXinSJ");
+        var kaiShiSJ = DateUtil.getCurrentDate();
+        Date gengXinSJ = DateUtil.offsetHour(DateUtil.offsetDay(DateUtil.beginOfDay(DateUtil.getCurrentDate()), -1), 1);
 
-        Date gengXinSJ =DateUtil.offsetHour(DateUtil.offsetDay(DateUtil.beginOfDay(DateUtil.getCurrentDate()),-1),1);
-
-        if (StringUtil.hasText(hasGengXinSJ))
-        {
+        if (StringUtil.hasText(hasGengXinSJ)) {
             gengXinSJ = DateUtil.parse(hasGengXinSJ);
+            kaiShiSJ = gengXinSJ;
+        } else {
+            var brDaJiaoChaSYXX = brDaJiaoChaSYRepository.findFirstByZiDongHBBZOrderByChuangJianSJDesc(1);
+            if (brDaJiaoChaSYXX != null) {
+                kaiShiSJ = brDaJiaoChaSYXX.getChuangJianSJ();
+            }
         }
+//        var kaiShiSJ=StringUtil.hasText(hasGengXinSJ)?gengXinSJ: brDaJiaoChaSYRepository.findFirstByZiDongHBBZOrderByChuangJianSJDesc(1).getChuangJianSJ();
 
-        var kaiShiSJ=StringUtil.hasText(hasGengXinSJ)?gengXinSJ: brDaJiaoChaSYRepository.findFirstByZiDongHBBZOrderByChuangJianSJDesc(1).getChuangJianSJ();
         var result = "";
         //region 取更新的患者列表
-        record RecordJiBenXXHeBingJL(QBR_DA_JiBenXXModel jiBenXX,QBR_DA_HeBingJLModel heBingJL) {
+        record RecordJiBenXXHeBingJL(QBR_DA_JiBenXXModel jiBenXX, QBR_DA_HeBingJLModel heBingJL) {
         }
-        List<BR_DA_JiBenXXModel> huanZheList = brDaJiBenXXRepository.asQuerydsl().where(x -> x.xiuGaiSJ.after(kaiShiSJ))
+        Date finalKaiShiSJ = kaiShiSJ;
+        List<BR_DA_JiBenXXModel> huanZheList = brDaJiBenXXRepository.asQuerydsl().where(x -> x.xiuGaiSJ.after(finalKaiShiSJ))
                 .leftJoin(brDaHeBingJLRepository.asQuerydsl(), (x, y) -> x.id.eq(y.bingRenID), RecordJiBenXXHeBingJL::new)
                 .where(x -> x.heBingJL.heBingZTDM.ne(ZhuSuoYHBZTConstants.HeBingZTDM_BHB).or(x.heBingJL.heBingZTDM.isNull()))
                 .orderBy(x -> x.jiBenXX.xiuGaiSJ.asc())
@@ -622,42 +630,38 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
                 .toList();
         //endregion
         try {
-            if (!CollectionUtils.isEmpty(huanZheList))
-            {
-                var updateXiuGaiSJ=huanZheList.stream().sorted(Comparator.comparing(BR_DA_JiBenXXModel::getXiuGaiSJ, Comparator.nullsLast(Comparator.reverseOrder()))).findFirst().orElse(new BR_DA_JiBenXXModel()).getXiuGaiSJ();
-                if (huanZheList.size()==1001) {
+            if (!CollectionUtils.isEmpty(huanZheList)) {
+                var updateXiuGaiSJ = huanZheList.stream().sorted(Comparator.comparing(BR_DA_JiBenXXModel::getXiuGaiSJ, Comparator.nullsLast(Comparator.reverseOrder()))).findFirst().orElse(new BR_DA_JiBenXXModel()).getXiuGaiSJ();
+                if (huanZheList.size() == 1001) {
                     //当患者列表的修改时间都一样时，重新取修改时间为这个时间的患者
-                    if (huanZheList.get(0).getXiuGaiSJ().equals(huanZheList.get(1000).getXiuGaiSJ()))
-                    {
+                    if (huanZheList.get(0).getXiuGaiSJ().equals(huanZheList.get(1000).getXiuGaiSJ())) {
                         huanZheList = brDaJiBenXXRepository.asQuerydsl()
                                 .leftJoin(brDaHeBingJLRepository.asQuerydsl(), (x, y) -> x.id.eq(y.bingRenID), RecordJiBenXXHeBingJL::new)
                                 .where(x -> x.heBingJL.heBingZTDM.ne(ZhuSuoYHBZTConstants.HeBingZTDM_BHB).or(x.heBingJL.heBingZTDM.isNull()))
                                 .orderBy(x -> x.jiBenXX.xiuGaiSJ.desc())
                                 .select(x -> x.jiBenXX).fetch().stream()
                                 .toList();
-                    }else{
+                    } else {
                         //防止下一个患者的修改时间和取出的患者列表最后的修改时间一样
                         List<BR_DA_JiBenXXModel> finalHuanZheList = huanZheList;
-                        huanZheList = huanZheList.stream().filter(x-> !x.getXiuGaiSJ().equals(finalHuanZheList.get(1000).getXiuGaiSJ())).toList();
+                        huanZheList = huanZheList.stream().filter(x -> !x.getXiuGaiSJ().equals(finalHuanZheList.get(1000).getXiuGaiSJ())).toList();
                     }
                 }
-                zengLiangPPXSHZ_Start(huanZheList,true);
-                springCache.put("GengXinSJ",DateUtil.getYYMMDDHHMMSS(updateXiuGaiSJ));
+                zengLiangPPXSHZ_Start(huanZheList, true);
+                springCache.put("GengXinSJ", DateUtil.getYYMMDDHHMMSS(updateXiuGaiSJ));
             }
-            result= StringUtil.concat("开始时间：",DateUtil.getYYMMDDHHmmss(kaiShiSJ),",本次处理修改的患者：",huanZheList.size(),"人");
+            result = StringUtil.concat("开始时间：", DateUtil.getYYMMDDHHmmss(kaiShiSJ), ",本次处理修改的患者：", huanZheList.size(), "人");
 
-        }catch (Exception e)
-        {
-           springCache.put("GengXinSJ",DateUtil.getYYMMDDHHMMSS(kaiShiSJ));
+        } catch (Exception e) {
+            springCache.put("GengXinSJ", DateUtil.getYYMMDDHHMMSS(kaiShiSJ));
 
 //            throw;
         }
         return result;
     }
 
-    private void zengLiangPPXSHZ_Start(List<BR_DA_JiBenXXModel> huanZheList,Boolean ziDongHB) throws TongYongYWException
-    {
-        log.info("主索引增量合并匹配处理-开始时间："+DateUtil.getCurrentDate());
+    private void zengLiangPPXSHZ_Start(List<BR_DA_JiBenXXModel> huanZheList, Boolean ziDongHB) throws TongYongYWException {
+        log.info("主索引增量合并匹配处理-开始时间：" + DateUtil.getCurrentDate());
         //region 获取合并规则
         //获取合并规则
         List<GuiZeListDto> guiZeList = brZdHeBingGZRepository.asQuerydsl()
@@ -667,19 +671,17 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
                 .where(m -> m.zuZhiJGID.eq("0")
                         .and(m.guiZeID.in(finalGuiZeList.stream().map(GuiZeListDto::getGuiZeID).toList())))
                 .select(GuiZePZDto.class).fetch();
-        for (var item:guiZeList)
-        {
+        for (var item : guiZeList) {
 
-            item.setGuiZePZList(guiZeMXList.stream().filter(x->x.getGuiZeID().equals(item.getGuiZeID())).toList());
+            item.setGuiZePZList(guiZeMXList.stream().filter(x -> x.getGuiZeID().equals(item.getGuiZeID())).toList());
             item.setXiangSiDu(item.getFaZhi().multiply(item.getGuiZePZList().stream()
-                    .map(GuiZePZDto::getQuanZhong).reduce(BigDecimal.ZERO, BigDecimal::add))
+                            .map(GuiZePZDto::getQuanZhong).reduce(BigDecimal.ZERO, BigDecimal::add))
                     .divide(new BigDecimal(100)));
         }
         guiZeList = guiZeList.stream().filter(x -> !CollectionUtils.isEmpty(x.getGuiZePZList().stream().toList()))
                 .sorted(Comparator.comparing(GuiZeListDto::getXiangSiDu).reversed()).toList();
-        if (CollectionUtils.isEmpty(guiZeList))
-        {
-          throw new TongYongYWException("规则未配置");
+        if (CollectionUtils.isEmpty(guiZeList)) {
+            throw new TongYongYWException("规则未配置");
         }
         //endregion
         //获取患者的相似患者列表
@@ -693,11 +695,11 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
 
         List<BR_DA_HeBingJLModel> heBingJLList = brDaHeBingJLRepository.findByBingRenIDIn(xiangShiHZId);
 
-      //  List<BR_DA_HeBingJLModel> addHeBingJLList=new ArrayList<>();
+        //  List<BR_DA_HeBingJLModel> addHeBingJLList=new ArrayList<>();
         List<BR_DA_HeBingJLModel> addHeBingJLList = xiangSiHZList.stream()
                 .filter(x -> !heBingJLList.stream().map(BR_DA_HeBingJLModel::getBingRenID).toList()
                         .contains(x.getId())).map(x -> {
-            var heBingJL = new BR_DA_HeBingJLModel();
+                    var heBingJL = new BR_DA_HeBingJLModel();
                     heBingJL.setHeBingShu(0);
                     heBingJL.setXiangSiShu(0);
                     heBingJL.setHeBingZTDM("0");
@@ -706,20 +708,17 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
                     heBingJL.setZuiDaXSD(0);
                     heBingJL.setZuZhiJGID("0");
                     heBingJL.setZuZhiJGMC("通用");
-            return heBingJL;
-        }).toList();
-        List<BR_DA_JiaoChaSYModel> addJiaoChaSYList=new ArrayList<>();
-        List<BR_DA_XiangSiSYModel> addXiangSiSYList=new ArrayList<>();
-        for (var bingRenXX:huanZheList)
-        {
-            if(addJiaoChaSYList.stream().anyMatch(x->x.getGuanLianBRID().equals(bingRenXX.getId())))
-            {
+                    return heBingJL;
+                }).toList();
+        List<BR_DA_JiaoChaSYModel> addJiaoChaSYList = new ArrayList<>();
+        List<BR_DA_XiangSiSYModel> addXiangSiSYList = new ArrayList<>();
+        for (var bingRenXX : huanZheList) {
+            if (addJiaoChaSYList.stream().anyMatch(x -> x.getGuanLianBRID().equals(bingRenXX.getId()))) {
                 continue;
             }
-            xiangSiPPByBRXX2(bingRenXX,xiangSiHZList,guiZeList,yuanXiangSiSYList,addXiangSiSYList,addJiaoChaSYList,yuanJiaoChaSYList,ziDongHB);
+            xiangSiPPByBRXX2(bingRenXX, xiangSiHZList, guiZeList, yuanXiangSiSYList, addXiangSiSYList, addJiaoChaSYList, yuanJiaoChaSYList, ziDongHB);
         }
-        if (!CollectionUtils.isEmpty(addXiangSiSYList))
-        {
+        if (!CollectionUtils.isEmpty(addXiangSiSYList)) {
             brDaXiangSiSYRepository.saveAll(addXiangSiSYList);
 
             List<String> deleteXiangSiSYIDs = yuanXiangSiSYList.stream()
@@ -728,111 +727,105 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
                     .map(StringMTEntity::getId)
                     .toList();
 
-            if (!CollectionUtils.isEmpty(deleteXiangSiSYIDs))
-            {
+            if (!CollectionUtils.isEmpty(deleteXiangSiSYIDs)) {
                 brDaXiangSiSYRepository.deleteAllById(deleteXiangSiSYIDs);
             }
         }
-        if (!CollectionUtils.isEmpty(addJiaoChaSYList))
-        {
-                brDaJiaoChaSYRepository.saveAll(addJiaoChaSYList);
-                List<GuiZeListDto> finalGuiZeList1 = guiZeList;
-                List<BR_DA_ZhuSuoYCZRZModel> caoZuoRZList = addJiaoChaSYList.stream().map(x -> {
-                    BR_DA_XiangSiSYModel guiZeID = addXiangSiSYList.stream()
-                            .filter(m -> m.getBingRenID1().equals(x.getZhuBingRID()) && m.getBingRenID2().equals(x.getGuanLianBRID()))
-                            .findFirst().orElse(null);
-                    var xiangXiSM="";
-                    if (guiZeID!=null)
-                    {
-                        var guiZe = finalGuiZeList1.stream().filter(m -> m.getGuiZeID().equals(guiZeID.getGuiZeID())).findFirst().orElse(null);
-                        if (guiZe!=null)
-                        {
-                            xiangXiSM=StringUtil.concat("，合并规则为：",
-                                    StringUtil.join(",",guiZe.getGuiZePZList().stream().map(o->o.getMingCheng()+o.getQuanZhong()+"%").toList()),
-                                    "，阀值",guiZe.getFaZhi(),"%");
-                        }
-                    }
-
-                    var zhuSuoYCZRZ = new BR_DA_ZhuSuoYCZRZModel();
-                    zhuSuoYCZRZ.setZuZhiJGID("0");
-                    zhuSuoYCZRZ.setZuZhiJGMC("通用");
-                    zhuSuoYCZRZ.setBingRenID(x.getZhuBingRID());
-                    zhuSuoYCZRZ.setXingMing(huanZheList.stream()
-                            .filter(m->m.getId().equals(x.getZhuBingRID())).findFirst().orElse(new BR_DA_JiBenXXModel()).getXingMing());
-                    zhuSuoYCZRZ.setCaoZuoLXDM(ZhuSuoYCZLXEnum.HEBING.getValue());
-                    zhuSuoYCZRZ.setCaoZuoLXMC(ZhuSuoYCZLXEnum.HEBING.getDescription());
-                    zhuSuoYCZRZ.setCaoZuoRID("0");
-                    zhuSuoYCZRZ.setCaoZuoRXM("系统");
-                    zhuSuoYCZRZ.setCaoZuoSJ( new Date());
-                    zhuSuoYCZRZ.setCaoZuoNR(StringUtil.concat("主索引MPI：",x.getZhuBingRID(),",已经合并MPI：",x.getGuanLianBRID(),xiangXiSM));
-                    return zhuSuoYCZRZ;
-                }).toList();
-                zhuSuoYCZRZRepository.saveAll(caoZuoRZList);
-                //移除被合并的相似索引(原有的)
-                List<BR_DA_XiangSiSYModel> deleteXiangSiSYList = yuanXiangSiSYList.stream()
-                        .filter(x -> x.getHeBingBZ().equals(0))
-                        .filter(x -> addJiaoChaSYList.stream()
-                                .map(BR_DA_JiaoChaSYModel::getGuanLianBRID).toList()
-                                .contains(x.getBingRenID1()) || addJiaoChaSYList.stream()
-                                .map(BR_DA_JiaoChaSYModel::getGuanLianBRID).toList().contains(x.getBingRenID2())).toList();
-                brDaXiangSiSYRepository.deleteAllInBatch(deleteXiangSiSYList);
-                List<String> bingRenIDs = deleteXiangSiSYList.stream().map(BR_DA_XiangSiSYModel::getBingRenID1).toList();
-                addHeBingJLList.stream().filter(x -> bingRenIDs.contains(x.getBingRenID())).forEach(x -> {
-                    long count = deleteXiangSiSYList.stream().filter(o -> o.getBingRenID1().equals(x.getBingRenID())).count();
-                    x.setXiangSiShu(x.getXiangSiShu()-(int)(count));
-                });
-            }
-            if (!CollectionUtils.isEmpty(addHeBingJLList))
-            {
-                brDaHeBingJLRepository.saveAll(addHeBingJLList);
-            }
-            log.info("主索引增量合并匹配处理-结束时间："+DateUtil.getCurrentDate());
-            jiSuanHBXSS(xiangSiHZList.stream().map(StringMTEntity::getId).toList());
-        }
-        /**
-         * 计算合并相似数
-         * @param bingRenIDs 病人ID集合
-         */
-        private void jiSuanHBXSS(List<String> bingRenIDs)
-        {
-            log.info("主索引处理相似数-开始时间："+DateUtil.getCurrentDate());
-            List<BR_DA_HeBingJLModel> allHeBingJL = brDaHeBingJLRepository.findByBingRenIDIn(bingRenIDs);
-            List<BR_DA_XiangSiSYModel> allXaingSiSYList =brDaXiangSiSYRepository.asQuerydsl().where(x->x.bingRenID1.in(bingRenIDs).and(x.huLueBZ.eq(0)).and(x.heBingBZ.eq(0))).fetch();
-            List<BR_DA_JiaoChaSYModel> allJiaoChaSYList = brDaJiaoChaSYRepository.findByZhuBingRIDInOrGuanLianBRIDIn(bingRenIDs, bingRenIDs);
-            allHeBingJL.forEach(x->{
-                long isZhuSuoYin = allJiaoChaSYList.stream().filter(m -> m.getZhuBingRID().equals(x.getBingRenID())).count();
-                long isBeiHeBing = allJiaoChaSYList.stream().filter(m -> m.getGuanLianBRID().equals(x.getBingRenID())).count();
-                if (isBeiHeBing>0)
-                {
-                    x.setHeBingShu((int)isBeiHeBing);
-                    x.setHeBingZTDM("2");
-                    x.setHeBingZTMC("被合并数据");
-                    x.setZuiDaXSD(100);
-                } else if (isZhuSuoYin>0) {
-                    x.setHeBingShu((int)isZhuSuoYin);
-                    x.setHeBingZTDM("1");
-                    x.setHeBingZTMC("合并后主数据");
-                    x.setZuiDaXSD(100);
-                }else {
-                    x.setHeBingShu(0);
-                    x.setHeBingZTDM("0");
-                    x.setHeBingZTMC("未合并");
-                    BR_DA_XiangSiSYModel xiangSiSY = allXaingSiSYList.stream()
-                            .filter(m -> m.getBingRenID1().equals(x.getBingRenID()))
-                           // .filter(m->m.getXiangSiDu()!=null)
-                            .max(Comparator.comparing(BR_DA_XiangSiSYModel::getXiangSiDu)).orElse(null);
-                    if (xiangSiSY!=null)
-                    {
-                        x.setZuiDaXSD( xiangSiSY.getXiangSiDu()==null?0:xiangSiSY.getXiangSiDu().intValue());
-                    }else{
-                        x.setZuiDaXSD(0);
+        if (!CollectionUtils.isEmpty(addJiaoChaSYList)) {
+            brDaJiaoChaSYRepository.saveAll(addJiaoChaSYList);
+            List<GuiZeListDto> finalGuiZeList1 = guiZeList;
+            List<BR_DA_ZhuSuoYCZRZModel> caoZuoRZList = addJiaoChaSYList.stream().map(x -> {
+                BR_DA_XiangSiSYModel guiZeID = addXiangSiSYList.stream()
+                        .filter(m -> m.getBingRenID1().equals(x.getZhuBingRID()) && m.getBingRenID2().equals(x.getGuanLianBRID()))
+                        .findFirst().orElse(null);
+                var xiangXiSM = "";
+                if (guiZeID != null) {
+                    var guiZe = finalGuiZeList1.stream().filter(m -> m.getGuiZeID().equals(guiZeID.getGuiZeID())).findFirst().orElse(null);
+                    if (guiZe != null) {
+                        xiangXiSM = StringUtil.concat("，合并规则为：",
+                                StringUtil.join(",", guiZe.getGuiZePZList().stream().map(o -> o.getMingCheng() + o.getQuanZhong() + "%").toList()),
+                                "，阀值", guiZe.getFaZhi(), "%");
                     }
                 }
-                x.setXiangSiShu((int)allXaingSiSYList.stream().filter(m->m.getBingRenID1().equals(x.getBingRenID())).count());
+
+                var zhuSuoYCZRZ = new BR_DA_ZhuSuoYCZRZModel();
+                zhuSuoYCZRZ.setZuZhiJGID("0");
+                zhuSuoYCZRZ.setZuZhiJGMC("通用");
+                zhuSuoYCZRZ.setBingRenID(x.getZhuBingRID());
+                zhuSuoYCZRZ.setXingMing(huanZheList.stream()
+                        .filter(m -> m.getId().equals(x.getZhuBingRID())).findFirst().orElse(new BR_DA_JiBenXXModel()).getXingMing());
+                zhuSuoYCZRZ.setCaoZuoLXDM(ZhuSuoYCZLXEnum.HEBING.getValue());
+                zhuSuoYCZRZ.setCaoZuoLXMC(ZhuSuoYCZLXEnum.HEBING.getDescription());
+                zhuSuoYCZRZ.setCaoZuoRID("0");
+                zhuSuoYCZRZ.setCaoZuoRXM("系统");
+                zhuSuoYCZRZ.setCaoZuoSJ(new Date());
+                zhuSuoYCZRZ.setCaoZuoNR(StringUtil.concat("主索引MPI：", x.getZhuBingRID(), ",已经合并MPI：", x.getGuanLianBRID(), xiangXiSM));
+                return zhuSuoYCZRZ;
+            }).toList();
+            zhuSuoYCZRZRepository.saveAll(caoZuoRZList);
+            //移除被合并的相似索引(原有的)
+            List<BR_DA_XiangSiSYModel> deleteXiangSiSYList = yuanXiangSiSYList.stream()
+                    .filter(x -> x.getHeBingBZ().equals(0))
+                    .filter(x -> addJiaoChaSYList.stream()
+                            .map(BR_DA_JiaoChaSYModel::getGuanLianBRID).toList()
+                            .contains(x.getBingRenID1()) || addJiaoChaSYList.stream()
+                            .map(BR_DA_JiaoChaSYModel::getGuanLianBRID).toList().contains(x.getBingRenID2())).toList();
+            brDaXiangSiSYRepository.deleteAllInBatch(deleteXiangSiSYList);
+            List<String> bingRenIDs = deleteXiangSiSYList.stream().map(BR_DA_XiangSiSYModel::getBingRenID1).toList();
+            addHeBingJLList.stream().filter(x -> bingRenIDs.contains(x.getBingRenID())).forEach(x -> {
+                long count = deleteXiangSiSYList.stream().filter(o -> o.getBingRenID1().equals(x.getBingRenID())).count();
+                x.setXiangSiShu(x.getXiangSiShu() - (int) (count));
             });
-            brDaHeBingJLRepository.saveAll(allHeBingJL);
-            log.info("主索引处理相似数-结束时间："+DateUtil.getCurrentDate());
         }
+        if (!CollectionUtils.isEmpty(addHeBingJLList)) {
+            brDaHeBingJLRepository.saveAll(addHeBingJLList);
+        }
+        log.info("主索引增量合并匹配处理-结束时间：" + DateUtil.getCurrentDate());
+        jiSuanHBXSS(xiangSiHZList.stream().map(StringMTEntity::getId).toList());
+    }
+
+    /**
+     * 计算合并相似数
+     *
+     * @param bingRenIDs 病人ID集合
+     */
+    private void jiSuanHBXSS(List<String> bingRenIDs) {
+        log.info("主索引处理相似数-开始时间：" + DateUtil.getCurrentDate());
+        List<BR_DA_HeBingJLModel> allHeBingJL = brDaHeBingJLRepository.findByBingRenIDIn(bingRenIDs);
+        List<BR_DA_XiangSiSYModel> allXaingSiSYList = brDaXiangSiSYRepository.asQuerydsl().where(x -> x.bingRenID1.in(bingRenIDs).and(x.huLueBZ.eq(0)).and(x.heBingBZ.eq(0))).fetch();
+        List<BR_DA_JiaoChaSYModel> allJiaoChaSYList = brDaJiaoChaSYRepository.findByZhuBingRIDInOrGuanLianBRIDIn(bingRenIDs, bingRenIDs);
+        allHeBingJL.forEach(x -> {
+            long isZhuSuoYin = allJiaoChaSYList.stream().filter(m -> m.getZhuBingRID().equals(x.getBingRenID())).count();
+            long isBeiHeBing = allJiaoChaSYList.stream().filter(m -> m.getGuanLianBRID().equals(x.getBingRenID())).count();
+            if (isBeiHeBing > 0) {
+                x.setHeBingShu((int) isBeiHeBing);
+                x.setHeBingZTDM("2");
+                x.setHeBingZTMC("被合并数据");
+                x.setZuiDaXSD(100);
+            } else if (isZhuSuoYin > 0) {
+                x.setHeBingShu((int) isZhuSuoYin);
+                x.setHeBingZTDM("1");
+                x.setHeBingZTMC("合并后主数据");
+                x.setZuiDaXSD(100);
+            } else {
+                x.setHeBingShu(0);
+                x.setHeBingZTDM("0");
+                x.setHeBingZTMC("未合并");
+                BR_DA_XiangSiSYModel xiangSiSY = allXaingSiSYList.stream()
+                        .filter(m -> m.getBingRenID1().equals(x.getBingRenID()))
+                        // .filter(m->m.getXiangSiDu()!=null)
+                        .max(Comparator.comparing(BR_DA_XiangSiSYModel::getXiangSiDu)).orElse(null);
+                if (xiangSiSY != null) {
+                    x.setZuiDaXSD(xiangSiSY.getXiangSiDu() == null ? 0 : xiangSiSY.getXiangSiDu().intValue());
+                } else {
+                    x.setZuiDaXSD(0);
+                }
+            }
+            x.setXiangSiShu((int) allXaingSiSYList.stream().filter(m -> m.getBingRenID1().equals(x.getBingRenID())).count());
+        });
+        brDaHeBingJLRepository.saveAll(allHeBingJL);
+        log.info("主索引处理相似数-结束时间：" + DateUtil.getCurrentDate());
+    }
 
     private void xiangSiPPByBRXX2(BR_DA_JiBenXXModel bingRenXX,
                                   List<BR_DA_JiBenXXModel> xiangSiHZList,
@@ -840,170 +833,158 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
                                   List<BR_DA_XiangSiSYModel> yuanXiangSiSYList,
                                   List<BR_DA_XiangSiSYModel> addXiangSiSYList,
                                   List<BR_DA_JiaoChaSYModel> addJiaoChaSYList,
-                                  List<BR_DA_JiaoChaSYModel>  yuanJiaoChaSYList,
-                                  Boolean ziDongHB)
-    {
+                                  List<BR_DA_JiaoChaSYModel> yuanJiaoChaSYList,
+                                  Boolean ziDongHB) {
         List<String> ignoreIds = new ArrayList<>(yuanXiangSiSYList.stream()
                 .filter(x -> x.getBingRenID1().equals(bingRenXX.getId()) && x.getHuLueBZ().equals(1)).map(BR_DA_XiangSiSYModel::getBingRenID2).toList());
 
-        ignoreIds.addAll(addXiangSiSYList.stream().filter(x->x.getBingRenID1().equals(bingRenXX.getId())).map(BR_DA_XiangSiSYModel::getBingRenID2).toList());
-        List<String> xiangSiBRIDs=new ArrayList<>();
+        ignoreIds.addAll(addXiangSiSYList.stream().filter(x -> x.getBingRenID1().equals(bingRenXX.getId())).map(BR_DA_XiangSiSYModel::getBingRenID2).toList());
+        List<String> xiangSiBRIDs = new ArrayList<>();
 
-        for (var guiZe:guiZeList)
-        {
-          var   ziDongHBBZ= guiZe.getXiangSiDu().compareTo(new BigDecimal(100))>=0&&ziDongHB;
+        for (var guiZe : guiZeList) {
+            var ziDongHBBZ = guiZe.getXiangSiDu().compareTo(new BigDecimal(100)) >= 0 && ziDongHB;
             //region 获取相似的患者
             List<BR_DA_JiBenXXModel> query = xiangSiHZList.stream().filter(x -> !x.getId().equals(bingRenXX.getId()) && !ignoreIds.contains(x.getId())).toList();
-            for (var ziDuan:guiZe.getGuiZePZList())
-            {
+            for (var ziDuan : guiZe.getGuiZePZList()) {
                 var value = getHuanZheValue(bingRenXX, ziDuan.getDaiMa());
                 //s=>s.字段名!=null && s.字段名=上面得到的值
-                query= query.stream().filter(item->{
-                    var cls= item.getClass();
+                query = query.stream().filter(item -> {
+                    var cls = item.getClass();
                     Field fieldM = null;
                     try {
-                        fieldM = cls.getDeclaredField(StringUtils.uncapitalize(ziDuan.getDaiMa()) );
+                        fieldM = cls.getDeclaredField(StringUtils.uncapitalize(ziDuan.getDaiMa()));
                     } catch (NoSuchFieldException e) {
                         throw new RuntimeException(e);
                     }
                     try {
                         fieldM.setAccessible(true);
-                            var fieldValue= fieldM.get(item);
-                            if(fieldValue!=null&&fieldValue.equals(value))
-                                return true;
+                        var fieldValue = fieldM.get(item);
+                        if (fieldValue != null && fieldValue.equals(value))
+                            return true;
                     } catch (IllegalAccessException e) {
                         throw new RuntimeException(e);
                     }
-                   return false;
+                    return false;
                 }).toList();
             }
-                var dangQianXSHZList=query.stream().toList();
-                xiangSiBRIDs.addAll(dangQianXSHZList.stream().map(BR_DA_JiBenXXModel::getId).toList());
-                ignoreIds.addAll(dangQianXSHZList.stream().map(BR_DA_JiBenXXModel::getId).toList());
-                //endregion
-                for (var dangQianXSHZ:dangQianXSHZList)
-                {
-                    if (addXiangSiSYList.stream().anyMatch(x->x.getBingRenID1().equals(bingRenXX.getId())&&x.getBingRenID2().equals(dangQianXSHZ.getId())))
-                    {
-                        continue;
-                    }
-                    //region 修改相似索引
-                    BR_DA_XiangSiSYModel xiangSiSY1 = yuanXiangSiSYList.stream()
-                            .filter(x -> x.getBingRenID2().equals(dangQianXSHZ.getId()) && x.getBingRenID1().equals(bingRenXX.getId())).findFirst().orElse(null);
-                    var hasXiangSiSY1=xiangSiSY1==null;
-                    if(hasXiangSiSY1)
-                    {
-                        xiangSiSY1=new BR_DA_XiangSiSYModel();
+            var dangQianXSHZList = query.stream().toList();
+            xiangSiBRIDs.addAll(dangQianXSHZList.stream().map(BR_DA_JiBenXXModel::getId).toList());
+            ignoreIds.addAll(dangQianXSHZList.stream().map(BR_DA_JiBenXXModel::getId).toList());
+            //endregion
+            for (var dangQianXSHZ : dangQianXSHZList) {
+                if (addXiangSiSYList.stream().anyMatch(x -> x.getBingRenID1().equals(bingRenXX.getId()) && x.getBingRenID2().equals(dangQianXSHZ.getId()))) {
+                    continue;
+                }
+                //region 修改相似索引
+                BR_DA_XiangSiSYModel xiangSiSY1 = yuanXiangSiSYList.stream()
+                        .filter(x -> x.getBingRenID2().equals(dangQianXSHZ.getId()) && x.getBingRenID1().equals(bingRenXX.getId())).findFirst().orElse(null);
+                var hasXiangSiSY1 = xiangSiSY1 == null;
+                if (hasXiangSiSY1) {
+                    xiangSiSY1 = new BR_DA_XiangSiSYModel();
+                    xiangSiSY1.setBingRenID1(bingRenXX.getId());
+                    xiangSiSY1.setBingRenID2(dangQianXSHZ.getId());
+                    xiangSiSY1.setXingMing1(bingRenXX.getXingMing());
+                    xiangSiSY1.setXingMing2(dangQianXSHZ.getXingMing());
+                    xiangSiSY1.setXiangSiDu(guiZe.getXiangSiDu());
+                    xiangSiSY1.setHeBingBZ(ziDongHBBZ ? 1 : 0);
+                    xiangSiSY1.setHuLueBZ(0);
+                    xiangSiSY1.setGuiZeID(guiZe.getGuiZeID());
+                    xiangSiSY1.setGuiZeMC(guiZe.getGuiZeMC());
+                    xiangSiSY1.setZuZhiJGID("0");
+                    xiangSiSY1.setZuZhiJGMC("通用");
+                    addXiangSiSYList.add(xiangSiSY1);
+                } else {
+                    if (!(xiangSiSY1.getGuiZeID().equals(guiZe.getGuiZeID()) && BigDecimalUtil.isGreaterOrEqual(xiangSiSY1.getXiangSiDu() == null ? new BigDecimal(0) : xiangSiSY1.getXiangSiDu(), guiZe.getXiangSiDu()))) {
+                        xiangSiSY1 = new BR_DA_XiangSiSYModel();
                         xiangSiSY1.setBingRenID1(bingRenXX.getId());
                         xiangSiSY1.setBingRenID2(dangQianXSHZ.getId());
                         xiangSiSY1.setXingMing1(bingRenXX.getXingMing());
                         xiangSiSY1.setXingMing2(dangQianXSHZ.getXingMing());
                         xiangSiSY1.setXiangSiDu(guiZe.getXiangSiDu());
-                        xiangSiSY1.setHeBingBZ(ziDongHBBZ?1:0);
+                        xiangSiSY1.setHeBingBZ(ziDongHBBZ ? 1 : 0);
                         xiangSiSY1.setHuLueBZ(0);
                         xiangSiSY1.setGuiZeID(guiZe.getGuiZeID());
                         xiangSiSY1.setGuiZeMC(guiZe.getGuiZeMC());
                         xiangSiSY1.setZuZhiJGID("0");
                         xiangSiSY1.setZuZhiJGMC("通用");
                         addXiangSiSYList.add(xiangSiSY1);
-                    }else{
-                        if (!(xiangSiSY1.getGuiZeID().equals(guiZe.getGuiZeID())&& BigDecimalUtil.isGreaterOrEqual(xiangSiSY1.getXiangSiDu()==null?new BigDecimal(0):xiangSiSY1.getXiangSiDu(),guiZe.getXiangSiDu()) ))
-                        {
-                            xiangSiSY1=new BR_DA_XiangSiSYModel();
-                            xiangSiSY1.setBingRenID1(bingRenXX.getId());
-                            xiangSiSY1.setBingRenID2(dangQianXSHZ.getId());
-                            xiangSiSY1.setXingMing1(bingRenXX.getXingMing());
-                            xiangSiSY1.setXingMing2(dangQianXSHZ.getXingMing());
-                            xiangSiSY1.setXiangSiDu(guiZe.getXiangSiDu());
-                            xiangSiSY1.setHeBingBZ(ziDongHBBZ?1:0);
-                            xiangSiSY1.setHuLueBZ(0);
-                            xiangSiSY1.setGuiZeID(guiZe.getGuiZeID());
-                            xiangSiSY1.setGuiZeMC(guiZe.getGuiZeMC());
-                            xiangSiSY1.setZuZhiJGID("0");
-                            xiangSiSY1.setZuZhiJGMC("通用");
-                            addXiangSiSYList.add(xiangSiSY1);
-                        }
                     }
-                    BR_DA_XiangSiSYModel xiangSiSY2 = yuanXiangSiSYList.stream()
-                            .filter(x -> x.getBingRenID2().equals(bingRenXX.getId()) && x.getBingRenID1().equals(dangQianXSHZ.getId()))
-                            .findFirst().orElse(null);
-                    var hasXiangSiSY2 = xiangSiSY2 == null;
-                    if (hasXiangSiSY2)
-                    {
-                        xiangSiSY2=new BR_DA_XiangSiSYModel();
+                }
+                BR_DA_XiangSiSYModel xiangSiSY2 = yuanXiangSiSYList.stream()
+                        .filter(x -> x.getBingRenID2().equals(bingRenXX.getId()) && x.getBingRenID1().equals(dangQianXSHZ.getId()))
+                        .findFirst().orElse(null);
+                var hasXiangSiSY2 = xiangSiSY2 == null;
+                if (hasXiangSiSY2) {
+                    xiangSiSY2 = new BR_DA_XiangSiSYModel();
+                    xiangSiSY2.setBingRenID1(dangQianXSHZ.getId());
+                    xiangSiSY2.setBingRenID2(bingRenXX.getId());
+                    xiangSiSY2.setXingMing1(dangQianXSHZ.getXingMing());
+                    xiangSiSY2.setXingMing2(bingRenXX.getXingMing());
+                    xiangSiSY2.setXiangSiDu(guiZe.getXiangSiDu());
+                    xiangSiSY2.setHeBingBZ(ziDongHBBZ ? 1 : 0);
+                    xiangSiSY2.setHuLueBZ(0);
+                    xiangSiSY2.setGuiZeID(guiZe.getGuiZeID());
+                    xiangSiSY2.setGuiZeMC(guiZe.getGuiZeMC());
+                    xiangSiSY2.setZuZhiJGID("0");
+                    xiangSiSY2.setZuZhiJGMC("通用");
+                    addXiangSiSYList.add(xiangSiSY2);
+                } else {
+                    if (!(xiangSiSY2.getGuiZeID().equals(guiZe.getGuiZeID()) && BigDecimalUtil.isGreaterOrEqual(xiangSiSY2.getXiangSiDu() == null ? new BigDecimal(0) : xiangSiSY2.getXiangSiDu(), guiZe.getXiangSiDu()))) {
+                        xiangSiSY2 = new BR_DA_XiangSiSYModel();
                         xiangSiSY2.setBingRenID1(dangQianXSHZ.getId());
                         xiangSiSY2.setBingRenID2(bingRenXX.getId());
                         xiangSiSY2.setXingMing1(dangQianXSHZ.getXingMing());
                         xiangSiSY2.setXingMing2(bingRenXX.getXingMing());
                         xiangSiSY2.setXiangSiDu(guiZe.getXiangSiDu());
-                        xiangSiSY2.setHeBingBZ(ziDongHBBZ?1:0);
+                        xiangSiSY2.setHeBingBZ(ziDongHBBZ ? 1 : 0);
                         xiangSiSY2.setHuLueBZ(0);
                         xiangSiSY2.setGuiZeID(guiZe.getGuiZeID());
                         xiangSiSY2.setGuiZeMC(guiZe.getGuiZeMC());
                         xiangSiSY2.setZuZhiJGID("0");
                         xiangSiSY2.setZuZhiJGMC("通用");
                         addXiangSiSYList.add(xiangSiSY2);
-                    }else{
-                       if (!(xiangSiSY2.getGuiZeID().equals(guiZe.getGuiZeID())&&BigDecimalUtil.isGreaterOrEqual(xiangSiSY2.getXiangSiDu()==null?new BigDecimal(0):xiangSiSY2.getXiangSiDu(),guiZe.getXiangSiDu())))
-                       {
-                            xiangSiSY2=new BR_DA_XiangSiSYModel();
-                            xiangSiSY2.setBingRenID1(dangQianXSHZ.getId());
-                            xiangSiSY2.setBingRenID2(bingRenXX.getId());
-                            xiangSiSY2.setXingMing1(dangQianXSHZ.getXingMing());
-                            xiangSiSY2.setXingMing2(bingRenXX.getXingMing());
-                            xiangSiSY2.setXiangSiDu(guiZe.getXiangSiDu());
-                            xiangSiSY2.setHeBingBZ(ziDongHBBZ?1:0);
-                            xiangSiSY2.setHuLueBZ(0);
-                            xiangSiSY2.setGuiZeID(guiZe.getGuiZeID());
-                            xiangSiSY2.setGuiZeMC(guiZe.getGuiZeMC());
-                            xiangSiSY2.setZuZhiJGID("0");
-                            xiangSiSY2.setZuZhiJGMC("通用");
-                            addXiangSiSYList.add(xiangSiSY2);
-                       }
                     }
-                    //endregion
-
-                    //region 更新交叉索引
-                    if (ziDongHBBZ)
-                    {
-                        //插入本次交叉索引
-                        var jiaoChaSY=new BR_DA_JiaoChaSYModel();
-                        jiaoChaSY.setHeBingRID("0");
-                        jiaoChaSY.setHeBingRXM("系统");
-                        jiaoChaSY.setHeBingSJ(new Date());
-                        jiaoChaSY.setGuanLianBRID(dangQianXSHZ.getId());
-                        jiaoChaSY.setZhuBingRID(bingRenXX.getId());
-                        jiaoChaSY.setZiDongHBBZ(1);
-                        jiaoChaSY.setZuZhiJGID("0");
-                        jiaoChaSY.setZuZhiJGMC("通用");
-                        addJiaoChaSYList.add(jiaoChaSY);
-                        //插入被关联患者的原交叉索引
-                        List<BR_DA_JiaoChaSYModel> xiangSiHZJCSYList = yuanJiaoChaSYList.stream().filter(x -> x.getZhuBingRID().equals(dangQianXSHZ.getId()))
-                                .map(x -> {
-                                    var jiaoChaSYModel = new BR_DA_JiaoChaSYModel();
-                                    jiaoChaSYModel.setHeBingRID("0");
-                                    jiaoChaSYModel.setHeBingRXM("系统");
-                                    jiaoChaSYModel.setHeBingSJ(new Date());
-                                    jiaoChaSYModel.setGuanLianBRID(x.getGuanLianBRID());
-                                    jiaoChaSYModel.setZhuBingRID(bingRenXX.getId());
-                                    jiaoChaSYModel.setZiDongHBBZ(1);
-                                    jiaoChaSYModel.setZuZhiJGID("0");
-                                    jiaoChaSYModel.setZuZhiJGMC("通用");
-                                    return jiaoChaSYModel;
-                                }).toList();
-                        if (!CollectionUtils.isEmpty(xiangSiHZJCSYList))
-                        {
-                            addJiaoChaSYList.addAll(xiangSiHZJCSYList);
-                        }
-                    }
-                    //endregion
                 }
+                //endregion
+
+                //region 更新交叉索引
+                if (ziDongHBBZ) {
+                    //插入本次交叉索引
+                    var jiaoChaSY = new BR_DA_JiaoChaSYModel();
+                    jiaoChaSY.setHeBingRID("0");
+                    jiaoChaSY.setHeBingRXM("系统");
+                    jiaoChaSY.setHeBingSJ(new Date());
+                    jiaoChaSY.setGuanLianBRID(dangQianXSHZ.getId());
+                    jiaoChaSY.setZhuBingRID(bingRenXX.getId());
+                    jiaoChaSY.setZiDongHBBZ(1);
+                    jiaoChaSY.setZuZhiJGID("0");
+                    jiaoChaSY.setZuZhiJGMC("通用");
+                    addJiaoChaSYList.add(jiaoChaSY);
+                    //插入被关联患者的原交叉索引
+                    List<BR_DA_JiaoChaSYModel> xiangSiHZJCSYList = yuanJiaoChaSYList.stream().filter(x -> x.getZhuBingRID().equals(dangQianXSHZ.getId()))
+                            .map(x -> {
+                                var jiaoChaSYModel = new BR_DA_JiaoChaSYModel();
+                                jiaoChaSYModel.setHeBingRID("0");
+                                jiaoChaSYModel.setHeBingRXM("系统");
+                                jiaoChaSYModel.setHeBingSJ(new Date());
+                                jiaoChaSYModel.setGuanLianBRID(x.getGuanLianBRID());
+                                jiaoChaSYModel.setZhuBingRID(bingRenXX.getId());
+                                jiaoChaSYModel.setZiDongHBBZ(1);
+                                jiaoChaSYModel.setZuZhiJGID("0");
+                                jiaoChaSYModel.setZuZhiJGMC("通用");
+                                return jiaoChaSYModel;
+                            }).toList();
+                    if (!CollectionUtils.isEmpty(xiangSiHZJCSYList)) {
+                        addJiaoChaSYList.addAll(xiangSiHZJCSYList);
+                    }
+                }
+                //endregion
+            }
         }
-        xiangSiBRIDs.addAll(yuanJiaoChaSYList.stream().filter(x->x.getZhuBingRID().equals(bingRenXX.getId())).map(BR_DA_JiaoChaSYModel::getGuanLianBRID).toList());
+        xiangSiBRIDs.addAll(yuanJiaoChaSYList.stream().filter(x -> x.getZhuBingRID().equals(bingRenXX.getId())).map(BR_DA_JiaoChaSYModel::getGuanLianBRID).toList());
     }
 
-    private Object getHuanZheValue(BR_DA_JiBenXXModel huanZhe, String daiMa)
-    {
+    private Object getHuanZheValue(BR_DA_JiBenXXModel huanZhe, String daiMa) {
         return switch (daiMa) {
             case "ShenFenZH" -> huanZhe.getShenFenZH();
             case "XingMing" -> huanZhe.getXingMing();
@@ -1025,8 +1006,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
     }
 
     //获取患者的相似患者列表，排除已合并与已忽略的
-    private List<BR_DA_JiBenXXModel> getXiangSiHZList(List<BR_DA_JiBenXXModel> huanZheList)
-    {
+    private List<BR_DA_JiBenXXModel> getXiangSiHZList(List<BR_DA_JiBenXXModel> huanZheList) {
         List<BR_DA_JiBenXXModel> xiangSiHZList = brDaJiBenXXRepository.asQuerydsl().where(x -> (x.zhengJianHM.isNotNull()
                 .and(x.zhengJianHM.isNotEmpty())
                 .and(x.zhengJianHM.in(huanZheList.stream().map(BR_DA_JiBenXXModel::getZhengJianHM).toList())))
@@ -1038,7 +1018,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
         List<String> ignoreIds = brDaJiaoChaSYRepository.asQuerydsl()
                 .where(x -> x.guanLianBRID.in(finalXiangSiHZList.stream().map(BR_DA_JiBenXXModel::getId).toList())).select(x -> x.guanLianBRID).fetch();
 
-        xiangSiHZList=xiangSiHZList.stream().filter(x->!ignoreIds.contains(x.getId())).toList();
+        xiangSiHZList = xiangSiHZList.stream().filter(x -> !ignoreIds.contains(x.getId())).toList();
         return xiangSiHZList;
     }
 

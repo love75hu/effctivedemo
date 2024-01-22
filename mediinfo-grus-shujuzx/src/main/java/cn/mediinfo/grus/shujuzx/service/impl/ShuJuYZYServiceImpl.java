@@ -3,6 +3,7 @@ package cn.mediinfo.grus.shujuzx.service.impl;
 import cn.mediinfo.cyan.msf.core.exception.CanShuException;
 import cn.mediinfo.cyan.msf.core.exception.TongYongYWException;
 import cn.mediinfo.cyan.msf.core.exception.WeiZhaoDSJException;
+import cn.mediinfo.cyan.msf.core.util.BeanUtil;
 import cn.mediinfo.cyan.msf.core.util.MapUtils;
 import cn.mediinfo.grus.shujuzx.constant.ShuJuZXConstant;
 import cn.mediinfo.grus.shujuzx.dto.shujuyzys.*;
@@ -203,35 +204,10 @@ public class ShuJuYZYServiceImpl implements ShuJuYZYService {
             throw new WeiZhaoDSJException("未找到此数据源类别");
         }
 
-        QSC_ZD_ShuJuYZYModel shuJuYZY = QSC_ZD_ShuJuYZYModel.sC_ZD_ShuJuYZYModel;
-        var factory = new JPAQueryFactory(sc_zd_shuJuYZYRepository.getEntityManager());
-        var query = factory.select(shuJuYZY).from(shuJuYZY);
-
-        query.where(shuJuYZY.shuJuYLBID.eq(shuJuYLBID));
-        //组织机构过滤
-        if (StringUtils.hasText(zuZhiJGID)) {
-            query.where(shuJuYZY.zuZhiJGID.eq(zuZhiJGID));
-        }
         //获取输入码类型
         var shuRuMLX = lyraIdentityService.getShuRuMLX();
-        //输入码过滤
-        if (StringUtils.hasText(likeQuery)) {
-            query.where(shuJuYZY.biaoZhunDM.like("%" + likeQuery + "%")
-                    .or(shuJuYZY.biaoZhunMC.like("%" + likeQuery + "%")));
-            if ("1".equals(shuRuMLX)) {
-                query.where(shuJuYZY.shuRuMa1.toLowerCase().like("%" + likeQuery.toLowerCase() + "%"));
-            } else if ("2".equals(shuRuMLX)) {
-                query.where(shuJuYZY.shuRuMa2.toLowerCase().like("%" + likeQuery.toLowerCase() + "%"));
-            } else {
-                query.where(shuJuYZY.shuRuMa3.toLowerCase().like("%" + likeQuery.toLowerCase() + "%"));
-            }
-        }
-        query.orderBy(shuJuYZY.shunXuHao.asc());
-
-        //分页处理
-        var shuJuYZYList=query.limit(pageSize).offset((long) (pageIndex - 1) *pageSize).fetch();
-        // var shuJuYZYList = query.offset(PageRequestUtil.of(pageIndex, pageSize).getOffset()).limit(pageIndex).fetch();
-        return MapUtils.copyListProperties(shuJuYZYList, SC_ZD_ShuJuYZYDto::new);
+        var shuJuYZYList = sc_zd_shuJuYZYRepository.getShuJuYZYList(zuZhiJGID, shuJuYLBID, likeQuery, shuRuMLX, pageIndex, pageSize);
+        return BeanUtil.copyListProperties(shuJuYZYList, SC_ZD_ShuJuYZYDto::new);
     }
 
     /**
@@ -255,30 +231,9 @@ public class ShuJuYZYServiceImpl implements ShuJuYZYService {
             throw new WeiZhaoDSJException("未找到此数据源类别");
         }
 
-        QSC_ZD_ShuJuYZYModel shuJuYZY = QSC_ZD_ShuJuYZYModel.sC_ZD_ShuJuYZYModel;
-        var factory = new JPAQueryFactory(sc_zd_shuJuYZYRepository.getEntityManager());
-        var query = factory.select(shuJuYZY).from(shuJuYZY);
-
-        query.where(shuJuYZY.shuJuYLBID.eq(shuJuYLBID));
-        //组织机构过滤
-        if (StringUtils.hasText(zuZhiJGID)) {
-            query.where(shuJuYZY.zuZhiJGID.eq(zuZhiJGID));
-        }
         //获取输入码类型
         var shuRuMLX = lyraIdentityService.getShuRuMLX();
-        //输入码过滤
-        if (StringUtils.hasText(likeQuery)) {
-            query.where(shuJuYZY.biaoZhunDM.like("%" + likeQuery + "%")
-                    .or(shuJuYZY.biaoZhunMC.like("%" + likeQuery + "%")));
-            if ("1".equals(shuRuMLX)) {
-                query.where(shuJuYZY.shuRuMa1.toLowerCase().like("%" + likeQuery.toLowerCase() + "%"));
-            } else if ("2".equals(shuRuMLX)) {
-                query.where(shuJuYZY.shuRuMa2.toLowerCase().like("%" + likeQuery.toLowerCase() + "%"));
-            } else {
-                query.where(shuJuYZY.shuRuMa3.toLowerCase().like("%" + likeQuery.toLowerCase() + "%"));
-            }
-        }
-        return query.fetch().size();
+        return sc_zd_shuJuYZYRepository.getShuJuYZYListCount(zuZhiJGID, shuJuYLBID, likeQuery, shuRuMLX);
     }
 
     /**
@@ -318,6 +273,7 @@ public class ShuJuYZYServiceImpl implements ShuJuYZYService {
             resultList.add(getDownChildren(allZhiYuList, childrenSJYZY, root));
         }
     }
+
     private TreeDto getDownChildren(List<SC_ZD_ShuJuYZYModel> allData, List<SC_ZD_ShuJuYZYModel> child, TreeDto parent) {
         List<SC_ZD_ShuJuYZYModel> childList = child.stream().sorted(Comparator.comparing(SC_ZD_ShuJuYZYModel::getShunXuHao, Comparator.nullsLast(Integer::compareTo))).toList();
         for (SC_ZD_ShuJuYZYModel item : childList) {
@@ -340,7 +296,7 @@ public class ShuJuYZYServiceImpl implements ShuJuYZYService {
      * @param list
      * @param flag
      */
-    private void setValues(List<SC_ZD_ShuJuYZYModel> allData, TreeDto parent,  SC_ZD_ShuJuYZYModel item,
+    private void setValues(List<SC_ZD_ShuJuYZYModel> allData, TreeDto parent, SC_ZD_ShuJuYZYModel item,
                            List<SC_ZD_ShuJuYZYModel> list, String flag) {
         TreeDto childNode = new TreeDto();
         childNode.setDaiMa(item.getBiaoZhunDM());

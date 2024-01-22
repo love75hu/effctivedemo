@@ -68,5 +68,5 @@ public interface ZhuSuoYGLService {
      */
     Boolean quXiaoHB(HuLueHBDto dto) throws TongYongYWException;
 
-    String zengLiangPPXSHZ();
+    String zengLiangPPXSHZ() throws ParseException;
 }

@@ -686,6 +686,7 @@ public class RenWuGLServiceImpl implements RenWuGLService {
                 SC_RW_ZhiXingRZModel zhiXingRZEntity = new SC_RW_ZhiXingRZModel();
                 zhiXingRZEntity.setRenWuID(jbxxItem.getRenWuID());
                 zhiXingRZEntity.setRenWuMC(jbxxItem.getRenWuMC());
+                zhiXingRZEntity.setZhiXingKSSJ(zhixingsj);
                 zhiXingRZEntity.setZhiXingSJ(zhixingsj);
                 zhiXingRZEntity.setZuZhiJGID(lyraIdentityService.getJiGouID());
                 zhiXingRZEntity.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
@@ -870,6 +871,9 @@ public class RenWuGLServiceImpl implements RenWuGLService {
             var tongYongPZItem=tongYongPZModels.stream().filter(t->Objects.equals(t.getFenLeiDM(),item.value)).findFirst().orElse(null);
             if (!Objects.isNull(tongYongPZItem)){
                 BeanUtil.mergeProperties(tongYongPZItem,dto);
+            }else{
+                dto.setFenLeiDM(item.getValue());
+                dto.setFenLeiMC(item.getLabel());
             }
             List<SC_RW_TongYongPZDto> children=new ArrayList<>();
             //判断是否存在子集，且递归赋值

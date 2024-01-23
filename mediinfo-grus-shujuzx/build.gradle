@@ -8,8 +8,7 @@ group = 'cn.mediinfo'
 sourceCompatibility = '17'
 dependencyManagement {
     imports {
-        mavenBom 'cn.mediinfo:mediinfo-bom-dependencies:1.6.3'
-    }
+        mavenBom 'cn.mediinfo:mediinfo-bom-dependencies:1.6.3-beat5'    }
 }
 repositories {
     mavenLocal()

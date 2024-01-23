@@ -59,12 +59,11 @@ public class RenWuDDController {
 
     @GetMapping(path = "zhiXingRW")
     public MsfResponse<String> zhiXingRW(JobExecutionContext context,String renWuMC) {
-       // var ziDongBZ= context.getTrigger().getName().startsWith("MT_");//手动执行的触发器
-      //  String zhiXingFSDM=ziDongBZ? ETLZhiXingFSConstant.shouDongZXDM:ETLZhiXingFSConstant.ziDongZXDM;
-      //  String zhiXingFSMC=ziDongBZ? ETLZhiXingFSConstant.shouDongZXMC:ETLZhiXingFSConstant.ziDongZXMC;
-
-        String zhiXingFSDM=ETLZhiXingFSConstant.shouDongZXDM;
-        String zhiXingFSMC=ETLZhiXingFSConstant.shouDongZXMC;
+        var ziDongBZ= context.getTrigger().getName().startsWith("MT_");//手动执行的触发器
+        String zhiXingFSDM=ziDongBZ? ETLZhiXingFSConstant.shouDongZXDM:ETLZhiXingFSConstant.ziDongZXDM;
+        String zhiXingFSMC=ziDongBZ? ETLZhiXingFSConstant.shouDongZXMC:ETLZhiXingFSConstant.ziDongZXMC;
+      //  String zhiXingFSDM=ETLZhiXingFSConstant.shouDongZXDM;
+      //  String zhiXingFSMC=ETLZhiXingFSConstant.shouDongZXMC;
         return MsfResponse.success(renWuDDService.saveRenWuZX(renWuMC,zhiXingFSDM,zhiXingFSMC));
     }
 

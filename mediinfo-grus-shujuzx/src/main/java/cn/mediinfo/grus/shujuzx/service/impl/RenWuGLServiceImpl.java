@@ -239,7 +239,7 @@ public class RenWuGLServiceImpl implements RenWuGLService {
         jiBenXXRepository.save(entity);
    //作业和触发器同步到中台
         createJob(createDto.getRenWuMC());
-        if(!StringUtil.hasText(createDto.getZhiXingPLDM())){
+        if(StringUtil.hasText(createDto.getZhiXingPLDM())){
             createTrigger(createDto.getRenWuMC(),createDto.getZhiXingPLDM());
         }
         return entity.getId();
@@ -256,6 +256,7 @@ public class RenWuGLServiceImpl implements RenWuGLService {
     @Transactional(rollbackOn = Exception.class)
     public Boolean updateRenWuJBXX(SC_RW_JiBenXXUpdateDto updateDto) throws TongYongYWException {
         var entity = jiBenXXRepository.findById(updateDto.getId()).orElse(null);
+        var id=schedulerService.trigger().getTriggerName();
         if (Objects.isNull(entity)) {
             throw new TongYongYWException("该任务基本信息不存在");
         }
@@ -274,11 +275,12 @@ public class RenWuGLServiceImpl implements RenWuGLService {
         //把dto赋值到entity
         BeanUtil.mergeProperties(updateDto, entity,true);
         jiBenXXRepository.save(entity);
- //同步中台job和触发器
+       //同步中台job和触发器
         updateJob(updateDto.getRenWuMC(),oldRenWuMC);
-        if(!StringUtil.hasText(updateDto.getZhiXingPLDM()) && !StringUtil.hasText(oldCorn) && !updateDto.getZhiXingPLDM().equals(oldCorn)){
+        if(StringUtil.hasText(updateDto.getZhiXingPLDM()) && StringUtil.hasText(oldCorn) && !updateDto.getZhiXingPLDM().equals(oldCorn)){
             updateTrigger(updateDto.getRenWuMC(),updateDto.getZhiXingPLDM());
-        }        return true;
+        }
+        return true;
     }
 
     /**
@@ -339,6 +341,7 @@ public class RenWuGLServiceImpl implements RenWuGLService {
     }
 
     public String updateJob(String newRenWuMC,String oldRenWuMC) throws TongYongYWException {
+        String url=environment.getProperty("mediinfo.remote.urls.mediinfo-lyra-gongyong")+"/mediinfo-grus-shujuzx/api/v1.0/RenWuDD/zhiXingRW?renWuMC="+newRenWuMC;
         //创建job
         var updateModel = ScheduleCurrentServiceJobUpdateDto
                 .builder()
@@ -347,7 +350,7 @@ public class RenWuGLServiceImpl implements RenWuGLService {
                 .jobGroup("GRUS_SC")
                 .oldJobGroup("GRUS_SC")
                 .oldJobName(oldRenWuMC)
-                .requestUrl("http://172.19.80.10:31003/mediinfo-grus-shujuzx/api/v1.0/RenWuDD/zhiXingRW?renWuMC="+newRenWuMC)
+                .requestUrl(url)
                 .httpMethod(HttpMethod.GET)
                 .concurrent(ConCurrent.YES)
                 .build();
@@ -366,6 +369,7 @@ public class RenWuGLServiceImpl implements RenWuGLService {
                 .tenantName(identityService.getTenantName())
                 .misFirePolicy(MisFirePolicy.MISFIRE_INSTRUCTION_IGNORE_MISFIRE_POLICY)
                 .triggerNameText(renWuMC+"_触发器")
+                .triggerName(schedulerTriggerService.getTriggerName())
                 .triggerType(TriggerType.CRON)
                 .cron(cron)
                 .build();
@@ -378,14 +382,13 @@ public class RenWuGLServiceImpl implements RenWuGLService {
                 .tenantId(identityService.getTenantId())
                 .tenantName(identityService.getTenantName())
                 .misFirePolicy(MisFirePolicy.MISFIRE_INSTRUCTION_IGNORE_MISFIRE_POLICY)
-                .TriggerNameText(renWuMC+"_触发器")
                 .triggerName(renWuMC)
                 .triggerType(TriggerType.CRON)
                 .cron(cron)
                 .build();
          schedulerTriggerService.update(renWuMC,"GRUS_SC",updateDto);
     }
-    
+
     /* 根据id查询日志详情
      *
      * @param id

@@ -904,12 +904,12 @@ public class RenWuGLServiceImpl implements RenWuGLService {
         //子集数据汇总到createDto中
         ChangeLevel(creatDto);
         //新增
-        var addDto = creatDto.stream().filter(t -> Objects.isNull(t.getId())).toList();
-        var addEntity = BeanUtil.copyListProperties(addDto, SC_RW_TongYongPZModel::new, (s, t) -> {
+        var addDto = creatDto.stream().filter(t -> Objects.isNull(t.getId()) && !Objects.isNull(t.getFuWuQIP()) && !Objects.isNull(t.getFuWuQDK())).toList();
+        List<SC_RW_TongYongPZModel> tongYongPZModelList= BeanUtil.copyListProperties(addDto, SC_RW_TongYongPZModel::new, (s, t) -> {
             t.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
             t.setZuZhiJGID(lyraIdentityService.getJiGouID());
         });
-        List<SC_RW_TongYongPZModel> tongYongPZModelList = new ArrayList<>(addEntity);
+
         //修改
         var updateDto = creatDto.stream().filter(t -> !Objects.isNull(t.getId())).toList();
         var ids = updateDto.stream().map(SC_RW_TongYongPZDto::getId).toList();
@@ -919,9 +919,8 @@ public class RenWuGLServiceImpl implements RenWuGLService {
             BeanUtil.mergeProperties(tongYongPZItem, item);
         }
         tongYongPZModelList.addAll(tongYongPZList);
-
         if(tongYongPZModelList.size()>0){
-            tongYongPZRepository.saveAll(tongYongPZList);
+            tongYongPZRepository.saveAll(tongYongPZModelList);
         }
         return true;
     }

@@ -1,6 +1,7 @@
 package cn.mediinfo.grus.shujuzx.dto.renwugls;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
 import lombok.Data;
 
 @Data
@@ -23,5 +24,7 @@ public class SC_RW_JiBenXXCreateDto {
     private String zhiXingPLMC;
     @Schema(description = "顺序号")
     private Integer shunXuHao;
+    @Column(columnDefinition = "触发器同步中台id")
+    private String chuFaQTBZTID;
 
 }

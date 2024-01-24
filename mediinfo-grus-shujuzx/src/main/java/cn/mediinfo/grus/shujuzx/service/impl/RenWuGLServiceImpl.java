@@ -211,6 +211,7 @@ public class RenWuGLServiceImpl implements RenWuGLService {
     @Override
     @Transactional(rollbackOn = Exception.class)
     public String addRenWuJBXX(SC_RW_JiBenXXCreateDto createDto) throws TongYongYWException {
+        var id=schedulerService.trigger().getTriggerName();
         //查询是否存在
         var shiFouCZ = jiBenXXRepository.existsByRenWuMC(createDto.getRenWuMC());
         //判断是否存在数据元类别
@@ -225,6 +226,7 @@ public class RenWuGLServiceImpl implements RenWuGLService {
             t.setRenWuID(sequenceService.getXuHao("SC_RW_JiBenXX_RenWuID", 9));
             t.setZuZhiJGID(lyraIdentityService.getJiGouID());
             t.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
+            t.setChuFaQTBZTID(id);
             if (Objects.isNull(createDto.getShunXuHao())){
                 // 获取shuJuYZYList集合中的SC_RW_JiBenXXModel对象中的shunXuHao的最大值
                 List<SC_RW_JiBenXXModel> maxModel=jiBenXXRepository.findAll().stream().sorted(Comparator.comparing(SC_RW_JiBenXXModel::getShunXuHao,Comparator.nullsLast(Comparator.reverseOrder()))).toList();
@@ -240,7 +242,7 @@ public class RenWuGLServiceImpl implements RenWuGLService {
    //作业和触发器同步到中台
         createJob(createDto.getRenWuMC());
         if(StringUtil.hasText(createDto.getZhiXingPLDM())){
-            createTrigger(createDto.getRenWuMC(),createDto.getZhiXingPLDM());
+            createTrigger(createDto.getRenWuMC(),id,createDto.getZhiXingPLDM());
         }
         return entity.getId();
     }
@@ -256,7 +258,6 @@ public class RenWuGLServiceImpl implements RenWuGLService {
     @Transactional(rollbackOn = Exception.class)
     public Boolean updateRenWuJBXX(SC_RW_JiBenXXUpdateDto updateDto) throws TongYongYWException {
         var entity = jiBenXXRepository.findById(updateDto.getId()).orElse(null);
-        var id=schedulerService.trigger().getTriggerName();
         if (Objects.isNull(entity)) {
             throw new TongYongYWException("该任务基本信息不存在");
         }
@@ -278,7 +279,7 @@ public class RenWuGLServiceImpl implements RenWuGLService {
        //同步中台job和触发器
         updateJob(updateDto.getRenWuMC(),oldRenWuMC);
         if(StringUtil.hasText(updateDto.getZhiXingPLDM()) && StringUtil.hasText(oldCorn) && !updateDto.getZhiXingPLDM().equals(oldCorn)){
-            updateTrigger(updateDto.getRenWuMC(),updateDto.getZhiXingPLDM());
+            updateTrigger(updateDto.getRenWuMC(),entity.getChuFaQTBZTID(),updateDto.getZhiXingPLDM());
         }
         return true;
     }
@@ -340,6 +341,10 @@ public class RenWuGLServiceImpl implements RenWuGLService {
        return schedulerService.job().create(createModel);
     }
 
+    /**
+     *   更新job
+     *
+     */
     public String updateJob(String newRenWuMC,String oldRenWuMC) throws TongYongYWException {
         String url=environment.getProperty("mediinfo.remote.urls.mediinfo-lyra-gongyong")+"/mediinfo-grus-shujuzx/api/v1.0/RenWuDD/zhiXingRW?renWuMC="+newRenWuMC;
         //创建job
@@ -362,27 +367,32 @@ public class RenWuGLServiceImpl implements RenWuGLService {
      *   创建触发器
      *
      */
-    public void createTrigger(String renWuMC,String cron) {
+    public void createTrigger(String renWuMC, String id, String cron) {
         var createDto= TriggerCreateDto
                 .builder()
                 .tenantId(identityService.getTenantId())
                 .tenantName(identityService.getTenantName())
                 .misFirePolicy(MisFirePolicy.MISFIRE_INSTRUCTION_IGNORE_MISFIRE_POLICY)
                 .triggerNameText(renWuMC+"_触发器")
-                .triggerName(schedulerTriggerService.getTriggerName())
+                .triggerName(id)
                 .triggerType(TriggerType.CRON)
                 .cron(cron)
                 .build();
         schedulerService.trigger().create(renWuMC,"GRUS_SC",createDto);
     }
 
-    public void updateTrigger(String renWuMC,String cron) throws TongYongYWException {
+    /**
+     *   更新触发器
+     *
+     */
+    public void updateTrigger(String renWuMC,String id, String cron) throws TongYongYWException {
         var updateDto= TriggerUpdateDto
                 .builder()
                 .tenantId(identityService.getTenantId())
                 .tenantName(identityService.getTenantName())
                 .misFirePolicy(MisFirePolicy.MISFIRE_INSTRUCTION_IGNORE_MISFIRE_POLICY)
-                .triggerName(renWuMC)
+                .triggerName(id)
+                .triggerNameText(renWuMC+"_触发器")
                 .triggerType(TriggerType.CRON)
                 .cron(cron)
                 .build();

@@ -56,5 +56,7 @@ public class SC_RW_JiBenXXModel  extends StringMTEntity {
     private String beiZhu;
     @Column(columnDefinition = "顺序号")
     private Integer shunXuHao;
+    @Column(columnDefinition = "触发器同步中台id")
+    private String chuFaQTBZTID;
 
 }

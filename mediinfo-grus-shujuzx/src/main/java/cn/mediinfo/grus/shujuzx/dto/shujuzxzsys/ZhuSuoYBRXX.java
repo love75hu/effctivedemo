@@ -12,7 +12,7 @@ public class ZhuSuoYBRXX {
    *病人ID
     */
    @Schema(description = "病人ID")
-   private String iD;
+   private String id;
 
     /**
    *姓名

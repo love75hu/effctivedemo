@@ -11,7 +11,7 @@ import cn.mediinfo.grus.shujuzx.dto.bingrenylsjs.SC_LC_BingRenYLSJInDto;
 import cn.mediinfo.grus.shujuzx.model.SC_LC_BingRenYLSJModel;
 import cn.mediinfo.grus.shujuzx.remotedto.JiuZhenXXs.BinRenJZCSTJDto;
 import cn.mediinfo.grus.shujuzx.remotedto.JiuZhenXXs.JZ_LC_JiuZhenSLRso;
-import cn.mediinfo.grus.shujuzx.remoteservice.JiuZhenRemoteService;
+import cn.mediinfo.grus.shujuzx.remoteservice.LinChuangRemoteService;
 import cn.mediinfo.grus.shujuzx.repository.SC_LC_BingRenYLSJRepository;
 import cn.mediinfo.grus.shujuzx.service.BingRenYLSJService;
 import cn.mediinfo.lyra.extension.service.LyraIdentityService;
@@ -28,12 +28,12 @@ import java.util.Objects;
 public class BingRenYLSJServiceImpl implements BingRenYLSJService {
 
     private final SC_LC_BingRenYLSJRepository sc_lc_bingRenYLSJRepository;
-    private final JiuZhenRemoteService jiuZhenRemoteService;
+    private final LinChuangRemoteService jiuZhenRemoteService;
     private final LyraIdentityService lyraIdentityService;
 
     public BingRenYLSJServiceImpl(
             SC_LC_BingRenYLSJRepository sc_lc_bingRenYLSJRepository,
-            JiuZhenRemoteService jiuZhenRemoteService,
+            LinChuangRemoteService jiuZhenRemoteService,
             LyraIdentityService lyraIdentityService) {
         this.sc_lc_bingRenYLSJRepository = sc_lc_bingRenYLSJRepository;
         this.jiuZhenRemoteService = jiuZhenRemoteService;

@@ -17,7 +17,7 @@ import cn.mediinfo.grus.shujuzx.dto.yinsigzszs.SC_ZD_YinSiPZOutDto;
 import cn.mediinfo.grus.shujuzx.model.*;
 import cn.mediinfo.grus.shujuzx.po.RecordJiBenXXAndHeBingJL;
 import cn.mediinfo.grus.shujuzx.po.RecordJiBenXXAndHeBingJLModel;
-import cn.mediinfo.grus.shujuzx.remoteservice.JiuZhenRemoteService;
+import cn.mediinfo.grus.shujuzx.remoteservice.LinChuangRemoteService;
 import cn.mediinfo.grus.shujuzx.repository.*;
 import cn.mediinfo.grus.shujuzx.service.YinSiGZSZService;
 import cn.mediinfo.grus.shujuzx.service.ZhuSuoYCZRZService;
@@ -56,7 +56,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
     public final BR_DA_KuoZhanXXRepository brDaKuoZhanXXRepository;
     public final BR_ZD_HeBingGZRepository brZdHeBingGZRepository;
     public final BR_ZD_HeBingGZMXRepository brZdHeBingGZMXRepository;
-    public final JiuZhenRemoteService jiuZhenRemoteService;
+    public final LinChuangRemoteService jiuZhenRemoteService;
     private final BR_DA_ZhuSuoYCZRZRepository zhuSuoYCZRZRepository;
     public final YinSiGZSZService yinSiGZSZService;
     public final ZhuSuoYCZRZService zhuSuoYCZRZService;
@@ -65,7 +65,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
     private final SpringCache springCache;
 
 
-    public ZhuSuoYGLServiceImpl(BR_DA_XiangSiSYRepository brDaXiangSiSYRepository, BR_DA_JiaoChaSYRepository brDaJiaoChaSYRepository, BR_DA_JiBenXXRepository brDaJiBenXXRepository, BR_DA_HeBingJLRepository brDaHeBingJLRepository, BR_DA_JieZhiXXRepository brDaJieZhiXXRepository, BR_DA_KuoZhanXXRepository brDaKuoZhanXXRepository, BR_ZD_HeBingGZRepository brZdHeBingGZRepository, BR_ZD_HeBingGZMXRepository brZdHeBingGZMXRepository, JiuZhenRemoteService jiuZhenRemoteService, YinSiGZSZService yinSiGZSZService, ZhuSuoYCZRZService zhuSuoYCZRZService, LyraIdentityService lyraIdentityService, BR_DA_ZhuSuoYCZRZRepository zhuSuoYCZRZRepository, SpringCache springCache) {
+    public ZhuSuoYGLServiceImpl(BR_DA_XiangSiSYRepository brDaXiangSiSYRepository, BR_DA_JiaoChaSYRepository brDaJiaoChaSYRepository, BR_DA_JiBenXXRepository brDaJiBenXXRepository, BR_DA_HeBingJLRepository brDaHeBingJLRepository, BR_DA_JieZhiXXRepository brDaJieZhiXXRepository, BR_DA_KuoZhanXXRepository brDaKuoZhanXXRepository, BR_ZD_HeBingGZRepository brZdHeBingGZRepository, BR_ZD_HeBingGZMXRepository brZdHeBingGZMXRepository, LinChuangRemoteService jiuZhenRemoteService, YinSiGZSZService yinSiGZSZService, ZhuSuoYCZRZService zhuSuoYCZRZService, LyraIdentityService lyraIdentityService, BR_DA_ZhuSuoYCZRZRepository zhuSuoYCZRZRepository, SpringCache springCache) {
         this.brDaXiangSiSYRepository = brDaXiangSiSYRepository;
         this.brDaJiaoChaSYRepository = brDaJiaoChaSYRepository;
         this.brDaJiBenXXRepository = brDaJiBenXXRepository;

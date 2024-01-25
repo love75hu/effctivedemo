@@ -42,7 +42,6 @@ import cn.mediinfo.grus.shujuzx.remotedto.JiuZhenXXs.ZhuYuanMZJZXXRso;
 import cn.mediinfo.grus.shujuzx.remotedto.linchuang.ChaXunDto;
 import cn.mediinfo.grus.shujuzx.remotedto.linchuang.JiuluTextRso;
 import cn.mediinfo.grus.shujuzx.remoteservice.GongYongRemoteService;
-import cn.mediinfo.grus.shujuzx.remoteservice.JiuZhenRemoteService;
 import cn.mediinfo.grus.shujuzx.remoteservice.LinChuangRemoteService;
 import cn.mediinfo.grus.shujuzx.repository.SC_CX_FangAnSCRepository;
 import cn.mediinfo.grus.shujuzx.repository.SC_SC_ShouCangJMXRepository;
@@ -105,10 +104,6 @@ public class FangAnServiceImpl implements FangAnService {
     private GongYongRemoteService gongYongRemoteService;
     @Autowired
     private ChaXunFAXXService chaXunFAXXService;
-
-    @Autowired
-    private JiuZhenRemoteService jiuZhenRemoteService;
-
     @Autowired
     private LinChuangRemoteService linChuangRemoteService;
 
@@ -1735,7 +1730,7 @@ public class FangAnServiceImpl implements FangAnService {
         List<BingLiXQXXDto> bingLiXQXXDtoList = new ArrayList<>();
 
         //获取就诊信息
-        List<ZhuYuanMZJZXXRso> jiuZhenXX = jiuZhenRemoteService.getZuYuanMZJZXX(
+        List<ZhuYuanMZJZXXRso> jiuZhenXX = linChuangRemoteService .getZuYuanMZJZXX(
                 BeanUtil.copyListProperties(bingLiXQDto.getBingLiJQXQList(), JiuZhenIDYWLXIDRso::new)).getData("获取住院门诊就诊信息失败");
 
         //获取

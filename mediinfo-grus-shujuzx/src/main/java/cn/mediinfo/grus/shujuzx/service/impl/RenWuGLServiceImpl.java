@@ -382,7 +382,7 @@ public class RenWuGLServiceImpl implements RenWuGLService {
                     .triggerType(TriggerType.CRON)
                     .cron(cron)
                     .build();
-            schedulerTriggerService.update(renWuMC,"GRUS_SC",updateDto);
+            schedulerTriggerService.update(renWuMC,"mediinfo-grus-shujuzx",updateDto);
         }
         else{
             var createDto= TriggerCreateDto

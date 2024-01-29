@@ -859,8 +859,24 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
                     try {
                         fieldM.setAccessible(true);
                         var fieldValue = fieldM.get(item);
-                        if (fieldValue != null && fieldValue.equals(value))
-                            return true;
+                        if (fieldValue != null) {
+                            var fieldClass = fieldM.get(item).getClass();
+                            if (fieldClass != null) {
+                                var fieldType = fieldM.get(item).getClass().getName();
+                                if (Objects.equals(fieldType, "java.lang.String")) {
+                                    if (StringUtil.hasText(fieldValue.toString()) && fieldValue.equals(value)) {
+                                        return true;
+                                    } else if (fieldValue.equals(value)) {
+                                        return true;
+                                    }
+                                }
+                            } else {
+                                if (fieldValue.equals(value)) {
+                                    return true;
+                                }
+                            }
+                        }
+
                     } catch (IllegalAccessException e) {
                         throw new RuntimeException(e);
                     }

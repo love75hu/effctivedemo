@@ -438,7 +438,11 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
             var xiangSiSY = brDaXiangSiSYRepository.findFirstByBingRenID1AndBingRenID2NotAndHuLueBZOrderByXiangSiDuDesc(zhuSuoYBRXX.getId(), dto.getXiangSiSYBRID(), 0);
             if (zhuSuoYHBJL != null) {
                 zhuSuoYHBJL.setXiangSiShu(zhuSuoYHBJL.getXiangSiShu() - 1);
-                zhuSuoYHBJL.setZuiDaXSD(xiangSiSY.getXiangSiDu() != null ? xiangSiSY.getXiangSiDu().intValue() : 0);
+                if (xiangSiSY != null) {
+                    zhuSuoYHBJL.setZuiDaXSD(xiangSiSY.getXiangSiDu() != null ? xiangSiSY.getXiangSiDu().intValue() : 0);
+                } else {
+                    zhuSuoYHBJL.setZuiDaXSD(0);
+                }
                 brDaHeBingJLRepository.save(zhuSuoYHBJL);
             }
         }
@@ -448,7 +452,11 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
             var xiangSiSY = brDaXiangSiSYRepository.findFirstByBingRenID1AndBingRenID2NotAndHuLueBZOrderByXiangSiDuDesc(xiangSiSYBRXX.getId(), dto.getZhuSuoYBRID(), 0);
             if (xiangSiSYYHBJL != null) {
                 xiangSiSYYHBJL.setXiangSiShu(xiangSiSYYHBJL.getXiangSiShu() - 1);
-                xiangSiSYYHBJL.setZuiDaXSD(xiangSiSY.getXiangSiDu() != null ? xiangSiSY.getXiangSiDu().intValue() : 0);
+                if (xiangSiSY != null) {
+                    xiangSiSYYHBJL.setZuiDaXSD(xiangSiSY.getXiangSiDu() != null ? xiangSiSY.getXiangSiDu().intValue() : 0);
+                } else {
+                    xiangSiSYYHBJL.setZuiDaXSD(0);
+                }
                 brDaHeBingJLRepository.save(xiangSiSYYHBJL);
             }
         }
@@ -866,9 +874,9 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
                                 if (Objects.equals(fieldType, "java.lang.String")) {
                                     if (StringUtil.hasText(fieldValue.toString()) && fieldValue.equals(value)) {
                                         return true;
-                                    } else if (fieldValue.equals(value)) {
-                                        return true;
                                     }
+                                } else if (fieldValue.equals(value)) {
+                                    return true;
                                 }
                             } else {
                                 if (fieldValue.equals(value)) {

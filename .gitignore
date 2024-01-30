@@ -85,3 +85,4 @@ out/
 /mediinfo-grus-shujuzx/src/main/generated/cn/mediinfo/grus/shujuzx/model/QSC_ZD_ZhanShiPZModel.java
 /mediinfo-grus-shujuzx/src/test/java/cn/mediinfo/grus/shujuzx/service/FangAnServiceDemo.java
 /mediinfo-grus-shujuzx/src/test/java/cn/mediinfo/grus/shujuzx/service/SpringbootJdbcTest.java
+/logs/service/*.log

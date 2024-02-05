@@ -20,23 +20,33 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://172.19.80.10:31003/mediinfo-lyra-authserver
+          issuer-uri: http://172.19.60.60:30696/mediinfo-lyra-authserver
   datasource:
     driver-class-name: oracle.jdbc.OracleDriver
     url: jdbc:oracle:thin:@172.19.80.161:1521:orcl
     username: LYRA_HIS
     password: LYRA_HIS
     multiple:
+#      datasourcesjzx:
+#        driver-class-name: org.postgresql.Driver
+#        url: jdbc:postgresql://172.19.80.171:5432/lyra_his?currentSchema=grus_sc
+#        username: lyra_his
+#        password: lyra_his
+#      datasourcebr:
+#        driver-class-name: org.postgresql.Driver
+#        url: jdbc:postgresql://172.19.80.171:5432/lyra_his?currentSchema=vela_br
+#        username: lyra_his
+#        password: lyra_his
       datasourcesjzx:
         driver-class-name: org.postgresql.Driver
-        url: jdbc:postgresql://172.19.80.171:5432/lyra_his?currentSchema=grus_sc
-        username: lyra_his
-        password: lyra_his
+        url: jdbc:postgresql://172.19.60.142:5432/lyradb?currentSchema=grus_sc
+        username: grus_sc
+        password: grus_sc2023
       datasourcebr:
         driver-class-name: org.postgresql.Driver
-        url: jdbc:postgresql://172.19.80.171:5432/lyra_his?currentSchema=vela_br
-        username: lyra_his
-        password: lyra_his
+        url: jdbc:postgresql://172.19.60.136:5432/lyradb?currentSchema=vela_br
+        username: vela_br
+        password: vela_br2023
   jpa:
     properties:
       hibernate:
@@ -47,30 +57,36 @@ spring:
     redis:
       key-prefix: "mediinfo:"  #前缀
       time-to-live: 3600000   #缓存有效期，毫秒为单位
+#  data:
+#    redis:
+#      database: 9
+#      host: 172.19.33.31
+#      lettuce:
+#        pool:
+#          max-active: 8
+#          max-idle: 8
+#          max-wait: -1
+#          min-idle: 0
+#      password: 'mediinfo@redis'
+#      port: 6379
   data:
     redis:
-      database: 9
-      host: 172.19.33.31
-      lettuce:
-        pool:
-          max-active: 8
-          max-idle: 8
-          max-wait: -1
-          min-idle: 0
-      password: 'mediinfo@redis'
-      port: 6379
+      sentinel:
+        master: mymaster
+        nodes: 172.19.60.31:26379,172.19.60.32:26379,172.19.60.33:26379
+      password: 'Mediinfo069'
   lifecycle:
     timeout-per-shutdown-phase: 30s
 mediinfo:
   remote:
     urls:
-      mediinfo-grus-huanzhe-query: "http://172.19.80.10:31003"
+      mediinfo-grus-huanzhe-query: "http://172.19.60.60:30696"
       # mediinfo-lyra-gongyong: "http://localhost:31004"
-      mediinfo-lyra-gongyong: "http://172.19.80.10:31003"
-      mediinfo-lyra-dizuo: "http://172.19.80.10:31003"
-      mediinfo-grus-linchuang-query: "http://172.19.80.10:31003"
-      mediinfo-grus-gongwei-query: "http://172.19.80.10:31003"
-      mediinfo-lyra-nengli: "http://172.19.80.10:31003"
+      mediinfo-lyra-gongyong: "http://172.19.60.60:30696"
+      mediinfo-lyra-dizuo: "http://172.19.60.60:30696"
+      mediinfo-grus-linchuang-query: "http://172.19.60.60:30696"
+      mediinfo-grus-gongwei-query: "http://172.19.60.60:30696"
+      mediinfo-lyra-nengli: "http://172.19.60.60:30696"
   sequence:
     provider: redis
   string-generator:

@@ -8,7 +8,8 @@ group = 'cn.mediinfo'
 sourceCompatibility = '17'
 dependencyManagement {
     imports {
-        mavenBom 'cn.mediinfo:mediinfo-bom-dependencies:1.6.3'    }
+        mavenBom 'cn.mediinfo:mediinfo-bom-dependencies:1.6.4'
+    }
 }
 repositories {
     mavenLocal()
@@ -25,7 +26,7 @@ dependencies {
     implementation 'cn.mediinfo:mediinfo-cyan-msf-util-starter'
     implementation 'cn.mediinfo:mediinfo-cyan-msf-cache-redis-starter'
     implementation 'cn.mediinfo:mediinfo-cyan-msf-distributedlock-starter'
-    implementation 'cn.mediinfo:mediinfo-cyan-aqua-scheduler-starter'
+    implementation 'cn.mediinfo:mediinfo-cyan-aqua-scheduler-starter:1.6.3-beat5'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     annotationProcessor 'com.querydsl:querydsl-apt:5.0.0:jakarta'

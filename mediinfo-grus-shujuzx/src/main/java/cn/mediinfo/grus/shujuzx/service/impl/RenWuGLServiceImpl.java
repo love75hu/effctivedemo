@@ -242,7 +242,7 @@ public class RenWuGLServiceImpl implements RenWuGLService {
    //作业和触发器同步到中台
         createJob(createDto.getRenWuMC());
         if(StringUtil.hasText(createDto.getZhiXingPLDM())){
-            createTrigger(createDto.getRenWuMC(),id,createDto.getZhiXingPLDM());
+            tongBuTrigger(createDto.getRenWuMC(),id,createDto.getZhiXingPLDM());
         }
         return entity.getId();
     }
@@ -279,7 +279,7 @@ public class RenWuGLServiceImpl implements RenWuGLService {
        //同步中台job和触发器
         updateJob(updateDto.getRenWuMC(),oldRenWuMC);
         if(StringUtil.hasText(updateDto.getZhiXingPLDM()) && StringUtil.hasText(oldCorn) && !updateDto.getZhiXingPLDM().equals(oldCorn)){
-            updateTrigger(updateDto.getRenWuMC(),entity.getChuFaQTBZTID(),updateDto.getZhiXingPLDM());
+            tongBuTrigger(updateDto.getRenWuMC(),entity.getChuFaQTBZTID(),updateDto.getZhiXingPLDM());
         }
         return true;
     }
@@ -333,7 +333,7 @@ public class RenWuGLServiceImpl implements RenWuGLService {
                 .builder()
                 //.fuWuMC(serviceName) //不指定则默认使用当前服务的applicationName
                 .jobName(renWuMC)
-                .jobGroup("GRUS_SC")
+                .jobGroup("mediinfo-grus-shujuzx")
                 .requestUrl(url)
                 .httpMethod(HttpMethod.GET)
                 .concurrent(ConCurrent.YES)
@@ -352,8 +352,8 @@ public class RenWuGLServiceImpl implements RenWuGLService {
                 .builder()
                 //.fuWuMC(serviceName) //不指定则默认使用当前服务的applicationName
                 .jobName(newRenWuMC)
-                .jobGroup("GRUS_SC")
-                .oldJobGroup("GRUS_SC")
+                .jobGroup("mediinfo-grus-shujuzx")
+                .oldJobGroup("mediinfo-grus-shujuzx")
                 .oldJobName(oldRenWuMC)
                 .requestUrl(url)
                 .httpMethod(HttpMethod.GET)
@@ -363,40 +363,40 @@ public class RenWuGLServiceImpl implements RenWuGLService {
     }
 
 
-    /**
-     *   创建触发器
-     *
-     */
-    public void createTrigger(String renWuMC, String id, String cron) {
-        var createDto= TriggerCreateDto
-                .builder()
-                .tenantId(identityService.getTenantId())
-                .tenantName(identityService.getTenantName())
-                .misFirePolicy(MisFirePolicy.MISFIRE_INSTRUCTION_IGNORE_MISFIRE_POLICY)
-                .triggerNameText(renWuMC+"_触发器")
-                .triggerName(id)
-                .triggerType(TriggerType.CRON)
-                .cron(cron)
-                .build();
-        schedulerService.trigger().create(renWuMC,"GRUS_SC",createDto);
-    }
 
     /**
-     *   更新触发器
+     *   同步触发器
      *
      */
-    public void updateTrigger(String renWuMC,String id, String cron) throws TongYongYWException {
-        var updateDto= TriggerUpdateDto
-                .builder()
-                .tenantId(identityService.getTenantId())
-                .tenantName(identityService.getTenantName())
-                .misFirePolicy(MisFirePolicy.MISFIRE_INSTRUCTION_IGNORE_MISFIRE_POLICY)
-                .triggerName(id)
-                .triggerNameText(renWuMC+"_触发器")
-                .triggerType(TriggerType.CRON)
-                .cron(cron)
-                .build();
-         schedulerTriggerService.update(renWuMC,"GRUS_SC",updateDto);
+    public void tongBuTrigger(String renWuMC,String id, String cron) throws TongYongYWException {
+        //根据触发器id和分组获取触发器详情
+        var response= schedulerTriggerService.get(id, "mediinfo-grus-shujuzx");
+        if(response!=null){
+            var updateDto= TriggerUpdateDto
+                    .builder()
+                    .tenantId(identityService.getTenantId())
+                    .tenantName(identityService.getTenantName())
+                    .misFirePolicy(MisFirePolicy.MISFIRE_INSTRUCTION_IGNORE_MISFIRE_POLICY)
+                    .triggerName(id)
+                    .triggerNameText(renWuMC+"_触发器")
+                    .triggerType(TriggerType.CRON)
+                    .cron(cron)
+                    .build();
+            schedulerTriggerService.update(renWuMC,"mediinfo-grus-shujuzx",updateDto);
+        }
+        else{
+            var createDto= TriggerCreateDto
+                    .builder()
+                    .tenantId(identityService.getTenantId())
+                    .tenantName(identityService.getTenantName())
+                    .misFirePolicy(MisFirePolicy.MISFIRE_INSTRUCTION_IGNORE_MISFIRE_POLICY)
+                    .triggerNameText(renWuMC+"_触发器")
+                    .triggerName(id)
+                    .triggerType(TriggerType.CRON)
+                    .cron(cron)
+                    .build();
+            schedulerService.trigger().create(renWuMC,"mediinfo-grus-shujuzx",createDto);
+        }
     }
 
     /* 根据id查询日志详情
@@ -904,12 +904,12 @@ public class RenWuGLServiceImpl implements RenWuGLService {
         //子集数据汇总到createDto中
         ChangeLevel(creatDto);
         //新增
-        var addDto = creatDto.stream().filter(t -> Objects.isNull(t.getId())).toList();
-        var addEntity = BeanUtil.copyListProperties(addDto, SC_RW_TongYongPZModel::new, (s, t) -> {
+        var addDto = creatDto.stream().filter(t -> Objects.isNull(t.getId()) && !Objects.isNull(t.getFuWuQIP()) && !Objects.isNull(t.getFuWuQDK())).toList();
+        List<SC_RW_TongYongPZModel> tongYongPZModelList= BeanUtil.copyListProperties(addDto, SC_RW_TongYongPZModel::new, (s, t) -> {
             t.setZuZhiJGMC(lyraIdentityService.getJiGouMC());
             t.setZuZhiJGID(lyraIdentityService.getJiGouID());
         });
-        List<SC_RW_TongYongPZModel> tongYongPZModelList = new ArrayList<>(addEntity);
+
         //修改
         var updateDto = creatDto.stream().filter(t -> !Objects.isNull(t.getId())).toList();
         var ids = updateDto.stream().map(SC_RW_TongYongPZDto::getId).toList();
@@ -919,9 +919,8 @@ public class RenWuGLServiceImpl implements RenWuGLService {
             BeanUtil.mergeProperties(tongYongPZItem, item);
         }
         tongYongPZModelList.addAll(tongYongPZList);
-
         if(tongYongPZModelList.size()>0){
-            tongYongPZRepository.saveAll(tongYongPZList);
+            tongYongPZRepository.saveAll(tongYongPZModelList);
         }
         return true;
     }

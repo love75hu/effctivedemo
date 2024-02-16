@@ -17,7 +17,7 @@ import cn.mediinfo.grus.shujuzx.dto.yinsigzszs.SC_ZD_YinSiPZOutDto;
 import cn.mediinfo.grus.shujuzx.model.*;
 import cn.mediinfo.grus.shujuzx.po.RecordJiBenXXAndHeBingJL;
 import cn.mediinfo.grus.shujuzx.po.RecordJiBenXXAndHeBingJLModel;
-import cn.mediinfo.grus.shujuzx.remoteservice.JiuZhenRemoteService;
+import cn.mediinfo.grus.shujuzx.remoteservice.LinChuangRemoteService;
 import cn.mediinfo.grus.shujuzx.repository.*;
 import cn.mediinfo.grus.shujuzx.service.YinSiGZSZService;
 import cn.mediinfo.grus.shujuzx.service.ZhuSuoYCZRZService;
@@ -56,7 +56,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
     public final BR_DA_KuoZhanXXRepository brDaKuoZhanXXRepository;
     public final BR_ZD_HeBingGZRepository brZdHeBingGZRepository;
     public final BR_ZD_HeBingGZMXRepository brZdHeBingGZMXRepository;
-    public final JiuZhenRemoteService jiuZhenRemoteService;
+    public final LinChuangRemoteService jiuZhenRemoteService;
     private final BR_DA_ZhuSuoYCZRZRepository zhuSuoYCZRZRepository;
     public final YinSiGZSZService yinSiGZSZService;
     public final ZhuSuoYCZRZService zhuSuoYCZRZService;
@@ -65,7 +65,7 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
     private final SpringCache springCache;
 
 
-    public ZhuSuoYGLServiceImpl(BR_DA_XiangSiSYRepository brDaXiangSiSYRepository, BR_DA_JiaoChaSYRepository brDaJiaoChaSYRepository, BR_DA_JiBenXXRepository brDaJiBenXXRepository, BR_DA_HeBingJLRepository brDaHeBingJLRepository, BR_DA_JieZhiXXRepository brDaJieZhiXXRepository, BR_DA_KuoZhanXXRepository brDaKuoZhanXXRepository, BR_ZD_HeBingGZRepository brZdHeBingGZRepository, BR_ZD_HeBingGZMXRepository brZdHeBingGZMXRepository, JiuZhenRemoteService jiuZhenRemoteService, YinSiGZSZService yinSiGZSZService, ZhuSuoYCZRZService zhuSuoYCZRZService, LyraIdentityService lyraIdentityService, BR_DA_ZhuSuoYCZRZRepository zhuSuoYCZRZRepository, SpringCache springCache) {
+    public ZhuSuoYGLServiceImpl(BR_DA_XiangSiSYRepository brDaXiangSiSYRepository, BR_DA_JiaoChaSYRepository brDaJiaoChaSYRepository, BR_DA_JiBenXXRepository brDaJiBenXXRepository, BR_DA_HeBingJLRepository brDaHeBingJLRepository, BR_DA_JieZhiXXRepository brDaJieZhiXXRepository, BR_DA_KuoZhanXXRepository brDaKuoZhanXXRepository, BR_ZD_HeBingGZRepository brZdHeBingGZRepository, BR_ZD_HeBingGZMXRepository brZdHeBingGZMXRepository, LinChuangRemoteService jiuZhenRemoteService, YinSiGZSZService yinSiGZSZService, ZhuSuoYCZRZService zhuSuoYCZRZService, LyraIdentityService lyraIdentityService, BR_DA_ZhuSuoYCZRZRepository zhuSuoYCZRZRepository, SpringCache springCache) {
         this.brDaXiangSiSYRepository = brDaXiangSiSYRepository;
         this.brDaJiaoChaSYRepository = brDaJiaoChaSYRepository;
         this.brDaJiBenXXRepository = brDaJiBenXXRepository;
@@ -321,14 +321,14 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
             throw new TongYongYWException("未选中相似索引");
         }
         //修改主索引病人信息
-        var bingRenXX = brDaJiBenXXRepository.findById(dto.getZhuSuoYBRXX().getID()).orElse(null);
+        var bingRenXX = brDaJiBenXXRepository.findById(dto.getZhuSuoYBRXX().getId()).orElse(null);
         if (bingRenXX == null) {
             throw new TongYongYWException("未找到相关病人信息");
         }
         MapUtils.mergeProperties(dto.getZhuSuoYBRXX(), bingRenXX);
         brDaJiBenXXRepository.save(bingRenXX);
         //获取主索引的合并记录
-        var zhuSuoYHBJL = brDaHeBingJLRepository.findFirstByBingRenID(dto.getZhuSuoYBRXX().getID());
+        var zhuSuoYHBJL = brDaHeBingJLRepository.findFirstByBingRenID(dto.getZhuSuoYBRXX().getId());
         if (zhuSuoYHBJL == null) {
             throw new TongYongYWException("未找到相关病人合并记录信息");
         }
@@ -379,8 +379,8 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
                             guiZe.getFaZhi());
                 }
             }
-            String caoZuoNR = StringUtil.concat("主索引MPI：", dto.getZhuSuoYBRXX().getID(), "，已经合并MPI：", item.getId(), xiangXiGZSM);
-            zhuSuoYCZRZService.addCaoZuoRZ(dto.getZhuSuoYBRXX().getID(), dto.getZhuSuoYBRXX().getXingMing(), ZhuSuoYCZLXEnum.HEBING, caoZuoNR, false);
+            String caoZuoNR = StringUtil.concat("主索引MPI：", dto.getZhuSuoYBRXX().getId(), "，已经合并MPI：", item.getId(), xiangXiGZSM);
+            zhuSuoYCZRZService.addCaoZuoRZ(dto.getZhuSuoYBRXX().getId(), dto.getZhuSuoYBRXX().getXingMing(), ZhuSuoYCZLXEnum.HEBING, caoZuoNR, false);
         }
         //插入交叉索引
         var yuanJiaoCSYList = brDaJiaoChaSYRepository.getJiaoChaZhuBRIDList(dto.getXiangSiBRIDList());
@@ -402,11 +402,11 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
         }).toList();
         brDaJiaoChaSYRepository.saveAll(insertJiaoChaSYList);
         //删除被合并患者的相似索引信息
-        var deleteXiangSiSYList = brDaXiangSiSYRepository.getDeleteXiangSiSYList(dto.getZhuSuoYBRXX().getID(), dto.getXiangSiBRIDList());
+        var deleteXiangSiSYList = brDaXiangSiSYRepository.getDeleteXiangSiSYList(dto.getZhuSuoYBRXX().getId(), dto.getXiangSiBRIDList());
         var deleteIDs = deleteXiangSiSYList.stream().map(BR_DA_XiangSiSYModel::getId).toList();
         brDaXiangSiSYRepository.deleteAllById(deleteIDs);
         //修改被删除相似索引患者的相似数
-        var xiangSiHZHBJLList = brDaHeBingJLRepository.findByBingRenIDNotAndBingRenIDIn(dto.getZhuSuoYBRXX().getID(), deleteXiangSiSYList.stream().map(BR_DA_XiangSiSYModel::getBingRenID1).toList());
+        var xiangSiHZHBJLList = brDaHeBingJLRepository.findByBingRenIDNotAndBingRenIDIn(dto.getZhuSuoYBRXX().getId(), deleteXiangSiSYList.stream().map(BR_DA_XiangSiSYModel::getBingRenID1).toList());
         for (var item : xiangSiHZHBJLList) {
             var count = deleteXiangSiSYList.stream()
                     .filter(o -> Objects.equals(o.getBingRenID1(), item.getBingRenID()))
@@ -438,7 +438,11 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
             var xiangSiSY = brDaXiangSiSYRepository.findFirstByBingRenID1AndBingRenID2NotAndHuLueBZOrderByXiangSiDuDesc(zhuSuoYBRXX.getId(), dto.getXiangSiSYBRID(), 0);
             if (zhuSuoYHBJL != null) {
                 zhuSuoYHBJL.setXiangSiShu(zhuSuoYHBJL.getXiangSiShu() - 1);
-                zhuSuoYHBJL.setZuiDaXSD(xiangSiSY.getXiangSiDu() != null ? xiangSiSY.getXiangSiDu().intValue() : 0);
+                if (xiangSiSY != null) {
+                    zhuSuoYHBJL.setZuiDaXSD(xiangSiSY.getXiangSiDu() != null ? xiangSiSY.getXiangSiDu().intValue() : 0);
+                } else {
+                    zhuSuoYHBJL.setZuiDaXSD(0);
+                }
                 brDaHeBingJLRepository.save(zhuSuoYHBJL);
             }
         }
@@ -448,7 +452,11 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
             var xiangSiSY = brDaXiangSiSYRepository.findFirstByBingRenID1AndBingRenID2NotAndHuLueBZOrderByXiangSiDuDesc(xiangSiSYBRXX.getId(), dto.getZhuSuoYBRID(), 0);
             if (xiangSiSYYHBJL != null) {
                 xiangSiSYYHBJL.setXiangSiShu(xiangSiSYYHBJL.getXiangSiShu() - 1);
-                xiangSiSYYHBJL.setZuiDaXSD(xiangSiSY.getXiangSiDu() != null ? xiangSiSY.getXiangSiDu().intValue() : 0);
+                if (xiangSiSY != null) {
+                    xiangSiSYYHBJL.setZuiDaXSD(xiangSiSY.getXiangSiDu() != null ? xiangSiSY.getXiangSiDu().intValue() : 0);
+                } else {
+                    xiangSiSYYHBJL.setZuiDaXSD(0);
+                }
                 brDaHeBingJLRepository.save(xiangSiSYYHBJL);
             }
         }
@@ -859,8 +867,24 @@ public class ZhuSuoYGLServiceImpl implements ZhuSuoYGLService {
                     try {
                         fieldM.setAccessible(true);
                         var fieldValue = fieldM.get(item);
-                        if (fieldValue != null && fieldValue.equals(value))
-                            return true;
+                        if (fieldValue != null) {
+                            var fieldClass = fieldM.get(item).getClass();
+                            if (fieldClass != null) {
+                                var fieldType = fieldM.get(item).getClass().getName();
+                                if (Objects.equals(fieldType, "java.lang.String")) {
+                                    if (StringUtil.hasText(fieldValue.toString()) && fieldValue.equals(value)) {
+                                        return true;
+                                    }
+                                } else if (fieldValue.equals(value)) {
+                                    return true;
+                                }
+                            } else {
+                                if (fieldValue.equals(value)) {
+                                    return true;
+                                }
+                            }
+                        }
+
                     } catch (IllegalAccessException e) {
                         throw new RuntimeException(e);
                     }

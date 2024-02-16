@@ -1,12 +1,12 @@
 package cn.mediinfo.grus.shujuzx.constant;
 
 public enum ZhuSuoYCZLXEnum {
-    HEBING("HeBing","主索引合并"),
+    HEBING("1","主索引合并"),
 
-    QUXIAOHB("QuXiaoHB","取消合并"),
-    HULUE("HuLue","忽略"),
-    XIUGAI("XiuGai","修改"),
-    XINZENG("XinZeng","新增");
+    QUXIAOHB("2","取消合并"),
+    HULUE("3","忽略"),
+    XIUGAI("4","修改"),
+    XINZENG("5","新增");
     private final String value;
     private final String description;
 
